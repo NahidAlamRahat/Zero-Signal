@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/routes/all_bindings.dart';
 import 'routes/app_routes.dart';
 import 'routes/app_routes_file.dart';
 import 'utils/app_size.dart';
@@ -16,11 +17,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Zero Signal',
-      // initialRoute: AppRoutes.instance.initial,
       initialRoute: AppRoutes.splashScreen,
       getPages: appRootRoutesFile,
       enableLog: true,
-      // initialBinding: AppBinding(),
+      initialBinding: AppBindings(),
     );
   }
 }

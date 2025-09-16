@@ -3,12 +3,13 @@ class AppRoutes {
 
   /////////////  initial or splash screen
   static const initial = '/';
-  static const onBoardingScreen = "/onboarding";
+  static const chooseLanguageScreen = "/chooseLanguageScreen";
   static const navigationScreen = "/navigation-screen";
 
 
   ///////////////App Screen////////////////////////////////////
   static const splashScreen = "/splashScreen";
+  static const glassEffectBackground = "/glassEffectBackground";
 
 
 

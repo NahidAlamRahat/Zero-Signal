@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:zero_signal/routes/app_routes.dart';
 
 enum Language { english, spanish }
 
@@ -12,7 +13,7 @@ class LanguageController extends GetxController {
   // Method to update selected language
   void selectLanguage(Language language) {
     _selectedLanguage = language;
-
+    Get.toNamed(AppRoutes.glassEffectBackground);
     update();
   }
 

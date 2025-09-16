@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_strings.dart';
-import 'package:zero_signal/screen/onboarding_screen/widget/language_selection_widget.dart';
+import 'package:zero_signal/screen/choose_language_screen/widget/language_selection_widget.dart';
 import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class ChooseLanguageScreen extends StatelessWidget {
+  const ChooseLanguageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:zero_signal/screen/choose_language_screen/choose_language_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import 'app_routes.dart';
@@ -19,11 +20,15 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   ),
 
   GetPage(
-    name: AppRoutes.onBoardingScreen,
+    name: AppRoutes.chooseLanguageScreen,
     // binding: SplashScreenBinding(),
-    page: () => OnboardingScreen(),
+    page: () => ChooseLanguageScreen(),
   ),
 
-
+  GetPage(
+    name: AppRoutes.glassEffectBackground,
+    // binding: SplashScreenBinding(),
+    page: () => GlassEffectBackground(),
+  ),
 
 ];
