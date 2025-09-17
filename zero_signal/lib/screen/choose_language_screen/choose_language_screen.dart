@@ -13,8 +13,6 @@ class ChooseLanguageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: AppColor.creamBackgroundColor,
-
       body: Center(
         child: Column(
           children: [

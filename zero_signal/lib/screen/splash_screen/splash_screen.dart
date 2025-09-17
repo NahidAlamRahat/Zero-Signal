@@ -60,24 +60,21 @@ class _SplashScreenState extends State<SplashScreen>
           ),
           child: Scaffold(
             backgroundColor: AppColor.backgroundColor,
-            body: Column(
-              children: [
-                Center(
-                  /// app logo with animation
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: Image.asset(
-                        AppImagePath.appLogo,
-                        height: AppSize.height(value: 166),
-                        width: AppSize.width(value: 171),
-                      ),
-                    ),
+            body: Center(
+              /// app logo with animation
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Image.asset(
+                    AppImagePath.appLogo,
+                    height: AppSize.height(value: 166),
+                    width: AppSize.width(value: 171),
                   ),
                 ),
-              ],
+              ),
             ),
+
           ),
         );
       },

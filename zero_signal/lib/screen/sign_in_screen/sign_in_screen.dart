@@ -1,15 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
-import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
-import '../../constant/app_strings.dart';
-import '../../routes/app_routes.dart';
-
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,31 +18,27 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 
+
   /// Background image widget
   Widget _buildBackgroundImage() {
     return Positioned.fill(
       child: Image.asset(
-        AppImagePath.onboardingBackgroundImage,
+        AppImagePath.signInBackgroundImage,
         fit: BoxFit.cover,
       ),
     );
   }
 
-  /// Title text widget
+
   Widget _buildTitleText() {
     return  Positioned(
       bottom: 100,
       left: 0,
       right: 0,
-      child: TextWidget(
-        fontSize: 32,
-        fontWeight: FontWeight.w600,
-        textAlignment: TextAlign.center,
-        text: AppStrings.discoverNewWorld,
-        fontColor: Colors.white,
-      ),
+      child: Image.asset(AppImagePath.frameImage),
     );
   }
+
 
   /// Get Started button widget
   Widget _buildGetStartedButton(BuildContext context) {
@@ -58,7 +48,6 @@ class OnboardingScreen extends StatelessWidget {
       right: 16,
       child: InkWell(
         onTap: () {
-          Get.toNamed(AppRoutes.signInScreen);
           // Add your navigation logic here
           // Navigator.pushNamed(context, '/next_screen');
         },
@@ -75,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
               // Centered text
               const Center(
                 child: Text(
-                  AppStrings.getStarted,
+                  'Get Started',
                   style: TextStyle(
                     color: Color(0xFFF1F1F1),
                     fontSize: 20,

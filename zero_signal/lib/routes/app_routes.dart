@@ -10,6 +10,7 @@ class AppRoutes {
   ///////////////App Screen////////////////////////////////////
   static const splashScreen = "/splashScreen";
   static const glassEffectBackground = "/glassEffectBackground";
+  static const signInScreen = "/signInScreen";
 
 
 
