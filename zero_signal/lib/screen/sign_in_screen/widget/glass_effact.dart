@@ -7,8 +7,10 @@ class GlassEffact extends StatelessWidget {
   final Color backgroundColor;
   final Color borderColor;
   final double borderWidth;
+  final Widget? child;
 
   const GlassEffact({
+    this.child,
     super.key,
     this.height = 371,
     this.width = 390,
@@ -20,18 +22,21 @@ class GlassEffact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(
-            color: borderColor,
-            width: borderWidth,
+    return Center(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Container(
+           height: height,
+          width: width,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: borderColor,
+              width: borderWidth,
+            ),
           ),
+           child: child,
         ),
       ),
     );
