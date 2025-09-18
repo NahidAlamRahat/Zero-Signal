@@ -11,5 +11,15 @@ class AppStrings {
   static const String password = "Password";
   static const String enterYourEmail = "Enter Your Email";
   static const String enterYourPassword = "Enter your password";
+  static const String signUp = "Sign Up";
+  static const String rememberMe = "Remember Me";
+  static const String forgotPassword = "Forgot Password?";
+  static const String signIn = "Sign In";
+  static const String orSignInWith = "or sign in with";
+  static const String dontHaveAccount = "Don't have an account? ";
+  static const String resetPasswordInstruction = "Enter your email below to reset your password";
+  static const String verify = "Verify";
+  static const String resetPassword = "Reset Password";
+  static const String enterFourDigitCode = "Enter the four-digit code that was emailed to you.";
 
 }

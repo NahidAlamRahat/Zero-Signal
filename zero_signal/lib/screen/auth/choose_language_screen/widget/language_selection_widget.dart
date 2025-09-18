@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-import '../../../constant/app_colors.dart';
-import '../../../constant/app_icon_path.dart';
+import '../../../../constant/app_colors.dart';
+import '../../../../constant/app_icon_path.dart';
 import '../controller/onboarding_controloler.dart';
 
 class LanguageSelectionWidget extends StatelessWidget {

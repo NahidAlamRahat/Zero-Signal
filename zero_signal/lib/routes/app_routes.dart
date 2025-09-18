@@ -12,6 +12,8 @@ class AppRoutes {
   static const glassEffectBackground = "/glassEffectBackground";
   static const signInAndRegistrationScreen = "/signInAndRegistrationScreen";
   static const signInScreen = "/signInScreen";
+  static const forgotPasswordScreen = "/forgotPasswordScreen";
+  static const resetPassOtpVerifyScreen = "/resetPassOtpVerifyScreen";
 
 
 

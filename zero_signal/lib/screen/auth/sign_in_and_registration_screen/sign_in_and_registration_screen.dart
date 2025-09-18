@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_colors.dart';
@@ -9,7 +10,7 @@ import 'package:zero_signal/widget/glass_effact.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
-import '../../routes/app_routes.dart';
+import '../../../routes/app_routes.dart';
 
 class SignInAndRegistrationScreen extends StatelessWidget {
   const SignInAndRegistrationScreen({super.key});
@@ -30,7 +31,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: GlassEffact(
-                height: 320,
+                height: 320.h,
                 child: Column(
                   children: [
                     const SizedBox(height: 20),

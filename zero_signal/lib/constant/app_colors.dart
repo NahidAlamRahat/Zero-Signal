@@ -10,6 +10,7 @@ class AppColor {
   static const Color subTitleColor = Color(0xFF565656);
   static const Color languageSelectedColor = Color.fromRGBO(245, 233, 223, 1);
   static const Color languageUnSelectedColor = Color.fromRGBO(255, 244, 233, 1);
+  static const Color yello = Color(0xFFFFCB20);
 
 
 }

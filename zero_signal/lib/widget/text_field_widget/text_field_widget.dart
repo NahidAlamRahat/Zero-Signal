@@ -21,7 +21,9 @@ class TextFieldWidget extends StatefulWidget {
 
   final Color backgroundColor;
   final Color hintColor; // Hint text color
-  final Color textColor; // <-- নতুন field যোগ করা হলো
+  final Color textColor;
+
+  final double fieldHeight; // <-- নতুন যোগ করা হলো
 
   const TextFieldWidget({
     super.key,
@@ -41,7 +43,8 @@ class TextFieldWidget extends StatefulWidget {
     this.customSuffixIcon,
     this.backgroundColor = Colors.white,
     this.hintColor = Colors.grey,
-    this.textColor = const Color(0xFF1A1A1A), // <-- Default text color
+    this.textColor = const Color(0xFF1A1A1A),
+    this.fieldHeight = 50, // <-- Default height
   });
 
   @override
@@ -61,6 +64,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
     return Container(
+      height: widget.fieldHeight, // <-- এখানে height control করা হলো
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -73,7 +77,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
         style: TextStyle(
-          color: widget.textColor, // <-- এখানে ব্যবহার করা হলো
+          color: widget.textColor,
         ),
         decoration: InputDecoration(
           filled: true,
@@ -106,7 +110,11 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             ),
           )
               : widget.customSuffixIcon,
-          contentPadding: EdgeInsets.all(ResponsiveUtils.width(18)),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: (widget.fieldHeight - 20) / 2,
+            // <-- height অনুযায়ী vertical padding auto adjust
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
             borderSide: BorderSide(
