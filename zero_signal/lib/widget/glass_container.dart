@@ -5,7 +5,12 @@ class GlassContainer extends StatelessWidget {
   final Widget? child;
   final double? width;
   final double? height;
-  const GlassContainer({super.key, this.width, this.height, this.child});
+  const GlassContainer({
+    super.key,
+    this.width = 150,
+    this.height = 150,
+    this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +56,7 @@ class GlassContainer extends StatelessWidget {
               ),
             ],
           ),
-          child: Center(child: child),
+          child: child,
         ),
       ),
     );
