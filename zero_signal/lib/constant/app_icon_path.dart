@@ -12,4 +12,7 @@ class AppIconPath {
   static const String shareIcon = "assets/icon/share.png";
   static const String batchIcon = "assets/icon/batch.png";
   static const String locationIcon = "assets/icon/location.png";
+  static const String groupIcon = "assets/icon/group.png";
+  static const String saveIcon = "assets/icon/save.png";
+  static const String addPeopleIcon = "assets/icon/add_people.png";
 }

@@ -10,6 +10,7 @@ class CustomElevatedButton extends StatelessWidget {
   final Size? maximumSize;
   final IconData? leftIcon; // The new optional icon on the left
   final IconData? rightIcon; // The original optional icon, now on the right
+  final double? iconSize;
   final FontWeight fontWeight;
   final double fontSize;
   final Color borderColor;
@@ -33,6 +34,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.alignment = MainAxisAlignment.center,
     this.rightIconColor,
     this.borderRadius = 8.0,
+    this.iconSize = 24.0,
   });
 
   @override
@@ -58,7 +60,7 @@ class CustomElevatedButton extends StatelessWidget {
           children: [
             // Conditionally show the LEFT icon
             if (leftIcon != null) ...[
-              Icon(leftIcon, size: 16.sp),
+              Icon(leftIcon, size: iconSize),
               SizedBox(width: 8.w),
             ],
 
@@ -71,7 +73,7 @@ class CustomElevatedButton extends StatelessWidget {
             // Conditionally show the RIGHT icon
             if (rightIcon != null) ...[
               SizedBox(width: 8.w),
-              Icon(rightIcon, size: 16.sp, color: rightIconColor),
+              Icon(rightIcon, size: iconSize, color: rightIconColor),
             ],
           ],
         ),
