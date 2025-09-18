@@ -11,13 +11,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
     AppSize.size = MediaQuery.of(context).size;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Zero Signal',
-      initialRoute: AppRoutes.splashScreen,
+      initialRoute: AppRoutes.socialScreen,
       getPages: appRootRoutesFile,
       enableLog: true,
       initialBinding: AppBindings(),

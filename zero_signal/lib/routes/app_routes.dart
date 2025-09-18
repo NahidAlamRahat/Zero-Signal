@@ -14,7 +14,8 @@ class AppRoutes {
   static const signInScreen = "/signInScreen";
 
 
-
+  //Social Screen
+  static const socialScreen = "/socialScreen";
 
 
 
