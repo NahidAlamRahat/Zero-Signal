@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../utils/app_size.dart';
 
 class TextFieldWidget extends StatefulWidget {
-  final TextEditingController controller;
-  final String hintText;
+  final TextEditingController? controller;
+  final String? hintText;
   final String? Function(String?)? validator;
   final bool? suffixIcon; // For password toggle
   final TextInputType? keyboardType;
@@ -11,7 +11,6 @@ class TextFieldWidget extends StatefulWidget {
   final VoidCallback? onTapSuffix;
   final Function(String submit)? onFieldSubmitted;
 
-  // নতুন প্রপার্টি
   final Color borderColor; // Normal border
   final Color focusedBorderColor; // Focused border
   final double borderRadius; // Rounded corner
@@ -20,10 +19,14 @@ class TextFieldWidget extends StatefulWidget {
   final Widget? prefixIcon; // Left icon
   final Widget? customSuffixIcon; // Right icon (custom, not password toggle)
 
+  final Color backgroundColor;
+  final Color hintColor; // Hint text color
+  final Color textColor; // <-- নতুন field যোগ করা হলো
+
   const TextFieldWidget({
     super.key,
-    required this.controller,
-    required this.hintText,
+    this.controller,
+    this.hintText,
     this.validator,
     this.suffixIcon,
     this.keyboardType,
@@ -36,6 +39,9 @@ class TextFieldWidget extends StatefulWidget {
     this.borderWidth = 1,
     this.prefixIcon,
     this.customSuffixIcon,
+    this.backgroundColor = Colors.white,
+    this.hintColor = Colors.grey,
+    this.textColor = const Color(0xFF1A1A1A), // <-- Default text color
   });
 
   @override
@@ -56,7 +62,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     ResponsiveUtils.initialize(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
       ),
       child: TextFormField(
@@ -66,14 +72,15 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
-        style: const TextStyle(
-          color: Color(0xFF1A1A1A),
+        style: TextStyle(
+          color: widget.textColor, // <-- এখানে ব্যবহার করা হলো
         ),
         decoration: InputDecoration(
-          fillColor: Colors.white,
+          filled: true,
+          fillColor: widget.backgroundColor,
           hintText: widget.hintText,
           hintStyle: TextStyle(
-            color: Colors.grey,
+            color: widget.hintColor,
             fontWeight: FontWeight.w400,
             fontSize: ResponsiveUtils.width(14),
           ),

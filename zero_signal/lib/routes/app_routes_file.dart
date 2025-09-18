@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/screen/choose_language_screen/choose_language_screen.dart';
-import 'package:zero_signal/screen/sign_in_screen/sign_in_screen.dart';
+import 'package:zero_signal/screen/sign_in_and_registration_screen/sign_in_and_registration_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
+import '../screen/sign_in_screen/sign_in_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import 'app_routes.dart';
 
@@ -33,10 +34,15 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   ),
 
   GetPage(
+    name: AppRoutes.signInAndRegistrationScreen,
+    // binding: SplashScreenBinding(),
+    page: () => SignInAndRegistrationScreen(),
+  ),
+
+  GetPage(
     name: AppRoutes.signInScreen,
     // binding: SplashScreenBinding(),
     page: () => SignInScreen(),
   ),
-
 
 ];

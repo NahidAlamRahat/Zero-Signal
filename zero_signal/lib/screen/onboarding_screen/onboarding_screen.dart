@@ -58,7 +58,7 @@ class OnboardingScreen extends StatelessWidget {
       right: 16,
       child: InkWell(
         onTap: () {
-          Get.toNamed(AppRoutes.signInScreen);
+          Get.toNamed(AppRoutes.signInAndRegistrationScreen);
           // Add your navigation logic here
           // Navigator.pushNamed(context, '/next_screen');
         },

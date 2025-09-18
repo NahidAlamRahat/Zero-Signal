@@ -17,7 +17,8 @@ class ButtonWidget extends StatelessWidget {
   final Color? borderColor;
   final FontWeight? fontWeight;
   final bool isLoading;
-  final double opacity; // ✅ নতুন opacity parameter
+  final double opacity;
+  final double borderWidth;
 
   const ButtonWidget({
     super.key,
@@ -36,16 +37,17 @@ class ButtonWidget extends StatelessWidget {
     this.borderColor,
     this.fontWeight,
     this.isLoading = false,
-    this.opacity = 1.0, // ✅ default opacity 1.0 (fully opaque)
+    this.opacity = 1.0,
+    this.borderWidth=0.1,
+
   });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
 
-    // ✅ Background color with opacity applied
-    Color finalBackgroundColor = (backgroundColor ?? Colors.green.shade500)
-        .withOpacity(opacity);
+    Color? finalBackgroundColor =
+    (backgroundColor == Colors.transparent) ? null : (backgroundColor ?? Colors.green.shade500).withOpacity(opacity);
 
     return Container(
       height: ResponsiveUtils.height(buttonHeight),
@@ -54,17 +56,22 @@ class ButtonWidget extends StatelessWidget {
         color: finalBackgroundColor,
         borderRadius: buttonRadius,
         border: borderColor != null
-            ? Border.all(color: borderColor!, width: 1)
+            ? Border.all(color: borderColor!, width: borderWidth)
             : null,
       ),
       child: MaterialButton(
         onPressed: isLoading ? null : onPressed,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         padding: padding,
-        color: Colors.transparent, // ✅ MaterialButton এর background transparent করুন
-        elevation: 0, // ✅ Shadow remove করুন
-        highlightElevation: 0, // ✅ Press করার সময় shadow remove করুন
-        shape: RoundedRectangleBorder(borderRadius: buttonRadius),
+        color: Colors.transparent,
+        elevation: 0,
+        highlightElevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: buttonRadius,
+          side: borderColor != null
+              ? BorderSide(color: borderColor!, width: 1)
+              : BorderSide.none,
+        ),
         child: isLoading
             ? const SizedBox(
           height: 22,
