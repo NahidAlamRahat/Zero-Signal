@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_strings.dart';
+import 'package:zero_signal/screen/auth/createa_password_screen/widget/button_sheet.dart';
 import 'package:zero_signal/widget/glass_effact.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
@@ -12,8 +14,8 @@ import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../../routes/app_routes.dart';
 import '../../../widget/text_field_widget/text_field_widget.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+class CreatePasswordScreen extends StatelessWidget {
+  const CreatePasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +31,20 @@ class ForgotPasswordScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Center(
             child: GlassEffact(
-              height: 374,
+              height: 512.h,
+              width: 390.w,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
                   Center(child: Image.asset(AppImagePath.appLogo, width: 61, height: 60)),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
 
                   Center(
                     child: TextWidget(
-                      text: AppStrings.forgotPassword,
+                      text: AppStrings.createPassword,
                       fontColor: Colors.white,
-                      fontSize: 24,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -49,7 +52,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                   Center(
                     child: TextWidget(
-                      text: AppStrings.resetPasswordInstruction,
+                      text: AppStrings.yourNewPassword,
                       fontColor: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -57,13 +60,40 @@ class ForgotPasswordScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-
-                  // Email Label
                   Padding(
                     padding: EdgeInsets.only(left: 12),
                     child: TextWidget(
                       textAlignment: TextAlign.left,
-                      text: AppStrings.email,
+                      text: AppStrings.newPassword,
+                      fontColor: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12,right: 12),
+                    child: TextFieldWidget(
+                       fieldHeight: 40,
+                      textColor: Colors.white,
+                      hintText: AppStrings.enterNewPassword,
+                      hintColor: Colors.white54,
+                      backgroundColor: Colors.transparent,
+                      borderColor: Colors.white,
+                      focusedBorderColor: Colors.white,
+                      borderRadius: 8,
+                      borderWidth: 1.0,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                  ),
+
+                  SizedBox(height: 20.w,),
+
+                  Padding(
+                    padding: EdgeInsets.only(left: 12),
+                    child: TextWidget(
+                      textAlignment: TextAlign.left,
+                      text: AppStrings.confirmPassword,
                       fontColor: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -72,11 +102,11 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                   // Email TextField
                   Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.only(left: 12,right: 12),
                     child: TextFieldWidget(
-                       fieldHeight: 40,
+                      fieldHeight: 40,
                       textColor: Colors.white,
-                      hintText: AppStrings.enterYourEmail,
+                      hintText: AppStrings.enterNewPassword,
                       hintColor: Colors.white54,
                       backgroundColor: Colors.transparent,
                       borderColor: Colors.white,
@@ -93,11 +123,11 @@ class ForgotPasswordScreen extends StatelessWidget {
                     child: Center(
                       child: ButtonWidget(
                         onPressed: (){
-                          Get.toNamed(AppRoutes.resetPassOtpVerifyScreen);
+                          showPasswordChangedSheet(context);
                         },
                         buttonWidth: double.infinity,
                         backgroundColor: AppColor.backgroundColor,
-                        label: AppStrings.verify,
+                        label: AppStrings.save,
                         buttonHeight: 40,
                       ),
                     ),
@@ -110,6 +140,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       ),
     );
   }
+
 
   /// Background image widget
   Widget _buildBackgroundImage() {

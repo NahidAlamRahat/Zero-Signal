@@ -23,7 +23,10 @@ class TextFieldWidget extends StatefulWidget {
   final Color hintColor; // Hint text color
   final Color textColor;
 
-  final double fieldHeight; // <-- নতুন যোগ করা হলো
+  final double fieldHeight;
+  final TextStyle? hintStyle; // <-- বাহির থেকে hintStyle কাস্টমাইজ করা যাবে
+  final TextStyle? textStyle; // <-- বাহির থেকে textStyle কাস্টমাইজ করা যাবে
+  final TextStyle? errorStyle; // <-- বাহির থেকে errorStyle কাস্টমাইজ করা যাবে
 
   const TextFieldWidget({
     super.key,
@@ -44,7 +47,10 @@ class TextFieldWidget extends StatefulWidget {
     this.backgroundColor = Colors.white,
     this.hintColor = Colors.grey,
     this.textColor = const Color(0xFF1A1A1A),
-    this.fieldHeight = 50, // <-- Default height
+    this.fieldHeight = 50,
+    this.hintStyle,
+    this.textStyle,
+    this.errorStyle,
   });
 
   @override
@@ -64,7 +70,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
     return Container(
-      height: widget.fieldHeight, // <-- এখানে height control করা হলো
+      height: widget.fieldHeight,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -76,23 +82,27 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
-        style: TextStyle(
-          color: widget.textColor,
-        ),
+        style: widget.textStyle ??
+            TextStyle(
+              color: widget.textColor,
+              fontSize: ResponsiveUtils.width(14), // default font size
+            ),
         decoration: InputDecoration(
           filled: true,
           fillColor: widget.backgroundColor,
           hintText: widget.hintText,
-          hintStyle: TextStyle(
-            color: widget.hintColor,
-            fontWeight: FontWeight.w400,
-            fontSize: ResponsiveUtils.width(14),
-          ),
-          errorStyle: const TextStyle(
-            color: Colors.red,
-            fontSize: 13,
-            fontWeight: FontWeight.w400,
-          ),
+          hintStyle: widget.hintStyle ??
+              TextStyle(
+                color: widget.hintColor,
+                fontWeight: FontWeight.w400,
+                fontSize: ResponsiveUtils.width(14),
+              ),
+          errorStyle: widget.errorStyle ??
+              TextStyle(
+                color: Colors.red,
+                fontSize: ResponsiveUtils.width(12),
+                fontWeight: FontWeight.w400,
+              ),
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon ?? false
               ? GestureDetector(
@@ -113,7 +123,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16,
             vertical: (widget.fieldHeight - 20) / 2,
-            // <-- height অনুযায়ী vertical padding auto adjust
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),

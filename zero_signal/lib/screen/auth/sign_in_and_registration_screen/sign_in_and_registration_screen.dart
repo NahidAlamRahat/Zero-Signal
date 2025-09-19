@@ -31,7 +31,8 @@ class SignInAndRegistrationScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: GlassEffact(
-                height: 320.h,
+                height: 371.h,
+                width: 390.w,
                 child: Column(
                   children: [
                     const SizedBox(height: 20),

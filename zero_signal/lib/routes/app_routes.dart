@@ -14,6 +14,8 @@ class AppRoutes {
   static const signInScreen = "/signInScreen";
   static const forgotPasswordScreen = "/forgotPasswordScreen";
   static const resetPassOtpVerifyScreen = "/resetPassOtpVerifyScreen";
+  static const createPasswordScreen = "/createPasswordScreen";
+  static const signUpScreen = "/signUpScreen";
 
 
 
