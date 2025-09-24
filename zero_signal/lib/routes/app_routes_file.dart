@@ -10,6 +10,7 @@ import '../screen/auth/sign_in_screen/sign_in_screen.dart';
 import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
+import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import 'all_bindings.dart';
 import 'app_routes.dart';
@@ -87,6 +88,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   GetPage(
     name: AppRoutes.bottomNav,
     page: () => const BottomNav(),
+    // binding: GeneralBindings(),
+  ),
+
+  GetPage(
+    name: AppRoutes.shareSpotScreen,
+    page: () => const ShareSpotScreen(),
     // binding: GeneralBindings(),
   ),
 

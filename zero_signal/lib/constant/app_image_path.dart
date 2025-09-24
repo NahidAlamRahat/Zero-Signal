@@ -9,6 +9,9 @@ class AppImagePath {
   static const String authBackground  = "assets/images/auth_backround.webp";
   static const String signUpBackgroundImage  = "assets/images/signUpBakground.webp";
   static const String mapImage  = "assets/images/map_image.png";
+  static const String mountainMap  = "assets/images/MountainMap.webp";
+  static const String normalMap  = "assets/images/normalMap.webp";
+  static const String roadMap  = "assets/images/RoadMap.webp";
 
 
 }

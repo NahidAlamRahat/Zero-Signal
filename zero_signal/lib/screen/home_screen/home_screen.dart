@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
-import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
-import 'package:zero_signal/widget/button_widget/button_widget.dart';
+import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
 import '../../constant/app_colors.dart';
-import '../../widget/text_button_widget/text_button_widget.dart';
-import '../button_nav_bar/button_nav_bar_screen.dart';
-import 'package:flutter/material.dart';
+import '../../routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,10 +18,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String selectedMapType = 'Default'; // State variable add করা হয়েছে
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // image appbar er niche jabe
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -31,25 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Search Box
             Expanded(
-            child: TextFieldWidget(
-              hintText: 'Search in ZeroSignal',
-              fieldHeight: 40,
-              prefixIcon: Icon(Icons.search,color: Colors.grey,),
+              child: TextFieldWidget(
+                hintText: 'Search in ZeroSignal',
+                fieldHeight: 40,
+                prefixIcon: Icon(Icons.search, color: Colors.grey),
+              ),
             ),
-            ),
-
             const SizedBox(width: 10),
 
             // Download Icon
-            Image.asset(AppIconPath.downloadIcon,width: 40, height: 40),
-
-
+            Image.asset(AppIconPath.downloadIcon, width: 40, height: 40),
             const SizedBox(width: 10),
 
             // Filtering Icon
             InkWell(
-              onTap: (){
-// Button এ tap করলে bottom sheet show হবে
+              onTap: () {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -58,13 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     initialChildSize: 0.7,
                     minChildSize: 0.5,
                     maxChildSize: 0.9,
-                    builder: (context, scrollController) => const FilterBottomSheet(),
+                    builder: (context, scrollController) =>
+                    const FilterBottomSheet(),
                   ),
                 );
               },
-                child: Image.asset(
-                AppIconPath.filtaringIcon,
-                width: 65, height: 65)),
+              child: Image.asset(AppIconPath.filtaringIcon,
+                  width: 65, height: 65),
+            ),
           ],
         ),
       ),
@@ -78,33 +76,39 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
+                // image: AssetImage(_getMapImageByType()), // Dynamic map image
                 image: AssetImage(AppImagePath.mapImage),
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
-          // Top-right icon (AppBar এর নিচে)
+          // Top-right icon (AppBar er niche)
           Positioned(
-            top: kToolbarHeight + 50.h, // AppBar এর height অনুযায়ী নিচে নামাও
-            right: 20, // ডান পাশে রাখতে
-            child: Image.asset(
-              AppIconPath.choiceMap,
-              width: 40,
-              height: 40,
+            top: kToolbarHeight + 50.h,
+            right: 20,
+            child: InkWell(
+              onTap: () {
+                // Proper way to show bottom sheet
+                _showMapTypeBottomSheet();
+              },
+              child: Image.asset(
+                AppIconPath.choiceMap,
+                width: 40,
+                height: 40,
+              ),
             ),
           ),
         ],
       ),
 
-
-      // Floating Buttons (bottom-right)
+      // Floating Buttons
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
             backgroundColor: Colors.transparent,
-            heroTag: "btn2",
+            heroTag: "btn1",
             onPressed: () {},
             child: Image.asset(AppIconPath.mapIcon),
           ),
@@ -112,226 +116,206 @@ class _HomeScreenState extends State<HomeScreen> {
           FloatingActionButton(
             backgroundColor: Colors.transparent,
             heroTag: "btn2",
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(AppRoutes.shareSpotScreen);
+            },
             child: Image.asset(AppIconPath.addIcon),
           ),
         ],
       ),
     );
   }
+
+  // Bottom sheet show করার method
+  void _showMapTypeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => MapTypeBottomSheet(
+        selectedMapType: selectedMapType,
+        onMapTypeSelected: (type) {
+          setState(() {
+            selectedMapType = type;
+          });
+          print('Selected Map Type: $type'); // Debug purpose
+        },
+      ),
+    );
+  }
+
+  // Map type অনুযায়ী image path return করার method
+  String _getMapImageByType() {
+    switch (selectedMapType) {
+      case 'Satellite':
+        return AppImagePath.roadMap;
+      case 'Terrain':
+        return AppImagePath.mountainMap;
+      case 'Default':
+      default:
+        return AppImagePath.normalMap;
+    }
+  }
 }
 
+class MapTypeBottomSheet extends StatefulWidget {
+  final String selectedMapType;
+  final Function(String) onMapTypeSelected;
 
-
-class FilterBottomSheet extends StatefulWidget {
-  const FilterBottomSheet({Key? key}) : super(key: key);
+  const MapTypeBottomSheet({
+    Key? key,
+    required this.selectedMapType,
+    required this.onMapTypeSelected,
+  }) : super(key: key);
 
   @override
-  State<FilterBottomSheet> createState() => _FilterBottomSheetState();
+  State<MapTypeBottomSheet> createState() => _MapTypeBottomSheetState();
 }
 
-class _FilterBottomSheetState extends State<FilterBottomSheet> {
-  // Track selected filters
-  Set<String> selectedFilters = {};
+class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
+  String selectedType = '';
 
-  // Filter categories and their options
-  final Map<String, List<String>> filterCategories = {
-    'Nature & Landscape': [
-      'View Points',
-      'Natural Pool',
-      'River',
-      'Cove',
-      'Waterfall',
-      'Monumental Trees',
-      'Natural Spring',
-      'Swamp',
-      'Thermal Water',
-    ],
-    'Overnight & Rest': [
-      'Verified Overnight Area',
-      'Wild Rest Area',
-      'Hostel',
-      'Camper Area',
-      'Shelter',
-      'Bivouac Area',
-      'Picnic Area',
-    ],
-    'Exploration & Adventure': [
-      'Mines',
-      'Caves',
-      'Hanging Bridges',
-      'Tunnels',
-      'Hidden Passage',
-    ],
-  };
+  @override
+  void initState() {
+    super.initState();
+    selectedType = widget.selectedMapType;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(top: 50), // Safe area থেকে দূরত্ব
+      padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: AppColor.creamBackgroundColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Header
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Filters',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Map Type',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
                 ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, size: 24),
-                  color: Colors.black,
-                ),
-              ],
-            ),
-          ),
-
-          // Filter content
-          Flexible(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Build each category
-                  ...filterCategories.entries.map((category) {
-                    return _buildFilterCategory(
-                      category.key,
-                      category.value,
-                    );
-                  }).toList(),
-
-                  const SizedBox(height: 20),
-                ],
               ),
-            ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.black54,
+                  size: 24,
+                ),
+              ),
+            ],
           ),
 
-          // Bottom buttons
+          const SizedBox(height: 30),
+
+          // Map Type Options
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildMapTypeOption(
+                'Default',
+                AppImagePath.normalMap,
+                Icons.map_outlined,
+              ),
+              _buildMapTypeOption(
+                'Satellite',
+                AppImagePath.roadMap,
+                Icons.satellite_alt,
+              ),
+              _buildMapTypeOption(
+                'Terrain',
+                AppImagePath.mountainMap,
+                Icons.terrain,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 30),
+
+          // Bottom indicator
           Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-
-                Expanded(
-                  child: ButtonWidget(
-                      buttonWidth: 10,
-                      backgroundColor: Colors.transparent,
-                      label: "Clear All",
-                      buttonHeight: 48,
-                      textColor: AppColor.yello,
-                      onPressed: () {
-                        setState(() {
-                          selectedFilters.clear();
-                        });
-                      }
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ButtonWidget(
-                    buttonWidth: 10,
-                    backgroundColor: AppColor.backgroundColor,
-                    label: "Show Results",
-                    buttonHeight: 48,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      // Handle show results
-                      Navigator.pop(context, selectedFilters);
-                    }
-                  ),
-                ),
-              ],
+            width: 60,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
+
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _buildFilterCategory(String title, List<String> options) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 12),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
+  Widget _buildMapTypeOption(String type, String imagePath, IconData fallbackIcon) {
+    final bool isSelected = selectedType == type;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedType = type;
+        });
+        widget.onMapTypeSelected(type);
+        Navigator.pop(context);
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected ? AppColor.backgroundColor : Colors.grey,
+                width: isSelected ? 3 : 3,
+              ),
+              color: AppColor.creamBackgroundColor,
             ),
-          ),
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: options.map((option) {
-            final isSelected = selectedFilters.contains(option);
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  if (isSelected) {
-                    selectedFilters.remove(option);
-                  } else {
-                    selectedFilters.add(option);
-                  }
-                });
-              },
-              child: Material(
-                elevation: isSelected ? 4.0 : 4.0, // Different elevation for selected/unselected
-                borderRadius: BorderRadius.circular(20),
-                shadowColor: Colors.black26,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColor.backgroundColor
-                        : AppColor.creamBackgroundColor,
-                    border: Border.all(
-                      color: isSelected
-                          ? AppColor.backgroundColor
-                          : Color(0xFFD6C8B0),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    option,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: isSelected
-                          ? Colors.white
-                          : Colors.black87,
-                    ),
-                  ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(11),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.red,
+                      child: Icon(
+                        fallbackIcon,
+                        size: 40,
+                        color: Colors.yellow,
+                      ),
+                    );
+                  },
                 ),
               ),
-            );
-          }).toList(),
-        ),
-      ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            type,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? Colors.black : Colors.black87,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
