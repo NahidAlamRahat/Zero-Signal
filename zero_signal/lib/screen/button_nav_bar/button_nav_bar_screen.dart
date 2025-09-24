@@ -64,7 +64,7 @@ class BottomNav extends StatelessWidget {
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
-                  tabBorderRadius: 8,
+                  tabBorderRadius: 40,
                   tabs: [
                     GButton(
                       text: 'Explore',

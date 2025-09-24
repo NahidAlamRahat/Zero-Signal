@@ -29,37 +29,38 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
-    return AppBar(
+    return  AppBar(
       systemOverlayStyle: SystemUiOverlayStyle.dark,
-      flexibleSpace: Container(color: backgroundColor ?? Colors.white),
-      //titleSpacing: showLeading ? 1 : -35,
+      backgroundColor: backgroundColor ?? Colors.white, // ✅ এখানেই দাও
+      elevation: 0, // transparent দিলে shadow এড়ানোর জন্য
       leading: showLeading
           ? (leading ??
-              IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon:  Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.black,
-                  size: 20,
-                ),
-              ))
+          IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.black,
+              size: 20,
+            ),
+          ))
           : Container(),
       titleSpacing: -4,
       actions: action != null ? [action!] : null,
-      title:textWidget ?? Text(
-        text ?? "",
-        style: TextStyle(
-          fontSize: ResponsiveUtils.width(20),
-          fontWeight: FontWeight.w500,
-          color: Colors.green.shade500,
-        ),
-      ),
+      title: textWidget ??
+          Text(
+            text ?? "",
+            style: TextStyle(
+              fontSize: ResponsiveUtils.width(20),
+              fontWeight: FontWeight.w500,
+              color: Colors.green.shade500,
+            ),
+          ),
       bottom: bottom,
-      // Add bottom to AppBar
-      centerTitle: centerTitle, // Set centerTitle in AppBar
+      centerTitle: centerTitle,
     );
+
   }
 
   @override

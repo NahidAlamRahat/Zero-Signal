@@ -16,5 +16,10 @@ class AppIconPath{
   static const String socialIcon = "assets/icon/socialIcon.png";
   static const String socialSelect = "assets/icon/socialSelect.png";
 
+  static const String addIcon = "assets/icon/addIcon.png";
+  static const String choiceMap = "assets/icon/choiceMap.webp";
+  static const String downloadIcon = "assets/icon/downloadIcon.png";
+  static const String mapIcon = "assets/icon/mapIcon.png";
+  static const String filtaringIcon = "assets/icon/filtaringIcon.webp";
 
 }
