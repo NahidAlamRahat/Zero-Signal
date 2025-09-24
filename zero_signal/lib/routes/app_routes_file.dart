@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:zero_signal/screen/home_screen/home_screen.dart';
 import '../screen/auth/choose_language_screen/choose_language_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
 import '../screen/auth/forgot_password_screen/forgot_password_screen.dart';
@@ -7,6 +8,7 @@ import '../screen/auth/reset_password_otp_verify_screen/reset_pass_otp_verify_sc
 import '../screen/auth/sign_in_and_registration_screen/sign_in_and_registration_screen.dart';
 import '../screen/auth/sign_in_screen/sign_in_screen.dart';
 import '../screen/auth/sign_up_screen/sign_up_screen.dart';
+import '../screen/button_nav_bar/button_nav_bar_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import 'all_bindings.dart';
@@ -75,6 +77,18 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () => SignUpScreen(),
   ),
 
+  GetPage(
+    name: AppRoutes.homeScreen,
+    binding: AppBindings(),
+    page: () => HomeScreen(),
+  ),
+
+
+  GetPage(
+    name: AppRoutes.bottomNav,
+    page: () => const BottomNav(),
+    // binding: GeneralBindings(),
+  ),
 
 
 ];

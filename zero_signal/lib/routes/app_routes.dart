@@ -16,7 +16,8 @@ class AppRoutes {
   static const resetPassOtpVerifyScreen = "/resetPassOtpVerifyScreen";
   static const createPasswordScreen = "/createPasswordScreen";
   static const signUpScreen = "/signUpScreen";
-
+  static const homeScreen = "/homeScreen";
+  static const bottomNav = "/bottomNav";
 
 
 

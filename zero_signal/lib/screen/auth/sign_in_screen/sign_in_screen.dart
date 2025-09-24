@@ -177,6 +177,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             label: AppStrings.signIn,
                             buttonHeight: 48,
                             textColor: Colors.white,
+                            onPressed: (){
+                              Get.toNamed(AppRoutes.bottomNav);
+                            },
                           ),
                         ),
                         const SizedBox(height: 20),

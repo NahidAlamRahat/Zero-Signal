@@ -110,11 +110,4 @@ class ForgotPasswordScreen extends StatelessWidget {
       ),
     );
   }
-
-  /// Background image widget
-  Widget _buildBackgroundImage() {
-    return Positioned.fill(
-      child: Image.asset(AppImagePath.signInBackgroundImage, fit: BoxFit.cover),
-    );
-  }
 }

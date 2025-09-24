@@ -96,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           SizedBox(height: 8.h),
                           TextFieldWidget(
-                            fieldHeight: 48,
+                            fieldHeight: 44,
                             textColor: Colors.white,
                             hintText: "Enter User Name",
                             textStyle: TextStyle(fontSize: 14.sp),
@@ -120,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           SizedBox(height: 8.h),
                           TextFieldWidget(
-                            fieldHeight: 48,
+                            fieldHeight: 44,
                             textColor: Colors.white,
                             hintText: "Enter Email",
                             textStyle: TextStyle(fontSize: 14.sp),
@@ -144,7 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           SizedBox(height: 8.h),
                           TextFieldWidget(
-                            fieldHeight: 48,
+                            fieldHeight: 44,
                             textColor: Colors.white,
                             hintText: "mm/ dd/ yyyy",
                             textStyle: TextStyle(fontSize: 14.sp),
@@ -173,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           SizedBox(height: 8.h),
                           TextFieldWidget(
-                            fieldHeight: 48,
+                            fieldHeight: 44,
                             textColor: Colors.white,
                             hintText: "Enter Password",
                             textStyle: TextStyle(fontSize: 14.sp),
@@ -252,6 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               textColor: Colors.white,
                               onPressed: () {
                                 // Handle registration
+                                 Get.back();
                               },
                             ),
                           ),

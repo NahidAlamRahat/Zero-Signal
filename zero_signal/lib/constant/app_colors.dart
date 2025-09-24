@@ -11,6 +11,8 @@ class AppColor {
   static const Color languageSelectedColor = Color.fromRGBO(245, 233, 223, 1);
   static const Color languageUnSelectedColor = Color.fromRGBO(255, 244, 233, 1);
   static const Color yello = Color(0xFFFFCB20);
+  static const Color buttonNavBackgroundColor = Color.fromRGBO(115,137, 126 ,1);
+
 
 
 }
