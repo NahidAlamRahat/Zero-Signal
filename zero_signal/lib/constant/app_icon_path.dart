@@ -21,5 +21,6 @@ class AppIconPath{
   static const String downloadIcon = "assets/icon/downloadIcon.png";
   static const String mapIcon = "assets/icon/mapIcon.png";
   static const String filtaringIcon = "assets/icon/filtaringIcon.webp";
-
+  static const String map = "assets/icon/map.png";
+  static const String myLocationIcon = "assets/icon/myLocationIcon.png";
 }

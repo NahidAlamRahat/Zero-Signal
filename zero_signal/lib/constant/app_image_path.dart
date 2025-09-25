@@ -12,6 +12,7 @@ class AppImagePath {
   static const String mountainMap  = "assets/images/MountainMap.webp";
   static const String normalMap  = "assets/images/normalMap.webp";
   static const String roadMap  = "assets/images/RoadMap.webp";
+  static const String mapImage2  = "assets/images/mapImage.webp";
 
 
 }

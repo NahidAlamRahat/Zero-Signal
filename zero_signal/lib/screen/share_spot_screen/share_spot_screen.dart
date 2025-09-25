@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/screen/share_spot_screen/widget/confirm_location_sheet.dart';
+import 'package:zero_signal/widget/button_widget/button_widget.dart';
 
 import '../../constant/app_colors.dart';
 
@@ -120,28 +125,52 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
             const SizedBox(height: 60),
 
             // Submit
-            _submitButton(),
           ],
+        ),
+      ),
+
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
+          child: ButtonWidget(
+            buttonWidth: double.infinity,
+            onPressed: () {},
+            label: 'Submit for Review',
+            backgroundColor: AppColor.backgroundColor,
+          ),
         ),
       ),
     );
   }
 
+
   // ------------------------------ helpers ------------------------------
+
+
+
+  void showConfirmLocationSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      // Background transparent rakha hocche
+      builder: (BuildContext context) {
+        return const ConfirmLocationSheet();
+      },
+    );
+  }
 
   Widget _uploadImagesBox() => Container(
     width: double.infinity,
     height: 120,
     decoration: BoxDecoration(
-      color: Color.fromRGBO(245, 233 ,223, 1),
+      color: Color.fromRGBO(245, 233, 223, 1),
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Color.fromRGBO(245, 233 ,223, 1)),
+      border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.camera_alt_outlined,
-            size: 40, color: Colors.grey.shade600),
+        Icon(Icons.camera_alt_outlined, size: 40, color: Colors.grey.shade600),
         const SizedBox(height: 8),
         Text(
           'Upload Images',
@@ -164,10 +193,10 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     width: double.infinity,
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     decoration: BoxDecoration(
-      color:Color.fromRGBO(245, 233 ,223, 1),
+      color: Color.fromRGBO(245, 233, 223, 1),
 
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color:Color.fromRGBO(245, 233 ,223, 1)),
+      border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,8 +205,12 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
           'Set Location',
           style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
         ),
-        Icon(Icons.location_on_outlined,
-            color: Colors.grey.shade600, size: 20),
+        InkWell(
+          onTap: () {
+            showConfirmLocationSheet(context);
+          },
+          child: Image.asset(AppIconPath.map, height: 16.h, width: 16.w),
+        ),
       ],
     ),
   );
@@ -186,9 +219,9 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     width: double.infinity,
     height: 80,
     decoration: BoxDecoration(
-      color: Color.fromRGBO(245, 233 ,223, 1),
+      color: Color.fromRGBO(245, 233, 223, 1),
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Color.fromRGBO(245, 233 ,223, 1)),
+      border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
     ),
     child: TextField(
       controller: descriptionController,
@@ -209,14 +242,14 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: Color.fromRGBO(245, 233 ,223, 1),
+        color: Color.fromRGBO(245, 233, 223, 1),
         borderRadius: isDropdownOpen
             ? const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        )
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              )
             : BorderRadius.circular(12),
-        border: Border.all(color: Color.fromRGBO(245, 233 ,223, 1)),
+        border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -240,7 +273,7 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     width: double.infinity,
     constraints: const BoxConstraints(maxHeight: 400),
     decoration: BoxDecoration(
-      color: Color.fromRGBO(245, 233 ,223, 1),
+      color: Color.fromRGBO(245, 233, 223, 1),
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(12),
         bottomRight: Radius.circular(12),
@@ -256,29 +289,6 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: _buildAllCategories(),
-      ),
-    ),
-  );
-
-  Widget _submitButton() => SizedBox(
-    width: double.infinity,
-    height: 52,
-    child: ElevatedButton(
-      onPressed: () {/* TODO: submit logic */},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF2D5A3D),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 0,
-      ),
-      child: const Text(
-        'Submit for Review',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     ),
   );
@@ -307,36 +317,40 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     return widgets;
   }
 
-  Widget _dropdownCheckboxTile(Map<String, dynamic> item, String category, int index) =>
-      GestureDetector(
-        onTap: () => setState(() {
-          allSpotTypes[category]![index]['selected'] =
+  Widget _dropdownCheckboxTile(
+    Map<String, dynamic> item,
+    String category,
+    int index,
+  ) => GestureDetector(
+    onTap: () => setState(() {
+      allSpotTypes[category]![index]['selected'] =
           !allSpotTypes[category]![index]['selected'];
-        }),
-        child: Row(
-          children: [
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: item['selected']
-                  ? const Icon(Icons.check,
-                  size: 16, color: Color(0xFF2D5A3D))
-                  : null,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                item['name'],
-                style: const TextStyle(fontSize: 15, color: Colors.black87),
-              ),
-            ),
-          ],
+    }),
+    child: Row(
+      children: [
+        Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade400, width: 1.5),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: item['selected']
+              ? const Icon(Icons.check, size: 16, color: Color(0xFF2D5A3D))
+              : null,
         ),
-      );
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            item['name'],
+            style: const TextStyle(fontSize: 15, color: Colors.black87),
+          ),
+        ),
+      ],
+    ),
+  );
+
+
 
   @override
   void dispose() {
