@@ -12,6 +12,7 @@ import '../screen/button_nav_bar/button_nav_bar_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
+import '../screen/sport_details/sport_details_screen.dart';
 import 'all_bindings.dart';
 import 'app_routes.dart';
 
@@ -97,5 +98,10 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     // binding: GeneralBindings(),
   ),
 
+  GetPage(
+    name: AppRoutes.spotDetailsScreen,
+    page: () => const SpotDetailsScreen(),
+    // binding: GeneralBindings(),
+  ),
 
 ];

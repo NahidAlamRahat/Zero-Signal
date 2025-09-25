@@ -19,6 +19,7 @@ class AppRoutes {
   static const homeScreen = "/homeScreen";
   static const bottomNav = "/bottomNav";
   static const shareSpotScreen = "/shareSpotScreen";
+  static const spotDetailsScreen = "/spotDetailsScreen";
 
 
 
