@@ -164,10 +164,46 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                     showDialog(
                                       context: context,
                                       builder: (context) => ShowCustomDialog(
+                                        backgroundColor: AppColor.creamBackgroundColor,
+                                        title: '@naturanauta',
+                                        titleStyle:TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16
+                                        ),
+                                        description: 'I’m a nature lover and outdoor enthusiast',
+                                        descriptionStyle: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
 
+                                        ),
                                         image: Image.asset(AppImagePath.profileImage),
                                         actionsLayout: ActionsLayout.column,
-                                        actions: [],
+                                        actions: [
+                                          Icon(Icons.thumb_up_outlined,size: 32,),
+
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 20,left: 20),
+                                            child: ButtonWidget(
+                                              backgroundColor: AppColor.backgroundColor,
+                                              label: 'View Profile',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              buttonHeight: 40,
+                                            ),
+                                          ),
+
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 20,left: 20),
+                                            child: ButtonWidget(
+                                              backgroundColor: Colors.transparent,
+                                              textColor: Colors.red,
+                                              label: 'Report user',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              buttonHeight: 40,
+                                            ),
+                                          )
+                                                                              ],
                                       ),
                                     );
                                   },
