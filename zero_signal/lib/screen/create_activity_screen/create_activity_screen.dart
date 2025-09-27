@@ -28,6 +28,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     return Scaffold(
       backgroundColor: AppColor.creamBackgroundColor,
       appBar: AppBar(
+
         backgroundColor: AppColor.creamBackgroundColor,
         elevation: 0,
         leading: IconButton(
@@ -49,18 +50,89 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextWidget(text: 'Title',fontWeight: FontWeight.bold,),
-            const SizedBox(height: 12),
+            TextWidget(text: 'Activity Title',fontWeight: FontWeight.w400,),
             TextFieldWidget(
-
+              hintText: 'Title of the activity',
               borderColor: Colors.transparent,
               backgroundColor: AppColor.lightGrayishOrange,
               borderRadius: 12,
             ),
+
             const SizedBox(height: 12),
-            TextWidget(text: 'Description',fontWeight: FontWeight.bold,),
-            const SizedBox(height: 12),
+
+            TextWidget(text: 'Date',fontWeight: FontWeight. w400,),
             TextFieldWidget(
+              customSuffixIcon: Icon(Icons.calendar_today,color: AppColor.backgroundColor),
+              hintText: 'dd/mm/yyyy',
+              borderColor: Colors.transparent,
+              backgroundColor: AppColor.lightGrayishOrange,
+              borderRadius: 12,
+            ),
+
+            const SizedBox(height: 12),
+
+            TextWidget(text: 'Do you want to do a route of your favorites?',
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+            CustomDropdown<String>(
+              items: [],
+              hint: 'Select route',
+              selectedValue: selectedValue,
+              borderRadius: 8,
+              onChanged: (value) {
+                selectedValue = value;
+              },
+              borderColor: AppColor.creamBackgroundColor,
+              dropdownColor: AppColor.lightGrayishOrange,
+              boxColor: AppColor.lightGrayishOrange,
+            ),
+
+            const SizedBox(height: 12),
+
+            TextWidget(text: 'Location',fontWeight: FontWeight. w400,),
+            TextFieldWidget(
+              customSuffixIcon: Icon(Icons.close,color: AppColor.backgroundColor),
+              prefixIcon: Icon(Icons.search,color: AppColor.yello,size: 18,),
+              hintText: 'Search place (Google Maps)',
+              borderColor: Colors.transparent,
+              backgroundColor: AppColor.lightGrayishOrange,
+              borderRadius: 12,
+            ),
+
+            SizedBox(height: 12,),
+
+            TextWidget(text: 'Activity Type',
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+            CustomDropdown<String>(
+              items: [
+                'Walking',
+                'Hiking',
+                'Running',
+                'Cycling',
+                'Motorcycle',
+                'SUV',
+                'Road Trip',
+              ],
+              hint: 'Select type',
+              selectedValue: selectedValue,
+              borderRadius: 8,
+              onChanged: (value) {
+
+                selectedValue = value;
+              },
+              borderColor: AppColor.creamBackgroundColor,
+              dropdownColor: AppColor.lightGrayishOrange,
+              boxColor: AppColor.lightGrayishOrange,
+            ),
+
+            SizedBox(height: 12,),
+
+            TextWidget(text: 'Description',fontWeight: FontWeight.w400,),
+            TextFieldWidget(
+              hintText: 'Description of the activity ',
               minLines: 4,
               maxLines: 5,
               borderColor: Colors.transparent,
@@ -68,114 +140,38 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
               borderRadius: 12,
             ),
 
-            const SizedBox(height: 24),
-            TextWidget(text: 'Difficulty',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-            CustomDropdown<String>(
-              items: [
-                'Walking',
-                'Hiking',
-                'Running',
-                'Cycling',
-                'Motorcycle',
-                'SUV',
-                'Road Trip',
-
-              ],
-              hint: 'Choose one',
-              selectedValue: selectedValue,
-              borderRadius: 8,
-              onChanged: (value) {
-
-                selectedValue = value;
-              },
-              borderColor: AppColor.creamBackgroundColor,
-              dropdownColor: AppColor.lightGrayishOrange,
-              boxColor: AppColor.lightGrayishOrange,
-            ),
-
-            const SizedBox(height: 12),
-            TextWidget(text: 'Activity',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-            CustomDropdown<String>(
-              items: [
-                'Walking',
-                'Hiking',
-                'Running',
-                'Cycling',
-                'Motorcycle',
-                'SUV',
-                'Road Trip',
-
-              ],
-              hint: 'Choose one',
-              selectedValue: selectedValue,
-              borderRadius: 8,
-              onChanged: (value) {
-
-                selectedValue = value;
-              },
-              borderColor: AppColor.creamBackgroundColor,
-              dropdownColor: AppColor.lightGrayishOrange,
-              boxColor: AppColor.lightGrayishOrange,
-            ),
-
-            SizedBox(height: 20.h,),
-
-            // Type of route Section
-            const Text(
-              'Type of route',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildRouteTypeChip('Circular'),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildRouteTypeChip('Round trip'),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 20.h,),
+            SizedBox(height: 12,),
 
             _uploadImagesBox(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: TextWidget(text: 'max 5 photos',
+                fontColor: AppColor.yello,
+                textAlignment: TextAlign.end,
+              ),
+            ),
+
+
+            SizedBox(height: 12.h,),
+
+            TextWidget(text: 'Maximum Number of Attendees',fontWeight: FontWeight.w400,),
+            TextFieldWidget(
+              hintText: 'Enter Number',
+              borderColor: Colors.transparent,
+              backgroundColor: AppColor.lightGrayishOrange,
+              borderRadius: 12,
+            ),
+
+
+
             SizedBox(height: 30.h,),
 
 
-            Row(
-              children: [
-                Expanded(
-                  child: ButtonWidget(
-                    backgroundColor: Color.fromRGBO(255, 222, 211, 1),
-                    buttonHeight: 48,
-                    icon: Image.asset(AppIconPath.deleteIcon,width: 20,height: 20,),
-                    label: 'Delete',
-                    textColor: Colors.red,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ButtonWidget(
-                    backgroundColor: AppColor.backgroundColor,
-                    icon: Image.asset(AppIconPath.sendIcon,width: 20,height: 20,),
-                    buttonHeight: 48,
-                    label: 'Submit',
-                  ),
-                ),
-              ],
-            ),
+
+            ButtonWidget(
+              backgroundColor: AppColor.backgroundColor,
+              label: 'Publish',
+            )
 
           ],
         ),
