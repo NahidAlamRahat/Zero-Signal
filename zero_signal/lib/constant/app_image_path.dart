@@ -15,6 +15,7 @@ class AppImagePath {
   static const String mapImage2  = "assets/images/mapImage.webp";
   static const String viewImage  = "assets/images/viewImage.webp";
   static const String profileImage  = "assets/images/profileImage.png";
+  static const String routeImage  = "assets/images/routeImage.webp";
 
 
 }

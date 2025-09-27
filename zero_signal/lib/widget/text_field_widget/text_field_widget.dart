@@ -8,6 +8,7 @@ class TextFieldWidget extends StatefulWidget {
   final bool? suffixIcon; // For password toggle
   final TextInputType? keyboardType;
   final int maxLines;
+  final int? minLines; // <-- বাহির থেকে minLines দেওয়া যাবে
   final VoidCallback? onTapSuffix;
   final Function(String submit)? onFieldSubmitted;
 
@@ -36,6 +37,7 @@ class TextFieldWidget extends StatefulWidget {
     this.suffixIcon,
     this.keyboardType,
     this.maxLines = 1,
+    this.minLines, // <-- Constructor এ যুক্ত করা হলো
     this.onTapSuffix,
     this.onFieldSubmitted,
     this.borderColor = const Color(0xFF181818),
@@ -70,7 +72,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
     return Container(
-      height: widget.fieldHeight,
+      // Single line হলে fixed height, multi-line হলে auto height
+      height: widget.maxLines == 1 ? widget.fieldHeight : null,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -82,6 +85,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
+        minLines: widget.minLines, // <-- এখন কাজ করবে
         style: widget.textStyle ??
             TextStyle(
               color: widget.textColor,
