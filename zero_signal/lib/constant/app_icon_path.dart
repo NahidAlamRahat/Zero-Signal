@@ -23,4 +23,12 @@ class AppIconPath{
   static const String filtaringIcon = "assets/icon/filtaringIcon.webp";
   static const String map = "assets/icon/map.png";
   static const String myLocationIcon = "assets/icon/myLocationIcon.png";
+  static const String sendIcon = "assets/icon/send.png";
+  static const String deleteIcon = "assets/icon/deleteIcon.png";
+
+
+
+
+
+
 }

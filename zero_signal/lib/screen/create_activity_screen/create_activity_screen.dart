@@ -8,14 +8,14 @@ import '../../constant/app_colors.dart';
 import '../../widget/button_widget/button_widget.dart';
 import '../../widget/custom_dropdown.dart';
 
-class SaveRouteScreen extends StatefulWidget {
-  const SaveRouteScreen({super.key});
+class CreateActivityScreen extends StatefulWidget {
+  const CreateActivityScreen({super.key});
 
   @override
-  _SaveRouteScreenState createState() => _SaveRouteScreenState();
+  _CreateActivityScreenState createState() => _CreateActivityScreenState();
 }
 
-class _SaveRouteScreenState extends State<SaveRouteScreen> {
+class _CreateActivityScreenState extends State<CreateActivityScreen> {
   bool isDropdownOpen = false;
   TextEditingController descriptionController = TextEditingController();
   String selectedRouteType = 'Round trip';
@@ -35,7 +35,7 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Save Route',
+          'Create Activity',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -93,7 +93,7 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
               },
               borderColor: AppColor.creamBackgroundColor,
               dropdownColor: AppColor.lightGrayishOrange,
-               boxColor: AppColor.lightGrayishOrange,
+              boxColor: AppColor.lightGrayishOrange,
             ),
 
             const SizedBox(height: 12),
@@ -123,7 +123,7 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
               dropdownColor: AppColor.lightGrayishOrange,
               boxColor: AppColor.lightGrayishOrange,
             ),
-            
+
             SizedBox(height: 20.h,),
 
             // Type of route Section

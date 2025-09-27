@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../utils/app_log/app_log.dart';
-import '../../filters_screen/filters_screen.dart';
+import '../../create_activity_screen/create_activity_screen.dart';
 import '../../home_screen/home_screen.dart';
-import '../../map_routes_screen/map_routes_screen.dart';
 import '../../save_route/save_route_screen.dart';
-import '../../sport_details/sport_details_screen.dart';
-import '../../update_information_screen/update_information_screen.dart';
 
 
 
@@ -17,7 +14,7 @@ class UserBottomNavController extends GetxController {
 
   final List<Widget> widgetOptions = [
     const HomeScreen(),
-    FiltersScreen(),
+    CreateActivityScreen(),
     const SaveRouteScreen(),
     const HomeScreen(),
 
