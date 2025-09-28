@@ -138,7 +138,7 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
           child: ButtonWidget(
             buttonWidth: double.infinity,
             onPressed: () {
-              Get.toNamed(AppRoutes.spotDetailsScreen);
+              Get.back();
             },
             label: 'Submit for Review',
             backgroundColor: AppColor.backgroundColor,
@@ -157,7 +157,6 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      // Background transparent rakha hocche
       builder: (BuildContext context) {
         return const ConfirmLocationSheet();
       },

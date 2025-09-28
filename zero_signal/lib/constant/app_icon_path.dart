@@ -26,6 +26,7 @@ class AppIconPath{
   static const String sendIcon = "assets/icon/send.png";
   static const String deleteIcon = "assets/icon/deleteIcon.png";
   static const String chatIcon = "assets/icon/chatIcon.png";
+  static const String yelloDownloadIcon = "assets/icon/yelloDownloadIcon.png";
 
 
 

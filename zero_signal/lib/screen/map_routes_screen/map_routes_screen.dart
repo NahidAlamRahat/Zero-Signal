@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
-import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/screen/map_routes_screen/widget/route_card_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
@@ -19,7 +17,7 @@ class MapRoutesScreen extends StatefulWidget {
 }
 
 class _MapRoutesScreenState extends State<MapRoutesScreen> {
-  String selectedMapType = 'Default'; // State variable add করা হয়েছে
+  String selectedMapType = 'Default';
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +43,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             // Filtering Icon
             InkWell(
               onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => DraggableScrollableSheet(
-                    initialChildSize: 0.7,
-                    minChildSize: 0.5,
-                    maxChildSize: 0.9,
-                    builder: (context, scrollController) =>
-                    const FilterBottomSheet(),
-                  ),
-                );
+               Get.toNamed(AppRoutes.filtersScreen);
               },
               child: Image.asset(AppIconPath.filtaringIcon,
                   width: 65, height: 65),
@@ -125,7 +112,11 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                 ],
               ),),
 
-          Positioned(bottom: 10,left:0,right:0,child: RouteCard(),)
+          Positioned(bottom: 10,left:0,right:0,child: GestureDetector(
+            onTap: (){
+              Get.toNamed(AppRoutes.saveRouteDetailsScreen);
+            },
+              child: RouteCard()),)
         ],
       ),
 
@@ -133,7 +124,6 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
     );
   }
 
-  // Bottom sheet show করার method
   void _showMapTypeBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -151,7 +141,6 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
     );
   }
 
-  // Map type অনুযায়ী image path return করার method
   String _getMapImageByType() {
     switch (selectedMapType) {
       case 'Satellite':
@@ -191,7 +180,7 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 50), // Safe area থেকে দূরত্ব
+      margin: const EdgeInsets.only(top: 50),
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: AppColor.creamBackgroundColor,

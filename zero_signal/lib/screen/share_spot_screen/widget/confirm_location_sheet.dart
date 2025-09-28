@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../../constant/app_icon_path.dart';
 import '../../../constant/app_image_path.dart';
@@ -9,9 +12,8 @@ class ConfirmLocationSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Sheet er design
       decoration: const BoxDecoration(
-        color: Color(0xFFF0EBE6), // Background color
+        color: Color(0xFFF0EBE6),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.0),
           topRight: Radius.circular(20.0),
@@ -20,17 +22,16 @@ class ConfirmLocationSheet extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Content onujayi choto thakbe
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // 1. Header (Title and Close button)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(width: 40), // Ektu space rakhar jonno
-                const Text(
+                const SizedBox(width: 40),
+                 Text(
                   'Confirm',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF333333),
                   ),
@@ -51,7 +52,6 @@ class ConfirmLocationSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15.0),
                   child: Image.asset(
                     AppImagePath.mapImage2,
-                    // <-- Shure kore 'assets/map_image.png' name ei image ta add korun
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -104,9 +104,8 @@ class ConfirmLocationSheet extends StatelessWidget {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Confirm location er logic ekhane likhben
                         print('Location Confirmed!');
-                        Navigator.pop(context);
+                        Get.back();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2D5A3D),
@@ -116,11 +115,11 @@ class ConfirmLocationSheet extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text(
+                      child:  Text(
                         'Confirm location',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

@@ -21,6 +21,10 @@ class AppRoutes {
   static const shareSpotScreen = "/shareSpotScreen";
   static const spotDetailsScreen = "/spotDetailsScreen";
 
+  static const filtersScreen = "/filtersScreen";
+  static const saveRouteDetailsScreen = "/saveRouteDetailsScreen";
+  static const viewProfileScreen = "/viewProfileScreen";
+  static const fullMapScreen = "/fullMapScreen";
 
 
 

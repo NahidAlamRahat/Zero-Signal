@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String selectedMapType = 'Default'; // State variable add করা হয়েছে
+  String selectedMapType = 'Default';
 
   @override
   Widget build(BuildContext context) {

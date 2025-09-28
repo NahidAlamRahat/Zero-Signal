@@ -19,6 +19,8 @@ class SignInAndRegistrationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: double.infinity,
+        width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AppImagePath.signInBackgroundImage),

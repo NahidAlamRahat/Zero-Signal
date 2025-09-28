@@ -9,10 +9,14 @@ import '../screen/auth/sign_in_and_registration_screen/sign_in_and_registration_
 import '../screen/auth/sign_in_screen/sign_in_screen.dart';
 import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
+import '../screen/filters_screen/filters_screen.dart';
+import '../screen/full_map_screen/full_map_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
+import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
+import '../screen/view_profile_screen/view_profile_screen.dart';
 import 'all_bindings.dart';
 import 'app_routes.dart';
 
@@ -103,5 +107,31 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () => const SpotDetailsScreen(),
     // binding: GeneralBindings(),
   ),
+
+  GetPage(
+    name: AppRoutes.filtersScreen,
+    page: () => const FiltersScreen(),
+    // binding: GeneralBindings(),
+  ),
+
+  GetPage(
+    name: AppRoutes.saveRouteDetailsScreen,
+    page: () => const SaveRouteDetailsScreen(),
+    // binding: GeneralBindings(),
+  ),
+
+  GetPage(
+    name: AppRoutes.viewProfileScreen,
+    page: () => const ViewProfileScreen(),
+    // binding: GeneralBindings(),
+  ),
+
+  GetPage(
+    name: AppRoutes.fullMapScreen,
+    page: () => const FullMapScreen(),
+    // binding: GeneralBindings(),
+  ),
+
+
 
 ];

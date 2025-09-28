@@ -34,7 +34,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Stack( // Stack ব্যবহার করুন
+          child: Stack(
             children: [
               // Main content in center
               Center(

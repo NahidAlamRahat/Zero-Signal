@@ -21,6 +21,7 @@ class AppImagePath {
   static const String image3  = "assets/images/image3.webp";
   static const String image4  = "assets/images/image4.webp";
   static const String sunImage  = "assets/images/sunImage.png";
+  static const String mapImage3  = "assets/images/mapImage3.webp";
 
 
 }
