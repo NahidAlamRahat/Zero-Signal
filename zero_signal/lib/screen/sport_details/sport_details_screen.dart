@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
@@ -7,6 +9,7 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import '../../routes/app_routes.dart';
 import '../../widget/showCustomDialog.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
@@ -24,7 +27,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     {
       'name': 'Charolette Hanlin',
       'date': 'Feb 3, 2025',
-      'comment': 'Chill atmosphere, friendly crowd. Exactly the relaxed spot we were looking for on a Friday night. Loved it. 😍😍',
+      'comment':
+          'Chill atmosphere, friendly crowd. Exactly the relaxed spot we were looking for on a Friday night. Loved it. 😍😍',
       'avatar': Colors.blue[100],
       'avatarIcon': Icons.person,
       'avatarIconColor': Colors.blue,
@@ -32,7 +36,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     {
       'name': 'Olivia Gabriella Hernandez',
       'date': 'Apr 21, 2025',
-      'comment': 'Good music, but the service was slow. Maybe an off night? The overall vibe was still positive though. 😊😊',
+      'comment':
+          'Good music, but the service was slow. Maybe an off night? The overall vibe was still positive though. 😊😊',
       'avatar': Colors.green[100],
       'avatarIcon': Icons.person,
       'avatarIconColor': Colors.green,
@@ -40,22 +45,22 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     {
       'name': 'Emma Victoria Lewis',
       'date': 'Mar 13, 2025',
-      'comment': 'Incredible vibes and even better cocktails. A bit crowded but that just adds to the fun. Highly recommend! 😍😍',
+      'comment':
+          'Incredible vibes and even better cocktails. A bit crowded but that just adds to the fun. Highly recommend! 😍😍',
       'avatar': Colors.orange[100],
       'avatarIcon': Icons.person,
       'avatarIconColor': Colors.orange,
     },
-
 
     {
       'name': 'Emma Victoria Lewis',
       'date': 'Mar 13, 2025',
-      'comment': 'Incredible vibes and even better cocktails. A bit crowded but that just adds to the fun. Highly recommend! 😍😍',
+      'comment':
+          'Incredible vibes and even better cocktails. A bit crowded but that just adds to the fun. Highly recommend! 😍😍',
       'avatar': Colors.orange[100],
       'avatarIcon': Icons.person,
       'avatarIconColor': Colors.orange,
     },
-
   ];
 
   @override
@@ -95,9 +100,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
                 child: Image.asset(
                   AppImagePath.viewImage,
                   fit: BoxFit.cover,
@@ -147,9 +150,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                               Text(
                                 'Espat, Catalonia',
                                 style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400),
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ],
                           ),
@@ -161,30 +165,45 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                               Expanded(
                                 child: InkWell(
                                   onTap: () {
+
                                     showDialog(
+
                                       context: context,
                                       builder: (context) => ShowCustomDialog(
-                                        backgroundColor: AppColor.creamBackgroundColor,
+                                        backgroundColor:
+                                            AppColor.creamBackgroundColor,
                                         title: '@naturanauta',
-                                        titleStyle:TextStyle(
+                                        titleStyle: TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 16
+                                          fontSize: 16,
                                         ),
-                                        description: 'I’m a nature lover and outdoor enthusiast',
+                                        description:
+                                            'I’m a nature lover and outdoor enthusiast',
                                         descriptionStyle: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400,
-
                                         ),
-                                        image: Image.asset(AppImagePath.profileImage),
+                                        image: Image.asset(
+                                          AppImagePath.profileImage,
+                                        ),
                                         actionsLayout: ActionsLayout.column,
                                         actions: [
-                                          Icon(Icons.thumb_up_outlined,size: 32,),
+                                          Icon(
+                                            Icons.thumb_up_outlined,
+                                            size: 32,
+                                          ),
 
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 20,left: 20),
+                                            padding: const EdgeInsets.only(
+                                              right: 20,
+                                              left: 20,
+                                            ),
                                             child: ButtonWidget(
-                                              backgroundColor: AppColor.backgroundColor,
+                                              onPressed: (){
+                                                Get.toNamed(AppRoutes.viewProfileScreen);
+                                              },
+                                              backgroundColor:
+                                                  AppColor.backgroundColor,
                                               label: 'View Profile',
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -193,19 +212,29 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                           ),
 
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 20,left: 20),
+                                            padding: const EdgeInsets.only(
+                                              right: 20,
+                                              left: 20,
+                                            ),
                                             child: ButtonWidget(
-                                              backgroundColor: Colors.transparent,
+                                              onPressed: () {
+                                                Get.back();
+                                                showReport(context);
+                                              },
+                                              backgroundColor:
+                                                  Colors.transparent,
                                               textColor: Colors.red,
                                               label: 'Report user',
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                               buttonHeight: 40,
                                             ),
-                                          )
-                                                                              ],
+                                          ),
+                                        ],
                                       ),
                                     );
+
+
                                   },
                                   child: Row(
                                     children: [
@@ -222,20 +251,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                       const Text('@naturanauta'),
                                     ],
                                   ),
-                                )
-
+                                ),
                               ),
                               const SizedBox(width: 8),
-                              Icon(
-                                Icons.star,
-                                color: AppColor.yello,
-                              ),
+                              Icon(Icons.star, color: AppColor.yello),
                               const SizedBox(width: 8),
                               TextWidget(
                                 text: '(17 lugares / 6 plane)',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
-                              )
+                              ),
                             ],
                           ),
 
@@ -245,34 +270,47 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                           Row(
                             children: [
                               Expanded(
-                                  child: ButtonWidget(
-                                    backgroundColor: AppColor.backgroundColor,
-                                    label: 'How To Arrive',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    buttonHeight: 48,
-                                    onPressed: () {},
-                                  )),
+                                child: ButtonWidget(
+                                  backgroundColor: AppColor.backgroundColor,
+                                  label: 'How To Arrive',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  buttonHeight: 48,
+                                  onPressed: () {},
+                                ),
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
-                                  child: ButtonWidget(
-                                    backgroundColor: Color.fromRGBO(245, 233, 223, 1),
-                                    label: 'Add Favorites',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: Colors.black,
-                                    onPressed: () {},
-                                  )),
+                                child: ButtonWidget(
+                                  backgroundColor: Color.fromRGBO(
+                                    245,
+                                    233,
+                                    223,
+                                    1,
+                                  ),
+                                  label: 'Add Favorites',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: Colors.black,
+                                  onPressed: () {},
+                                ),
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
-                                  child: ButtonWidget(
-                                    backgroundColor: Color.fromRGBO(245, 233, 223, 1),
-                                    label: 'Assist',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: Colors.black,
-                                    onPressed: () {},
-                                  )),
+                                child: ButtonWidget(
+                                  backgroundColor: Color.fromRGBO(
+                                    245,
+                                    233,
+                                    223,
+                                    1,
+                                  ),
+                                  label: 'Assist',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: Colors.black,
+                                  onPressed: () {},
+                                ),
+                              ),
                             ],
                           ),
 
@@ -289,7 +327,9 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                             child: const Text(
                               '5 user will visit this place on Sunday',
                               style: TextStyle(
-                                  color: Color(0xFF2C2C2C), fontSize: 14),
+                                color: Color(0xFF2C2C2C),
+                                fontSize: 14,
+                              ),
                             ),
                           ),
 
@@ -343,7 +383,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                   fontColor: AppColor.backgroundColor,
                                   underline: true,
                                 ),
-                              )
+                              ),
                             ],
                           ),
 
@@ -374,7 +414,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                       ),
                                       const SizedBox(width: 12),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             comment['name'],
@@ -400,7 +441,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16,
                                     textAlignment: TextAlign.start,
-                                  )
+                                  ),
                                 ],
                               ),
                             );
@@ -458,12 +499,52 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       ),
     );
   }
+
+  void showReport(context) {
+    showDialog(
+      context: context,
+      builder: (context) => ShowCustomDialog(
+        backgroundColor: AppColor.creamBackgroundColor,
+        title: 'Report User',
+        titleStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+        description: 'Your report is anonymous. Please provide details about the issue to help our moderation team.',
+        descriptionStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+
+        actionsLayout: ActionsLayout.column,
+        actions: [
+          Align(child: TextWidget(text: 'Reason for reporting'),alignment: Alignment.bottomLeft,),
+
+          TextFieldWidget(
+            backgroundColor: AppColor.lightGrayishOrange,
+            hintText: 'e.g., inappropriate content, spam, harassment.....',
+            hintStyle: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ) ,
+            borderRadius: 8,
+            borderColor: AppColor.creamBackgroundColor,
+            maxLines: 5,
+            minLines: 4,
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(right: 20, left: 20),
+            child: ButtonWidget(
+              onPressed: () {},
+              backgroundColor: Colors.transparent,
+              textColor: Colors.red,
+              label: 'Report ',
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              buttonHeight: 40,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+
 }
-
-
-
-
-
-
-
-

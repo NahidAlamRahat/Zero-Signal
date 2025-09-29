@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 enum ActionsLayout { row, column }
 
 class ShowCustomDialog extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
   final double iconSize;
   final Color iconColor;
 
   // ✅ নতুন property → icon এর জায়গায় চাইলে image ব্যবহার করা যাবে
   final Widget? image;
 
-  final String title;
+  final String? title;
   final TextStyle? titleStyle;
 
   final String? description;
@@ -32,11 +32,11 @@ class ShowCustomDialog extends StatelessWidget {
 
   const ShowCustomDialog({
     super.key,
-    this.icon = Icons.lock_outline,
+    this.icon ,
     this.iconSize = 90,
     this.iconColor = Colors.black87,
     this.image, // ✅ নতুন যোগ হলো
-    this.title = "enter your title",
+    this.title ,
     this.titleStyle,
     this.description,
     this.descriptionStyle,
@@ -79,7 +79,7 @@ class ShowCustomDialog extends StatelessWidget {
 
             // Title
             Text(
-              title,
+              title ?? '',
               style: titleStyle ??
                   const TextStyle(
                     fontSize: 20,

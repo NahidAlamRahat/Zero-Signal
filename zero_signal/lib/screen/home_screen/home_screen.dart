@@ -6,6 +6,7 @@ import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
 import '../../routes/app_routes.dart';
@@ -99,6 +100,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
+          Positioned(
+            top: 265.h,
+            right: 92.w,
+            child: InkWell(
+              onTap: () {
+                // Proper way to show bottom sheet
+                _showMapTypeBottomSheet();
+              },
+              child: GestureDetector(
+                onTap: (){
+                  Get.toNamed(AppRoutes.spotDetailsScreen);
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                ),
+              )
+            ),
+          ),
+
         ],
       ),
 
