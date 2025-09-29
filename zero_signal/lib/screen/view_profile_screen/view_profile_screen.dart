@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
+
+import '../../constant/app_colors.dart';
 
 class ViewProfileScreen extends StatelessWidget {
   const ViewProfileScreen({super.key});
@@ -8,6 +11,10 @@ class ViewProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppbarWidget(
+        backgroundColor:  AppColor.creamBackgroundColor,
+
+      ),
       backgroundColor: const Color(0xFFFFF4E9),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 46),

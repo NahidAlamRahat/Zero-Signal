@@ -9,6 +9,7 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import '../../report_button_sheet/report_button_sheet.dart';
 import '../../routes/app_routes.dart';
 import '../../widget/showCustomDialog.dart';
 
@@ -200,6 +201,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                             ),
                                             child: ButtonWidget(
                                               onPressed: (){
+                                                Get.back();
                                                 Get.toNamed(AppRoutes.viewProfileScreen);
                                               },
                                               backgroundColor:
@@ -503,44 +505,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   void showReport(context) {
     showDialog(
       context: context,
-      builder: (context) => ShowCustomDialog(
-        backgroundColor: AppColor.creamBackgroundColor,
-        title: 'Report User',
-        titleStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-        description: 'Your report is anonymous. Please provide details about the issue to help our moderation team.',
-        descriptionStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-
-        actionsLayout: ActionsLayout.column,
-        actions: [
-          Align(child: TextWidget(text: 'Reason for reporting'),alignment: Alignment.bottomLeft,),
-
-          TextFieldWidget(
-            backgroundColor: AppColor.lightGrayishOrange,
-            hintText: 'e.g., inappropriate content, spam, harassment.....',
-            hintStyle: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ) ,
-            borderRadius: 8,
-            borderColor: AppColor.creamBackgroundColor,
-            maxLines: 5,
-            minLines: 4,
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20),
-            child: ButtonWidget(
-              onPressed: () {},
-              backgroundColor: Colors.transparent,
-              textColor: Colors.red,
-              label: 'Report ',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              buttonHeight: 40,
-            ),
-          ),
-        ],
-      ),
+      builder: (context) => ReportActivityBottomSheet(),
     );
   }
 
