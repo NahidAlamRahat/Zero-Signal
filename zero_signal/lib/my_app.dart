@@ -14,23 +14,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
+
     AppSize.size = MediaQuery.of(context).size;
 
     return ScreenUtilInit(
-        designSize: const Size(430, 932),
-        ensureScreenSize: true,
-        minTextAdapt: true,
-        splitScreenMode: true,
-      builder: (_, child) {
+      designSize: const Size(375, 882), // Your design size
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        AppSize.size = MediaQuery.of(context).size;
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Zero Signal',
-          initialRoute: AppRoutes.splashScreen,
+          initialRoute: AppRoutes.socialScreen,
+
           getPages: appRootRoutesFile,
           enableLog: true,
           initialBinding: AppBindings(),
         );
       }
+
     );
   }
 }

@@ -11,6 +11,10 @@ import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
+
+import 'package:zero_signal/screen/choose_language_screen/choose_language_screen.dart';
+import 'package:zero_signal/screen/sign_in_and_registration_screen/sign_in_and_registration_screen.dart';
+import 'package:zero_signal/screen/social_screen/social_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
@@ -134,4 +138,10 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
 
 
+  //Social Screen
+  GetPage(
+    name: AppRoutes.socialScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const SocialScreen(),
+  ),
 ];

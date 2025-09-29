@@ -1,5 +1,4 @@
-class AppIconPath{
-
+class AppIconPath {
   AppIconPath._();
 
   //  Images Path
@@ -32,5 +31,14 @@ class AppIconPath{
 
 
 
-
+  //Social Screen Icons
+  static const String addIcon = "assets/icon/add.png";
+  static const String searchIcon = "assets/icon/search.png";
+  static const String taskIcon = "assets/icon/task.png";
+  static const String shareIcon = "assets/icon/share.png";
+  static const String batchIcon = "assets/icon/batch.png";
+  static const String locationIcon = "assets/icon/location.png";
+  static const String groupIcon = "assets/icon/group.png";
+  static const String saveIcon = "assets/icon/save.png";
+  static const String addPeopleIcon = "assets/icon/add_people.png";
 }
