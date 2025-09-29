@@ -1,44 +1,60 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GlassEffact extends StatelessWidget {
-  final double height;
-  final double width;
-  final double borderRadius;
-  final Color backgroundColor;
-  final Color borderColor;
-  final double borderWidth;
   final Widget? child;
-
-  const GlassEffact({
-    this.child,
-    super.key,
-    this.height = 371,
-    this.width = 390,
-    this.borderRadius = 40,
-    this.backgroundColor = const Color.fromRGBO(255, 255, 255, 0.2),
-    this.borderColor = const Color.fromRGBO(255, 255, 255, 0.3),
-    this.borderWidth = 1.5,
-  });
+  final double? width;
+  final double? height;
+  const GlassEffact({super.key, this.width, this.height, this.child});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25.0),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 3.0,
+          sigmaY: 3.0,
+        ), // Minimal blur for subtle glass effect
         child: Container(
-           height: height,
           width: width,
+          height: height,
           decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor,
-              width: borderWidth,
+            // Higher transparency for brighter effect
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(25.0),
+            // Brighter border - white on left and top only
+            border: Border(
+              left: BorderSide(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 1.0,
+              ),
+              top: BorderSide(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 1.0,
+              ),
+              right: BorderSide(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 0.25,
+              ),
+              bottom: BorderSide(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 0.25,
+              ),
             ),
+            // Minimal shadow for lighter appearance
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-           child: child,
+          child: Center(child: child),
         ),
       ),
     );
   }
 }
+

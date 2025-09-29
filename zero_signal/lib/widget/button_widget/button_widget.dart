@@ -19,6 +19,8 @@ class ButtonWidget extends StatelessWidget {
   final bool isLoading;
   final double opacity;
   final double borderWidth;
+  final double iconSpacing; // <-- new spacing between text & icon
+  final bool iconOnRight;   // <-- option to put icon on right or left
 
   const ButtonWidget({
     super.key,
@@ -38,8 +40,9 @@ class ButtonWidget extends StatelessWidget {
     this.fontWeight,
     this.isLoading = false,
     this.opacity = 1.0,
-    this.borderWidth=0.1,
-
+    this.borderWidth = 0.1,
+    this.iconSpacing = 6.0,
+    this.iconOnRight = false,
   });
 
   @override
@@ -47,7 +50,9 @@ class ButtonWidget extends StatelessWidget {
     ResponsiveUtils.initialize(context);
 
     Color? finalBackgroundColor =
-    (backgroundColor == Colors.transparent) ? null : (backgroundColor ?? Colors.green.shade500).withOpacity(opacity);
+    (backgroundColor == Colors.transparent)
+        ? null
+        : (backgroundColor ?? Colors.green.shade500).withOpacity(opacity);
 
     return Container(
       height: ResponsiveUtils.height(buttonHeight),
@@ -81,7 +86,37 @@ class ButtonWidget extends StatelessWidget {
             color: Colors.white,
           ),
         )
-            : label != null
+            : (label != null && icon != null)
+            ? Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: iconOnRight
+              ? [
+            Text(
+              label!,
+              style: TextStyle(
+                color: textColor,
+                fontSize: ResponsiveUtils.width(fontSize),
+                fontWeight: fontWeight ?? FontWeight.w500,
+              ),
+            ),
+            SizedBox(width: iconSpacing),
+            icon!,
+          ]
+              : [
+            icon!,
+            SizedBox(width: iconSpacing),
+            Text(
+              label!,
+              style: TextStyle(
+                color: textColor,
+                fontSize: ResponsiveUtils.width(fontSize),
+                fontWeight: fontWeight ?? FontWeight.w500,
+              ),
+            ),
+          ],
+        )
+            : (label != null)
             ? Text(
           label!,
           style: TextStyle(
@@ -90,9 +125,7 @@ class ButtonWidget extends StatelessWidget {
             fontWeight: fontWeight ?? FontWeight.w500,
           ),
         )
-            : (icon != null
-            ? SizedBox(child: icon)
-            : const SizedBox()),
+            : (icon ?? const SizedBox()),
       ),
     );
   }

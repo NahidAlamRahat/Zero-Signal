@@ -8,6 +8,7 @@ class TextFieldWidget extends StatefulWidget {
   final bool? suffixIcon; // For password toggle
   final TextInputType? keyboardType;
   final int maxLines;
+  final int? minLines; // <-- বাহির থেকে minLines দেওয়া যাবে
   final VoidCallback? onTapSuffix;
   final Function(String submit)? onFieldSubmitted;
 
@@ -21,7 +22,12 @@ class TextFieldWidget extends StatefulWidget {
 
   final Color backgroundColor;
   final Color hintColor; // Hint text color
-  final Color textColor; // <-- নতুন field যোগ করা হলো
+  final Color textColor;
+
+  final double fieldHeight;
+  final TextStyle? hintStyle; // <-- বাহির থেকে hintStyle কাস্টমাইজ করা যাবে
+  final TextStyle? textStyle; // <-- বাহির থেকে textStyle কাস্টমাইজ করা যাবে
+  final TextStyle? errorStyle; // <-- বাহির থেকে errorStyle কাস্টমাইজ করা যাবে
 
   const TextFieldWidget({
     super.key,
@@ -31,6 +37,7 @@ class TextFieldWidget extends StatefulWidget {
     this.suffixIcon,
     this.keyboardType,
     this.maxLines = 1,
+    this.minLines, // <-- Constructor এ যুক্ত করা হলো
     this.onTapSuffix,
     this.onFieldSubmitted,
     this.borderColor = const Color(0xFF181818),
@@ -41,7 +48,11 @@ class TextFieldWidget extends StatefulWidget {
     this.customSuffixIcon,
     this.backgroundColor = Colors.white,
     this.hintColor = Colors.grey,
-    this.textColor = const Color(0xFF1A1A1A), // <-- Default text color
+    this.textColor = const Color(0xFF1A1A1A),
+    this.fieldHeight = 50,
+    this.hintStyle,
+    this.textStyle,
+    this.errorStyle,
   });
 
   @override
@@ -61,6 +72,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   Widget build(BuildContext context) {
     ResponsiveUtils.initialize(context);
     return Container(
+      // Single line হলে fixed height, multi-line হলে auto height
+      height: widget.maxLines == 1 ? widget.fieldHeight : null,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -72,23 +85,28 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
-        style: TextStyle(
-          color: widget.textColor, // <-- এখানে ব্যবহার করা হলো
-        ),
+        minLines: widget.minLines, // <-- এখন কাজ করবে
+        style: widget.textStyle ??
+            TextStyle(
+              color: widget.textColor,
+              fontSize: ResponsiveUtils.width(14), // default font size
+            ),
         decoration: InputDecoration(
           filled: true,
           fillColor: widget.backgroundColor,
           hintText: widget.hintText,
-          hintStyle: TextStyle(
-            color: widget.hintColor,
-            fontWeight: FontWeight.w400,
-            fontSize: ResponsiveUtils.width(14),
-          ),
-          errorStyle: const TextStyle(
-            color: Colors.red,
-            fontSize: 13,
-            fontWeight: FontWeight.w400,
-          ),
+          hintStyle: widget.hintStyle ??
+              TextStyle(
+                color: widget.hintColor,
+                fontWeight: FontWeight.w400,
+                fontSize: ResponsiveUtils.width(14),
+              ),
+          errorStyle: widget.errorStyle ??
+              TextStyle(
+                color: Colors.red,
+                fontSize: ResponsiveUtils.width(12),
+                fontWeight: FontWeight.w400,
+              ),
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon ?? false
               ? GestureDetector(
@@ -106,7 +124,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             ),
           )
               : widget.customSuffixIcon,
-          contentPadding: EdgeInsets.all(ResponsiveUtils.width(18)),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: (widget.fieldHeight - 20) / 2,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
             borderSide: BorderSide(
