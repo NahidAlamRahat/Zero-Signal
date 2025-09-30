@@ -26,11 +26,18 @@ class AppRoutes {
   static const saveRouteDetailsScreen = "/saveRouteDetailsScreen";
   static const viewProfileScreen = "/viewProfileScreen";
   static const fullMapScreen = "/fullMapScreen";
+  static const editProfileScreen = "/editProfileScreen";
+  static const personalInformationScreen = "/personalInformationScreen";
+  static const mySpotsScreen = "/mySpotsScreen";
 
+  static const myRoutesScreen = "/myRoutes";
 
   //Social Screen
   static const socialScreen = "/socialScreen";
 
+  static const favoriteSitesScreen = "/favoriteSitesScreen";
+  static const conditionsScreen = "/conditionsScreen";
+  static const onboardingScreen = "/OnboardingScreen";
 
 
 }

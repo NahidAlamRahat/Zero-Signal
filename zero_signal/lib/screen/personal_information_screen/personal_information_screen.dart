@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/routes/app_routes.dart';
+import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 class PersonalInformationScreen extends StatelessWidget {
   const PersonalInformationScreen({super.key});
@@ -7,13 +13,24 @@ class PersonalInformationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppbarWidget(
+        backgroundColor:  AppColor.creamBackgroundColor,
+        textWidget: Align(
+          alignment: Alignment.center,
+          child: TextWidget(text: 'Personal Information',
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+      ),
       backgroundColor: const Color(0xFFFFF4E9),
       body: SafeArea(
+
         child: SingleChildScrollView(
           child: Column(
             children: [
               // Header
-              _buildHeader(),
 
               // Content
               Padding(
@@ -39,38 +56,7 @@ class PersonalInformationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              // Handle back navigation
-            },
-            child: const Icon(
-              Icons.arrow_back,
-              size: 24,
-              color: Color(0xFF2C2C2C),
-            ),
-          ),
-          const Expanded(
-            child: Text(
-              'Personal Information',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF2C2C2C),
-                fontSize: 20,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          const SizedBox(width: 24), // Balance the back button
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildProfileCard() {
     return Container(
@@ -133,19 +119,24 @@ class PersonalInformationScreen extends StatelessWidget {
           ),
 
           // Edit Button
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0x262E4F3E),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Text(
-              'Edit Profile',
-              style: TextStyle(
-                color: Color(0xFF2E4F3E),
-                fontSize: 9,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w400,
+          GestureDetector(
+            onTap: (){
+              Get.toNamed( AppRoutes.editProfileScreen);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0x262E4F3E),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Text(
+                'Edit Profile',
+                style: TextStyle(
+                  color: Color(0xFF2E4F3E),
+                  fontSize: 9,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),

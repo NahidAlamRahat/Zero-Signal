@@ -107,7 +107,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                     onPressed: () {
                       Get.toNamed(AppRoutes.shareSpotScreen);
                     },
-                    child: Image.asset(AppIconPath.addIcon,width: 40,height: 40,),
+                    child: Image.asset(AppIconPath.addIcon2,width: 40,height: 40,),
                   ),
                 ],
               ),),

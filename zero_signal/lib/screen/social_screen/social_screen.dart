@@ -35,7 +35,7 @@ class _SocialScreenState extends State<SocialScreen> {
                     IconButton(
                       onPressed: () {},
                       icon: Image.asset(
-                        AppIconPath.addIcon,
+                        AppIconPath.addIcon2,
                         color: Colors.white,
                         height: 24,
                       ),

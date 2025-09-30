@@ -32,7 +32,7 @@ class AppIconPath {
 
 
   //Social Screen Icons
-  static const String addIcon = "assets/icon/add.png";
+  static const String addIcon2 = "assets/icon/add.png";
   static const String searchIcon = "assets/icon/search.png";
   static const String taskIcon = "assets/icon/task.png";
   static const String shareIcon = "assets/icon/share.png";
@@ -41,4 +41,11 @@ class AppIconPath {
   static const String groupIcon = "assets/icon/group.png";
   static const String saveIcon = "assets/icon/save.png";
   static const String addPeopleIcon = "assets/icon/add_people.png";
+
+  static const String mySpotsIcon = "assets/icon/my_sport_list.png";
+
+
+
+
+
 }

@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Zero Signal',
-          initialRoute: AppRoutes.socialScreen,
+          initialRoute: AppRoutes.splashScreen,
 
           getPages: appRootRoutesFile,
           enableLog: true,

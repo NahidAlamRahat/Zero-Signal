@@ -136,9 +136,10 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10),
           FloatingActionButton(
             backgroundColor: Colors.transparent,
-            heroTag: "btn2",
+            heroTag: "btn1",
             onPressed: () {
               Get.toNamed(AppRoutes.shareSpotScreen);
+
             },
             child: Image.asset(AppIconPath.addIcon),
           ),

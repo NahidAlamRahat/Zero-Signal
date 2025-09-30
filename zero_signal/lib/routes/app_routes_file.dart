@@ -1,21 +1,22 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/screen/home_screen/home_screen.dart';
+import '../condition_screen/terms_condition_screen.dart';
+import '../my_routes_screen/my_routes_screen.dart';
+import '../my_spots_screen/my_spots_screen.dart';
 import '../screen/auth/choose_language_screen/choose_language_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
 import '../screen/auth/forgot_password_screen/forgot_password_screen.dart';
-import '../screen/auth/reset_password_otp_verify_screen/controller/forgot_pass_verify_otp_screen_controller.dart';
 import '../screen/auth/reset_password_otp_verify_screen/reset_pass_otp_verify_screen.dart';
 import '../screen/auth/sign_in_and_registration_screen/sign_in_and_registration_screen.dart';
 import '../screen/auth/sign_in_screen/sign_in_screen.dart';
 import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
+import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
-
-import 'package:zero_signal/screen/choose_language_screen/choose_language_screen.dart';
-import 'package:zero_signal/screen/sign_in_and_registration_screen/sign_in_and_registration_screen.dart';
 import 'package:zero_signal/screen/social_screen/social_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
+import '../screen/personal_information_screen/personal_information_screen.dart';
 import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
@@ -39,11 +40,11 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () => const SplashScreen(),
   ),
 
-  GetPage(
+ /* GetPage(
     name: AppRoutes.chooseLanguageScreen,
     // binding: SplashScreenBinding(),
     page: () => ChooseLanguageScreen(),
-  ),
+  ),*/
 
   GetPage(
     name: AppRoutes.glassEffectBackground,
@@ -144,4 +145,52 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     // binding: SplashScreenBinding(),
     page: () => const SocialScreen(),
   ),
+
+
+  GetPage(
+    name: AppRoutes.editProfileScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const EditProfileScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.personalInformationScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const PersonalInformationScreen(),
+  ),
+  GetPage(
+    name: AppRoutes.mySpotsScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const MySpotsScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.mySpotsScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const MySpotsScreen(),
+  ),
+
+
+  GetPage(
+    name: AppRoutes.myRoutesScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const MyRoutesScreen(),
+  ),
+
+
+  GetPage(
+    name: AppRoutes.conditionsScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ConditionsScreen(),
+  ),
+
+
+  GetPage(
+    name: AppRoutes.onboardingScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  OnboardingScreen(),
+  ),
+
+
+
 ];

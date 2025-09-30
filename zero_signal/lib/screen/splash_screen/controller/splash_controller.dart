@@ -36,7 +36,7 @@ class SplashController extends GetxController {
     }*/
 
 
-    Get.offAllNamed(AppRoutes.chooseLanguageScreen);
+    Get.offAllNamed(AppRoutes.onboardingScreen);
 
 
 

@@ -41,7 +41,7 @@ class ChooseLanguageScreen extends StatelessWidget {
               fontColor: AppColor.subTitleColor ,
             ),
 
-            LanguageSelectionWidget()
+            // LanguageSelectionWidget()
 
 
           ],
