@@ -102,21 +102,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           Positioned(
-            top: 265.h,
-            right: 92.w,
+            top: 252.h,
+            right: 80.w,
             child: InkWell(
               onTap: () {
-                // Proper way to show bottom sheet
-                _showMapTypeBottomSheet();
+                Get.toNamed(AppRoutes.spotDetailsScreen);
+
               },
-              child: GestureDetector(
-                onTap: (){
-                  Get.toNamed(AppRoutes.spotDetailsScreen);
-                },
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                ),
-              )
+             child: CircleAvatar(
+
+              backgroundColor: Colors.red,
+            ),
             ),
           ),
 

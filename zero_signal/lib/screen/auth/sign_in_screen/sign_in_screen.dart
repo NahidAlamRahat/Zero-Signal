@@ -38,13 +38,13 @@ class _SignInScreenState extends State<SignInScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
-                child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20,left: 20),
+              child: SingleChildScrollView(
+                child: Center(
                   child: GlassEffact(
                     height: 640.h,
                     width: 390.w,
@@ -54,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                            SizedBox(height: 18.w),
-                  
+
                           // Title
                           Center(
                             child: TextWidget(
@@ -65,7 +65,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                            SizedBox(height: 8.w),
-                  
+
                           // Subtitle
                           Center(
                             child: TextWidget(
@@ -76,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                            SizedBox(height: 32.w),
-                  
+
                           // Email Label
                           TextWidget(
                             textAlignment: TextAlign.left,
@@ -86,7 +86,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                            SizedBox(height: 8.w),
-                  
+
                           // Email TextField
                           TextFieldWidget(
                             fieldHeight: 44,
@@ -102,7 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             keyboardType: TextInputType.emailAddress,
                           ),
                            SizedBox(height: 15.w),
-                  
+
                           // Password Label
                           TextWidget(
                             textAlignment: TextAlign.left,
@@ -112,7 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                           const SizedBox(height: 8),
-                  
+
                           // Password TextField
                         TextFieldWidget(
                           fieldHeight: 44,
@@ -128,7 +128,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           keyboardType: TextInputType.emailAddress,
                         ),
                            SizedBox(height: 12.w),
-                  
+
                           // Remember Me & Forgot Password Row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +169,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ],
                           ),
                           const SizedBox(height: 15),
-                  
+
                           // Sign In Button
                           SizedBox(
                             width: double.infinity,
@@ -184,7 +184,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                  
+
                           // Or sign in with text
                           Center(
                             child: TextWidget(
@@ -195,7 +195,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                            SizedBox(height: 20.w),
-                  
+
                           // Google Sign In Button
                           Center(
                             child: GestureDetector(
@@ -218,7 +218,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ),
                           ),
-                  
+
                           // Sign Up Link
                           Center(
                             child: Row(
@@ -245,15 +245,15 @@ class _SignInScreenState extends State<SignInScreen> {
                               ],
                             ),
                           ),
-                  
+
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

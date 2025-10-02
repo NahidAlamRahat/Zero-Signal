@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -13,6 +14,14 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
     return Scaffold(
       body: Stack(
         children: [
@@ -37,7 +46,7 @@ class OnboardingScreen extends StatelessWidget {
   /// Title text widget
   Widget _buildTitleText() {
     return  Positioned(
-      bottom: 100,
+      bottom: 140,
       left: 0,
       right: 0,
       child: TextWidget(
@@ -53,14 +62,12 @@ class OnboardingScreen extends StatelessWidget {
   /// Get Started button widget
   Widget _buildGetStartedButton(BuildContext context) {
     return Positioned(
-      bottom: 30,
+      bottom: kBottomNavigationBarHeight,
       left: 16,
       right: 16,
       child: InkWell(
         onTap: () {
           Get.toNamed(AppRoutes.signInAndRegistrationScreen);
-          // Add your navigation logic here
-          // Navigator.pushNamed(context, '/next_screen');
         },
         borderRadius: BorderRadius.circular(8),
         child: Container(
@@ -99,7 +106,7 @@ class OnboardingScreen extends StatelessWidget {
                   child: const Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
-                    color: Colors.black87,
+                    color: Colors.white,
                   ),
                 ),
               ),

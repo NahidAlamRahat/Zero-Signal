@@ -18,67 +18,70 @@ class SignInAndRegistrationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppImagePath.signInBackgroundImage),
-            fit: BoxFit.cover,
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImagePath.signInBackgroundImage),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GlassEffact(
-                height: 371.h,
-                width: 390.w,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Image.asset(AppImagePath.appLogo, width: 61, height: 60),
-                    const SizedBox(height: 20),
-
-                    TextWidget(
-                      text: AppStrings.lifeIsShortAndSignIn,
-                      fontColor: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    const SizedBox(height: 20),
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ButtonWidget(
-                        backgroundColor: Colors.transparent,
-                        label: 'Sign In',
-                        buttonHeight: 40,
-                        borderColor: Colors.white,
-                        textColor: Colors.white,
-                        onPressed: (){
-                          Get.toNamed(AppRoutes.signInScreen);
-                        },
-                        
+          child: Stack(
+            children: [
+              Positioned(
+                bottom: kBottomNavigationBarHeight,
+                left: 16,
+                right: 16,
+                child: GlassEffact(
+                  height: 371.h,
+                  width: 390.w,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Image.asset(AppImagePath.appLogo, width: 61, height: 60),
+                      const SizedBox(height: 20),
+                      TextWidget(
+                        text: AppStrings.lifeIsShortAndSignIn,
+                        fontColor: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
-                    ),
+                      const SizedBox(height: 20),
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ButtonWidget(
-                        backgroundColor: AppColor.backgroundColor,
-                        label: 'Registration',
-                        buttonHeight: 40,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ButtonWidget(
+                          backgroundColor: Colors.transparent,
+                          label: 'Sign In',
+                          buttonHeight: 40,
+                          borderColor: Colors.white,
+                          textColor: Colors.white,
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.signInScreen);
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ButtonWidget(
+                          onPressed: (){
+                            Get.toNamed(AppRoutes.signUpScreen);
+                          },
+                          backgroundColor: AppColor.backgroundColor,
+                          label: 'Registration',
+                          buttonHeight: 40,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+
     );
   }
 
