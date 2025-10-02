@@ -34,7 +34,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                 left: 16,
                 right: 16,
                 child: GlassEffact(
-                  height: 371.h,
+                  height: 280.h,
                   width: 390.w,
                   child: Column(
                     children: [
