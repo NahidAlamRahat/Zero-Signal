@@ -118,7 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               // Password TextField
                             TextFieldWidget(
                               textColor: Colors.white,
-                              hintText: AppStrings.enterYourEmail,
+                              hintText: AppStrings.enterYourPassword,
                               textStyle:TextStyle(fontSize: 14.sp) ,
                               hintColor: Colors.white54,
                               backgroundColor: Colors.transparent,
