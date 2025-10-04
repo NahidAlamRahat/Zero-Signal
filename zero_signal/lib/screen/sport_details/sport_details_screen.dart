@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
+import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
@@ -255,9 +257,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
                               Icon(Icons.star, color: AppColor.yello),
-                              const SizedBox(width: 8),
                               TextWidget(
                                 text: '(17 lugares / 6 plane)',
                                 fontWeight: FontWeight.w400,
@@ -310,7 +310,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   textColor: Colors.black,
-                                  onPressed: () {},
+                                  onPressed: () {
+
+                                    showDatePickerSheet(context);
+                                  },
                                 ),
                               ),
                             ],
@@ -388,14 +391,11 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                               ),
                             ],
                           ),
-
-                          const SizedBox(height: 16),
-
+                          SpaceWidget(spaceHeight: 16,),
                           // Comments List
                           ...commentsToShow.map((comment) {
                             return Container(
                               margin: const EdgeInsets.only(bottom: 16),
-                              padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: AppColor.creamBackgroundColor,
                                 borderRadius: BorderRadius.circular(12),
@@ -511,5 +511,351 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
 
 
+Future<void> showDatePickerSheet(BuildContext context) async {
+final selectedDate = await CalendarBottomSheet.show(context);
 
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+
+class CalendarBottomSheet extends StatefulWidget {
+  final DateTime? initialDate;
+  final Function(DateTime)? onDateSelected;
+
+  const CalendarBottomSheet({
+    Key? key,
+    this.initialDate,
+    this.onDateSelected,
+  }) : super(key: key);
+
+  @override
+  State<CalendarBottomSheet> createState() => _CalendarBottomSheetState();
+
+  static Future<DateTime?> show(
+    BuildContext context, {
+    DateTime? initialDate,
+  }) {
+    return showModalBottomSheet<DateTime>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControllerEnabled: true,
+      builder: (context) => CalendarBottomSheet(initialDate: initialDate),
+    );
+  }
+}
+
+class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
+  late DateTime currentMonth;
+  DateTime? selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    currentMonth = widget.initialDate ?? DateTime.now();
+    selectedDate = widget.initialDate;
+  }
+
+  void _changeMonth(int delta) {
+    setState(() {
+      currentMonth = DateTime(currentMonth.year, currentMonth.month + delta);
+    });
+  }
+
+  void _selectDate(DateTime date) {
+    setState(() {
+      selectedDate = date;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 514,
+      decoration: const BoxDecoration(
+        color: Color(0xFFFFF4E9),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 12),
+          Container(
+            width: 60,
+            height: 6,
+            decoration: BoxDecoration(
+              color: const Color(0xFFDBDBDB),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          const SizedBox(height: 22),
+          const Text(
+            'Select Date',
+            style: TextStyle(
+              color: Color(0xFF2C2C2C),
+              fontSize: 20,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Container(
+            height: 0.5,
+            color: const Color(0xFFBEC8C3),
+          ),
+          const SizedBox(height: 16),
+          _buildCalendar(),
+          const Spacer(),
+          _buildButtons(),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCalendar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5E9DF),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          _buildMonthHeader(),
+          const SizedBox(height: 8),
+          const Divider(height: 1, color: Color(0x99484949)),
+          const SizedBox(height: 16),
+          _buildWeekDays(),
+          const SizedBox(height: 15),
+          _buildDaysGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMonthHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          _getMonthYear(),
+          style: const TextStyle(
+            color: Color(0xFF2C2C2C),
+            fontSize: 20,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.chevron_left, size: 22),
+              onPressed: () => _changeMonth(-1),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.chevron_right, size: 22),
+              onPressed: () => _changeMonth(1),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeekDays() {
+    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: weekDays.map((day) => SizedBox(
+        width: 40,
+        child: Text(
+          day,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Color(0xFF2C2C2C),
+            fontSize: 16,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      )).toList(),
+    );
+  }
+
+  Widget _buildDaysGrid() {
+    final daysInMonth = _getDaysInMonth();
+    return Column(
+      children: _buildWeeks(daysInMonth),
+    );
+  }
+
+  List<Widget> _buildWeeks(List<DateTime?> days) {
+    List<Widget> weeks = [];
+    for (int i = 0; i < days.length; i += 7) {
+      weeks.add(_buildWeek(days.sublist(i, i + 7)));
+      if (i + 7 < days.length) weeks.add(const SizedBox(height: 12));
+    }
+    return weeks;
+  }
+
+  Widget _buildWeek(List<DateTime?> days) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: days.map((day) => _buildDayCell(day)).toList(),
+    );
+  }
+
+  Widget _buildDayCell(DateTime? day) {
+    if (day == null) {
+      return const SizedBox(width: 36, height: 28);
+    }
+
+    final isCurrentMonth = day.month == currentMonth.month;
+    final isSelected = selectedDate != null && 
+        day.year == selectedDate!.year &&
+        day.month == selectedDate!.month &&
+        day.day == selectedDate!.day;
+    final isToday = _isToday(day);
+
+    return GestureDetector(
+      onTap: () => isCurrentMonth ? _selectDate(day) : null,
+      child: Container(
+        width: 36,
+        height: 28,
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF2E4F3E) : Colors.transparent,
+          border: isToday && !isSelected
+              ? Border.all(color: const Color(0xFF2E4F3E), width: 1)
+              : null,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          '${day.day}',
+          style: TextStyle(
+            color: isSelected
+                ? const Color(0xFFFBFBFB)
+                : isCurrentMonth
+                    ? const Color(0xFF2C2C2C)
+                    : const Color(0xFFDBDBDB),
+            fontSize: 16,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFDED3C0),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Color(0xFF565656),
+                  fontSize: 16,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                if (selectedDate != null) {
+                  widget.onDateSelected?.call(selectedDate!);
+                  Navigator.pop(context, selectedDate);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2E4F3E),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'Confirm',
+                style: TextStyle(
+                  color: Color(0xFFF1F1F1),
+                  fontSize: 16,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getMonthYear() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${months[currentMonth.month - 1]} ${currentMonth.year}';
+  }
+
+  List<DateTime?> _getDaysInMonth() {
+    final firstDay = DateTime(currentMonth.year, currentMonth.month, 1);
+    final lastDay = DateTime(currentMonth.year, currentMonth.month + 1, 0);
+    final prevMonthDays = DateTime(currentMonth.year, currentMonth.month, 0).day;
+    
+    List<DateTime?> days = [];
+    
+    // Previous month days
+    for (int i = firstDay.weekday % 7; i > 0; i--) {
+      days.add(DateTime(currentMonth.year, currentMonth.month - 1, prevMonthDays - i + 1));
+    }
+    
+    // Current month days
+    for (int i = 1; i <= lastDay.day; i++) {
+      days.add(DateTime(currentMonth.year, currentMonth.month, i));
+    }
+    
+    // Next month days
+    while (days.length % 7 != 0) {
+      final nextDay = days.length - firstDay.weekday % 7 - lastDay.day + 1;
+      days.add(DateTime(currentMonth.year, currentMonth.month + 1, nextDay));
+    }
+    
+    return days;
+  }
+
+  bool _isToday(DateTime day) {
+    final now = DateTime.now();
+    return day.year == now.year && day.month == now.month && day.day == now.day;
+  }
 }
