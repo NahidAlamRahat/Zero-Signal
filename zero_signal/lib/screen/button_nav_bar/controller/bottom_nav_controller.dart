@@ -5,7 +5,6 @@ import '../../home_screen/home_screen.dart';
 import '../../map_routes_screen/map_routes_screen.dart';
 import '../../profile/profile_section_screen.dart';
 import '../../social_screen/social_screen.dart';
-import '../../sunset_point_details_screen/sunset_point_details_screen.dart';
 
 class UserBottomNavController extends GetxController {
   var selectedIndex = 0.obs;

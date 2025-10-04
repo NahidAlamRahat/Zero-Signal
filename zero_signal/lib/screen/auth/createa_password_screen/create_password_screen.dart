@@ -1,17 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/screen/auth/createa_password_screen/widget/button_sheet.dart';
 import 'package:zero_signal/widget/glass_effact.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
+import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
-import '../../../routes/app_routes.dart';
 import '../../../widget/text_field_widget/text_field_widget.dart';
 
 class CreatePasswordScreen extends StatelessWidget {
@@ -31,7 +28,7 @@ class CreatePasswordScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Center(
             child: GlassEffact(
-              height: 512.h,
+              height: 480.h,
               width: 390.w,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +71,6 @@ class CreatePasswordScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 12,right: 12),
                     child: TextFieldWidget(
-                       fieldHeight: 40,
                       textColor: Colors.white,
                       hintText: AppStrings.enterNewPassword,
                       hintColor: Colors.white54,
@@ -104,7 +100,6 @@ class CreatePasswordScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 12,right: 12),
                     child: TextFieldWidget(
-                      fieldHeight: 40,
                       textColor: Colors.white,
                       hintText: AppStrings.enterNewPassword,
                       hintColor: Colors.white54,
@@ -117,6 +112,7 @@ class CreatePasswordScreen extends StatelessWidget {
                     ),
                   ),
 
+                  SpaceWidget(spaceHeight: 44,),
 
                   Padding(
                     padding: const EdgeInsets.all(12),
@@ -128,7 +124,6 @@ class CreatePasswordScreen extends StatelessWidget {
                         buttonWidth: double.infinity,
                         backgroundColor: AppColor.backgroundColor,
                         label: AppStrings.save,
-                        buttonHeight: 40,
                       ),
                     ),
                   ),

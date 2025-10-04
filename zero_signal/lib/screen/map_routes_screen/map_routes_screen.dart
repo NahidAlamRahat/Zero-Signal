@@ -159,10 +159,10 @@ class MapTypeBottomSheet extends StatefulWidget {
   final Function(String) onMapTypeSelected;
 
   const MapTypeBottomSheet({
-    Key? key,
+    super.key,
     required this.selectedMapType,
     required this.onMapTypeSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<MapTypeBottomSheet> createState() => _MapTypeBottomSheetState();

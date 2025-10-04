@@ -5,6 +5,8 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
 class UpdateInformationScreen extends StatefulWidget {
+  const UpdateInformationScreen({super.key});
+
   @override
   _UpdateInformationScreenState createState() => _UpdateInformationScreenState();
 }

@@ -1,8 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 

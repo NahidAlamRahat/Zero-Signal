@@ -14,6 +14,8 @@ import '../../widget/button_widget/button_widget.dart';
 
 
 class ActivityListsScreen extends StatefulWidget {
+  const ActivityListsScreen({super.key});
+
   @override
   _ActivityListsScreenState createState() => _ActivityListsScreenState();
 }

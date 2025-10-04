@@ -3,7 +3,7 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 
 class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({Key? key}) : super(key: key);
+  const FiltersScreen({super.key});
 
   @override
   State<FiltersScreen> createState() => _FiltersScreenState();

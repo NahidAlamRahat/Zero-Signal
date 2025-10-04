@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_strings.dart';
-import 'package:zero_signal/screen/auth/choose_language_screen/widget/language_selection_widget.dart';
 import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 

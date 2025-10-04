@@ -447,7 +447,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                                 ],
                               ),
                             );
-                          }).toList(),
+                          }),
 
                           // Add comment section (only show when not showing all comments or at the end)
                           if (!showAllComments || showAllComments) ...[

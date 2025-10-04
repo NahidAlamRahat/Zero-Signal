@@ -3,7 +3,6 @@ import 'package:zero_signal/screen/home_screen/home_screen.dart';
 import '../condition_screen/terms_condition_screen.dart';
 import '../my_routes_screen/my_routes_screen.dart';
 import '../my_spots_screen/my_spots_screen.dart';
-import '../screen/auth/choose_language_screen/choose_language_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
 import '../screen/auth/forgot_password_screen/forgot_password_screen.dart';
 import '../screen/auth/reset_password_otp_verify_screen/reset_pass_otp_verify_screen.dart';

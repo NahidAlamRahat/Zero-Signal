@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../../constant/app_colors.dart';
 import '../../../widget/button_widget/button_widget.dart';
@@ -28,16 +30,22 @@ class FilterBottomSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Filters',
-                  style: TextStyle(
-                    fontSize: 18,
+                // Left spacer (to balance IconButton)
+                const SizedBox(width: 48), // same as IconButton size
+
+                // Centered Text
+                Expanded(
+                  child: TextWidget(
+                    text: 'Filters',
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    fontColor: Colors.black87,
+                    textAlignment: TextAlign.center,
                   ),
                 ),
+
+                // Close Button
                 IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.close, size: 24),
@@ -59,7 +67,7 @@ class FilterBottomSheet extends StatelessWidget {
                     ...controller.filterCategories.entries.map((category) {
                       return _buildFilterCategory(
                           controller, category.key, category.value);
-                    }).toList(),
+                    }),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -69,20 +77,26 @@ class FilterBottomSheet extends StatelessWidget {
 
           // Bottom buttons
           Container(
-            padding: const EdgeInsets.all(16),
+            padding:  EdgeInsets.all(16),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ButtonWidget(
-                    buttonWidth: 10,
-                    backgroundColor: Colors.transparent,
-                    label: "Clear All",
-                    buttonHeight: 48,
-                    textColor: AppColor.yello,
-                    onPressed: () {
-                      controller.clearAll();
-                    },
-                  ),
+                Flexible(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: InkWell(
+                      onTap: (){
+                        controller.clearAll();
+                      },
+                      child: TextWidget(text: 'Clear All',
+                       fontColor: AppColor.yello,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      
+                      ),
+                    ),
+                  )
                 ),
                 const SizedBox(width: 12),
                 Expanded(

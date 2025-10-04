@@ -341,7 +341,7 @@ class ProfileSectionScreen extends StatelessWidget {
 }
 
 class LogoutAlertDialog extends StatelessWidget {
-  const LogoutAlertDialog({Key? key}) : super(key: key);
+  const LogoutAlertDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

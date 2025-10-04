@@ -24,7 +24,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _acceptTerms = false;
-  bool _obscurePassword = true;
+  final bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GlassEffact(
-                    height: 816.h,
+                    height: 750.h,
                     width: 390.w,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24, ),
@@ -222,7 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       TextSpan(
                                         text: "Terms & Conditions",
                                         style: TextStyle(
-                                          color: AppColor.yello,
+                                          color:Color(0xFF45EA69),
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
@@ -230,7 +230,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       TextSpan(
                                         text: "Privacy Policy",
                                         style: TextStyle(
-                                          color: AppColor.yello,
+                                          color: Color(0xFF45EA69),
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),

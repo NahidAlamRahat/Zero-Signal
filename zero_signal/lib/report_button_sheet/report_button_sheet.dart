@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ReportActivityBottomSheet extends StatefulWidget {
-  const ReportActivityBottomSheet({Key? key}) : super(key: key);
+  const ReportActivityBottomSheet({super.key});
 
   @override
   State<ReportActivityBottomSheet> createState() => _ReportActivityBottomSheetState();

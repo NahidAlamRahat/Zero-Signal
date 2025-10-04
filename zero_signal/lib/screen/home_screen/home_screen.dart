@@ -144,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Bottom sheet show করার method
   void _showMapTypeBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -162,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Map type অনুযায়ী image path return করার method
   String _getMapImageByType() {
     switch (selectedMapType) {
       case 'Satellite':
@@ -181,10 +179,10 @@ class MapTypeBottomSheet extends StatefulWidget {
   final Function(String) onMapTypeSelected;
 
   const MapTypeBottomSheet({
-    Key? key,
+    super.key,
     required this.selectedMapType,
     required this.onMapTypeSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<MapTypeBottomSheet> createState() => _MapTypeBottomSheetState();

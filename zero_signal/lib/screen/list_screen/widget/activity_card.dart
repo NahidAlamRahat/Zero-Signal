@@ -9,12 +9,12 @@ class ActivityCard extends StatelessWidget {
   final Alignment buttonsAlignment; // Left or Right
 
   const ActivityCard({
-    Key? key,
+    super.key,
     required this.activity,
     this.buttons,
     this.buttonsDirection = Axis.horizontal, // Default: horizontal
     this.buttonsAlignment = Alignment.centerRight, // Default: Right
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
