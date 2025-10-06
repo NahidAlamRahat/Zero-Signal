@@ -39,5 +39,8 @@ class AppRoutes {
   static const conditionsScreen = "/conditionsScreen";
   static const onboardingScreen = "/OnboardingScreen";
 
+  static const updateInformationScreen = "/updateInformationScreen";
+
+
 
 }

@@ -91,13 +91,16 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
             Spacer(),
 
             // Submit button
-            ButtonWidget(
-              backgroundColor: AppColor.backgroundColor,
-              onPressed: () {
-                // Handle submit button press
-                print("Submitted: ${_textController.text}");
-              },
-              label: 'Submit for Review',
+            Center(
+              child: ButtonWidget(
+                buttonWidth: double.infinity,
+                backgroundColor: AppColor.backgroundColor,
+                onPressed: () {
+                  // Handle submit button press
+                  print("Submitted: ${_textController.text}");
+                },
+                label: 'Submit for Review',
+              ),
             ),
             SizedBox(height: 16),
 

@@ -47,7 +47,7 @@ class BottomNav extends StatelessWidget {
                       vertical: navPadding * 0.7,
                     ),
                     duration: const Duration(milliseconds: 400),
-                    tabBackgroundColor: Colors.green.shade900, // selected tab bg
+                    tabBackgroundColor: AppColor.backgroundColor, // selected tab bg
                     textStyle: TextStyle(
                       fontSize: screenWidth * 0.035,
                       color: Colors.white,

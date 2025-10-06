@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/generated/assets.dart' hide Icon;
 import 'package:zero_signal/screen/share_spot_screen/widget/confirm_location_sheet.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
 
@@ -171,12 +173,9 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.camera_alt_outlined, size: 40, color: Colors.grey.shade600),
+        Image.asset(Assets.icon.cameraicon,height: 24, width: 24),
         const SizedBox(height: 8),
-        Text(
-          'Upload Images',
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-        ),
+       TextWidget(text: 'Upload Image',fontColor: AppColor.blackColor,fontWeight: FontWeight.w500, fontSize: 14,)
       ],
     ),
   );

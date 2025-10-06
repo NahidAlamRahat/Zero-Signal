@@ -45,6 +45,10 @@ class AppIconPath {
   static const String mySpotsIcon = "assets/icon/my_sport_list.png";
 
 
+  //share a new spot screen icon
+  static const String cameraIcon = "assets/icon/cameraIcon.png";
+
+
 
 
 

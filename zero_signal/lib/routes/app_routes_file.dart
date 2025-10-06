@@ -20,6 +20,7 @@ import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
+import '../screen/update_information_screen/update_information_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
 import 'all_bindings.dart';
 import 'app_routes.dart';
@@ -190,6 +191,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () =>  OnboardingScreen(),
   ),
 
+
+  GetPage(
+    name: AppRoutes.updateInformationScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  UpdateInformationScreen(),
+  ),
 
 
 ];

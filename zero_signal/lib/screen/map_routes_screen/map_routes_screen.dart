@@ -85,7 +85,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             ),
           ),
           Positioned(
-              bottom: 210.h,
+              bottom: 300.h,
               right: 20,
               child: Column(
 
@@ -107,12 +107,12 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                     onPressed: () {
                       Get.toNamed(AppRoutes.shareSpotScreen);
                     },
-                    child: Image.asset(AppIconPath.addIcon2,width: 40,height: 40,),
+                    child: Image.asset(AppIconPath.addIcon,width: 40,height: 40,),
                   ),
                 ],
               ),),
 
-          Positioned(bottom: 10,left:0,right:0,child: GestureDetector(
+          Positioned(bottom: 130,left:0,right:0,child: GestureDetector(
             onTap: (){
               Get.toNamed(AppRoutes.saveRouteDetailsScreen);
             },
