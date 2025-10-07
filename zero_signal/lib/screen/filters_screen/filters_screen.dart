@@ -91,7 +91,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 15),
 
               // Distance Section
               Row(
@@ -114,7 +114,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: const Color(0xFF2E5233),
@@ -136,7 +135,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
 
               // Type of route Section
               const Text(
@@ -160,7 +158,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 ],
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 50),
 
               // Apply Filters Button
               Center(
