@@ -173,7 +173,7 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(Assets.icon.cameraicon,height: 24, width: 24),
+        Image.asset(Assets.icons.cameraicon,height: 24, width: 24),
         const SizedBox(height: 8),
        TextWidget(text: 'Upload Image',fontColor: AppColor.blackColor,fontWeight: FontWeight.w500, fontSize: 14,)
       ],

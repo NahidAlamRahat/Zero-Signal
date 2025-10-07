@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
+
+import '../../gen/assets.gen.dart';
 
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key});
@@ -43,22 +47,24 @@ class _FiltersScreenState extends State<FiltersScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Activity Selection Wrap
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
+              // Activity Selection GridView
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 3,
+                crossAxisSpacing: AppSize.width(value: 12),
+                mainAxisSpacing: AppSize.height(value: 12),
+                childAspectRatio: 118 / 90, // width/height ratio for maintaining card proportions
                 children: [
-                  _buildActivityCard('Walking', Icons.directions_walk, 'Walking', height: 90, width: 118,),
-                  _buildActivityCard('Hiking', Icons.hiking, 'Hiking', height: 90, width: 118),
-                  _buildActivityCard('Running', Icons.directions_run, 'Running', height: 90, width: 118),
-                  _buildActivityCard('Gravel', Icons.pedal_bike, 'Gravel', height: 90, width: 118),
-                  _buildActivityCard('Motorcycle', Icons.motorcycle, 'Motorcycle', height: 90, width: 118),
-                  _buildActivityCard('SUV / 4*4', Icons.local_shipping, 'SUV / 4*4', height: 90, width: 118),
-                  _buildActivityCard('Road Trip', Icons.car_rental, 'Road Trip', height: 90, width: 118),
+                  _buildActivityCard('Walking', Assets.icons.walking.path, 'Walking'),
+                  _buildActivityCard('Hiking', Assets.icons.hiking.path, 'Hiking'),
+                  _buildActivityCard('Running', Assets.icons.running.path, 'Running'),
+                  _buildActivityCard('Gravel', Assets.icons.gravel.path, 'Gravel'),
+                  _buildActivityCard('Motorcycle', Assets.icons.bike.path, 'Motorcycle'),
+                  _buildActivityCard('SUV / 4*4', Assets.icons.car.path, 'SUV / 4*4'),
+                  _buildActivityCard('Road Trip', Assets.icons.roadTrip.path, 'Road Trip'),
                 ],
               ),
-
-              const SizedBox(height: 32),
 
               // Difficulty Section
               const Text(
@@ -91,7 +97,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
                   Text(
                     'Distance:',
                     style: TextStyle(
@@ -100,7 +105,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
                       color: Colors.black,
                     ),
                   ),
-
                   Text(
                     '0m to +250km',
                     style: TextStyle(
@@ -159,7 +163,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
               const SizedBox(height: 32),
 
               // Apply Filters Button
-
               Center(
                 child: ButtonWidget(
                   backgroundColor: AppColor.backgroundColor,
@@ -167,7 +170,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   buttonWidth: double.infinity,
                 ),
               )
-
             ],
           ),
         ),
@@ -177,11 +179,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   Widget _buildActivityCard(
       String title,
-      IconData icon,
-      String value, {
-        double height = 120,
-        double width = 100,
-      }) {
+      String imageIcon,
+      String value) {
     final isSelected = selectedActivity == value;
     return GestureDetector(
       onTap: () {
@@ -190,11 +189,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
         });
       },
       child: Container(
-        height: height,
-        width: width,
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -206,19 +203,25 @@ class _FiltersScreenState extends State<FiltersScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.white : Colors.black54,
+            Image.asset(
+              imageIcon,
+              height: AppSize.height(value: 40),
+              width: AppSize.width(value: 40),
             ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: isSelected ? Colors.white : Colors.black87,
+            SizedBox(height: AppSize.height(value: 8)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 4)),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: AppSize.width(value: 12),
+                  fontWeight: FontWeight.w500,
+                  color: isSelected ? const Color(0xFF2C2C2C) : const Color(0xFF565656),
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -239,14 +242,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.soilColor,
           borderRadius: BorderRadius.circular(20),
-
         ),
         child: Text(
           difficulty,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color:  Colors.black,
+            color: Colors.black,
           ),
         ),
       ),
@@ -266,7 +268,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
           borderRadius: BorderRadius.circular(8),
-
         ),
         child: Text(
           routeType,
