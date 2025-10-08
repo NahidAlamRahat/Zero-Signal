@@ -3,15 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/gen/assets.gen.dart';
+import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
+import 'package:zero_signal/widget/showCustomDialog.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
-import '../../gen/assets.gen.dart';
-import '../../routes/app_routes.dart';
-import '../../widget/showCustomDialog.dart';
 import 'controller/save_route_details_screen_controller.dart';
 
 class SaveRouteDetailsScreen extends StatelessWidget {
@@ -254,39 +254,39 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => ShowCustomDialog(
-          backgroundColor: AppColor.creamBackgroundColor,
-          title: '@naturanauta',
-          titleStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-          description: "I'm a nature lover and outdoor enthusiast",
-      descriptionStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-      image: Image.asset(AppImagePath.profileImage),
-      actionsLayout: ActionsLayout.column,
-      actions: [
-        Icon(Icons.thumb_up_outlined, size: 32),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: ButtonWidget(
-            onPressed: () => Get.toNamed(AppRoutes.viewProfileScreen),
-            backgroundColor: AppColor.backgroundColor,
-            label: 'View Profile',
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            buttonHeight: 40,
+        backgroundColor: AppColor.creamBackgroundColor,
+        title: '@naturanauta',
+        titleStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+        description: "I'm a nature lover and outdoor enthusiast",
+        descriptionStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        image: Image.asset(AppImagePath.profileImage),
+        actionsLayout: ActionsLayout.column,
+        actions: [
+          Icon(Icons.thumb_up_outlined, size: 32),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ButtonWidget(
+              onPressed: () => Get.toNamed(AppRoutes.viewProfileScreen),
+              backgroundColor: AppColor.backgroundColor,
+              label: 'View Profile',
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              buttonHeight: 40,
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: ButtonWidget(
-            backgroundColor: Colors.transparent,
-            textColor: Colors.red,
-            label: 'Report user',
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            buttonHeight: 40,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ButtonWidget(
+              backgroundColor: Colors.transparent,
+              textColor: Colors.red,
+              label: 'Report user',
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              buttonHeight: 40,
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 
@@ -329,127 +329,49 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         Obx(() => SizedBox(
-          height: 84.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.images.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(
-                    right: index == controller.images.length - 1 ? 0 : 8.w),
-                child: _buildImageThumbnails(context, controller,)
-              );
-            },
-          ),
-        )),
+              height: 84.h,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                itemCount: controller.images.length,
+                separatorBuilder: (context, index) => SizedBox(width: 8.w),
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      _showImageDialog(context, controller, index);
+                    },
+                    child: Container(
+                      width: 84.w,
+                      height: 84.h,
+                      decoration: ShapeDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(controller.images[index]),
+                          fit: BoxFit.cover,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )),
       ],
     );
   }
 
-  Widget _buildImageThumbnails(BuildContext context, RouteDetailsController controller) {
-    return Obx(() => Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: List.generate(
-        controller.images.length,
-            (index) => InkWell(
-          onTap: () {
-            controller.selectImage(controller.images[index]);
-            _showImageDialog(context, controller, index);
-          },
-          child: Container(
-            width: 84,
-            height: 84,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                image: AssetImage(controller.images[index]),
-                fit: BoxFit.cover,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ));
-  }
-
-
-
   void _showImageDialog(
       BuildContext context, RouteDetailsController controller, int index) {
+    // Set the initial image when the dialog opens
+    if (index < controller.images.length) {
+      controller.selectImage(controller.images[index]);
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: AppColor.creamBackgroundColor,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(() => ClipRRect(
-                borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
-                child: controller.images.isNotEmpty &&
-                    index < controller.images.length
-                    ? Image.asset(
-                  controller.selectedImage.value.isEmpty
-                      ? controller.images[index]
-                      : controller.selectedImage.value,
-                  width: double.infinity,
-                  height: AppSize.height(value: 219),
-                  fit: BoxFit.cover,
-                )
-                    : Container(
-                  width: double.infinity,
-
-                  height: AppSize.width(value: 10),
-                  color: Colors.grey[300],
-                  child: Icon(Icons.image,
-                      size: 50, color: Colors.grey[600]),
-                ),
-              )),
-              SizedBox(height: AppSize.width(value: 12)),
-              Obx(() => SizedBox(
-                height: AppSize.width(value: 78),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.images.length,
-                  itemBuilder: (context, imgIndex) {
-                    final img = controller.images[imgIndex];
-                    return GestureDetector(
-                      onTap: () => controller.selectImage(img),
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            right: AppSize.width(value: 4)),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: controller.selectedImage.value == img
-                                ? Colors.blue
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                              AppSize.width(value: 8)),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              AppSize.width(value: 8)),
-                          child: Image.asset(
-                            img,
-                            width: AppSize.width(value: 78),
-                            height: AppSize.width(value: 78),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              )),
-
-            ],
-          ),
-        );
+        return ImageGalleryDialog(controller: controller);
       },
     );
   }
@@ -457,37 +379,38 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   // Comments Section
   Widget _buildCommentsSection(RouteDetailsController controller) {
     return Obx(() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Comments',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF2D2D2D),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Comments',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2D2D2D),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => controller.toggleComments(),
+                  child: TextWidget(
+                    text: controller.showAllComments.value
+                        ? 'Show less'
+                        : 'See more (${controller.remainingCommentsCount})',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    fontColor: AppColor.backgroundColor,
+                    underline: true,
+                  ),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () => controller.toggleComments(),
-              child: TextWidget(
-                text: controller.showAllComments.value
-                    ? 'Show less'
-                    : 'See more (${controller.remainingCommentsCount})',
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                fontColor: AppColor.backgroundColor,
-                underline: true,
-              ),
-            ),
+            ...controller.displayedComments
+                .map((comment) => _buildCommentItem(comment)),
+            _buildAddCommentSection(),
           ],
-        ),
-        ...controller.displayedComments.map((comment) => _buildCommentItem(comment)),
-        _buildAddCommentSection(),
-      ],
-    ));
+        ));
   }
 
   Widget _buildCommentItem(Map<String, dynamic> comment) {
@@ -568,6 +491,103 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// --- NEW EXTRACTED DIALOG WIDGET ---
+class ImageGalleryDialog extends StatelessWidget {
+  final RouteDetailsController controller;
+  const ImageGalleryDialog({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.all(24),
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColor.creamBackgroundColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Main Image Display
+            Obx(() => ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: controller.selectedImage.value.isNotEmpty
+                      ? Image.asset(
+                          controller.selectedImage.value,
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            height: 200,
+                            color: Colors.grey[300],
+                            child: Icon(Icons.error,
+                                size: 50, color: Colors.grey[600]),
+                          ),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(Icons.image,
+                              size: 50, color: Colors.grey[600]),
+                        ),
+                )),
+            SizedBox(height: 16),
+            // Thumbnails List
+            SizedBox(
+              height: 70,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                itemCount: controller.images.length,
+                separatorBuilder: (context, index) => SizedBox(width: 10),
+                itemBuilder: (context, imgIndex) {
+                  final imgPath = controller.images[imgIndex];
+                  return Obx(() {
+                    final isSelected =
+                        controller.selectedImage.value == imgPath;
+                    return GestureDetector(
+                      onTap: () => controller.selectImage(imgPath),
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: isSelected
+                                  ? Colors.amber
+                                  : Colors.transparent,
+                              width: 3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.asset(
+                            imgPath,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

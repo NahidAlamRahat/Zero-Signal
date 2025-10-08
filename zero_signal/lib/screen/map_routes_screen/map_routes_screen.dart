@@ -39,14 +39,13 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             ),
             const SizedBox(width: 10),
 
-
             // Filtering Icon
             InkWell(
               onTap: () {
-               Get.toNamed(AppRoutes.filtersScreen);
+                Get.toNamed(AppRoutes.filtersScreen);
               },
-              child: Image.asset(AppIconPath.filtaringIcon,
-                  width: 65, height: 65),
+              child:
+                  Image.asset(AppIconPath.filtaringIcon, width: 65, height: 65),
             ),
           ],
         ),
@@ -85,38 +84,46 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             ),
           ),
           Positioned(
-              bottom: 300.h,
-              right: 20,
-              child: Column(
-
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-
-                    mini: true,
-                    backgroundColor: Colors.transparent,
-                    heroTag: "btn1",
-                    onPressed: () {},
-                    child: Image.asset(AppIconPath.mapIcon),
+            bottom: 300.h,
+            right: 20,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  mini: true,
+                  backgroundColor: Colors.transparent,
+                  heroTag: "map_btn1", // Changed from "btn1" to "map_btn1"
+                  onPressed: () {},
+                  child: Image.asset(AppIconPath.mapIcon),
+                ),
+                const SizedBox(height: 10),
+                FloatingActionButton(
+                  mini: true,
+                  backgroundColor: Colors.transparent,
+                  heroTag: "map_btn2", // Changed from "btn2" to "map_btn2"
+                  onPressed: () {
+                    Get.toNamed(AppRoutes.shareSpotScreen);
+                  },
+                  child: Image.asset(
+                    AppIconPath.addIcon,
+                    width: 40,
+                    height: 40,
                   ),
-                  const SizedBox(height: 10),
-                  FloatingActionButton(
-                    mini: true,
-                    backgroundColor: Colors.transparent,
-                    heroTag: "btn2",
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.shareSpotScreen);
-                    },
-                    child: Image.asset(AppIconPath.addIcon,width: 40,height: 40,),
-                  ),
-                ],
-              ),),
+                ),
+              ],
+            ),
+          ),
 
-          Positioned(bottom: 130,left:0,right:0,child: GestureDetector(
-            onTap: (){
-              Get.toNamed(AppRoutes.saveRouteDetailsScreen);
-            },
-              child: RouteCard()),)
+          Positioned(
+            bottom: 130,
+            left: 0,
+            right: 0,
+            child: GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoutes.saveRouteDetailsScreen);
+                },
+                child: RouteCard()),
+          )
         ],
       ),
 
@@ -256,7 +263,8 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
     );
   }
 
-  Widget _buildMapTypeOption(String type, String imagePath, IconData fallbackIcon) {
+  Widget _buildMapTypeOption(
+      String type, String imagePath, IconData fallbackIcon) {
     final bool isSelected = selectedType == type;
 
     return GestureDetector(
