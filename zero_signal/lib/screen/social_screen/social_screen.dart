@@ -54,7 +54,6 @@ class _SocialScreenState extends State<SocialScreen> {
                             height: 24,
                           ),
                         ),
-
                         IconButton(
                           onPressed: () {},
                           icon: Image.asset(
@@ -90,7 +89,7 @@ class _SocialScreenState extends State<SocialScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: "Mountain Hike",
+                          text: "Mountailn Hike",
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
