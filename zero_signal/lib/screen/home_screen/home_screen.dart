@@ -58,12 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     minChildSize: 0.5,
                     maxChildSize: 0.9,
                     builder: (context, scrollController) =>
-                    const FilterBottomSheet(),
+                        const FilterBottomSheet(),
                   ),
                 );
               },
-              child: Image.asset(AppIconPath.filtaringIcon,
-                  width: 65, height: 65),
+              child:
+                  Image.asset(AppIconPath.filtaringIcon, width: 65, height: 65),
             ),
           ],
         ),
@@ -108,10 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: InkWell(
               onTap: () {
                 Get.toNamed(AppRoutes.spotDetailsScreen);
-
               },
               child: CircleAvatar(
-
                 backgroundColor: Colors.red,
               ),
             ),
@@ -142,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -164,5 +161,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
