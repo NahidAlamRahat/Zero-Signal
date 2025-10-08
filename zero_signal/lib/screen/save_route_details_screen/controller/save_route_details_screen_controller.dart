@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../gen/assets.gen.dart';
+
 class RouteDetailsController extends GetxController {
   // Selected image for dialog
   var selectedImage = ''.obs;
 
   // Images list - Test er jonno static images (pore API theke asbe)
   var images = <String>[
-    'assets/images/route1.jpg',
-    'assets/images/route2.jpg',
-    'assets/images/route3.jpg',
-    'assets/images/route4.jpg',
-    'assets/images/route5.jpg',
-    'assets/images/route6.jpg',
+    Assets.images.image1.path,
+    Assets.images.image2.path,
+    Assets.images.image3.path,
+    Assets.images.image4.path,
+    Assets.images.sunImage.path,
   ].obs;
 
   // Comments data

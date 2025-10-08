@@ -337,7 +337,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.only(
                     right: index == controller.images.length - 1 ? 0 : 8.w),
-                child: _buildImageThumbnail(context, controller, index),
+                child: _buildImageThumbnails(context, controller,)
               );
             },
           ),
@@ -346,27 +346,36 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildImageThumbnail(
-      BuildContext context, RouteDetailsController controller, int index) {
-    return InkWell(
-      onTap: () => _showImageDialog(context, controller, index),
-      child: Container(
-        width: 84.w,
-        height: 84.h,
-        decoration: ShapeDecoration(
-          image: DecorationImage(
-            image: controller.images.isNotEmpty && index < controller.images.length
-                ? AssetImage(controller.images[index]) // Static asset image
-                : AssetImage(AppImagePath.sunImage) as ImageProvider,
-            fit: BoxFit.cover,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.r),
+  Widget _buildImageThumbnails(BuildContext context, RouteDetailsController controller) {
+    return Obx(() => Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: List.generate(
+        controller.images.length,
+            (index) => InkWell(
+          onTap: () {
+            controller.selectImage(controller.images[index]);
+            _showImageDialog(context, controller, index);
+          },
+          child: Container(
+            width: 84,
+            height: 84,
+            decoration: ShapeDecoration(
+              image: DecorationImage(
+                image: AssetImage(controller.images[index]),
+                fit: BoxFit.cover,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
           ),
         ),
       ),
-    );
+    ));
   }
+
+
 
   void _showImageDialog(
       BuildContext context, RouteDetailsController controller, int index) {
@@ -374,7 +383,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColor.creamBackgroundColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -387,12 +396,13 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                       ? controller.images[index]
                       : controller.selectedImage.value,
                   width: double.infinity,
-                  height: AppSize.width(value: 300),
+                  height: AppSize.height(value: 219),
                   fit: BoxFit.cover,
                 )
                     : Container(
                   width: double.infinity,
-                  height: AppSize.width(value: 300),
+
+                  height: AppSize.width(value: 10),
                   color: Colors.grey[300],
                   child: Icon(Icons.image,
                       size: 50, color: Colors.grey[600]),
@@ -436,16 +446,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                   },
                 ),
               )),
-              SizedBox(height: AppSize.width(value: 12)),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: CircleBorder(),
-                  padding: EdgeInsets.all(10),
-                ),
-                child: Icon(Icons.close, color: Colors.black),
-              ),
+
             ],
           ),
         );
