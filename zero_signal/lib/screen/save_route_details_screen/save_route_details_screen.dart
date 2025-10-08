@@ -528,7 +528,7 @@ class ImageGalleryDialog extends StatelessWidget {
                             height: 200,
                             color: Colors.grey[300],
                             child: Icon(Icons.error,
-                                size: 50, color: Colors.grey[600]),
+                                size: 64, color: Colors.grey[600]),
                           ),
                         )
                       : Container(
@@ -539,7 +539,7 @@ class ImageGalleryDialog extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(Icons.image,
-                              size: 50, color: Colors.grey[600]),
+                              size: 64, color: Colors.red),
                         ),
                 )),
             SizedBox(height: 16),
@@ -559,8 +559,8 @@ class ImageGalleryDialog extends StatelessWidget {
                     return GestureDetector(
                       onTap: () => controller.selectImage(imgPath),
                       child: Container(
-                        width: 70,
-                        height: 70,
+                        width: 90,
+                        height: 110,
                         padding: EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           border: Border.all(
