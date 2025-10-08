@@ -73,6 +73,10 @@ class $AssetsIconsGen {
   AssetGenImage get deleteIcon =>
       const AssetGenImage('assets/icons/deleteIcon.png');
 
+  /// File path: assets/icons/download.png
+  AssetGenImage get download =>
+      const AssetGenImage('assets/icons/download.png');
+
   /// File path: assets/icons/downloadIcon.png
   AssetGenImage get downloadIcon =>
       const AssetGenImage('assets/icons/downloadIcon.png');
@@ -85,11 +89,17 @@ class $AssetsIconsGen {
   AssetGenImage get googleIcon =>
       const AssetGenImage('assets/icons/googleIcon.png');
 
+  /// File path: assets/icons/graph.png
+  AssetGenImage get graph => const AssetGenImage('assets/icons/graph.png');
+
   /// File path: assets/icons/gravel.png
   AssetGenImage get gravel => const AssetGenImage('assets/icons/gravel.png');
 
   /// File path: assets/icons/group.png
   AssetGenImage get group => const AssetGenImage('assets/icons/group.png');
+
+  /// File path: assets/icons/growth.png
+  AssetGenImage get growth => const AssetGenImage('assets/icons/growth.png');
 
   /// File path: assets/icons/hiking.png
   AssetGenImage get hiking => const AssetGenImage('assets/icons/hiking.png');
@@ -193,11 +203,14 @@ class $AssetsIconsGen {
         choiceMap,
         completedIcon,
         deleteIcon,
+        download,
         downloadIcon,
         filtaringIcon,
         googleIcon,
+        graph,
         gravel,
         group,
+        growth,
         hiking,
         homeIcon,
         homeIconselect,

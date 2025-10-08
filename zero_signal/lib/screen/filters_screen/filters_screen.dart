@@ -238,7 +238,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColor.soilColor : AppColor.soilColor,
+          color: isSelected ? AppColor.soilColor : Color(0xFFF5E9DF),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
