@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
 class FilterController extends GetxController {
-  // Selected filters
-  Set<String> selectedFilters = {};
+  // Selected filters - Observable for reactive updates
+  final selectedFilters = <String>[].obs;
 
   // Filter categories and options
   final Map<String, List<String>> filterCategories = {
@@ -42,12 +42,30 @@ class FilterController extends GetxController {
     } else {
       selectedFilters.add(option);
     }
-    update(); // UI refresh
+    // No need for update() with .obs
+  }
+
+  /// Check if filter is selected
+  bool isFilterSelected(String option) {
+    return selectedFilters.contains(option);
+  }
+
+  /// Get all selected filters
+  List<String> getSelectedFilters() {
+    return selectedFilters.toList();
   }
 
   /// Clear all filters
   void clearAll() {
     selectedFilters.clear();
-    update();
+  }
+
+  /// Get all filter options
+  List<String> getAllOptions() {
+    List<String> allOptions = [];
+    filterCategories.forEach((category, options) {
+      allOptions.addAll(options);
+    });
+    return allOptions;
   }
 }

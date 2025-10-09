@@ -572,7 +572,7 @@ class ImageGalleryDialog extends StatelessWidget {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Image.asset(
+                            child: Image.asset(
                             imgPath,
                             fit: BoxFit.cover,
                             width: double.infinity,
