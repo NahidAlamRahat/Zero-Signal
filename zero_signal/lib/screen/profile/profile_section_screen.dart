@@ -5,6 +5,7 @@ import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 
 import '../../constant/app_icon_path.dart';
+import '../../gen/assets.gen.dart';
 import '../../widget/icon_widget/icon_widget.dart';
 import '../../widget/space_widget.dart';
 import '../../widget/text_widget/text_widgets.dart';
@@ -154,7 +155,7 @@ class ProfileSectionScreen extends StatelessWidget {
             context,
             iconHeight: 15,
             iconWidth: 15,
-            icon: AppIconPath.mySpotsIcon,
+            icon: Assets.icons,
             title: 'Favorite Sites',
             onTap: () {
               Get.toNamed(AppRoutes.favoriteSitesScreen);

@@ -224,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: BoxDecoration(
                     color: Colors.blue,
                     shape: BoxShape.circle,
+
                     border: Border.all(color: Colors.white, width: 2),
                     boxShadow: [
                       BoxShadow(
@@ -233,6 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+
                 ),
               ),
             ),
