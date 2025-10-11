@@ -46,6 +46,11 @@ class BottomNav extends StatelessWidget {
                       horizontal: navPadding,
                       vertical: navPadding * 0.7,
                     ),
+                    tabMargin: controller.selectedIndex.value == 3
+                        ? EdgeInsets.only(right: 8)
+                        : controller.selectedIndex.value == 0
+                            ? EdgeInsets.only(left: 8)
+                            : EdgeInsets.zero,
                     duration: const Duration(milliseconds: 400),
                     tabBackgroundColor: AppColor.backgroundColor, // selected tab bg
                     textStyle: TextStyle(
@@ -116,6 +121,7 @@ class BottomNav extends StatelessWidget {
                               : iconUnselectedSize,
                         ),
                         icon: Icons.home,
+
 
                       ),
                     ],

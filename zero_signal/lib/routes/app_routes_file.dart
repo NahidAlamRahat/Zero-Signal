@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/screen/home_screen/home_screen.dart';
 import '../condition_screen/terms_condition_screen.dart';
-import '../my_routes_screen/my_routes_screen.dart';
 import '../my_spots_screen/my_spots_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
 import '../screen/auth/forgot_password_screen/forgot_password_screen.dart';
@@ -15,6 +14,7 @@ import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
 import 'package:zero_signal/screen/social_screen/social_screen.dart';
+import '../screen/my_routes_screen/my_spots_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/personal_information_screen/personal_information_screen.dart';
 import '../screen/save_route_details_screen/save_route_details_screen.dart';
@@ -162,20 +162,14 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   GetPage(
     name: AppRoutes.mySpotsScreen,
     // binding: SplashScreenBinding(),
-    page: () => const MySpotsScreen(),
-  ),
-
-  GetPage(
-    name: AppRoutes.mySpotsScreen,
-    // binding: SplashScreenBinding(),
-    page: () => const MySpotsScreen(),
+    page: () => MySpotsScreen(),
   ),
 
 
   GetPage(
     name: AppRoutes.myRoutesScreen,
     // binding: SplashScreenBinding(),
-    page: () => const MyRoutesScreen(),
+    page: () =>  MyRoutesScreen(),
   ),
 
 

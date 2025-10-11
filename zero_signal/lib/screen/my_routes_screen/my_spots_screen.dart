@@ -4,15 +4,14 @@ import 'package:get/get.dart';
 import 'package:zero_signal/my_spots_screen/widget/delete_confirm_dialog.dart';
 import 'package:zero_signal/my_spots_screen/widget/empty_state_widget.dart';
 import 'package:zero_signal/my_spots_screen/widget/spot_card.dart';
-
-import '../constant/app_colors.dart';
-import '../widget/appbar_widget/appbar_widget.dart';
+import '../../constant/app_colors.dart';
+import '../../widget/appbar_widget/appbar_widget.dart';
 import 'controller/my_spots_controller.dart';
 
-class MySpotsScreen extends StatelessWidget {
-  MySpotsScreen({super.key});
+class MyRoutesScreen extends StatelessWidget {
+  MyRoutesScreen({super.key});
 
-  final MySpotsController controller = Get.put(MySpotsController());
+  final MyRoutesController controller = Get.put(MyRoutesController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +20,13 @@ class MySpotsScreen extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
           appBar: AppbarWidget(
-            text: 'My Spots',
+            text: 'My Routes',
             backgroundColor: AppColor.creamBackgroundColor,
             centerTitle: true,
           ),
           backgroundColor: const Color(0xFFFFF4E9),
           body: SafeArea(
-            child: GetBuilder<MySpotsController>(
+            child: GetBuilder<MyRoutesController>(
               builder: (_) {
                 return Column(
                   children: [

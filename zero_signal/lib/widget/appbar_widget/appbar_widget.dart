@@ -55,7 +55,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
             style: TextStyle(
               fontSize: ResponsiveUtils.width(20),
               fontWeight: FontWeight.w500,
-              color: Colors.green.shade500,
+              color: Colors.black,
             ),
           ),
       bottom: bottom,
