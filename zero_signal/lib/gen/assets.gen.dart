@@ -1,5 +1,3 @@
-// dart format width=80
-
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
 ///  FlutterGen
@@ -7,7 +5,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 
@@ -27,12 +25,24 @@ class $AssetsFontsGen {
   String get outfitSemiBold => 'assets/fonts/Outfit-SemiBold.ttf';
 
   /// List of all assets
-  List<String> get values =>
-      [outfitBold, outfitMedium, outfitRegular, outfitSemiBold];
+  List<String> get values => [
+    outfitBold,
+    outfitMedium,
+    outfitRegular,
+    outfitSemiBold,
+  ];
 }
 
 class $AssetsIconsGen {
   const $AssetsIconsGen();
+
+  /// File path: assets/icons/RoutesImage.png
+  AssetGenImage get routesImage =>
+      const AssetGenImage('assets/icons/RoutesImage.png');
+
+  /// File path: assets/icons/aboutUsImage.png
+  AssetGenImage get aboutUsImage =>
+      const AssetGenImage('assets/icons/aboutUsImage.png');
 
   /// File path: assets/icons/add.png
   AssetGenImage get add => const AssetGenImage('assets/icons/add.png');
@@ -54,8 +64,16 @@ class $AssetsIconsGen {
   AssetGenImage get cameraIcon =>
       const AssetGenImage('assets/icons/cameraIcon.png');
 
+  /// File path: assets/icons/cameraIcon2.png
+  AssetGenImage get cameraIcon2 =>
+      const AssetGenImage('assets/icons/cameraIcon2.png');
+
   /// File path: assets/icons/car.png
   AssetGenImage get car => const AssetGenImage('assets/icons/car.png');
+
+  /// File path: assets/icons/changePasswordImage.png
+  AssetGenImage get changePasswordImage =>
+      const AssetGenImage('assets/icons/changePasswordImage.png');
 
   /// File path: assets/icons/chatIcon.png
   AssetGenImage get chatIcon =>
@@ -69,6 +87,10 @@ class $AssetsIconsGen {
   AssetGenImage get completedIcon =>
       const AssetGenImage('assets/icons/completedIcon.png');
 
+  /// File path: assets/icons/deleteAccountImage.png
+  AssetGenImage get deleteAccountImage =>
+      const AssetGenImage('assets/icons/deleteAccountImage.png');
+
   /// File path: assets/icons/deleteIcon.png
   AssetGenImage get deleteIcon =>
       const AssetGenImage('assets/icons/deleteIcon.png');
@@ -80,6 +102,18 @@ class $AssetsIconsGen {
   /// File path: assets/icons/downloadIcon.png
   AssetGenImage get downloadIcon =>
       const AssetGenImage('assets/icons/downloadIcon.png');
+
+  /// File path: assets/icons/faqImage.png
+  AssetGenImage get faqImage =>
+      const AssetGenImage('assets/icons/faqImage.png');
+
+  /// File path: assets/icons/favoriteRoutesImage.png
+  AssetGenImage get favoriteRoutesImage =>
+      const AssetGenImage('assets/icons/favoriteRoutesImage.png');
+
+  /// File path: assets/icons/favoriteSiteImage.png
+  AssetGenImage get favoriteSiteImage =>
+      const AssetGenImage('assets/icons/favoriteSiteImage.png');
 
   /// File path: assets/icons/filtaringIcon.webp
   AssetGenImage get filtaringIcon =>
@@ -112,9 +146,21 @@ class $AssetsIconsGen {
   AssetGenImage get homeIconselect =>
       const AssetGenImage('assets/icons/homeIconselect.png');
 
+  /// File path: assets/icons/languageImage.png
+  AssetGenImage get languageImage =>
+      const AssetGenImage('assets/icons/languageImage.png');
+
   /// File path: assets/icons/location.png
   AssetGenImage get location =>
       const AssetGenImage('assets/icons/location.png');
+
+  /// File path: assets/icons/logoutImage.png
+  AssetGenImage get logoutImage =>
+      const AssetGenImage('assets/icons/logoutImage.png');
+
+  /// File path: assets/icons/manageDownloadImage.png
+  AssetGenImage get manageDownloadImage =>
+      const AssetGenImage('assets/icons/manageDownloadImage.png');
 
   /// File path: assets/icons/map.png
   AssetGenImage get map => const AssetGenImage('assets/icons/map.png');
@@ -126,9 +172,17 @@ class $AssetsIconsGen {
   AssetGenImage get myLocationIcon =>
       const AssetGenImage('assets/icons/myLocationIcon.png');
 
+  /// File path: assets/icons/mySpotsImage.png
+  AssetGenImage get mySpotsImage =>
+      const AssetGenImage('assets/icons/mySpotsImage.png');
+
   /// File path: assets/icons/my_sport_list.png
   AssetGenImage get mySportList =>
       const AssetGenImage('assets/icons/my_sport_list.png');
+
+  /// File path: assets/icons/privacyPolicyImage.png
+  AssetGenImage get privacyPolicyImage =>
+      const AssetGenImage('assets/icons/privacyPolicyImage.png');
 
   /// File path: assets/icons/profileIcon.png
   AssetGenImage get profileIcon =>
@@ -177,8 +231,16 @@ class $AssetsIconsGen {
   AssetGenImage get spanishFlag =>
       const AssetGenImage('assets/icons/spanish_flag.png');
 
+  /// File path: assets/icons/supportImage.png
+  AssetGenImage get supportImage =>
+      const AssetGenImage('assets/icons/supportImage.png');
+
   /// File path: assets/icons/task.png
   AssetGenImage get task => const AssetGenImage('assets/icons/task.png');
+
+  /// File path: assets/icons/termsAndConditionsImage.png
+  AssetGenImage get termsAndConditionsImage =>
+      const AssetGenImage('assets/icons/termsAndConditionsImage.png');
 
   /// File path: assets/icons/uk_flag.png
   AssetGenImage get ukFlag => const AssetGenImage('assets/icons/uk_flag.png');
@@ -192,51 +254,66 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-        add,
-        addIcon,
-        addPeople,
-        batch,
-        bike,
-        cameraIcon,
-        car,
-        chatIcon,
-        choiceMap,
-        completedIcon,
-        deleteIcon,
-        download,
-        downloadIcon,
-        filtaringIcon,
-        googleIcon,
-        graph,
-        gravel,
-        group,
-        growth,
-        hiking,
-        homeIcon,
-        homeIconselect,
-        location,
-        map,
-        mapIcon,
-        myLocationIcon,
-        mySportList,
-        profileIcon,
-        profileSelect,
-        roadTrip,
-        routeIcon,
-        routesSelect,
-        running,
-        save,
-        search,
-        send,
-        share,
-        socialIcon,
-        socialSelect,
-        spanishFlag,
-        task,
-        ukFlag,
-        walking,
-        yelloDownloadIcon
-      ];
+    routesImage,
+    aboutUsImage,
+    add,
+    addIcon,
+    addPeople,
+    batch,
+    bike,
+    cameraIcon,
+    cameraIcon2,
+    car,
+    changePasswordImage,
+    chatIcon,
+    choiceMap,
+    completedIcon,
+    deleteAccountImage,
+    deleteIcon,
+    download,
+    downloadIcon,
+    faqImage,
+    favoriteRoutesImage,
+    favoriteSiteImage,
+    filtaringIcon,
+    googleIcon,
+    graph,
+    gravel,
+    group,
+    growth,
+    hiking,
+    homeIcon,
+    homeIconselect,
+    languageImage,
+    location,
+    logoutImage,
+    manageDownloadImage,
+    map,
+    mapIcon,
+    myLocationIcon,
+    mySpotsImage,
+    mySportList,
+    privacyPolicyImage,
+    profileIcon,
+    profileSelect,
+    roadTrip,
+    routeIcon,
+    routesSelect,
+    running,
+    save,
+    search,
+    send,
+    share,
+    socialIcon,
+    socialSelect,
+    spanishFlag,
+    supportImage,
+    task,
+    termsAndConditionsImage,
+    ukFlag,
+    walking,
+    yelloDownloadIcon,
+  ];
 }
 
 class $AssetsImagesGen {
@@ -343,33 +420,33 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-        mountainMap,
-        roadMap,
-        appLogo,
-        authBackround,
-        frameImage,
-        image1,
-        image2,
-        image3,
-        image4,
-        map5,
-        mapImageWebp,
-        mapImagePng,
-        mapImage3,
-        normalMap,
-        onboardingBackground,
-        profileImage,
-        profileImage1,
-        profileImage2,
-        profileImage3,
-        profileImage4,
-        routeImage,
-        signInBackgroundImage,
-        signUpBakground,
-        socialBg,
-        sunImage,
-        viewImage
-      ];
+    mountainMap,
+    roadMap,
+    appLogo,
+    authBackround,
+    frameImage,
+    image1,
+    image2,
+    image3,
+    image4,
+    map5,
+    mapImageWebp,
+    mapImagePng,
+    mapImage3,
+    normalMap,
+    onboardingBackground,
+    profileImage,
+    profileImage1,
+    profileImage2,
+    profileImage3,
+    profileImage4,
+    routeImage,
+    signInBackgroundImage,
+    signUpBakground,
+    socialBg,
+    sunImage,
+    viewImage,
+  ];
 }
 
 class Assets {
@@ -381,18 +458,12 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-    this.animation,
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
   final Size? size;
   final Set<String> flavors;
-  final AssetGenImageAnimation? animation;
 
   Image image({
     Key? key,
@@ -447,30 +518,11 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
 
   String get keyName => _assetName;
-}
-
-class AssetGenImageAnimation {
-  const AssetGenImageAnimation({
-    required this.isAnimation,
-    required this.duration,
-    required this.frames,
-  });
-
-  final bool isAnimation;
-  final Duration duration;
-  final int frames;
 }

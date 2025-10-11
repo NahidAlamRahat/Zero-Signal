@@ -10,6 +10,7 @@ import '../screen/auth/sign_in_and_registration_screen/sign_in_and_registration_
 import '../screen/auth/sign_in_screen/sign_in_screen.dart';
 import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
+import '../screen/contact_support_screen/contact_support_screen.dart';
 import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
@@ -192,10 +193,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   ),
 
 
+
+
   GetPage(
-    name: AppRoutes.updateInformationScreen,
+    name: AppRoutes.contactSupportScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  UpdateInformationScreen(),
+    page: () =>  ContactSupportScreen(),
   ),
 
 

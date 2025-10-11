@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -15,78 +14,96 @@ class SignInAndRegistrationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final screenHeight = size.height;
+    final screenWidth = size.width;
+
     return Scaffold(
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppImagePath.signInBackgroundImage),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                bottom: kBottomNavigationBarHeight,
-                left: 16,
-                right: 16,
-                child: GlassEffact(
-                  height: 280.h,
-                  width: 390.w,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      Image.asset(AppImagePath.appLogo, width: 61, height: 60),
-                      const SizedBox(height: 20),
-                      TextWidget(
-                        text: AppStrings.lifeIsShortAndSignIn,
-                        fontColor: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      const SizedBox(height: 20),
-
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ButtonWidget(
-                          backgroundColor: Colors.transparent,
-                          label: 'Sign In',
-                          buttonHeight: 40,
-                          borderColor: Colors.white,
-                          textColor: Colors.white,
-                          onPressed: () {
-                            Get.toNamed(AppRoutes.signInScreen);
-                          },
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ButtonWidget(
-                          onPressed: (){
-                            Get.toNamed(AppRoutes.signUpScreen);
-                          },
-                          backgroundColor: AppColor.backgroundColor,
-                          label: 'Registration',
-                          buttonHeight: 40,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+      body: Container(
+        height: screenHeight,
+        width: screenWidth,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppImagePath.signInBackgroundImage),
+            fit: BoxFit.cover,
           ),
         ),
+        child: Stack(
+          children: [
+            Positioned(
+              bottom: screenHeight * 0.08,
+              left: screenWidth * 0.04,
+              right: screenWidth * 0.04,
+              child: GlassEffact(
+                height: screenHeight * 0.35,
+                width: screenWidth * 0.92,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // App Logo
+                    Image.asset(
+                      AppImagePath.appLogo,
+                      width: screenWidth * 0.15,
+                      height: screenHeight * 0.08,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
 
-    );
-  }
+                    // Title Text
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.08,
+                      ),
+                      child: TextWidget(
+                        text: AppStrings.lifeIsShortAndSignIn,
+                        fontColor: Colors.white,
+                        fontSize: screenWidth * 0.045,
+                        fontWeight: FontWeight.w400,
+                        textAlignment: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
 
-  /// Background image widget
-  Widget _buildBackgroundImage() {
-    return Positioned.fill(
-      child: Image.asset(AppImagePath.signInBackgroundImage, fit: BoxFit.cover),
+                    // Sign In Button
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.06,
+                        vertical: screenHeight * 0.008,
+                      ),
+                      child: ButtonWidget(
+                        backgroundColor: Colors.transparent,
+                        label: 'Sign In',
+                        buttonHeight: screenHeight * 0.05,
+                        borderColor: Colors.white,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.signInScreen);
+                        },
+                      ),
+                    ),
+
+                    // Registration Button
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.06,
+                        vertical: screenHeight * 0.008,
+                      ),
+                      child: ButtonWidget(
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.signUpScreen);
+                        },
+                        backgroundColor: AppColor.backgroundColor,
+                        label: 'Registration',
+                        buttonHeight: screenHeight * 0.05,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

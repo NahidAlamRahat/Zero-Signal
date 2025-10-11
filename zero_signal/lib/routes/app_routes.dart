@@ -41,6 +41,7 @@ class AppRoutes {
 
   static const updateInformationScreen = "/updateInformationScreen";
 
+  static const contactSupportScreen = "/contactSupportScreen";
 
 
 }

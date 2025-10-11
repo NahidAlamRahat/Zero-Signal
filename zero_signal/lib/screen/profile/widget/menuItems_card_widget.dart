@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import 'package:zero_signal/gen/assets.gen.dart';
+import 'package:zero_signal/routes/app_routes.dart';
+import '../../../widget/space_widget.dart';
+import '../controller/profile_controller.dart';
+import 'menuItem_widget.dart';
+
+class MenuItemsCardWidget extends StatelessWidget {
+  final ProfileController controller;
+
+  const MenuItemsCardWidget({
+    super.key,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5E9DF),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0x23000000),
+            blurRadius: 4,
+            offset: const Offset(0, 0),
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          MenuItemWidget(
+            icon: Assets.icons.mySpotsImage.path,
+            title: 'My Spots',
+            onTap: () => controller.navigateToRoute(AppRoutes.mySpotsScreen),
+          ),
+          _buildDivider(),
+          MenuItemWidget(
+            icon: Assets.icons.routesImage.path,
+            title: 'My Routes',
+            onTap: () => controller.navigateToRoute(AppRoutes.myRoutesScreen),
+          ),
+          _buildDivider(),
+          MenuItemWidget(
+            icon: Assets.icons.favoriteSiteImage.path,
+            title: 'Favorite Sites',
+            onTap: () => controller.navigateToRoute(AppRoutes.favoriteSitesScreen),
+          ),
+          _buildDivider(),
+          MenuItemWidget(
+            icon: Assets.icons.favoriteRoutesImage.path,
+            title: 'Favorite Routes',
+            onTap: () => controller.navigateToRoute(AppRoutes.favoriteSitesScreen),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Column(
+      children: [
+        SpaceWidget(spaceHeight: 16),
+        Container(
+          height: 0.5,
+          color: const Color(0x99D6C8B0),
+        ),
+        SpaceWidget(spaceHeight: 16),
+      ],
+    );
+  }
+}

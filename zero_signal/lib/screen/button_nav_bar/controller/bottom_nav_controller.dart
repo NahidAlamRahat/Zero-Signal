@@ -13,7 +13,7 @@ class UserBottomNavController extends GetxController {
     const HomeScreen(),
     MapRoutesScreen(),
     const SocialScreen(),
-    const ProfileSectionScreen(),
+     ProfileSectionScreen(),
 
   ];
 
