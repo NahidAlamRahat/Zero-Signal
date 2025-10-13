@@ -12,15 +12,53 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Screen width & height
+    // Screen dimensions
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallDevice = screenWidth < 360;
+    final isMediumDevice = screenWidth >= 360 && screenWidth < 600;
+    final isLargeDevice = screenWidth >= 600;
 
-    // Responsive values
-    final double iconSelectedSize = screenWidth * 0.06;
-    final double iconUnselectedSize = screenWidth * 0.09;
-    final double navPadding = screenWidth * 0.04;
-    final double navGap = screenWidth * 0.02;
-    final double navIconSize = screenWidth * 0.08;
+    // Responsive calculations
+    late double iconSelectedSize;
+    late double iconUnselectedSize;
+    late double navPadding;
+    late double navGap;
+    late double navIconSize;
+    late double fontSize;
+    late double borderRadius;
+
+    if (isSmallDevice) {
+      // Small devices (< 360px)
+      iconSelectedSize = screenWidth * 0.05;
+      iconUnselectedSize = screenWidth * 0.07;
+      navPadding = screenWidth * 0.03;
+      navGap = screenWidth * 0.01;
+      navIconSize = screenWidth * 0.065;
+      fontSize = screenWidth * 0.03;
+      borderRadius = 35;
+    } else if (isMediumDevice) {
+      // Medium devices (360-600px)
+      iconSelectedSize = screenWidth * 0.055;
+      iconUnselectedSize = screenWidth * 0.075;
+      navPadding = screenWidth * 0.035;
+      navGap = screenWidth * 0.015;
+      navIconSize = screenWidth * 0.07;
+      fontSize = screenWidth * 0.032;
+      borderRadius = 38;
+    } else {
+      // Large devices (> 600px)
+      iconSelectedSize = screenWidth * 0.06;
+      iconUnselectedSize = screenWidth * 0.09;
+      navPadding = screenWidth * 0.04;
+      navGap = screenWidth * 0.02;
+      navIconSize = screenWidth * 0.08;
+      fontSize = screenWidth * 0.035;
+      borderRadius = 40;
+    }
+
+    // Responsive padding
+    final horizontalPadding = isSmallDevice ? 12.0 : isMediumDevice ? 14.0 : 16.0;
 
     return GetBuilder(
       init: UserBottomNavController(),
@@ -33,9 +71,12 @@ class BottomNav extends StatelessWidget {
           ),
           bottomNavigationBar: SafeArea(
             child: Padding(
-              padding: EdgeInsets.only(left: 16, right: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: isSmallDevice ? 8 : 10,
+              ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(borderRadius),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: GNav(
@@ -44,85 +85,52 @@ class BottomNav extends StatelessWidget {
                     iconSize: navIconSize,
                     padding: EdgeInsets.symmetric(
                       horizontal: navPadding,
-                      vertical: navPadding * 0.7,
+                      vertical: navPadding * 0.6,
                     ),
-                    tabMargin: controller.selectedIndex.value == 3
-                        ? EdgeInsets.only(right: 8)
-                        : controller.selectedIndex.value == 0
-                            ? EdgeInsets.only(left: 8)
-                            : EdgeInsets.zero,
+                    tabMargin: _getTabMargin(
+                      controller.selectedIndex.value,
+                      isSmallDevice ? 6 : 8,
+                    ),
                     duration: const Duration(milliseconds: 400),
-                    tabBackgroundColor: AppColor.backgroundColor, // selected tab bg
+                    tabBackgroundColor: AppColor.backgroundColor,
                     textStyle: TextStyle(
-                      fontSize: screenWidth * 0.035,
+                      fontSize: fontSize,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
-                    tabBorderRadius: 40,
+                    tabBorderRadius: borderRadius,
                     tabs: [
-                      GButton(
+                      _buildGButton(
                         text: 'Explore',
-                        leading: IconWidget(
-                          icon: controller.selectedIndex.value == 0
-                              ? AppIconPath.homeIconselect
-                              : AppIconPath.homeIcon,
-                          width: controller.selectedIndex.value == 0
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                          height: controller.selectedIndex.value == 0
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                        ),
-                        icon: Icons.home,
+                        isSelected: controller.selectedIndex.value == 0,
+                        selectedIcon: AppIconPath.homeIconselect,
+                        unselectedIcon: AppIconPath.homeIcon,
+                        selectedSize: iconSelectedSize,
+                        unselectedSize: iconUnselectedSize,
                       ),
-                      GButton(
+                      _buildGButton(
                         text: 'Routes',
-                        leading: IconWidget(
-                          icon: controller.selectedIndex.value == 1
-                              ? AppIconPath.routesSelect
-                              : AppIconPath.routeIcon,
-                          width: controller.selectedIndex.value == 1
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                          height: controller.selectedIndex.value == 1
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                        ),
-                        icon: Icons.home,
-
+                        isSelected: controller.selectedIndex.value == 1,
+                        selectedIcon: AppIconPath.routesSelect,
+                        unselectedIcon: AppIconPath.routeIcon,
+                        selectedSize: iconSelectedSize,
+                        unselectedSize: iconUnselectedSize,
                       ),
-                      GButton(
+                      _buildGButton(
                         text: 'Social',
-                        leading: IconWidget(
-                          icon: controller.selectedIndex.value == 2
-                              ? AppIconPath.socialSelect
-                              : AppIconPath.socialIcon,
-                          width: controller.selectedIndex.value == 2
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                          height: controller.selectedIndex.value == 2
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                        ),
-                        icon: Icons.home,
-
+                        isSelected: controller.selectedIndex.value == 2,
+                        selectedIcon: AppIconPath.socialSelect,
+                        unselectedIcon: AppIconPath.socialIcon,
+                        selectedSize: iconSelectedSize,
+                        unselectedSize: iconUnselectedSize,
                       ),
-                      GButton(
+                      _buildGButton(
                         text: 'Profile',
-                        leading: IconWidget(
-                          icon: controller.selectedIndex.value == 3
-                              ? AppIconPath.profileSelect
-                              : AppIconPath.profileIcon,
-                          width: controller.selectedIndex.value == 3
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                          height: controller.selectedIndex.value == 3
-                              ? iconSelectedSize
-                              : iconUnselectedSize,
-                        ),
-                        icon: Icons.home,
-
-
+                        isSelected: controller.selectedIndex.value == 3,
+                        selectedIcon: AppIconPath.profileSelect,
+                        unselectedIcon: AppIconPath.profileIcon,
+                        selectedSize: iconSelectedSize,
+                        unselectedSize: iconUnselectedSize,
                       ),
                     ],
                     selectedIndex: controller.selectedIndex.value,
@@ -135,5 +143,33 @@ class BottomNav extends StatelessWidget {
         );
       },
     );
+  }
+
+  GButton _buildGButton({
+    required String text,
+    required bool isSelected,
+    required String selectedIcon,
+    required String unselectedIcon,
+    required double selectedSize,
+    required double unselectedSize,
+  }) {
+    return GButton(
+      text: text,
+      leading: IconWidget(
+        icon: isSelected ? selectedIcon : unselectedIcon,
+        width: isSelected ? selectedSize : unselectedSize,
+        height: isSelected ? selectedSize : unselectedSize,
+      ),
+      icon: Icons.home,
+    );
+  }
+
+  EdgeInsets _getTabMargin(int selectedIndex, double margin) {
+    if (selectedIndex == 3) {
+      return EdgeInsets.only(right: margin);
+    } else if (selectedIndex == 0) {
+      return EdgeInsets.only(left: margin);
+    }
+    return EdgeInsets.zero;
   }
 }

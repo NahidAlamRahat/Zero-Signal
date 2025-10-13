@@ -2,15 +2,12 @@ import 'dart:math' as Math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:get/get.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Position;
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
-import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
-import 'package:zero_signal/widget/text_widget/text_widgets.dart';
-import '../../constant/app_colors.dart';
 import '../../routes/app_routes.dart';
 import '../map_routes_screen/map_routes_screen.dart';
 
@@ -39,10 +36,43 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String selectedMapType = 'Default';
-  Position? currentPosition;
+  // Map style URIs
+  static const String defaultStyleUri = 'mapbox://styles/mapbox/streets-v12';
+  static const String satelliteStyleUri = 'mapbox://styles/lede18/cmg91jkk3000r01sf8m1r29ky';
+  static const String terrainStyleUri = 'mapbox://styles/lede18/cmg91k73u000s01qo5ye4bl7q';
+
+  String selectedMapType = 'OutDoor';
+  geo.Position? currentPosition;
   List<SpotModel> nearbySpots = [];
   bool isLoading = true;
+  late MapboxMap mapboxMap;
+
+  // Method to update map style based on selection
+  Future<void> _updateMapStyle(String mapType) async {
+    String styleUri;
+    switch (mapType) {
+      case 'Satellite':
+        styleUri = satelliteStyleUri;
+        break;
+      case 'Terrain':
+        styleUri = terrainStyleUri;
+        break;
+      case 'OutDoor':
+      default:
+        styleUri = defaultStyleUri;
+        break;
+    }
+
+    try {
+      await mapboxMap.loadStyleURI(styleUri);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error changing map style: $e')),
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -70,20 +100,68 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _getCurrentLocation() async {
     try {
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        await Geolocator.requestPermission();
+      // Check if location services are enabled
+      bool serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please enable location services')),
+          );
+        }
+        return;
       }
 
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+      // Check location permission
+      var permission = await geo.Geolocator.checkPermission();
+      if (permission == geo.LocationPermission.denied) {
+        permission = await geo.Geolocator.requestPermission();
+        if (permission == geo.LocationPermission.denied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Location permission denied')),
+            );
+          }
+          return;
+        }
+      }
+
+      if (permission == geo.LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permission permanently denied. Please enable from settings.')),
+          );
+        }
+        return;
+      }
+
+      // Get current position
+      final position = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo.LocationAccuracy.high,
       );
 
-      setState(() {
-        currentPosition = position;
-      });
+      if (mounted) {
+        setState(() {
+          currentPosition = position;
+        });
+
+        // Animate camera to current location
+        await mapboxMap.flyTo(
+          CameraOptions(
+            center: Point(coordinates: Position.fromJson([position.longitude, position.latitude])),
+            zoom: 15.0,
+            bearing: 0,
+            pitch: 0,
+          ),
+          MapAnimationOptions(duration: 2000, startDelay: 0),
+        );
+      }
     } catch (e) {
       print('Error getting location: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error getting location: $e')),
+        );
+      }
       rethrow;
     }
   }
@@ -134,9 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
       return distance <= 5; // 5 km radius
     }).toList();
 
-    setState(() {
-      nearbySpots = nearby;
-    });
+    if (mounted) {
+      setState(() {
+        nearbySpots = nearby;
+      });
+      await _addMarkersToMap();
+    }
   }
 
   double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
@@ -149,6 +230,54 @@ class _HomeScreenState extends State<HomeScreen> {
             2;
     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
   }
+
+  // Add markers to Mapbox
+  Future<void> _addMarkersToMap() async {
+    if (!mounted) return;
+
+    try {
+      final pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+      
+      for (var spot in nearbySpots) {
+        await pointAnnotationManager.create(
+          PointAnnotationOptions(
+            geometry: Point(coordinates: Position.fromJson([spot.longitude, spot.latitude])),
+            iconImage: _getMarkerIconName(spot.type),
+            textField: spot.name,
+            textSize: 12,
+            textColor: Colors.white.value,
+            textHaloColor: Colors.black.value,
+            textHaloWidth: 1,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error adding markers: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error adding markers: $e')),
+        );
+      }
+    }
+  }
+
+  String _getMarkerIconName(String type) {
+    // Mapbox এ icon names যোগ করুন
+    switch (type) {
+      case 'restaurant':
+        return 'restaurant_marker';
+      case 'park':
+        return 'park_marker';
+      case 'landmark':
+        return 'landmark_marker';
+      case 'market':
+        return 'market_marker';
+      default:
+        return 'default_marker';
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -200,46 +329,65 @@ class _HomeScreenState extends State<HomeScreen> {
       // Map Background
       body: Stack(
         children: [
-          // Background Image
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-           child: MapWidget(),
+          // MapBox Widget
+          MapWidget(
+            onMapCreated: (controller) async {
+              mapboxMap = controller;
+              
+              // Set initial map style
+              await mapboxMap.loadStyleURI(defaultStyleUri);
+              
+              // Set initial camera position to Dhaka
+              await mapboxMap.setCamera(
+                CameraOptions(
+                  center: Point(coordinates: Position.fromJson([90.4125, 23.8103])), // Dhaka coordinates
+                  zoom: 12.0,
+                ),
+              );
+              
+              if (nearbySpots.isNotEmpty) {
+                await _addMarkersToMap();
+              }
+            },
           ),
-
-          // Nearby Spots Markers
-          if (!isLoading && currentPosition != null)
-            ..._buildNearbySpotMarkers(),
 
           // Current Location Marker (Blue dot)
           if (!isLoading && currentPosition != null)
             Positioned(
-              top: MediaQuery.of(context).size.height * 0.4,
+              top: MediaQuery.of(context).size.height * 0.5,
               left: MediaQuery.of(context).size.width * 0.5,
               child: Transform.translate(
                 offset: Offset(-15, -15),
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
-
-                    border: Border.all(color: Colors.white, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.5),
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                child: TweenAnimationBuilder(
+                  tween: Tween<double>(begin: 0.7, end: 1.0),
+                  duration: Duration(milliseconds: 1000),
+                  curve: Curves.easeInOut,
+                  builder: (context, double value, child) {
+                    return Transform.scale(
+                      scale: value,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue.withOpacity(0.5),
+                              blurRadius: 10,
+                              spreadRadius: 2 * value,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-
+                    );
+                  },
                 ),
               ),
             ),
 
-          // Top-right icon (AppBar er niche)
+          // Top-right icon
           Positioned(
             top: kToolbarHeight + 50.h,
             right: 20,
@@ -291,95 +439,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Widget> _buildNearbySpotMarkers() {
-    return nearbySpots.map((spot) {
-      // Calculate marker position based on spot coordinates
-      // You might need to adjust this based on your map image coordinates
-      final xPosition = (spot.longitude + 74.35) * 1000; // Adjust multiplier
-      final yPosition = (spot.latitude - 24.8) * 1000; // Adjust multiplier
-
-      return Positioned(
-        left: xPosition,
-        top: yPosition,
-        child: InkWell(
-          onTap: () {
-            Get.toNamed(AppRoutes.spotDetailsScreen);
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: _getMarkerColor(spot.type),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  _getMarkerIcon(spot.type),
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              SizedBox(height: 4),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.black87,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  spot.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  Color _getMarkerColor(String type) {
-    switch (type) {
-      case 'restaurant':
-        return Colors.orange;
-      case 'park':
-        return Colors.green;
-      case 'landmark':
-        return Colors.red;
-      case 'market':
-        return Colors.purple;
-      default:
-        return Colors.blue;
-    }
-  }
-
-  IconData _getMarkerIcon(String type) {
-    switch (type) {
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'park':
-        return Icons.nature;
-      case 'landmark':
-        return Icons.location_on;
-      case 'market':
-        return Icons.shopping_cart;
-      default:
-        return Icons.place;
-    }
-  }
-
   void _showMapTypeBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -387,11 +446,11 @@ class _HomeScreenState extends State<HomeScreen> {
       isScrollControlled: true,
       builder: (context) => MapTypeBottomSheet(
         selectedMapType: selectedMapType,
-        onMapTypeSelected: (type) {
+        onMapTypeSelected: (type) async {
           setState(() {
             selectedMapType = type;
           });
-          print('Selected Map Type: $type');
+          await _updateMapStyle(type);
         },
       ),
     );

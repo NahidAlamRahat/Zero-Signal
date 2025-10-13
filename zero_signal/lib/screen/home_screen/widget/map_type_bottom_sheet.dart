@@ -71,7 +71,7 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildMapTypeOption(
-                'Default',
+                'OutDoor',
                 AppImagePath.normalMap,
                 Icons.map_outlined,
               ),
