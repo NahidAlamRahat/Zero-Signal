@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
@@ -30,7 +31,7 @@ class CustomText extends StatelessWidget {
       textAlign: textAlign,
       style: TextStyle(
         decoration: textDecoration,
-        fontSize: fontSize,
+        fontSize: fontSize.sp,
         fontWeight: fontWeight,
         color: color,
       ),
