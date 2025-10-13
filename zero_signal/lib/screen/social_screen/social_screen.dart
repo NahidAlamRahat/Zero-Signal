@@ -334,11 +334,14 @@ class _SocialScreenState extends State<SocialScreen> {
                       
                             ],
                           ),
-                          SpaceWidget(spaceHeight: 8,),
-                          TextWidget(text: 'Report Activity',
-                            textAlignment: TextAlign.center,
-                            fontSize: 16.sp,
-                            underline: true,
+                          Center(
+                            child: TextWidget(text: 'Report Activity',
+                              fontColor: Colors.white,
+                              textAlignment: TextAlign.center,
+                              underlineColor: Colors.white,
+                              fontSize: 16.sp,
+                              underline: true,
+                            ),
                           )
                         ],
                       ),
