@@ -192,6 +192,10 @@ class $AssetsIconsGen {
   AssetGenImage get profileSelect =>
       const AssetGenImage('assets/icons/profileSelect.png');
 
+  /// File path: assets/icons/realEstate.png
+  AssetGenImage get realEstate =>
+      const AssetGenImage('assets/icons/realEstate.png');
+
   /// File path: assets/icons/roadTrip.png
   AssetGenImage get roadTrip =>
       const AssetGenImage('assets/icons/roadTrip.png');
@@ -296,6 +300,7 @@ class $AssetsIconsGen {
     privacyPolicyImage,
     profileIcon,
     profileSelect,
+    realEstate,
     roadTrip,
     routeIcon,
     routesSelect,
