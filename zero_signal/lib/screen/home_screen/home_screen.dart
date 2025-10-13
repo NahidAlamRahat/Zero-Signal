@@ -334,9 +334,6 @@ class _HomeScreenState extends State<HomeScreen> {
             onMapCreated: (controller) async {
               mapboxMap = controller;
               
-              // Set initial map style
-              await mapboxMap.loadStyleURI(defaultStyleUri);
-              
               // Set initial camera position to Dhaka
               await mapboxMap.setCamera(
                 CameraOptions(

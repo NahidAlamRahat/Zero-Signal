@@ -41,14 +41,14 @@ class BottomNav extends StatelessWidget {
       // Medium devices (360-600px)
       iconSelectedSize = screenWidth * 0.055;
       iconUnselectedSize = screenWidth * 0.075;
-      navPadding = screenWidth * 0.035;
+      navPadding = screenWidth * 0.040;
       navGap = screenWidth * 0.015;
       navIconSize = screenWidth * 0.07;
       fontSize = screenWidth * 0.032;
       borderRadius = 38;
     } else {
       // Large devices (> 600px)
-      iconSelectedSize = screenWidth * 0.06;
+      iconSelectedSize = screenWidth * 0.12;
       iconUnselectedSize = screenWidth * 0.09;
       navPadding = screenWidth * 0.04;
       navGap = screenWidth * 0.02;
@@ -73,7 +73,7 @@ class BottomNav extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
-                vertical: isSmallDevice ? 8 : 10,
+                vertical: isSmallDevice ? 12 : 10,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(borderRadius),
@@ -85,7 +85,7 @@ class BottomNav extends StatelessWidget {
                     iconSize: navIconSize,
                     padding: EdgeInsets.symmetric(
                       horizontal: navPadding,
-                      vertical: navPadding * 0.6,
+                      vertical: navPadding * 0.8, // Increased vertical padding
                     ),
                     tabMargin: _getTabMargin(
                       controller.selectedIndex.value,
