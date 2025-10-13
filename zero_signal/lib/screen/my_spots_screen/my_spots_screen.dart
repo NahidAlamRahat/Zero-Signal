@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zero_signal/my_spots_screen/widget/delete_confirm_dialog.dart';
-import 'package:zero_signal/my_spots_screen/widget/empty_state_widget.dart';
-import 'package:zero_signal/my_spots_screen/widget/spot_card.dart';
-
-import '../constant/app_colors.dart';
-import '../widget/appbar_widget/appbar_widget.dart';
+import '../../constant/app_colors.dart';
+import '../../widget/appbar_widget/appbar_widget.dart';
+import '../my_routes_screen/widget/delete_confirm_dialog.dart';
+import '../my_routes_screen/widget/empty_state_widget.dart';
+import '../my_routes_screen/widget/spot_card.dart';
 import 'controller/my_spots_controller.dart';
 
 class MySpotsScreen extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../favorite_sites_screen/favorite_sites_screen.dart';
+import '../model/spot_item.dart';
 
 class DeleteConfirmDialog extends StatelessWidget {
   final SpotItem spot;

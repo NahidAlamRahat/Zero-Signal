@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import '../../../gen/assets.gen.dart';
 import '../../favorite_sites_screen/favorite_sites_screen.dart';
-import '../../gen/assets.gen.dart';
+import '../model/spot_item.dart';
 
 class SpotActions extends StatelessWidget {
   final SpotItem spot;

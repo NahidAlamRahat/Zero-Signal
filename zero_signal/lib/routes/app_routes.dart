@@ -6,6 +6,7 @@ class AppRoutes {
   static const chooseLanguageScreen = "/chooseLanguageScreen";
   static const navigationScreen = "/navigation-screen";
 
+  static const changeLanguageScreen = "/changeLanguageScreen";
 
   ///////////////App Screen////////////////////////////////////
   static const splashScreen = "/splashScreen";
@@ -42,6 +43,9 @@ class AppRoutes {
   static const updateInformationScreen = "/updateInformationScreen";
 
   static const contactSupportScreen = "/contactSupportScreen";
+  static const favoriteRoutesScreen = "/favoriteRoutesScreen";
+  static const changePasswordScreen = "/changePasswordScreen";
+  static const manageDownloadScreen = "/manageDownloadScreen";
 
 
 }

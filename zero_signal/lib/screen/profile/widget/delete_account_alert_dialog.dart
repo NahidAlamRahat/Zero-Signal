@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/widget/space_widget.dart';
+import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+import '../../../constant/app_colors.dart';
 import '../controller/profile_controller.dart';
 
-class LogoutAlertDialog extends StatelessWidget {
+class DeleteAccountAlertDialog extends StatelessWidget {
   final ProfileController controller;
 
-  const LogoutAlertDialog({
+  const DeleteAccountAlertDialog({
     super.key,
     required this.controller,
   });
@@ -13,7 +17,7 @@ class LogoutAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: const Color(0xFFFFF4E9),
+      backgroundColor: AppColor.lightGrayishOrange,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -35,9 +39,9 @@ class LogoutAlertDialog extends StatelessWidget {
             const SizedBox(height: 20),
             Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text(
-                  'Logout',
+              children: [
+                const Text(
+                  'Want to Delete Account !',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF2C2C2C),
@@ -47,9 +51,9 @@ class LogoutAlertDialog extends StatelessWidget {
                     height: 1.10,
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'Are you sure you want to Logout?',
+                const SizedBox(height: 8),
+                const Text(
+                  'Please confirm your password to remove your account.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF565656),
@@ -59,6 +63,26 @@ class LogoutAlertDialog extends StatelessWidget {
                     height: 1.10,
                   ),
                 ),
+                const SpaceWidget(spaceHeight: 10,),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TextWidget(text: 'Enter Password',
+                    textAlignment: TextAlign.start,
+                    ),
+                    const SpaceWidget(spaceHeight: 8,),
+                    TextFieldWidget(
+                      borderRadius: 8,
+                      borderColor: AppColor.creamBackgroundColor,
+                      hintText: 'Enter Password',
+                      backgroundColor: AppColor.creamBackgroundColor,
+                      suffixIcon: true,
+
+                    ),
+                  ],
+                )
               ],
             ),
             const SizedBox(height: 32),
@@ -67,7 +91,7 @@ class LogoutAlertDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildButton(
-                    label: 'No',
+                    label: 'Cancel',
                     bgColor: Colors.transparent,
                     textColor: const Color(0xFF2E4F3E),
                     borderColor: const Color(0xFF2E4F3E),
@@ -77,10 +101,10 @@ class LogoutAlertDialog extends StatelessWidget {
                 const SizedBox(width: 20),
                 Expanded(
                   child: _buildButton(
-                    label: 'Yes',
-                    bgColor: const Color(0xFF2E4F3E),
-                    textColor: const Color(0xFFF1F1F1),
-                    onTap: () => controller.logout(),
+                    label: 'Delete',
+                    bgColor: AppColor.creamBackgroundColor,
+                    textColor: Colors.black,
+                    onTap: () => Get.back(),
                   ),
                 ),
               ],
@@ -127,17 +151,14 @@ class LogoutAlertDialog extends StatelessWidget {
   }
 }
 
-void showLogoutDialog({
+void showDeleteAccountDialog({
   required BuildContext context,
   required ProfileController controller,
 }) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return LogoutAlertDialog(controller: controller);
+      return DeleteAccountAlertDialog(controller: controller);
     },
   );
 }
-
-
-

@@ -51,7 +51,7 @@ class MenuItemsCardWidget extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.favoriteRoutesImage.path,
             title: 'Favorite Routes',
-            onTap: () => controller.navigateToRoute(AppRoutes.favoriteSitesScreen),
+            onTap: () => controller.navigateToRoute(AppRoutes.favoriteRoutesScreen),
           ),
         ],
       ),

@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../constant/app_colors.dart';
 import '../../widget/appbar_widget/appbar_widget.dart';
+import '../my_routes_screen/widget/delete_confirm_dialog.dart';
+import '../my_routes_screen/widget/empty_state_widget.dart';
+import '../my_routes_screen/widget/spot_card.dart';
 import '../my_spots_screen/controller/my_spots_controller.dart';
-import '../my_spots_screen/widget/delete_confirm_dialog.dart';
-import '../my_spots_screen/widget/empty_state_widget.dart';
-import '../my_spots_screen/widget/spot_card.dart';
 
-class MyRoutesScreen extends StatelessWidget {
-  MyRoutesScreen({super.key});
+class FavoriteRoutesScreen extends StatelessWidget {
+  FavoriteRoutesScreen({super.key});
 
   final MySpotsController controller = Get.put(MySpotsController());
 
@@ -20,7 +20,7 @@ class MyRoutesScreen extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
           appBar: AppbarWidget(
-            text: 'My Routes',
+            text: 'Favorite Routes',
             backgroundColor: AppColor.creamBackgroundColor,
             centerTitle: true,
           ),

@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import '../../constant/app_colors.dart';
-import '../../widget/appbar_widget/appbar_widget.dart';
 import '../my_spots_screen/controller/my_spots_controller.dart';
 import '../my_spots_screen/widget/delete_confirm_dialog.dart';
 import '../my_spots_screen/widget/empty_state_widget.dart';
 import '../my_spots_screen/widget/spot_card.dart';
 
-class MyRoutesScreen extends StatelessWidget {
-  MyRoutesScreen({super.key});
+class FavoriteSitesScreen extends StatefulWidget {
+  const FavoriteSitesScreen({super.key});
+
+  @override
+  State<FavoriteSitesScreen> createState() => _FavoriteSitesScreenState();
+}
+
+class _FavoriteSitesScreenState extends State<FavoriteSitesScreen> {
 
   final MySpotsController controller = Get.put(MySpotsController());
 
@@ -20,7 +28,7 @@ class MyRoutesScreen extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
           appBar: AppbarWidget(
-            text: 'My Routes',
+            text: 'Favorite Sites',
             backgroundColor: AppColor.creamBackgroundColor,
             centerTitle: true,
           ),
@@ -75,3 +83,4 @@ class MyRoutesScreen extends StatelessWidget {
     );
   }
 }
+

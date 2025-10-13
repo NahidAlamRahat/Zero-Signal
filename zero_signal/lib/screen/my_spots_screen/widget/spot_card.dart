@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zero_signal/my_spots_screen/widget/spot_actions.dart';
-import 'package:zero_signal/my_spots_screen/widget/spot_image.dart';
-import 'package:zero_signal/my_spots_screen/widget/spot_info.dart';
-
-import '../../favorite_sites_screen/favorite_sites_screen.dart';
+import '../../my_routes_screen/widget/spot_actions.dart';
+import '../../my_routes_screen/widget/spot_image.dart';
+import '../../my_routes_screen/widget/spot_info.dart';
+import '../model/spot_item.dart';
 
 class SpotCard extends StatelessWidget {
   final SpotItem spot;

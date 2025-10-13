@@ -3,6 +3,7 @@ import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 import '../../../widget/space_widget.dart';
 import '../controller/profile_controller.dart';
+import 'delete_account_alert_dialog.dart';
 import 'logout_alert_dialog.dart';
 import 'menuItem_widget.dart';
 
@@ -48,26 +49,27 @@ class SettingsCardWidget extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.languageImage.path,
             title: 'Language',
-            onTap: () => controller.navigateToRoute(AppRoutes.mySpotsScreen),
+            onTap: () => controller.navigateToRoute(AppRoutes.changeLanguageScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.changePasswordImage.path,
             title: 'Change Password',
-            onTap: () => controller.navigateToRoute(AppRoutes.myRoutesScreen),
+            onTap: () => controller.navigateToRoute(AppRoutes.changePasswordScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.deleteIcon.path,
             title: 'Delete account',
             titleColor: const Color(0xFFFB6057),
-            onTap: () => controller.navigateToRoute(AppRoutes.favoriteSitesScreen),
+            onTap: () => showDeleteAccountDialog(context: context, controller: controller, ),
+
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.manageDownloadImage.path,
             title: 'Manage Download',
-            onTap: () => controller.navigateToRoute(AppRoutes.favoriteSitesScreen),
+            onTap: () => controller.navigateToRoute(AppRoutes.manageDownloadScreen),
           ),
           _buildDivider(),
           MenuItemWidget(

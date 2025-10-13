@@ -204,6 +204,10 @@ class $AssetsIconsGen {
   AssetGenImage get routeIcon =>
       const AssetGenImage('assets/icons/routeIcon.png');
 
+  /// File path: assets/icons/routeMap.png
+  AssetGenImage get routeMap =>
+      const AssetGenImage('assets/icons/routeMap.png');
+
   /// File path: assets/icons/routesSelect.png
   AssetGenImage get routesSelect =>
       const AssetGenImage('assets/icons/routesSelect.png');
@@ -303,6 +307,7 @@ class $AssetsIconsGen {
     realEstate,
     roadTrip,
     routeIcon,
+    routeMap,
     routesSelect,
     running,
     save,

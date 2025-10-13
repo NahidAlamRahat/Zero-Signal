@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/screen/home_screen/home_screen.dart';
 import '../condition_screen/terms_condition_screen.dart';
-import '../my_spots_screen/my_spots_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
 import '../screen/auth/forgot_password_screen/forgot_password_screen.dart';
 import '../screen/auth/reset_password_otp_verify_screen/reset_pass_otp_verify_screen.dart';
@@ -9,19 +8,23 @@ import '../screen/auth/sign_in_and_registration_screen/sign_in_and_registration_
 import '../screen/auth/sign_in_screen/sign_in_screen.dart';
 import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
+import '../screen/change_language_screen/change_language_screen.dart';
+import '../screen/change_password_screen/change_password_screen.dart';
 import '../screen/contact_support_screen/contact_support_screen.dart';
 import '../screen/edit_profile_screen/edit_profile_screen.dart';
+import '../screen/favorite_routes_screen/favorite_routes_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
 import 'package:zero_signal/screen/social_screen/social_screen.dart';
+import '../screen/manage_download_screen/manage_download_screen.dart';
 import '../screen/my_routes_screen/my_spots_screen.dart';
+import '../screen/my_spots_screen/my_spots_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/personal_information_screen/personal_information_screen.dart';
 import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
-import '../screen/update_information_screen/update_information_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
 import 'all_bindings.dart';
 import 'app_routes.dart';
@@ -194,6 +197,36 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     // binding: SplashScreenBinding(),
     page: () =>  ContactSupportScreen(),
   ),
+
+
+
+  GetPage(
+    name: AppRoutes.favoriteRoutesScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  FavoriteRoutesScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.changeLanguageScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ChangeLanguageScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.changePasswordScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ChangePasswordScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.manageDownloadScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ManageDownloadScreen(),
+  ),
+
+
+
+
 
 
 ];

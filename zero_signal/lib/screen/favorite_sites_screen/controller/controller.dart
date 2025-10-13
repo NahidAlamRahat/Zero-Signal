@@ -1,12 +1,10 @@
-import 'dart:ui';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import '../../../constant/app_icon_path.dart';
 import '../../my_spots_screen/model/spot_item.dart';
 
-
-class MyRoutesController extends GetxController {
-  final List<SpotItem> spots = [
+class FavoriteSitesController extends GetxController {
+  final RxList<SpotItem> spots = RxList<SpotItem>([
     SpotItem(
       id: '1',
       name: 'Sunset Point',
@@ -37,37 +35,29 @@ class MyRoutesController extends GetxController {
       uploadDate: '2025-08-15',
       imageUrl: AppIconPath.ukFlag,
     ),
-  ];
+  ]);
 
-  void onSpotTap(SpotItem spot) {
-    print('Tapped on spot: ${spot.name}');
-    Get.snackbar(
-      'Spot',
-      'Opening ${spot.name}',
-      backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
-    );
-  }
+  RxBool isLoading = false.obs;
 
   void toggleFavorite(SpotItem spot) {
-    spot.isFavorite = !spot.isFavorite;
-    update();
+    final index = spots.indexWhere((s) => s.id == spot.id);
+    if (index != -1) {
+      spots[index] = spots[index].copyWith(isFavorite: !spots[index].isFavorite);
 
-    Get.snackbar(
-      'Favorite',
-      spot.isFavorite
-          ? '${spot.name} added to favorites'
-          : '${spot.name} removed from favorites',
-      backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+      Get.snackbar(
+        'Success',
+        spots[index].isFavorite
+            ? '${spot.name} added to favorites'
+            : '${spot.name} removed from favorites',
+        backgroundColor: const Color(0xFF2E4F3E),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 
   void deleteSpot(SpotItem spot) {
     spots.removeWhere((s) => s.id == spot.id);
-    update();
-
     Get.snackbar(
       'Deleted',
       '${spot.name} deleted',
@@ -77,12 +67,36 @@ class MyRoutesController extends GetxController {
   }
 
   void addNewSpot() {
-    print('Add new spot tapped');
     Get.snackbar(
-      'Info',
+      'Coming Soon',
       'Add new spot feature coming soon!',
       backgroundColor: const Color(0xFF2E4F3E),
       colorText: Colors.white,
+    );
+  }
+
+  void onSpotTap(SpotItem spot) {
+    Get.snackbar(
+      'Opening',
+      'Opening ${spot.name}',
+      backgroundColor: const Color(0xFF2E4F3E),
+      colorText: Colors.white,
+    );
+  }
+
+  void showDeleteDialog(SpotItem spot) {
+    Get.defaultDialog(
+      title: 'Delete Spot',
+      content: Text('Are you sure you want to delete "${spot.name}"?'),
+      textCancel: 'Cancel',
+      textConfirm: 'Delete',
+      onCancel: () => Get.back(),
+      onConfirm: () {
+        deleteSpot(spot);
+        Get.back();
+      },
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
     );
   }
 
@@ -94,6 +108,5 @@ class MyRoutesController extends GetxController {
       return dateString;
     }
   }
-
-  bool get isEmpty => spots.isEmpty;
 }
+

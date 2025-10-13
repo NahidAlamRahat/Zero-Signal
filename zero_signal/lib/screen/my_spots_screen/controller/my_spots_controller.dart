@@ -1,10 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../favorite_sites_screen/favorite_sites_screen.dart';
-import '../../gen/assets.gen.dart';
+import '../../../gen/assets.gen.dart';
+import '../model/spot_item.dart';
 
 class MySpotsController extends GetxController {
   final List<SpotItem> spots = [
