@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/button_widget/custom_elevated_button.dart';
 import 'package:zero_signal/widget/glass_container.dart';
 import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_widget/custom_text.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+
+import '../../report_button_sheet/report_button_sheet.dart';
 
 class SocialScreen extends StatefulWidget {
   const SocialScreen({super.key});
@@ -60,7 +65,9 @@ class _SocialScreenState extends State<SocialScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.activityListsScreen);
+                          },
                           icon: Image.asset(
                             AppIconPath.taskIcon,
                             color: Colors.white,
@@ -68,7 +75,10 @@ class _SocialScreenState extends State<SocialScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.websiteViewScreen);
+
+                          },
                           icon: Image.asset(
                             AppIconPath.shareIcon,
                             color: Colors.white,
@@ -139,25 +149,31 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                 ],
                               ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        AppIconPath.locationIcon,
-                                        height: 20,
-                                      ),
-                                      SizedBox(height: AppSize.height(value: 5)),
-                                      CustomText(
-                                        text: "Girona, Catalonia",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white,
-                                      ),
-                                    ],
+
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+
+                                      children: [
+                                        Image.asset(
+                                          AppIconPath.locationIcon,
+                                          height: 20,
+                                        ),
+                                        SizedBox(height: AppSize.height(value: 5)),
+                                        Flexible(
+
+                                          child: CustomText(
+                                            overflow: TextOverflow.ellipsis,
+                                            text: "Girona, Catalonia",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
+
                             ],
                           ),
                           SizedBox(height: AppSize.height(value: 20)),
@@ -309,7 +325,9 @@ class _SocialScreenState extends State<SocialScreen> {
                                   backgroundColor: Color(0xFF2e4f3e),
                                   leftIcon: Icons.done,
                                   text: "I'm in!",
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.toNamed(AppRoutes.activityListsScreen);
+                                  },
                                 ),
                               ],
                             ),
@@ -334,13 +352,18 @@ class _SocialScreenState extends State<SocialScreen> {
                       
                             ],
                           ),
+                          SpaceWidget(spaceHeight: 8,),
                           Center(
-                            child: TextWidget(text: 'Report Activity',
-                              fontColor: Colors.white,
-                              textAlignment: TextAlign.center,
-                              underlineColor: Colors.white,
-                              fontSize: 16.sp,
-                              underline: true,
+                            child: InkWell(
+                              onTap: (){
+                                showReportBottomSheet(context);
+                              },
+                              child: TextWidget(text: 'Report Activity',
+                                fontColor: Colors.white,
+                                textAlignment: TextAlign.center,
+                                fontSize: 16.sp,
+                                underline: true,
+                              ),
                             ),
                           )
                         ],

@@ -16,6 +16,7 @@ import '../screen/favorite_routes_screen/favorite_routes_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
 import 'package:zero_signal/screen/social_screen/social_screen.dart';
+import '../screen/list_screen/list_screen.dart';
 import '../screen/manage_download_screen/manage_download_screen.dart';
 import '../screen/my_routes_screen/my_spots_screen.dart';
 import '../screen/my_spots_screen/my_spots_screen.dart';
@@ -26,6 +27,7 @@ import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
+import '../screen/website_view_screen/website_view_screen.dart';
 import 'all_bindings.dart';
 import 'app_routes.dart';
 
@@ -225,8 +227,16 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   ),
 
 
+  GetPage(
+    name: AppRoutes.activityListsScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ActivityListsScreen(),
+  ),
 
-
-
+  GetPage(
+    name: AppRoutes.websiteViewScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  WebsiteViewScreen(),
+  ),
 
 ];

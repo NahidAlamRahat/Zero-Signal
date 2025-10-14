@@ -46,6 +46,8 @@ class AppRoutes {
   static const favoriteRoutesScreen = "/favoriteRoutesScreen";
   static const changePasswordScreen = "/changePasswordScreen";
   static const manageDownloadScreen = "/manageDownloadScreen";
+  static const activityListsScreen = "/activityListsScreen";
+  static const websiteViewScreen = "/websiteViewScreen";
 
 
 }

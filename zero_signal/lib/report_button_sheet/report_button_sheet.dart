@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 
 class ReportActivityBottomSheet extends StatefulWidget {
   const ReportActivityBottomSheet({super.key});
@@ -140,7 +141,7 @@ class _ReportActivityBottomSheetState extends State<ReportActivityBottomSheet> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2C5F4F),
+                  backgroundColor: AppColor.backgroundColor,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

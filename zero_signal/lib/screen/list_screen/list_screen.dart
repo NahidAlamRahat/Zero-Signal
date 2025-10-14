@@ -176,7 +176,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                         child: ButtonWidget(
                           backgroundColor:AppColor.red50,
                           label: 'Left',
-                          buttonWidth: 110.w,
+                          buttonWidth: 100.w,
                           buttonHeight: 40.h,
                           onPressed: () {},
                           textColor: AppColor.red,
@@ -189,7 +189,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                           icon: Image.asset(AppIconPath.chatIcon),
                           backgroundColor:AppColor.backgroundColor,
                           label: 'Chat',
-                          buttonWidth: 110.w,
+                          buttonWidth: 100.w,
                           buttonHeight: 40.h,
                           onPressed: () {},
                         ),
@@ -221,7 +221,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                     activity: activity,
                     buttons: [
                       Text('18 Aug 2023')
-                      
+
                     ],
                   );
                 }
