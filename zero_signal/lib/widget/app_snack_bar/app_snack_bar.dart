@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../utils/app_size.dart';
 import '../text_widget/text_widgets.dart';
 
 class AppSnackBar {
@@ -36,13 +36,11 @@ class AppSnackBar {
             ),
           ],
         ),
-        borderRadius: ResponsiveUtils.width(20),
-        padding: EdgeInsets.all(
-          ResponsiveUtils.width(10),
-        ),
+        borderRadius: 20.w,
+        padding: EdgeInsets.all(10.w),
         margin: EdgeInsets.symmetric(
-            horizontal: AppSize.width(value: 40.0),
-            vertical: AppSize.width(value: 30)),
+            horizontal: 40.w,
+            vertical: 30.w),
       ),
     );
   }
@@ -64,11 +62,11 @@ class AppSnackBar {
           fontColor: Colors.white,
           textAlignment: TextAlign.center,
         ),
-        borderRadius: AppSize.width(value: 20.0),
-        padding: EdgeInsets.all(AppSize.width(value: 10.0)),
+        borderRadius: 20.w,
+        padding: EdgeInsets.all(10.w),
         margin: EdgeInsets.symmetric(
-            horizontal: AppSize.width(value: 40.0),
-            vertical: AppSize.width(value: 30)),
+            horizontal: 40.w,
+            vertical: 30.w),
       ),
     );
   }
@@ -97,11 +95,11 @@ class AppSnackBar {
           textAlignment: TextAlign.center,
           fontWeight: FontWeight.w400,
         ),
-        borderRadius: AppSize.width(value: 20.0),
-        padding: EdgeInsets.all(AppSize.width(value: 10.0)),
+        borderRadius: 20.w,
+        padding: EdgeInsets.all(10.w),
         margin: EdgeInsets.symmetric(
-            horizontal: AppSize.width(value: 40.0),
-            vertical: AppSize.width(value: 30)),
+            horizontal: 40.w,
+            vertical: 30.w),
       ),
     );
   }

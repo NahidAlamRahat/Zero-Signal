@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../utils/app_size.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String? text;
@@ -28,8 +28,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
-    return  AppBar(
+    return AppBar(
       scrolledUnderElevation: 0 ,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
       backgroundColor: backgroundColor ?? Colors.white, // ✅ এখানেই দাও
@@ -53,7 +52,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
           Text(
             text ?? "",
             style: TextStyle(
-              fontSize: ResponsiveUtils.width(20),
+              fontSize: 20.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black,
             ),

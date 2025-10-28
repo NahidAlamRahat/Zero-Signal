@@ -115,7 +115,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
           ),
 
           Positioned(
-            bottom: 130,
+            bottom: 80.h,
             left: 0,
             right: 0,
             child: GestureDetector(

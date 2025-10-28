@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -35,11 +36,16 @@ class SignInAndRegistrationScreen extends StatelessWidget {
               left: screenWidth * 0.04,
               right: screenWidth * 0.04,
               child: GlassEffact(
-                height: screenHeight * 0.35,
+               // height: screenHeight * 0.35,
                 width: screenWidth * 0.92,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+
+                    SizedBox(
+                      height: 25.h,
+                    ),
+
                     // App Logo
                     Image.asset(
                       AppImagePath.appLogo,
@@ -97,6 +103,10 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                         buttonHeight: screenHeight * 0.05,
                       ),
                     ),
+
+                    SizedBox(
+                      height: 35.h,
+                    )
                   ],
                 ),
               ),

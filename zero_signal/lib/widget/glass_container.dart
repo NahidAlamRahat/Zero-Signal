@@ -8,7 +8,7 @@ class GlassContainer extends StatelessWidget {
   const GlassContainer({
     super.key,
     this.width = 150,
-    this.height = 150,
+    this.height,
     this.child,
   });
 

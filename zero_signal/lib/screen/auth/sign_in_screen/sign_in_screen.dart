@@ -44,7 +44,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: SingleChildScrollView(
                 child: Center(
                   child: GlassEffact(
-                    height: 600.h,
+                 //   height: 600.h,
                     width: 390.w,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),

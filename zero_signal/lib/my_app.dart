@@ -15,14 +15,12 @@ class MyApp extends StatelessWidget {
 
 
 
-    AppSize.size = MediaQuery.of(context).size;
 
     return ScreenUtilInit(
       designSize: const Size(430, 932), // Your design size
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        AppSize.size = MediaQuery.of(context).size;
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Zero Signal',

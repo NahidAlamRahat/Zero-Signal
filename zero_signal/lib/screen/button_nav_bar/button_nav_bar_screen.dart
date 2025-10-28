@@ -69,73 +69,74 @@ class BottomNav extends StatelessWidget {
             index: controller.selectedIndex.value,
             children: controller.widgetOptions,
           ),
-          bottomNavigationBar: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: isSmallDevice ? 12 : 10,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(borderRadius),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: GNav(
-                    backgroundColor: AppColor.buttonNavBackgroundColor,
-                    gap: navGap,
-                    iconSize: navIconSize,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: navPadding,
-                      vertical: navPadding * 0.8, // Increased vertical padding
-                    ),
-                    tabMargin: _getTabMargin(
-                      controller.selectedIndex.value,
-                      isSmallDevice ? 6 : 8,
-                    ),
-                    duration: const Duration(milliseconds: 400),
-                    tabBackgroundColor: AppColor.backgroundColor,
-                    textStyle: TextStyle(
-                      fontSize: fontSize,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    tabBorderRadius: borderRadius,
-                    tabs: [
-                      _buildGButton(
-                        text: 'Explore',
-                        isSelected: controller.selectedIndex.value == 0,
-                        selectedIcon: AppIconPath.homeIconselect,
-                        unselectedIcon: AppIconPath.homeIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                      _buildGButton(
-                        text: 'Routes',
-                        isSelected: controller.selectedIndex.value == 1,
-                        selectedIcon: AppIconPath.routesSelect,
-                        unselectedIcon: AppIconPath.routeIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                      _buildGButton(
-                        text: 'Social',
-                        isSelected: controller.selectedIndex.value == 2,
-                        selectedIcon: AppIconPath.socialSelect,
-                        unselectedIcon: AppIconPath.socialIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                      _buildGButton(
-                        text: 'Profile',
-                        isSelected: controller.selectedIndex.value == 3,
-                        selectedIcon: AppIconPath.profileSelect,
-                        unselectedIcon: AppIconPath.profileIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                    ],
-                    selectedIndex: controller.selectedIndex.value,
-                    onTabChange: (index) => controller.changeIndex(index),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: controller.selectedIndex.value==1? AppColor.creamBackgroundColor:Colors.transparent
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: isSmallDevice ? 12 : 10,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: GNav(
+                  backgroundColor: AppColor.buttonNavBackgroundColor,
+                  gap: navGap,
+                  iconSize: navIconSize,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: navPadding,
+                    vertical: navPadding * 0.8, // Increased vertical padding
                   ),
+                  tabMargin: _getTabMargin(
+                    controller.selectedIndex.value,
+                    isSmallDevice ? 6 : 8,
+                  ),
+                  duration: const Duration(milliseconds: 400),
+                  tabBackgroundColor: AppColor.backgroundColor,
+                  textStyle: TextStyle(
+                    fontSize: fontSize,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  tabBorderRadius: borderRadius,
+                  tabs: [
+                    _buildGButton(
+                      text: 'Explore',
+                      isSelected: controller.selectedIndex.value == 0,
+                      selectedIcon: AppIconPath.homeIconselect,
+                      unselectedIcon: AppIconPath.homeIcon,
+                      selectedSize: iconSelectedSize,
+                      unselectedSize: iconUnselectedSize,
+                    ),
+                    _buildGButton(
+                      text: 'Routes',
+                      isSelected: controller.selectedIndex.value == 1,
+                      selectedIcon: AppIconPath.routesSelect,
+                      unselectedIcon: AppIconPath.routeIcon,
+                      selectedSize: iconSelectedSize,
+                      unselectedSize: iconUnselectedSize,
+                    ),
+                    _buildGButton(
+                      text: 'Social',
+                      isSelected: controller.selectedIndex.value == 2,
+                      selectedIcon: AppIconPath.socialSelect,
+                      unselectedIcon: AppIconPath.socialIcon,
+                      selectedSize: iconSelectedSize,
+                      unselectedSize: iconUnselectedSize,
+                    ),
+                    _buildGButton(
+                      text: 'Profile',
+                      isSelected: controller.selectedIndex.value == 3,
+                      selectedIcon: AppIconPath.profileSelect,
+                      unselectedIcon: AppIconPath.profileIcon,
+                      selectedSize: iconSelectedSize,
+                      unselectedSize: iconUnselectedSize,
+                    ),
+                  ],
+                  selectedIndex: controller.selectedIndex.value,
+                  onTabChange: (index) => controller.changeIndex(index),
                 ),
               ),
             ),

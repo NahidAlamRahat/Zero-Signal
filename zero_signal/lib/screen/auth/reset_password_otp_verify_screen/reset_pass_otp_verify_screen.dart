@@ -12,8 +12,6 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_log/app_log.dart';
-import '../../../utils/app_size.dart';
-import '../../../widget/text_button_widget/text_button_widget.dart';
 import 'controller/forgot_pass_verify_otp_screen_controller.dart';
 
 class ResetPassOtpVerifyScreen extends StatelessWidget {
@@ -186,8 +184,8 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(top: AppSize.height(value: 60),
-            left: AppSize.width(value: 20),child: InkWell(
+          Positioned(top: 60.h,
+            left: 20.w, child: InkWell(
                 onTap: (){
                   Get.back();
                 },

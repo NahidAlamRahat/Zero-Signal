@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
-import 'package:zero_signal/constant/app_icon_path.dart';
-import 'package:zero_signal/utils/app_size.dart';
-import 'package:zero_signal/widget/button_widget/button_widget.dart';
-
 import '../../gen/assets.gen.dart';
+import '../../widget/button_widget/button_widget.dart';
 
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key});
@@ -52,8 +50,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 3,
-                crossAxisSpacing: AppSize.width(value: 12),
-                mainAxisSpacing: AppSize.height(value: 12),
+                crossAxisSpacing: 12.w,
+                mainAxisSpacing: 12.h,
                 childAspectRatio: 118 / 90, // width/height ratio for maintaining card proportions
                 children: [
                   _buildActivityCard('Walking', Assets.icons.walking.path, 'Walking'),
@@ -189,7 +187,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
-          borderRadius: BorderRadius.circular(AppSize.width(value: 12)),
+          borderRadius: BorderRadius.circular(12.w),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -203,16 +201,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
           children: [
             Image.asset(
               imageIcon,
-              height: AppSize.height(value: 40),
-              width: AppSize.width(value: 40),
+              height: 40.h,
+              width: 40.w,
             ),
-            SizedBox(height: AppSize.height(value: 8)),
+            SizedBox(height: 8.h),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 4)),
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: AppSize.width(value: 12),
+                  fontSize: 12.w,
                   fontWeight: FontWeight.w500,
                   color: isSelected ? const Color(0xFF2C2C2C) : const Color(0xFF565656),
                 ),

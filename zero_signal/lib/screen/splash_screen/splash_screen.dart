@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zero_signal/utils/app_size.dart';
 import '../../constant/app_colors.dart';
 import '../../constant/app_image_path.dart';
 import 'controller/splash_controller.dart';
@@ -52,7 +52,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SplashController>(
+    return ScreenUtilInit(
+      designSize: const Size(390, 844),
+      builder: (_, child) => GetBuilder<SplashController>(
       builder: (controller) {
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(
@@ -68,8 +70,8 @@ class _SplashScreenState extends State<SplashScreen>
                   opacity: _fadeAnimation,
                   child: Image.asset(
                     AppImagePath.appLogo,
-                    height: AppSize.height(value: 166),
-                    width: AppSize.width(value: 171),
+                    height: 166.h,
+                    width: 171.w,
                   ),
                 ),
               ),
@@ -78,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         );
       },
-    );
+    ));
   }
 }
 

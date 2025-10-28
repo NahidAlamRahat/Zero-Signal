@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 
 import '../../../constant/app_icon_path.dart';
 import '../../../constant/app_image_path.dart';
-import '../../../utils/app_size.dart';
 
 class ConfirmLocationSheet extends StatelessWidget {
   const ConfirmLocationSheet({super.key});
@@ -16,12 +16,12 @@ class ConfirmLocationSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF0EBE6),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(AppSize.width(value: 20)),
-          topRight: Radius.circular(AppSize.width(value: 20)),
+          topLeft: Radius.circular(20.w),
+          topRight: Radius.circular(20.w),
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(AppSize.width(value: 20)),
+        padding: EdgeInsets.all(20.w),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -29,11 +29,11 @@ class ConfirmLocationSheet extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: AppSize.width(value: 40)),
+                  SizedBox(width: 40.w),
                   Text(
                     'Confirm',
                     style: TextStyle(
-                      fontSize: AppSize.width(value: 20),
+                      fontSize: 20.w,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF333333),
                     ),
@@ -42,37 +42,37 @@ class ConfirmLocationSheet extends StatelessWidget {
                     icon: Icon(
                       Icons.close,
                       color: Colors.black54,
-                      size: AppSize.width(value: 24),
+                      size: 24.w,
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
               const Divider(),
-              SizedBox(height: AppSize.height(value: 15)),
+              SizedBox(height: 15.h),
 
               // Map Image
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(AppSize.width(value: 15)),
+                    borderRadius: BorderRadius.circular(15.w),
                     child: Image.asset(
                       AppImagePath.mapImage2,
                       fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(
-                    bottom: AppSize.height(value: 20),
-                    right: AppSize.width(value: 10),
+                    bottom: 20.h,
+                    right: 10.w,
                     child: Image.asset(
                       AppIconPath.myLocationIcon,
-                      width: AppSize.width(value: 40),
-                      height: AppSize.width(value: 40),
+                      width: 40.w,
+                      height: 40.w,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: AppSize.height(value: 25)),
+              SizedBox(height: 25.h),
 
               // Buttons
               Row(
@@ -85,14 +85,14 @@ class ConfirmLocationSheet extends StatelessWidget {
                         Get.back();
                       },
                       label: 'Cancel',
-                      fontSize: AppSize.width(value: 16),
+                      fontSize: 16.w,
                       fontWeight: FontWeight.w500,
                       backgroundColor: const Color(0xFFE2DACC),
-                      buttonRadius: BorderRadius.circular(AppSize.width(value: 8)),
+                      buttonRadius: BorderRadius.circular(8.w),
                       textColor: const Color(0xFF565656),
                     ),
                   ),
-                  SizedBox(width: AppSize.width(value: 15)),
+                  SizedBox(width: 15.w),
                   // Confirm Location Button
                   Expanded(
                     child: ButtonWidget(
@@ -100,10 +100,10 @@ class ConfirmLocationSheet extends StatelessWidget {
                         Get.back();
                       },
                       label: 'Confirm location',
-                      fontSize: AppSize.width(value: 16),
+                      fontSize: 16.w,
                       fontWeight: FontWeight.w500,
                       backgroundColor: AppColor.backgroundColor,
-                      buttonRadius: BorderRadius.circular(AppSize.width(value: 8)),
+                      buttonRadius: BorderRadius.circular(8.w),
                     ),
                   ),
                 ],

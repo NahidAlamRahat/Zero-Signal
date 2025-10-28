@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_strings.dart';
-import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 class ChooseLanguageScreen extends StatelessWidget {
@@ -10,19 +10,20 @@ class ChooseLanguageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: AppSize.height(value: 250)),
+    return ScreenUtilInit(
+      designSize: const Size(390, 844),
+      builder: (_, child) => Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              SizedBox(height: 250.h),
             Image.asset(
               AppImagePath.appLogo,
-              height: AppSize.width(value: 160),
-              width: AppSize.width(value: 390),
+              height: 160.w,
+              width: 390.w,
             ),
 
-            SizedBox( height: AppSize.height(value: 20),),
+            SizedBox(height: 20.h),
 
             TextWidget(text: AppStrings.chooseYourLanguage,
             textAlignment: TextAlign.center,
@@ -31,7 +32,7 @@ class ChooseLanguageScreen extends StatelessWidget {
               fontColor: AppColor.blackColor ,
             ),
 
-            SizedBox( height: AppSize.height(value: 8),),
+            SizedBox(height: 8.h),
 
             TextWidget(text: AppStrings.selectYourPreferredLanguage,
               textAlignment: TextAlign.center,
@@ -43,9 +44,11 @@ class ChooseLanguageScreen extends StatelessWidget {
             // LanguageSelectionWidget()
 
 
-          ],
+            ],
+          ),
         ),
       ),
     );
+  
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextWidget extends StatelessWidget {
   final String text;
@@ -34,7 +33,6 @@ class TextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
     return Text(
       text,
       overflow: overflow,
@@ -42,7 +40,7 @@ class TextWidget extends StatelessWidget {
       textAlign: textAlignment,
       style: TextStyle(
         fontWeight: fontWeight,
-        fontSize: ResponsiveUtils.width(fontSize),
+        fontSize: fontSize.sp,
         fontStyle: fontStyle,
         color: fontColor,
         fontFamily: fontFamily,

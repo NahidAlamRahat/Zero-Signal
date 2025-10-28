@@ -8,6 +8,7 @@ class ActivityCard extends StatelessWidget {
   final Axis buttonsDirection; // Row or Column
   final Alignment buttonsAlignment; // Left or Right
 
+
   const ActivityCard({
     super.key,
     required this.activity,

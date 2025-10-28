@@ -5,7 +5,6 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
-import 'package:zero_signal/utils/app_size.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/showCustomDialog.dart';
@@ -110,8 +109,8 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           foregroundColor: Colors.white,
           child: Image.asset(
             Assets.icons.download.path,
-            width: AppSize.width(value: 24),
-            height: AppSize.height(value: 20),
+            width: 24.w,
+            height: 20.h,
           ),
         ),
       ],
@@ -126,14 +125,14 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         _buildStatChip(
           text: '12.5 Km',
           imageIcon: Assets.icons.growth.path,
-          width: AppSize.width(value: 15),
-          height: AppSize.height(value: 15),
+          width: 15.w,
+          height: 15.h,
         ),
         _buildStatChip(
           text: 'Medium',
           imageIcon: Assets.icons.graph.path,
-          width: AppSize.width(value: 14),
-          height: AppSize.height(value: 14),
+          width: 14.w,
+          height: 14.h,
         ),
         _buildStatChip(
           text: 'Hiking',

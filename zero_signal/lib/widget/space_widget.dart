@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SpaceWidget extends StatelessWidget {
   final double spaceHeight;
@@ -14,19 +13,18 @@ class SpaceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
     if (spaceHeight != 0.0 && spaceWidth != 0.0) {
       return SizedBox(
-        height: ResponsiveUtils.height(spaceHeight),
-        width: ResponsiveUtils.width(spaceWidth),
+        height: spaceHeight.h,
+        width: spaceWidth.w,
       );
     } else if (spaceHeight != 0.0 && spaceWidth == 0.0) {
       return SizedBox(
-        height: ResponsiveUtils.height(spaceHeight),
+        height: spaceHeight.h,
       );
     } else if (spaceHeight == 0.0 && spaceWidth != 0.0) {
       return SizedBox(
-        width: ResponsiveUtils.width(spaceWidth),
+        width: spaceWidth.w,
       );
     } else {
       return const SizedBox.shrink();

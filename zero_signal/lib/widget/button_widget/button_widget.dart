@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String? label;
@@ -47,16 +47,14 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
-
     Color? finalBackgroundColor =
     (backgroundColor == Colors.transparent)
         ? null
         : (backgroundColor ?? Colors.green.shade500).withOpacity(opacity);
 
     return Container(
-      height: ResponsiveUtils.height(buttonHeight),
-      width: ResponsiveUtils.width(buttonWidth),
+      height: buttonHeight.h,
+      width: buttonWidth.w,
       decoration: BoxDecoration(
         color: finalBackgroundColor,
         borderRadius: buttonRadius,
@@ -96,21 +94,21 @@ class ButtonWidget extends StatelessWidget {
               label!,
               style: TextStyle(
                 color: textColor,
-                fontSize: ResponsiveUtils.width(fontSize),
+                fontSize: fontSize.sp,
                 fontWeight: fontWeight ?? FontWeight.w500,
               ),
             ),
-            SizedBox(width: iconSpacing),
+            SizedBox(width: iconSpacing.w),
             icon!,
           ]
               : [
             icon!,
-            SizedBox(width: iconSpacing),
+            SizedBox(width: iconSpacing.w),
             Text(
               label!,
               style: TextStyle(
                 color: textColor,
-                fontSize: ResponsiveUtils.width(fontSize),
+                fontSize: fontSize.sp,
                 fontWeight: fontWeight ?? FontWeight.w500,
               ),
             ),
@@ -121,7 +119,7 @@ class ButtonWidget extends StatelessWidget {
           label!,
           style: TextStyle(
             color: textColor,
-            fontSize: ResponsiveUtils.width(fontSize),
+            fontSize: fontSize.sp,
             fontWeight: fontWeight ?? FontWeight.w500,
           ),
         )

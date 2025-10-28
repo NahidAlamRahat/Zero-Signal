@@ -172,26 +172,57 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                     activity: activity,
                     buttons: [
 
-                      Expanded(
-                        child: ButtonWidget(
-                          backgroundColor:AppColor.red50,
-                          label: 'Left',
-                          buttonWidth: 100.w,
-                          buttonHeight: 40.h,
-                          onPressed: () {},
-                          textColor: AppColor.red,
+                      //  Expanded(
+                      //   child: ButtonWidget(
+                      //     backgroundColor:AppColor.red50,
+                      //     label: 'Left',
+                      //     buttonWidth: 100.w,
+                      //     buttonHeight: 40.h,
+                      //     onPressed: () {},
+                      //     textColor: AppColor.red,
+                      //
+                      //   ),
+                      // ),
+                      //
+                      // Expanded(
+                      //   child: ButtonWidget(
+                      //     icon: Image.asset(AppIconPath.chatIcon),
+                      //     backgroundColor:AppColor.backgroundColor,
+                      //     label: 'Chat',
+                      //    buttonWidth: 100.w,
+                      //     buttonHeight: 40.h,
+                      //     onPressed: () {},
+                      //   ),
+                      // ),
 
+
+
+
+
+                      Expanded(
+                        child:Container(
+                          height: 40.h,
+                         // width: 100.w,
+                          decoration: BoxDecoration(
+                            color: AppColor.red50
+
+                          ),
+
+                          child: Text("data"),
                         ),
                       ),
 
+
                       Expanded(
-                        child: ButtonWidget(
-                          icon: Image.asset(AppIconPath.chatIcon),
-                          backgroundColor:AppColor.backgroundColor,
-                          label: 'Chat',
-                          buttonWidth: 100.w,
-                          buttonHeight: 40.h,
-                          onPressed: () {},
+                        child:Container(
+                          height: 40.h,
+                          // width: 100.w,
+                          decoration: BoxDecoration(
+                              color: AppColor.red50
+
+                          ),
+
+                          child: Text("data"),
                         ),
                       ),
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
@@ -24,7 +23,6 @@ class TextButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
@@ -37,7 +35,7 @@ class TextButtonWidget extends StatelessWidget {
         text,
         style: TextStyle(
           color: textColor,
-          fontSize: ResponsiveUtils.width(fontSize),
+          fontSize: fontSize.sp,
           fontWeight: fontWeight,
           decoration: decoration,
           decorationColor: decorationColor,

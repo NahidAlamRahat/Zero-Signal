@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../utils/app_size.dart';
 
 class IconWidget extends StatelessWidget {
   final double? height;
@@ -18,11 +17,10 @@ class IconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
     return Image.asset(
       icon,
-      height: ResponsiveUtils.width(height?.h ?? 36),
-      width: ResponsiveUtils.width(width?.w ?? 36),
+      height: (height ?? 36).h,
+      width: (width ?? 36).w,
       fit: BoxFit.cover,
       color: color,
     );

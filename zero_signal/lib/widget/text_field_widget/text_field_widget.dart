@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final TextEditingController? controller;
@@ -70,7 +70,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveUtils.initialize(context);
     return Container(
       // Single line হলে fixed height, multi-line হলে auto height
       height: widget.maxLines == 1 ? widget.fieldHeight : null,
@@ -89,7 +88,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         style: widget.textStyle ??
             TextStyle(
               color: widget.textColor,
-              fontSize: ResponsiveUtils.width(14), // default font size
+              fontSize: 14.sp, // default font size
             ),
         decoration: InputDecoration(
           filled: true,
@@ -99,12 +98,12 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               TextStyle(
                 color: widget.hintColor,
                 fontWeight: FontWeight.w400,
-                fontSize: ResponsiveUtils.width(14),
+                fontSize: 14.sp,
               ),
           errorStyle: widget.errorStyle ??
               TextStyle(
                 color: Colors.red,
-                fontSize: ResponsiveUtils.width(12),
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
               ),
           prefixIcon: widget.prefixIcon,
