@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../../constant/app_colors.dart';
 import '../../../constant/app_icon_path.dart';
 import '../../../gen/assets.gen.dart';
@@ -30,53 +31,54 @@ class ActivityCard extends StatelessWidget {
         // For Near Activities, we use a completely different design with a Stack
         // So we return an empty list here
         return [];
+
       case 1: // Joined Activities
         return [
-          Expanded(
-            child: Container(
-              height: 40.h,
-              decoration: BoxDecoration(
-                color: AppColor.red50,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                "Leave",
-                style: TextStyle(
-                  color: AppColor.red,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Container(
-              height: 40.h,
-              decoration: BoxDecoration(
-                color: AppColor.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    AppIconPath.chatIcon,
-                    height: 16.h,
-                  ),
-                  SizedBox(width: 6.w),
-                  Text(
-                    "Chat",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: Container(
+          //     height: 40.h,
+          //     decoration: BoxDecoration(
+          //       color: AppColor.red50,
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //     alignment: Alignment.center,
+          //     child: Text(
+          //       "Leave",
+          //       style: TextStyle(
+          //         color: AppColor.red,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(width: 10.w),
+          // Expanded(
+          //   child: Container(
+          //     height: 40.h,
+          //     decoration: BoxDecoration(
+          //       color: AppColor.backgroundColor,
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //     alignment: Alignment.center,
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Image.asset(
+          //           AppIconPath.chatIcon,
+          //           height: 16.h,
+          //         ),
+          //         SizedBox(width: 6.w),
+          //         Text(
+          //           "Chat",
+          //           style: TextStyle(
+          //             color: Colors.white,
+          //             fontWeight: FontWeight.w500,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ];
       case 2: // Created Activities
         return [
@@ -130,11 +132,13 @@ class ActivityCard extends StatelessWidget {
       return Container(
         width: double.infinity,
         height: 140.h,
-        clipBehavior: Clip.antiAlias,
         margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(12),
         decoration: ShapeDecoration(
-          color:  Colors.green,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          color: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
           shadows: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -143,143 +147,294 @@ class ActivityCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Stack(
+        child: Row(
           children: [
             // Activity Image
-            Positioned(
-              bottom: 12,
-              left: 12,
-              top: 12,
-              child: Container(
-                width: 116.w,
-                height: 116.w,
-                clipBehavior: Clip.antiAlias,
-                decoration: ShapeDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(activity.imagePath),
-                    fit: BoxFit.cover,
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            Container(
+              width: 116.w,
+              height: 116.h,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: AssetImage(activity.imagePath),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),
-            
+
+            SizedBox(width: 12.w),
+
             // Content Section
-            Positioned(
-              left: 140,
-              top: 12,
-              right: 12, // Add right constraint so it adapts to available width
-              child: Container(
-                height: 116,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title and Category section
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title
-                        SizedBox(
-                          width: 200.w, // Use a reasonable fixed width instead of infinity
-                          child: Text(
-                            activity.title,
-                            style: TextStyle(
-                              color: const Color(0xFF2C2C2C),
-                              fontSize: 20,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              height: 1.10,
-                            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    activity.title,
+                    style: TextStyle(
+                      color: const Color(0xFF2C2C2C),
+                      fontSize: 20.sp,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      height: 1.10,
+                    ),
+                  ),
+
+                  // Category with icon
+                  Row(
+                    children: [
+                      Container(
+                        width: 12.w,
+                        height: 12.h,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(Assets.icons.location.path),
+                            fit: BoxFit.cover,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          activity.category,
+                          style: TextStyle(
+                            color: const Color(0xFF727272),
+                            fontSize: 12.sp,
+                            fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        
-                        // Category with circle
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 12.w,
-                              height: 12.h,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(Assets.icons.location.path),
-                                  fit: BoxFit.cover,
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                             SizedBox(width: 6.w),
-                            Flexible(
-                              child: Text(
-                                activity.category,
-                                style: TextStyle(
-                                  color: const Color(0xFF727272),
-                                  fontSize: 12.sp,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.10.h,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 8.h),
+
+                  // Location
+                  Text(
+                    activity.location,
+                    style: TextStyle(
+                      color: const Color(0xFF2C2C2C),
+                      fontSize: 12.sp,
+                      fontFamily: 'Open Sans',
+                      fontWeight: FontWeight.w400,
                     ),
-                    
-                     SizedBox(height: 8.h),
-                    
-                    // Location
-                    Flexible(
-                      child: Text(
-                        activity.location,
-                        style: TextStyle(
-                          color: const Color(0xFF2C2C2C),
-                          fontSize: 12.sp,
-                          fontFamily: 'Open Sans',
-                          fontWeight: FontWeight.w400,
-                          height: 1.10,
+                  ),
+
+                  const Spacer(),
+
+                  // View Button
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: InkWell(
+                      onTap: () {
+                        print('View button tapped');
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFF2E4F3E),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'View',
+                          style: TextStyle(
+                            color: const Color(0xFFF1F1F1),
+                            fontSize: 14.sp,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
-                    
-                    const Spacer(),
-                    
-                    // View Button
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Container(
-                        margin: EdgeInsets.only(right: 12.w,bottom: 12.h), // Add margin to ensure it's visible
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (tabIndex == 1) { // Near Activities
+      return Container(
+        width: double.infinity,
+        height: 140.h,
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: ShapeDecoration(
+          color: AppColor.creamBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          shadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Activity Image
+            Container(
+              width: 116.w,
+              height: 116.h,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: AssetImage(activity.imagePath),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+
+            SizedBox(width: 12.w),
+
+            // Content Section
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    activity.title,
+                    style: TextStyle(
+                      color: const Color(0xFF2C2C2C),
+                      fontSize: 20.sp,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      height: 1.10,
+                    ),
+                  ),
+
+                  // Category with icon
+                  Row(
+                    children: [
+                      Container(
+                        width: 12.w,
+                        height: 12.h,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(Assets.icons.location.path),
+                            fit: BoxFit.cover,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          activity.category,
+                          style: TextStyle(
+                            color: const Color(0xFF727272),
+                            fontSize: 12.sp,
+                            fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 8.h),
+
+                  // Location
+                  Text(
+                    activity.location,
+                    style: TextStyle(
+                      color: const Color(0xFF2C2C2C),
+                      fontSize: 12.sp,
+                      fontFamily: 'Open Sans',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  // View Buttons
+                  Row(
+                    children: [
+                      Expanded(
                         child: InkWell(
                           onTap: () {
-                            // Add your action here
-                            print('View button tapped');
+                            print('Left button tapped');
                           },
                           child: Container(
-                            width: 72.w,
-                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 8.h,
+                            ),
                             decoration: ShapeDecoration(
-                              color: const Color(0xFF2E4F3E),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              color: const Color(0x26FB6057),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Left',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: const Color(0xFFFB6057),
+                                fontSize: 16.sp,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                height: 1.10,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            print('Right button tapped');
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 8.h,
+                            ),
+                            decoration: ShapeDecoration(
+                              color: AppColor.backgroundColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                             child: Row(
-                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                
+                                Image.asset(
+
+                                    height: 20.h,
+                                    width: 20.w,
+                                    AppIconPath.chatIcon),
+
+                                SizedBox(
+                                  width: 4.w,
+                                ),
                                 Text(
-                                  'View',
+                                  "Chat",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: const Color(0xFFF1F1F1),
-                                    fontSize: 14.sp,
+                                    color:Color(0xFFffffff),
+                                    fontSize: 16.sp,
                                     fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
+                                    fontWeight: FontWeight.w500,
                                     height: 1.10,
                                   ),
                                 ),
@@ -288,16 +443,20 @@ class ActivityCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
       );
     }
-    
+
+
+
+
+
     // For other tabs, use the original design
     Axis buttonLayout = tabIndex == 2 ? Axis.vertical : Axis.horizontal;
     Alignment buttonAlign = tabIndex == 3 ? Alignment.bottomLeft : Alignment.centerRight;

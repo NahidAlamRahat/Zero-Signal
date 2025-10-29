@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/list_screen/widget/activity_card.dart';
@@ -97,7 +98,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
             height: 50,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               itemCount: tabs.length,
               itemBuilder: (context, index) {
                 bool isSelected = selectedTabIndex == index;
@@ -108,30 +109,54 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    margin: const EdgeInsets.only(right: 20),
+                    height: 5,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                    margin: const EdgeInsets.only(right: 0),
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(
-                          color: isSelected ? Colors.black87 : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
+                        bottom: BorderSide(color: Colors.transparent)
+                      )
                     ),
-                    child: Text(
-                      tabs[index],
-                      style: TextStyle(
-                        color: isSelected ? Colors.black87 : Colors.grey,
-                        fontSize: 14,
-                        fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.w400,
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Text(
+                            tabs[index],
+                            textAlign: TextAlign.center,
+
+                            style: TextStyle(
+                              color: isSelected ? Colors.black87 : Colors.grey,
+                              fontSize: 14,
+                              fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        // 👇 Rounded underline only when selected
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          height: 5,
+                                               width: 150.w,
+
+                                               // line width, you can adjust
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColor.backgroundColor
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(50), // rounded underline
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
               },
             ),
-          ),
+          )
+,
 
           const SizedBox(height: 20),
 
