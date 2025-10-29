@@ -48,6 +48,7 @@ class AppIconPath {
   //share a new spot screen icon
   static const String cameraIcon = "assets/icons/cameraIcon.png";
 
+  static const String editIcon = "assets/icons/editIcon.png";
 
 
 

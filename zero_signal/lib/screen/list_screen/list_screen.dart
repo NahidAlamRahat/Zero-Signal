@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
-import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/list_screen/widget/activity_card.dart';
-
-import '../../widget/button_widget/button_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:zero_signal/constant/app_colors.dart';
-import 'package:zero_signal/constant/app_image_path.dart';
-import '../../widget/button_widget/button_widget.dart';
 
 
 
@@ -150,112 +142,12 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
               itemCount: tabActivities[tabs[selectedTabIndex]]!.length,
               itemBuilder: (context, index) {
                 final activity = tabActivities[tabs[selectedTabIndex]]![index];
-                final tabName = tabs[selectedTabIndex]; // current tab
-
-                // ✅ Conditional card style based on tab
-                if (tabName == 'Near Activities') {
-                  return ActivityCard(
-                    activity: activity,
-                    buttons: [
-                      ButtonWidget(
-                        backgroundColor:AppColor.backgroundColor,
-                        label: 'view',
-                        buttonWidth: 72,
-                        buttonHeight: 40,
-                        onPressed: () {},
-                      ),
-                    ],
-                    // Optionally, add custom background for Near Activities
-                  );
-                } else if (tabName == 'Joined Activities') {
-                  return ActivityCard(
-                    activity: activity,
-                    buttons: [
-
-                      //  Expanded(
-                      //   child: ButtonWidget(
-                      //     backgroundColor:AppColor.red50,
-                      //     label: 'Left',
-                      //     buttonWidth: 100.w,
-                      //     buttonHeight: 40.h,
-                      //     onPressed: () {},
-                      //     textColor: AppColor.red,
-                      //
-                      //   ),
-                      // ),
-                      //
-                      // Expanded(
-                      //   child: ButtonWidget(
-                      //     icon: Image.asset(AppIconPath.chatIcon),
-                      //     backgroundColor:AppColor.backgroundColor,
-                      //     label: 'Chat',
-                      //    buttonWidth: 100.w,
-                      //     buttonHeight: 40.h,
-                      //     onPressed: () {},
-                      //   ),
-                      // ),
-
-
-
-
-
-                      Expanded(
-                        child:Container(
-                          height: 40.h,
-                         // width: 100.w,
-                          decoration: BoxDecoration(
-                            color: AppColor.red50
-
-                          ),
-
-                          child: Text("data"),
-                        ),
-                      ),
-
-
-                      Expanded(
-                        child:Container(
-                          height: 40.h,
-                          // width: 100.w,
-                          decoration: BoxDecoration(
-                              color: AppColor.red50
-
-                          ),
-
-                          child: Text("data"),
-                        ),
-                      ),
-
-                    ],
-                    // Optionally, change card background or layout
-                  );
-                } else if (tabName == 'Created Activities') {
-                  return ActivityCard(
-                    buttonsDirection: Axis.vertical,
-                    activity: activity,
-                    buttons: [
-                      Icon(Icons.edit_outlined),
-                      ButtonWidget(
-                        icon: Image.asset(AppIconPath.chatIcon),
-                        backgroundColor:AppColor.backgroundColor,
-                        label: 'Chat',
-                        buttonWidth: 110.w,
-                        buttonHeight: 40.h,
-                        onPressed: () {},
-                      ),
-                    ],
-                  );
-                } else {
-                  // Saved tab
-                  return ActivityCard(
-                    buttonsAlignment: Alignment.bottomLeft,
-                    activity: activity,
-                    buttons: [
-                      Text('18 Aug 2023')
-
-                    ],
-                  );
-                }
+                // Pass selectedTabIndex directly to ActivityCard
+                // Now all design handling will be done inside ActivityCard
+                return ActivityCard(
+                  activity: activity,
+                  tabIndex: selectedTabIndex,
+                );
               },
             ),
           )
