@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:zero_signal/screen/create_activity_screen/create_activity_screen.dart';
 import 'package:zero_signal/screen/home_screen/home_screen.dart';
 import '../condition_screen/terms_condition_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
@@ -238,5 +239,20 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     // binding: SplashScreenBinding(),
     page: () =>  WebsiteViewScreen(),
   ),
+
+  GetPage(
+    name: AppRoutes.createActivityScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  CreateActivityScreen(),
+  ),
+
+
+
+
+
+
+
+
+
 
 ];

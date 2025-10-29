@@ -25,7 +25,7 @@ class _SocialScreenState extends State<SocialScreen> {
     return Scaffold(
 
       body: Container(
-        height: Get.height,
+        height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AppImagePath.socialBackgroundImage),
@@ -42,7 +42,9 @@ class _SocialScreenState extends State<SocialScreen> {
                   Column(
                     children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.createActivityScreen);
+                    },
                     icon: Image.asset(
                       AppIconPath.addIcon2,
                       color: Colors.white,
@@ -372,6 +374,8 @@ class _SocialScreenState extends State<SocialScreen> {
                               textAlignment: TextAlign.center,
                               fontSize: 16.sp,
                               underline: true,
+                              underlineColor: Colors.white,
+                              underlineWidth: 1.5,
                             ),
                           ),
                         ),

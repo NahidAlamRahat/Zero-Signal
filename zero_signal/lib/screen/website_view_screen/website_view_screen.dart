@@ -8,7 +8,9 @@ class WebsiteViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: AppColor.creamBackgroundColor,
+      ),
 
       backgroundColor: AppColor.creamBackgroundColor,
       body: Center(child: TextWidget(text: ' http://zero signal',fontColor: Color(0xFF411BEC),),),

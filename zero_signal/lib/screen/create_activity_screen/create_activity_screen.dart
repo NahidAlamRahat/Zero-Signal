@@ -167,9 +167,15 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
 
 
-            ButtonWidget(
-              backgroundColor: AppColor.backgroundColor,
-              label: 'Publish',
+            Center(
+              child: ButtonWidget(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                buttonWidth: double.infinity,
+                backgroundColor: AppColor.backgroundColor,
+                label: 'Publish',
+              ),
             )
 
           ],

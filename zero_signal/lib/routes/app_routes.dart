@@ -48,6 +48,7 @@ class AppRoutes {
   static const manageDownloadScreen = "/manageDownloadScreen";
   static const activityListsScreen = "/activityListsScreen";
   static const websiteViewScreen = "/websiteViewScreen";
+  static const createActivityScreen = "/createActivityScreen";
 
 
 }
