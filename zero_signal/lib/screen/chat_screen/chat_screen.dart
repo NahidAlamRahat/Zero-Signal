@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
             size: 20,
           ),
           onPressed: () {
-            // In a real app, you'd use Navigator.pop(context)
+            Get.back();
             debugPrint('Back button pressed');
           },
         ),
@@ -133,7 +133,9 @@ class _ChatScreenState extends State<ChatScreen> {
             opacity: 0,
             child: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {},
+              onPressed: () {
+                Get.back();
+              },
             ),
           ),
         ],

@@ -60,6 +60,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/bike.png
   AssetGenImage get bike => const AssetGenImage('assets/icons/bike.png');
 
+  /// File path: assets/icons/calender.png
+  AssetGenImage get calender =>
+      const AssetGenImage('assets/icons/calender.png');
+
   /// File path: assets/icons/cameraIcon.png
   AssetGenImage get cameraIcon =>
       const AssetGenImage('assets/icons/cameraIcon.png');
@@ -281,6 +285,7 @@ class $AssetsIconsGen {
     addPeople,
     batch,
     bike,
+    calender,
     cameraIcon,
     cameraIcon2,
     car,

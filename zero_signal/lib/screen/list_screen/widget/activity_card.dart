@@ -107,19 +107,22 @@ class ActivityCard extends StatelessWidget {
                   color: Colors.white,
                 ),
                 SizedBox(width: 6.w),
-                Text(
-                  "Chat",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                TextWidget(
+                 text:  "Chat",
+                  fontColor: AppColor.white500,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
               ],
             ),
           ),
         ];
       case 3: // Saved
-        return [Text('18 Aug 2023')];
+        return [TextWidget(text: '18 Aug 2023',
+        fontColor: AppColor.darkGray500,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        )];
       default:
         return buttons ?? [];
     }
@@ -138,7 +141,7 @@ class ActivityCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(12),
         decoration: ShapeDecoration(
-          color: Colors.green,
+          color: AppColor.creamBackgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
@@ -562,29 +565,34 @@ class ActivityCard extends StatelessWidget {
                           height:   12.h,
                         ),
 
-                        Container(
-                          height: 32.h,
-                          width: 95.w,
-                          decoration: BoxDecoration(
-                            color: AppColor.backgroundColor,
-                            borderRadius: BorderRadius.circular(8.r),
+                        InkWell(
+                            onTap: (){
+                              Get.toNamed(AppRoutes.chatScreen);
+                            },
+                          child: Container(
+                            height: 32.h,
+                            width: 95.w,
+                            decoration: BoxDecoration(
+                              color: AppColor.backgroundColor,
+                              borderRadius: BorderRadius.circular(8.r),
+
+                            ),
+
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+
+                                Image.asset(
+                                    height: 20.h,
+                                    width: 20.w,
+                                    AppIconPath.chatIcon),
+                                SizedBox(
+                                  width: 4.w,                           ),
+                                TextWidget(text: "Chat",fontColor: AppColor.white500,fontSize: 14,fontWeight: FontWeight.w400,),
+                              ],
+                            ),
 
                           ),
-
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-
-                              Image.asset(
-                                  height: 20.h,
-                                  width: 20.w,
-                                  AppIconPath.chatIcon),
-                              SizedBox(
-                                width: 4.w,                           ),
-                              TextWidget(text: "Chat",fontColor: AppColor.white500,fontSize: 14.sp,fontWeight: FontWeight.w400,),
-                            ],
-                          ),
-
                         )
 
                       ],
@@ -622,6 +630,7 @@ class ActivityCard extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Activity Image
           Container(
@@ -640,60 +649,60 @@ class ActivityCard extends StatelessWidget {
 
           SizedBox(width: 12.w),
 
-          //Content Section
+          // Content Section
           Expanded(
-            child: Column(
+            child: Container(
+              height: 116.h,
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                Text(
-                  activity.title,
-                  style: TextStyle(
-                    color: const Color(0xFF2C2C2C),
-                    fontSize: 20.sp,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    height: 1.10,
-                  ),
+               Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   TextWidget(
+                     text: activity.title,
+                     fontColor: const Color(0xFF2C2C2C),
+                     fontSize: 16,
+                     fontWeight: FontWeight.w500,
+                     textAlignment: TextAlign.start,
+                     maxLines: 1,
+                     overflow: TextOverflow.ellipsis,
+                   ),
+
+                   SizedBox(height: 4.h),
+
+                   // Category with icon
+                   Align(
+                     alignment: Alignment.topLeft,
+                     child: TextWidget(
+
+                       textAlignment: TextAlign.start,
+                       maxLines: 2,
+
+                      overflow: TextOverflow.ellipsis,
+                      text: "Join me on a hike to a stunning water...",
+                       fontColor: AppColor.subTitleColor,
+                       fontSize: 16,
+                       fontWeight: FontWeight.w400,
+                     ),
+                   ),
+                 ],
+               ),
+
+
+
+
+                // Date at bottom
+                TextWidget(
+                 text:  '18 Aug 2023',
+                  fontColor: AppColor.darkGray500,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
                 ),
-
-                // Category with icon
-                Row(
-                  children: [
-                    Container(
-                      width: 12.w,
-                      height: 12.h,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(Assets.icons.location.path),
-                          fit: BoxFit.cover,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 6.w),
-                    Expanded(
-                      child: Text(
-                        activity.category,
-                        style: TextStyle(
-                          color: const Color(0xFF727272),
-                          fontSize: 12.sp,
-                          fontFamily: 'Open Sans',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-
-
-
-
-
-
-
               ],
+            ),
             ),
           ),
         ],

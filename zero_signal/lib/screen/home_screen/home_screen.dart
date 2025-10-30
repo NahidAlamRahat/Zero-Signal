@@ -229,6 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: TextFieldWidget(
                 hintText: 'Search in ZeroSignal',
                 fieldHeight: 40,
+                borderColor: Colors.transparent,
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
             ),

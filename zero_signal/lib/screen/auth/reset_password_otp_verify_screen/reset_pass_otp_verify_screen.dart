@@ -51,7 +51,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                        // height: 438.h,
                         width: 390.w,
                         child: Padding(
-                          padding: EdgeInsets.all(24.w),
+                          padding: EdgeInsets.symmetric(horizontal: 20.h,vertical: 28.h),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Equal spacing
@@ -98,9 +98,13 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                               TextWidget(
                                 text: "Enter the four-digit code that was emailed to you.",
                                 fontColor:  AppColor.white500,
-                                fontSize: 16.sp,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 textAlignment: TextAlign.center,
+                              ),
+
+                              SizedBox(
+                                height: 44.h,
                               ),
 
                               // PIN Code TextField
@@ -143,7 +147,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                           TextWidget(
                                             text: "Didn't receive code? ",
                                             fontColor: AppColor.white500,
-                                            fontSize: 14.sp,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w400,
                                           ),
                                           GestureDetector(
@@ -153,7 +157,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                             child: TextWidget(
                                               text: "Resend",
                                               fontColor: AppColor.yello,
-                                              fontSize: 14.sp,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),

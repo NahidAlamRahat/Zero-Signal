@@ -4,6 +4,7 @@ import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
+import '../../gen/assets.gen.dart';
 import '../../widget/button_widget/button_widget.dart';
 import '../../widget/custom_dropdown.dart';
 
@@ -61,7 +62,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
             TextWidget(text: 'Date',fontWeight: FontWeight. w400,),
             TextFieldWidget(
-              customSuffixIcon: Icon(Icons.calendar_today,color: AppColor.backgroundColor),
+              customSuffixIcon: Image.asset(Assets.icons.calender.path, height: 12.h,width: 11.w,),
               hintText: 'dd/mm/yyyy',
               borderColor: Colors.transparent,
               backgroundColor: AppColor.lightGrayishOrange,
