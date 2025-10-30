@@ -24,113 +24,110 @@ class CreatePasswordScreen extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: GlassEffact(
-              height: 480.h,
-              width: 390.w,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  Center(child: Image.asset(AppImagePath.appLogo, width: 61, height: 60)),
-                  const SizedBox(height: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal:20.0.w),
+              child: Center(
+                child: GlassEffact(
+                //  height: 480.h,
+                  width: 390.w,
+                  child: Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-                  Center(
-                    child: TextWidget(
-                      text: AppStrings.createPassword,
-                      fontColor: Colors.white,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w500,
+                        Center(child: Image.asset(AppImagePath.appLogo, width: 61, height: 60)),
+                        const SizedBox(height: 16),
+
+                        Center(
+                          child: TextWidget(
+                            text: AppStrings.createPassword,
+                            fontColor: AppColor.white500,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+
+                        Center(
+                          child: TextWidget(
+                            text: AppStrings.yourNewPassword,
+                            fontColor: AppColor.white500,
+                            fontSize: 16,
+                            maxLines: 2,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        TextWidget(
+                          textAlignment: TextAlign.left,
+                          text: AppStrings.newPassword,
+                          fontColor: AppColor.white500,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+
+                         SizedBox(height: 8.h),
+
+
+                        TextFieldWidget(
+                          textColor: Colors.white,
+                          hintText: AppStrings.enterNewPassword,
+                          hintColor: Colors.white54,
+                          backgroundColor: Colors.transparent,
+                          borderColor: Colors.white,
+                          focusedBorderColor: Colors.white,
+                          borderRadius: 8,
+                          borderWidth: 1.0,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+
+                        SizedBox(height: 20.w,),
+
+                        TextWidget(
+                          textAlignment: TextAlign.left,
+                          text: AppStrings.confirmPassword,
+                          fontColor: AppColor.white500,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+
+                        SizedBox(height: 8.h),
+
+                        // Email TextField
+                        TextFieldWidget(
+                          textColor: Colors.white,
+                          hintText: AppStrings.enterNewPassword,
+                          hintColor: Colors.white54,
+                          backgroundColor: Colors.transparent,
+                          borderColor: Colors.white,
+                          focusedBorderColor: Colors.white,
+                          borderRadius: 8,
+                          borderWidth: 1.0,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+
+                        SpaceWidget(spaceHeight: 44,),
+
+                        ButtonWidget(
+                          onPressed: (){
+                            showPasswordChangedSheet(context);
+                          },
+                          buttonWidth: double.infinity,
+                          backgroundColor: AppColor.backgroundColor,
+                          label: AppStrings.save,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-
-                  Center(
-                    child: TextWidget(
-                      text: AppStrings.yourNewPassword,
-                      fontColor: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Padding(
-                    padding: EdgeInsets.only(left: 12),
-                    child: TextWidget(
-                      textAlignment: TextAlign.left,
-                      text: AppStrings.newPassword,
-                      fontColor: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12,right: 12),
-                    child: TextFieldWidget(
-                      textColor: Colors.white,
-                      hintText: AppStrings.enterNewPassword,
-                      hintColor: Colors.white54,
-                      backgroundColor: Colors.transparent,
-                      borderColor: Colors.white,
-                      focusedBorderColor: Colors.white,
-                      borderRadius: 8,
-                      borderWidth: 1.0,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                  ),
-
-                  SizedBox(height: 20.w,),
-
-                  Padding(
-                    padding: EdgeInsets.only(left: 12),
-                    child: TextWidget(
-                      textAlignment: TextAlign.left,
-                      text: AppStrings.confirmPassword,
-                      fontColor: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-
-                  // Email TextField
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12,right: 12),
-                    child: TextFieldWidget(
-                      textColor: Colors.white,
-                      hintText: AppStrings.enterNewPassword,
-                      hintColor: Colors.white54,
-                      backgroundColor: Colors.transparent,
-                      borderColor: Colors.white,
-                      focusedBorderColor: Colors.white,
-                      borderRadius: 8,
-                      borderWidth: 1.0,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                  ),
-
-                  SpaceWidget(spaceHeight: 44,),
-
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Center(
-                      child: ButtonWidget(
-                        onPressed: (){
-                          showPasswordChangedSheet(context);
-                        },
-                        buttonWidth: double.infinity,
-                        backgroundColor: AppColor.backgroundColor,
-                        label: AppStrings.save,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

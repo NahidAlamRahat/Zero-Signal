@@ -45,8 +45,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+
+                  SizedBox(
+                    height: 20.h,
+                  ),
                   GlassEffact(
-                    height: 750.h,
+               //     height: 750.h,
                     width: 390.w,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24, ),
@@ -308,11 +312,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                             ),
                           ),
+SizedBox(
+  height: 32.h,
+)
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 50.h),
                 ],
               ),
             ),

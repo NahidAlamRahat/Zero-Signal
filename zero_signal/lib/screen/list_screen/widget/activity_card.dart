@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_strings.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../../constant/app_colors.dart';
 import '../../../constant/app_icon_path.dart';
 import '../../../gen/assets.gen.dart';
+import '../../../routes/app_routes.dart';
 import '../list_screen.dart';
 
 class ActivityCard extends StatelessWidget {
@@ -126,7 +129,7 @@ class ActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Generate buttons based on tabIndex
     List<Widget> cardButtons = _getButtonsForTabIndex();
-    
+
     // For Near Activities tab, use the Figma design
     if (tabIndex == 0) { // Near Activities
       return Container(
@@ -401,7 +404,7 @@ class ActivityCard extends StatelessWidget {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            print('Right button tapped');
+                            Get.toNamed(AppRoutes.chatScreen);
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -417,7 +420,7 @@ class ActivityCard extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                
+
                                 Image.asset(
 
                                     height: 20.h,
@@ -453,20 +456,164 @@ class ActivityCard extends StatelessWidget {
       );
     }
 
+    if (tabIndex == 2) { // Near Activities
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: ShapeDecoration(
+          color: AppColor.creamBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          shadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Activity Image
+            Container(
+              width: 116.w,
+              height: 116.h,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: AssetImage(activity.imagePath),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+
+            SizedBox(width: 12.w),
+
+            //Content Section
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    activity.title,
+                    style: TextStyle(
+                      color: const Color(0xFF2C2C2C),
+                      fontSize: 20.sp,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      height: 1.10,
+                    ),
+                  ),
+
+                  // Category with icon
+                  Row(
+                    children: [
+                      Container(
+                        width: 12.w,
+                        height: 12.h,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(Assets.icons.location.path),
+                            fit: BoxFit.cover,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          activity.category,
+                          style: TextStyle(
+                            color: const Color(0xFF727272),
+                            fontSize: 12.sp,
+                            fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
 
 
 
 
-    // For other tabs, use the original design
-    Axis buttonLayout = tabIndex == 2 ? Axis.vertical : Axis.horizontal;
-    Alignment buttonAlign = tabIndex == 3 ? Alignment.bottomLeft : Alignment.centerRight;
-    
+
+
+
+                  // View Buttons
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+
+                      children: [
+
+                        Image.asset(
+                            height: 20.h,
+                            width: 20.w,
+                            AppIconPath.editIcon),
+
+                        SizedBox(
+                          height:   12.h,
+                        ),
+
+                        Container(
+                          height: 32.h,
+                          width: 95.w,
+                          decoration: BoxDecoration(
+                            color: AppColor.backgroundColor,
+                            borderRadius: BorderRadius.circular(8.r),
+
+                          ),
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+
+                              Image.asset(
+                                  height: 20.h,
+                                  width: 20.w,
+                                  AppIconPath.chatIcon),
+                              SizedBox(
+                                width: 4.w,                           ),
+                              TextWidget(text: "Chat",fontColor: AppColor.white500,fontSize: 14.sp,fontWeight: FontWeight.w400,),
+                            ],
+                          ),
+
+                        )
+
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+
+
+
+
+
+
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: AppColor.lightGrayishOrange,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+      padding: const EdgeInsets.all(12),
+      decoration: ShapeDecoration(
+        color: AppColor.creamBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        shadows: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
@@ -474,103 +621,82 @@ class ActivityCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ✅ Activity Image
-            Container(
-              width: 116.w,
-              height: 116.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: AssetImage(activity.imagePath),
-                  fit: BoxFit.cover,
-                ),
+      child: Row(
+        children: [
+          // Activity Image
+          Container(
+            width: 116.w,
+            height: 116.h,
+            decoration: ShapeDecoration(
+              image: DecorationImage(
+                image: AssetImage(activity.imagePath),
+                fit: BoxFit.cover,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
+          ),
 
-            SizedBox(width: 16.w),
+          SizedBox(width: 12.w),
 
-            // ✅ Activity Details + Buttons
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    activity.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
+          //Content Section
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  activity.title,
+                  style: TextStyle(
+                    color: const Color(0xFF2C2C2C),
+                    fontSize: 20.sp,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                    height: 1.10,
                   ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Container(
-                        width: 8.w,
-                        height: 8.h,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
+                ),
+
+                // Category with icon
+                Row(
+                  children: [
+                    Container(
+                      width: 12.w,
+                      height: 12.h,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(Assets.icons.location.path),
+                          fit: BoxFit.cover,
                         ),
+                        shape: BoxShape.circle,
                       ),
-                      SizedBox(width: 6.w),
-                      Text(
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
                         activity.category,
                         style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
+                          color: const Color(0xFF727272),
+                          fontSize: 12.sp,
+                          fontFamily: 'Open Sans',
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    activity.location,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
                     ),
-                  ),
+                  ],
+                ),
 
-                  SizedBox(height: 8.h),
 
-                  // ✅ Buttons section with dynamic handling based on tabIndex
-                  if (cardButtons.isNotEmpty)
-                    Align(
-                      alignment: buttonAlign, // Using the dynamic alignment based on tabIndex
-                      child: buttonLayout == Axis.horizontal
-                          ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: cardButtons
-                            .map((btn) => Padding(
-                          padding: EdgeInsets.only(left: 8.w),
-                          child: btn,
-                        ))
-                            .toList(),
-                      )
-                          : Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: buttonAlign == Alignment.centerRight
-                            ? CrossAxisAlignment.end
-                            : CrossAxisAlignment.start,
-                        children: cardButtons
-                            .map((btn) => Padding(
-                          padding: EdgeInsets.only(top: 8.h),
-                          child: btn,
-                        ))
-                            .toList(),
-                      ),
-                    ),
-                ],
-              ),
+
+
+
+
+
+
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

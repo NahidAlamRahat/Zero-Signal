@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextWidget extends StatelessWidget {
   final String text;
@@ -38,12 +39,12 @@ class TextWidget extends StatelessWidget {
       overflow: overflow,
       maxLines: maxLines,
       textAlign: textAlignment,
-      style: TextStyle(
+      style: GoogleFonts.poppins(
         fontWeight: fontWeight,
         fontSize: fontSize.sp,
         fontStyle: fontStyle,
         color: fontColor,
-        fontFamily: fontFamily,
+       // fontFamily: fontFamily,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
         decorationColor: underline ? underlineColor : null,
         decorationThickness: underline ? underlineWidth : null,

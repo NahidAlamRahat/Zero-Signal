@@ -103,6 +103,10 @@ class $AssetsIconsGen {
   AssetGenImage get downloadIcon =>
       const AssetGenImage('assets/icons/downloadIcon.png');
 
+  /// File path: assets/icons/editIcon.png
+  AssetGenImage get editIcon =>
+      const AssetGenImage('assets/icons/editIcon.png');
+
   /// File path: assets/icons/faqImage.png
   AssetGenImage get faqImage =>
       const AssetGenImage('assets/icons/faqImage.png');
@@ -168,6 +172,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mapIcon.png
   AssetGenImage get mapIcon => const AssetGenImage('assets/icons/mapIcon.png');
 
+  /// File path: assets/icons/microphone_icon.png
+  AssetGenImage get microphoneIcon =>
+      const AssetGenImage('assets/icons/microphone_icon.png');
+
   /// File path: assets/icons/myLocationIcon.png
   AssetGenImage get myLocationIcon =>
       const AssetGenImage('assets/icons/myLocationIcon.png');
@@ -223,6 +231,10 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/send.png
   AssetGenImage get send => const AssetGenImage('assets/icons/send.png');
+
+  /// File path: assets/icons/send_icon.png
+  AssetGenImage get sendIcon =>
+      const AssetGenImage('assets/icons/send_icon.png');
 
   /// File path: assets/icons/share.png
   AssetGenImage get share => const AssetGenImage('assets/icons/share.png');
@@ -280,6 +292,7 @@ class $AssetsIconsGen {
     deleteIcon,
     download,
     downloadIcon,
+    editIcon,
     faqImage,
     favoriteRoutesImage,
     favoriteSiteImage,
@@ -298,6 +311,7 @@ class $AssetsIconsGen {
     manageDownloadImage,
     map,
     mapIcon,
+    microphoneIcon,
     myLocationIcon,
     mySpotsImage,
     mySportList,
@@ -313,6 +327,7 @@ class $AssetsIconsGen {
     save,
     search,
     send,
+    sendIcon,
     share,
     socialIcon,
     socialSelect,

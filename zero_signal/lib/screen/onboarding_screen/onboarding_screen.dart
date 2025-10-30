@@ -48,6 +48,7 @@ class OnboardingScreen extends StatelessWidget {
       left: 0,
       right: 0,
       child: TextWidget(
+
         fontSize: 32,
         fontWeight: FontWeight.w600,
         textAlignment: TextAlign.center,

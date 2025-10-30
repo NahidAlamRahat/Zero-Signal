@@ -15,11 +15,13 @@ import '../../../utils/app_log/app_log.dart';
 import 'controller/forgot_pass_verify_otp_screen_controller.dart';
 
 class ResetPassOtpVerifyScreen extends StatelessWidget {
-  const ResetPassOtpVerifyScreen({super.key});
+   ResetPassOtpVerifyScreen({super.key});
+
+  ForgotPassVerifyOtpScreenController controller = Get.find<ForgotPassVerifyOtpScreenController>();
+
 
   @override
   Widget build(BuildContext context) {
-    ForgotPassVerifyOtpScreenController controller = Get.find<ForgotPassVerifyOtpScreenController>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -27,6 +29,8 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
         children: [
           Container(
             height: double.infinity,
+
+
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -34,15 +38,17 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            child: SafeArea(
-              child: Stack(
+            child: Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 20.w, vertical: 28.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Main content in center
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0.w),
                       child: GlassEffact(
-                        height: 438.h,
+                       // height: 438.h,
                         width: 390.w,
                         child: Padding(
                           padding: EdgeInsets.all(24.w),
@@ -56,6 +62,9 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                   width: 61.w,
                                   height: 60.h
                               ),
+                              SizedBox(
+                                height: 16.h,
+                              ),
 
                               // Title with colored number
                               RichText(
@@ -67,7 +76,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                       text: "Enter ",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: AppColor.white500),
                                     ),
                                     TextSpan(
                                       text: "4",
@@ -75,16 +84,20 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                     ),
                                     TextSpan(
                                       text: " digits code",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color:  AppColor.white500),
                                     ),
                                   ],
                                 ),
                               ),
 
+                              SizedBox(
+                                height: 12.h,
+                              ),
+
                               // Subtitle
                               TextWidget(
                                 text: "Enter the four-digit code that was emailed to you.",
-                                fontColor: Colors.white70,
+                                fontColor:  AppColor.white500,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w400,
                                 textAlignment: TextAlign.center,
@@ -108,7 +121,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                           children: [
                                             TextSpan(
                                               text: "Resend code in ",
-                                              style: TextStyle(color: Colors.white70),
+                                              style: TextStyle(color:  AppColor.white500),
                                             ),
                                             TextSpan(
                                               text: controller.formatTime(),
@@ -116,7 +129,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                             ),
                                             TextSpan(
                                               text: " s",
-                                              style: TextStyle(color: Colors.white70),
+                                              style: TextStyle(color: AppColor.white500),
                                             ),
                                           ],
                                         ),
@@ -129,7 +142,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                         children: [
                                           TextWidget(
                                             text: "Didn't receive code? ",
-                                            fontColor: Colors.white70,
+                                            fontColor: AppColor.white500,
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,
                                           ),
@@ -149,6 +162,11 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                   ],
                                 );
                               }),
+
+
+                              SizedBox(
+                                height: 32.h,
+                              ),
 
                               // Reset Password Button
                               ButtonWidget(

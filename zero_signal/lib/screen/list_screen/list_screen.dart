@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/list_screen/widget/activity_card.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+
+import 'controller/list_screen_controller.dart';
 
 
 
@@ -72,113 +76,121 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.creamBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColor.creamBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Lists',
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          // ✅ Tab Bar
-          SizedBox(
-            height: 50,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              itemCount: tabs.length,
-              itemBuilder: (context, index) {
-                bool isSelected = selectedTabIndex == index;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedTabIndex = index;
-                    });
-                  },
-                  child: Container(
-                    height: 5,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                    margin: const EdgeInsets.only(right: 0),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.transparent)
-                      )
+    return GetBuilder(
+      init: ListScreenController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: AppColor.creamBackgroundColor,
+          appBar: AppBar(
+            backgroundColor: AppColor.creamBackgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: const Text(
+              'Lists',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            centerTitle: true,
+            bottom:  PreferredSize(
+              preferredSize: const Size.fromHeight(56),
+              child: Stack(
+                key: controller.headerKey,
+                children: [
+                  Container(
+                    margin:  EdgeInsets.only(left: 19.w, right: 19.w),
+                    height: 56,
+                    color:Colors.transparent,
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      height: 5,
+                      margin: const EdgeInsets.only(bottom: 4),
+                      color: AppColor.base_50,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                  ),
+                  SingleChildScrollView(
+                    controller: controller.scrollController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Text(
-                            tabs[index],
-                            textAlign: TextAlign.center,
-
-                            style: TextStyle(
-                              color: isSelected ? Colors.black87 : Colors.grey,
-                              fontSize: 14,
-                              fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w400,
+                        for (int i = 0; i < controller.tabs.length; i++)
+                          GestureDetector(
+                            onTap: () => controller.select(i),
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              key: controller.tabKeys[i],
+                              padding:  EdgeInsets.symmetric(horizontal: 14.w, vertical: 12),
+                              child: TextWidget(
+                                fontWeight: i == controller.selectedIndex ? FontWeight.w400 : FontWeight.w300,
+                                fontColor: i == controller.selectedIndex ? AppColor.textColor : AppColor.subTitleColor,
+                                text: controller.tabs[i],),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        // 👇 Rounded underline only when selected
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          height: 5,
-                                               width: 150.w,
-
-                                               // line width, you can adjust
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppColor.backgroundColor
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(50), // rounded underline
-                          ),
-                        ),
+                        const SizedBox(width: 8),
                       ],
                     ),
                   ),
-                );
-              },
+
+                  // Text(
+                  //   controller.tabs[i],
+                  //   style: TextStyle(
+                  //     color: i == controller.selectedIndex ? Colors.black87 : Colors.black54,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
+                  // )
+
+
+                  Positioned(
+                    bottom: 4,
+                    left: controller.indicatorLeft,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOut,
+                      height: 5,
+                      width: controller.indicatorWidth > 0 ? controller.indicatorWidth : 0,
+                      decoration: BoxDecoration(
+                        color: AppColor.backgroundColor,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )
-,
+          ),
+          body: Column(
+            children: [
 
-          const SizedBox(height: 20),
 
-          // ✅ Activities List
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              itemCount: tabActivities[tabs[selectedTabIndex]]!.length,
-              itemBuilder: (context, index) {
-                final activity = tabActivities[tabs[selectedTabIndex]]![index];
-                // Pass selectedTabIndex directly to ActivityCard
-                // Now all design handling will be done inside ActivityCard
-                return ActivityCard(
-                  activity: activity,
-                  tabIndex: selectedTabIndex,
-                );
-              },
-            ),
-          )
+              const SizedBox(height: 20),
 
-        ],
-      ),
+              // ✅ Activities List
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  itemCount: tabActivities[tabs[controller.selectedIndex]]!.length,
+                  itemBuilder: (context, index) {
+                    final activity = tabActivities[tabs[controller.selectedIndex]]![index];
+                    // Pass selectedTabIndex directly to ActivityCard
+                    // Now all design handling will be done inside ActivityCard
+                    return ActivityCard(
+                      activity: activity,
+                      tabIndex: controller.selectedIndex,
+                    );
+                  },
+                ),
+              )
+
+            ],
+          ),
+        );
+      }
     );
   }
 }

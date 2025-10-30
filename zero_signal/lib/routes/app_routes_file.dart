@@ -11,6 +11,7 @@ import '../screen/auth/sign_up_screen/sign_up_screen.dart';
 import '../screen/button_nav_bar/button_nav_bar_screen.dart';
 import '../screen/change_language_screen/change_language_screen.dart';
 import '../screen/change_password_screen/change_password_screen.dart';
+import '../screen/chat_screen/chat_screen.dart';
 import '../screen/contact_support_screen/contact_support_screen.dart';
 import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/favorite_routes_screen/favorite_routes_screen.dart';
@@ -247,7 +248,11 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   ),
 
 
-
+  GetPage(
+    name: AppRoutes.chatScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ChatScreen(),
+  ),
 
 
 

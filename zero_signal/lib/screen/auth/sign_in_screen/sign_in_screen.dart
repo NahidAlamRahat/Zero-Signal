@@ -130,29 +130,43 @@ class _SignInScreenState extends State<SignInScreen> {
                         
                               // Remember Me & Forgot Password Row
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                                 children: [
                                   Row(
                                     children: [
-                                      Checkbox(
-                                        value: _rememberMe,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _rememberMe = value ?? false;
-                                          });
-                                        },
-                                        activeColor: Colors.blue,
-                                        checkColor: Colors.white,
-                                        side: BorderSide(color: Colors.white54),
+                                      SizedBox(
+                                        height: 14.h
+                                        ,
+                                        width: 14.w
+                                        ,
+                                        child: Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.r),
+                                          ),
+                                          value: _rememberMe,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _rememberMe = value ?? false;
+                                            });
+                                          },
+                                          activeColor: Colors.blue,
+                                          checkColor: Colors.white,
+                                          side: BorderSide(color: Colors.white54),
+                                        ),
                                       ),
+
+
+                                      SizedBox(width: 8.w,),
                                       TextWidget(
                                         text: AppStrings.rememberMe,
                                         fontColor: Colors.white70,
-                                        fontSize: 14.sp,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ],
                                   ),
+
+                                  Spacer(),
                                   GestureDetector(
                                     onTap: () {
                                       // Handle forgot password

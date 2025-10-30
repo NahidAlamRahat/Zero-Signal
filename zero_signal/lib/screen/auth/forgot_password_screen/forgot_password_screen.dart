@@ -41,50 +41,51 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: Center(
                     child: GlassEffact(
                   //    height: 374,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 20),
-                          Center(child: Image.asset(AppImagePath.appLogo, width: 61, height: 60)),
-                          const SizedBox(height: 20),
+                      child: Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            Center(child: Image.asset(AppImagePath.appLogo, width: 61, height: 60)),
+                            const SizedBox(height: 20),
 
-                          Center(
-                            child: TextWidget(
-                              text: AppStrings.forgotPassword,
-                              fontColor: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w500,
+                            Center(
+                              child: TextWidget(
+                                text: AppStrings.forgotPassword,
+                                fontColor: AppColor.white500,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
+                            const SizedBox(height: 10),
 
-                          Center(
-                            child: TextWidget(
-                              text: AppStrings.resetPasswordInstruction,
-                              fontColor: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
+                            Center(
+                              child: TextWidget(
+                                text: AppStrings.resetPasswordInstruction,
+                                fontColor: AppColor.white500,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
 
-                          // Email Label
-                          Padding(
-                            padding: EdgeInsets.only(left: 12),
-                            child: TextWidget(
+                            // Email Label
+                            TextWidget(
                               textAlignment: TextAlign.left,
                               text: AppStrings.email,
-                              fontColor: Colors.white,
+                              fontColor: AppColor.white500,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
-                          ),
 
-                          // Email TextField
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: TextFieldWidget(
+                            SizedBox(
+                              height: 8.h,
+                            ),
+
+                            // Email TextField
+                            TextFieldWidget(
                               textColor: Colors.white,
                               hintText: AppStrings.enterYourEmail,
                               hintColor: Colors.white54,
@@ -95,27 +96,25 @@ class ForgotPasswordScreen extends StatelessWidget {
                               borderWidth: 1.0,
                               keyboardType: TextInputType.emailAddress,
                             ),
-                          ),
 
-
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Center(
-                              child: ButtonWidget(
-                                onPressed: (){
-                                  Get.toNamed(AppRoutes.resetPassOtpVerifyScreen);
-                                },
-                                buttonWidth: double.infinity,
-                                backgroundColor: AppColor.backgroundColor,
-                                label: AppStrings.verify,
-                                buttonHeight: 40,
-                              ),
+                            SizedBox(height: 32.h
                             ),
-                          ),
 
-                           SizedBox(height: 15.h
-                          ),
-                        ],
+
+                            ButtonWidget(
+                              onPressed: (){
+                                Get.toNamed(AppRoutes.resetPassOtpVerifyScreen);
+                              },
+                              buttonWidth: double.infinity,
+                              backgroundColor: AppColor.backgroundColor,
+                              label: AppStrings.verify,
+                              buttonHeight: 40,
+                            ),
+
+                             SizedBox(height: 29.h
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
