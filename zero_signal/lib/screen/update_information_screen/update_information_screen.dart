@@ -4,6 +4,8 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
+import '../../widget/text_widget/text_widgets.dart';
+
 class UpdateInformationScreen extends StatefulWidget {
   const UpdateInformationScreen({super.key});
 
@@ -33,13 +35,12 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text(
-          'Update Information',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+        title: TextWidget(
+         text:  'Update Information',
+
+          fontColor: AppColor.textColor,
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
         ),
         centerTitle: true,
       ),
@@ -49,13 +50,12 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Modifications label
-            Text(
-              'Modifications',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
+            TextWidget(
+             text:  'Modifications',
+
+              fontColor: AppColor.textColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
             SizedBox(height: 12),
 
@@ -63,7 +63,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
             TextFieldWidget(
               hintText: 'Enter a description of the changes here....',
               hintStyle: TextStyle(
-                color: Colors.grey[600],
+                color: AppColor.subTitleColor,
                 fontSize: 12,
               ),
               controller: _textController,
@@ -71,7 +71,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
               borderRadius: 16,
               minLines: 7,
               maxLines: 8,
-              backgroundColor: Color.fromRGBO(245, 233, 223, 1),
+              backgroundColor: AppColor.overLayBoxColor,
             ),
 
             SizedBox(height: 16),
@@ -106,13 +106,13 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
 
             // Thank you message
             Center(
-              child: Text(
-                'Thank you for helping other people like you',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
+              child: TextWidget(
+              text:  'Thank you for helping other people like you',
+
+                textAlignment: TextAlign.center,
+                fontColor: AppColor.subTitleColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
               ),
             ),
             SizedBox(height: 8),

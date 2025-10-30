@@ -346,16 +346,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 10),
 
-                    Container(
-
-                      height: 47.h,
-                      width: 47.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColor.blackColor
+                    InkWell(
+                      onTap: (){
+                        Get.toNamed(AppRoutes.spotDetailsScreen);
+                      },
+                      child: Container(
+                      
+                        height: 47.h,
+                        width: 47.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.blackColor
+                        ),
+                      
+                        child: Image.asset(AppIconPath.addIcon, height: 24.h,width: 24.w,) ,
                       ),
-
-                      child: Image.asset(AppIconPath.addIcon, height: 24.h,width: 24.w,) ,
                     ),
 
 

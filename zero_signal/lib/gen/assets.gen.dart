@@ -273,6 +273,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/uk_flag.png
   AssetGenImage get ukFlag => const AssetGenImage('assets/icons/uk_flag.png');
 
+  /// File path: assets/icons/userEdit.png
+  AssetGenImage get userEdit =>
+      const AssetGenImage('assets/icons/userEdit.png');
+
   /// File path: assets/icons/walking.png
   AssetGenImage get walking => const AssetGenImage('assets/icons/walking.png');
 
@@ -346,6 +350,7 @@ class $AssetsIconsGen {
     task,
     termsAndConditionsImage,
     ukFlag,
+    userEdit,
     walking,
     yelloDownloadIcon,
   ];

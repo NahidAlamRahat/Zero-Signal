@@ -28,6 +28,7 @@ class AppColor {
   static const Color BGColor=Color(0xFFFFF4E9);
   static const Color darkGray500=Color(0xFF2C2C2C);
   static const Color darkGay300 =  Color(0xFF727272);
-
+  static const Color boxShadowColor=Color(0x23000000);
+  static const Color lineColor=Color(0x99D6C8B0);
 
 }

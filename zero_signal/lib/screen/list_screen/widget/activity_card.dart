@@ -238,6 +238,7 @@ class ActivityCard extends StatelessWidget {
                     alignment: Alignment.bottomRight,
                     child: InkWell(
                       onTap: () {
+                        Get.toNamed(AppRoutes.listViewDetailsScreen);
                         print('View button tapped');
                       },
                       child: Container(
@@ -376,6 +377,7 @@ class ActivityCard extends StatelessWidget {
                       Expanded(
                         child: InkWell(
                           onTap: () {
+                            Get.toNamed(AppRoutes.listViewDetailsScreen);
                             print('Left button tapped');
                           },
                           child: Container(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 
+import '../../constant/app_colors.dart';
+import '../../widget/text_widget/text_widgets.dart';
+
 class SunsetPointDetailsScreen extends StatefulWidget {
   const SunsetPointDetailsScreen({super.key});
 
@@ -53,21 +56,18 @@ class _SunsetPointDetailsScreenState extends State<SunsetPointDetailsScreen> {
               Navigator.pop(context);
             },
             child: const Icon(
-              Icons.arrow_back,
+              Icons.arrow_back_ios_new_rounded,
               size: 24,
               color: Color(0xFF2C2C2C),
             ),
           ),
-          const Expanded(
-            child: Text(
-              'Sunset Point Details',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF2C2C2C),
-                fontSize: 20,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
+           Expanded(
+            child: TextWidget(
+             text:  'Sunset Point Details',
+              textAlignment: TextAlign.center,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              fontColor: AppColor.textColor,
             ),
           ),
 

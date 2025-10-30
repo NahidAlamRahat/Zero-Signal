@@ -50,6 +50,8 @@ class AppRoutes {
   static const websiteViewScreen = "/websiteViewScreen";
   static const createActivityScreen = "/createActivityScreen";
   static const chatScreen = "/chatScreen";
+  static const sunsetPointDetailsScreen = "/sunsetPointDetailsScreen";
+  static const listViewDetailsScreen = "/listViewDetailsScreen";
 
 
 }

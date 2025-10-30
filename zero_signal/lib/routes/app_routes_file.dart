@@ -19,6 +19,7 @@ import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
 import 'package:zero_signal/screen/social_screen/social_screen.dart';
 import '../screen/list_screen/list_screen.dart';
+import '../screen/list_view_details_screen/list_view_details_screen.dart';
 import '../screen/manage_download_screen/manage_download_screen.dart';
 import '../screen/my_routes_screen/my_spots_screen.dart';
 import '../screen/my_spots_screen/my_spots_screen.dart';
@@ -28,6 +29,7 @@ import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
+import '../screen/sunset_point_details_screen/sunset_point_details_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
 import '../screen/website_view_screen/website_view_screen.dart';
 import 'all_bindings.dart';
@@ -254,8 +256,17 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () =>  ChatScreen(),
   ),
 
+  GetPage(
+    name: AppRoutes.sunsetPointDetailsScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  SunsetPointDetailsScreen(),
+  ),
 
-
+  GetPage(
+    name: AppRoutes.listViewDetailsScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  ListViewDetailsScreen(),
+  ),
 
 
 
