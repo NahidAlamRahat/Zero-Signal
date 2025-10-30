@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -47,7 +48,7 @@ class _SocialScreenState extends State<SocialScreen> {
                     },
                     icon: Image.asset(
                       AppIconPath.addIcon2,
-                      color: Colors.white,
+                      color: AppColor.white500,
                       height: 24,
                     ),
                   ),
@@ -61,7 +62,7 @@ class _SocialScreenState extends State<SocialScreen> {
                         onPressed: () {},
                         icon: Image.asset(
                           AppIconPath.searchIcon,
-                          color: Colors.white,
+                          color: AppColor.white500,
                           height: 24,
                         ),
                       ),
@@ -71,7 +72,7 @@ class _SocialScreenState extends State<SocialScreen> {
                         },
                         icon: Image.asset(
                           AppIconPath.taskIcon,
-                          color: Colors.white,
+                          color: AppColor.white500,
                           height: 24,
                         ),
                       ),
@@ -82,7 +83,7 @@ class _SocialScreenState extends State<SocialScreen> {
                         },
                         icon: Image.asset(
                           AppIconPath.shareIcon,
-                          color: Colors.white,
+                          color: AppColor.white500,
                           height: 24,
                         ),
                       ),
@@ -109,13 +110,13 @@ class _SocialScreenState extends State<SocialScreen> {
                           text: "Mountailn Hike",
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: AppColor.white500,
                         ),
                         CustomText(
                           text: "April 24",
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: AppColor.white500,
                         ),
                         SizedBox(height: 5.h),
                         CustomText(
@@ -124,7 +125,7 @@ class _SocialScreenState extends State<SocialScreen> {
                               "Join me for a scenic hike in the mountains. Everyone is welcome!",
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: AppColor.white500,
                         ),
                         SizedBox(height: 20.h),
                         Row(
@@ -145,7 +146,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                           "@naturanauta • 4,8 ✰\n(17 luggers / 6 planes)",
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
-                                      color: Colors.white,
+                                      color: AppColor.white500,
                                     ),
                                   ],
                                 ),
@@ -166,7 +167,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                       text: "Girona, Catalonia",
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
-                                      color: Colors.white,
+                                      color: AppColor.white500,
                                     ),
                                   ),
                                 ],
@@ -190,7 +191,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                     text: "12 people attending",
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
-                                    color: Colors.white,
+                                    color: AppColor.white500,
                                   ),
                                 ],
                               ),
@@ -209,7 +210,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                     text: "15 attendants max.",
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
-                                    color: Colors.white,
+                                    color: AppColor.white500,
                                   ),
                                 ],
                               ),
@@ -225,7 +226,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                     text: "@Saved",
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
-                                    color: Colors.white,
+                                    color: AppColor.white500,
                                   ),
                                 ],
                               ),
@@ -238,7 +239,7 @@ class _SocialScreenState extends State<SocialScreen> {
                           text: "Attendants",
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          color: AppColor.white500,
                         ),
                         SizedBox(height: 20.h),
                         Row(
@@ -257,7 +258,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   text: "@alexa, 28",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white,
+                                  color: AppColor.white500,
                                 ),
                               ],
                             ),
@@ -274,7 +275,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   text: "@john.d, 32",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white,
+                                  color: AppColor.white500,
                                 ),
                               ],
                             ),
@@ -291,7 +292,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   text: "@samira_k, 25",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white,
+                                  color: AppColor.white500,
                                 ),
                               ],
                             ),
@@ -307,7 +308,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   text: "@alexa, 28",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white,
+                                  color: AppColor.white500,
                                 ),
                               ],
                             ),
@@ -357,7 +358,7 @@ class _SocialScreenState extends State<SocialScreen> {
                               text: "Save",
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                              color: AppColor.white500,
                             ),
 
                           ],
@@ -370,7 +371,7 @@ class _SocialScreenState extends State<SocialScreen> {
                             },
                             child: TextWidget(
                               text: 'Report Activity',
-                              fontColor: Colors.white,
+                              fontColor: AppColor.white500,
                               textAlignment: TextAlign.center,
                               fontSize: 16.sp,
                               underline: true,

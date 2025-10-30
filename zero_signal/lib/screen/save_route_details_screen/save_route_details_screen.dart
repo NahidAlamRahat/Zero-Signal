@@ -67,8 +67,12 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   Widget _buildHeaderImage() {
     return Center(
       child: Container(
-        width: 390,
-        height: 219,
+        margin: EdgeInsets.only(
+          right: 20.w,
+          left: 20.w,
+        ),
+        width: double.infinity,
+        height: 219.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -184,9 +188,10 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           child: ButtonWidget(
             backgroundColor: AppColor.backgroundColor,
             label: 'Follow Route',
+
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            buttonHeight: 48,
+            buttonHeight: 40,
             onPressed: () => Get.toNamed(AppRoutes.fullMapScreen),
           ),
         ),
@@ -196,6 +201,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             backgroundColor: Color.fromRGBO(245, 233, 223, 1),
             label: 'Add Favorites',
             fontSize: 12,
+            buttonHeight: 40,
             fontWeight: FontWeight.w500,
             textColor: Colors.black,
             onPressed: () {},
@@ -206,6 +212,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           child: ButtonWidget(
             backgroundColor: Color.fromRGBO(245, 233, 223, 1),
             label: 'Create Outing',
+            buttonHeight: 40,
             fontSize: 12,
             fontWeight: FontWeight.w500,
             textColor: Colors.black,
@@ -261,7 +268,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         image: Image.asset(AppImagePath.profileImage),
         actionsLayout: ActionsLayout.column,
         actions: [
-          Icon(Icons.thumb_up_outlined, size: 32),
+          Image.asset(Assets.icons.likeIcon.path,height: 24.h,width: 24.w,),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: ButtonWidget(
@@ -294,18 +301,20 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Description',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF2D2D2D),
-          ),
+        TextWidget(
+         text:  'Description',
+         fontColor: AppColor.textColor,
+         fontSize: 16,
+         fontWeight: FontWeight.w400,
+         textAlignment: TextAlign.left,
         ),
-        SizedBox(height: 12),
-        Text(
-          'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
-          style: TextStyle(fontSize: 14, color: Colors.grey, height: 1.5),
+        SizedBox(height: 8.h),
+        TextWidget(
+         text:  'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
+          fontColor: AppColor.darkGay300,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          textAlignment: TextAlign.left,
         ),
       ],
     );

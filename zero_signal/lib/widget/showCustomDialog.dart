@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 enum ActionsLayout { row, column }
 
@@ -104,32 +107,38 @@ class ShowCustomDialog extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
-                      child: Text(
-                        title!,
-                        style: titleStyle ??
-                            const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                        textAlign: titleAlignment,
+                      child: TextWidget(
+                       text:  title!,
+                        // style: titleStyle ??
+                        //     const TextStyle(
+                        //       fontSize: 20,
+                        //       fontWeight: FontWeight.w600,
+                        //       color: Colors.black87,
+                        //     ),
+                        fontColor: titleStyle?.color ?? AppColor.textColor,
+                        fontSize: titleStyle?.fontSize ?? 20,
+                        fontWeight: titleStyle?.fontWeight ?? FontWeight.w600,
+                        textAlignment: titleAlignment,
                       ),
                     ),
 
                   // ✅ Description
                   if (description != null && description!.isNotEmpty)
-                    Text(
-                      description!,
-                      style: descriptionStyle ??
-                          const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            height: 1.4,
-                          ),
-                      textAlign: descriptionAlignment,
+                    TextWidget(
+                     text:  description!,
+                      // style: descriptionStyle ??
+                      //     const TextStyle(
+                      //       fontSize: 14,
+                      //       color: Colors.grey,
+                      //       height: 1.4,
+                      //     ),
+                      fontColor: descriptionStyle?.color ?? AppColor.textColor,
+                      fontSize: descriptionStyle?.fontSize ?? 14,
+                      fontWeight: descriptionStyle?.fontWeight ?? FontWeight.w400,
+                      textAlignment: descriptionAlignment,
                     ),
 
-                  const SizedBox(height: 24),
+                   SizedBox(height: 16.h),
 
                   // ✅ Actions
                   if (actions != null && actions!.isNotEmpty) ...[

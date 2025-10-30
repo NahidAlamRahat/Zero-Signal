@@ -158,6 +158,10 @@ class $AssetsIconsGen {
   AssetGenImage get languageImage =>
       const AssetGenImage('assets/icons/languageImage.png');
 
+  /// File path: assets/icons/likeIcon.png
+  AssetGenImage get likeIcon =>
+      const AssetGenImage('assets/icons/likeIcon.png');
+
   /// File path: assets/icons/location.png
   AssetGenImage get location =>
       const AssetGenImage('assets/icons/location.png');
@@ -311,6 +315,7 @@ class $AssetsIconsGen {
     homeIcon,
     homeIconselect,
     languageImage,
+    likeIcon,
     location,
     logoutImage,
     manageDownloadImage,

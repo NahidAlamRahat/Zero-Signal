@@ -21,10 +21,12 @@ class ButtonWidget extends StatelessWidget {
   final double borderWidth;
   final double iconSpacing; // <-- new spacing between text & icon
   final bool iconOnRight;   // <-- option to put icon on right or left
+  final int maxLines;
 
   const ButtonWidget({
     super.key,
     this.label,
+    this.maxLines = 1,
     this.icon,
     this.iconHeight,
     this.iconWidth,
@@ -92,6 +94,7 @@ class ButtonWidget extends StatelessWidget {
               ? [
             Text(
               label!,
+              maxLines: maxLines,
               style: TextStyle(
                 color: textColor,
                 fontSize: fontSize.sp,

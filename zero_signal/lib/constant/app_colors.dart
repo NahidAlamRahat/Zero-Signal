@@ -27,6 +27,7 @@ class AppColor {
 
   static const Color BGColor=Color(0xFFFFF4E9);
   static const Color darkGray500=Color(0xFF2C2C2C);
+  static const Color darkGay300 =  Color(0xFF727272);
 
 
 }

@@ -67,7 +67,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         backgroundColor: AppColor.creamBackgroundColor,
         textWidget: TextWidget(
           text: 'Spot Details',
-          fontColor: Colors.black,
+          fontColor: AppColor.textColor,
           fontSize: 20,
           fontWeight: FontWeight.w500,
         ),
