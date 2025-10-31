@@ -30,6 +30,7 @@ import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
 import '../screen/sunset_point_details_screen/sunset_point_details_screen.dart';
+import '../screen/update_information_screen/update_information_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
 import '../screen/website_view_screen/website_view_screen.dart';
 import 'all_bindings.dart';
@@ -269,6 +270,10 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   ),
 
 
-
+  GetPage(
+    name: AppRoutes.updateInformationScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  UpdateInformationScreen(),
+  ),
 
 ];

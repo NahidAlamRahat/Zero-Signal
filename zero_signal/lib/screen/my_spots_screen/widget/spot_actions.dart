@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
 import '../../favorite_sites_screen/favorite_sites_screen.dart';
 import '../model/spot_item.dart';
@@ -27,7 +28,7 @@ class SpotActions extends StatelessWidget {
             onTap: onFavoriteTap,
             child: Icon(
               spot.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: spot.isFavorite ? Colors.red : const Color(0xFF999999),
+              color: spot.isFavorite ? AppColor.red : const Color(0xFF999999),
               size: 18.sp,
             ),
           ),

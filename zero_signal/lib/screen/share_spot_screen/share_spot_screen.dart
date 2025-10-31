@@ -74,13 +74,14 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Share a New Spot',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+        title: const TextWidget(
+         text:  'Share a New Spot',
+
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+          fontColor: AppColor.blackColor,
+
+
         ),
         centerTitle: true,
       ),
@@ -95,36 +96,34 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  'Max 10',
-                  style: TextStyle(
-                    color: AppColor.yello,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                child: TextWidget(
+                  text: 'Max 10',
+                  fontColor: AppColor.yello,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+             SizedBox(height: 24.h),
 
             // Location
             _sectionTitle('Location'),
-            const SizedBox(height: 12),
+             SizedBox(height: 12.h),
             _setLocationBox(),
-            const SizedBox(height: 24),
+             SizedBox(height: 24.h),
 
             // Description
             _sectionTitle('Description'),
-            const SizedBox(height: 12),
+             SizedBox(height: 12.h),
             _descriptionBox(),
-            const SizedBox(height: 24),
+             SizedBox(height: 24.h),
 
             // Type Spot
             _sectionTitle('Type Spot'),
-            const SizedBox(height: 12),
+             SizedBox(height: 12.h),
             _typeDropdown(),
             if (isDropdownOpen) _dropdownBody(),
-            const SizedBox(height: 60),
+             SizedBox(height: 60.h),
 
             // Submit
           ],
@@ -201,9 +200,12 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          'Set Location',
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+        TextWidget(
+         text:  'Set Location',
+          // style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+          fontColor: AppColor.blackColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
         ),
         InkWell(
           onTap: () {

@@ -49,7 +49,7 @@ class _SocialScreenState extends State<SocialScreen> {
                     icon: Image.asset(
                       AppIconPath.addIcon2,
                       color: AppColor.white500,
-                      height: 24,
+                      height: 24.h,
                     ),
                   ),
                     ],
@@ -63,7 +63,7 @@ class _SocialScreenState extends State<SocialScreen> {
                         icon: Image.asset(
                           AppIconPath.searchIcon,
                           color: AppColor.white500,
-                          height: 24,
+                          height: 24.h,
                         ),
                       ),
                       IconButton(
@@ -73,7 +73,7 @@ class _SocialScreenState extends State<SocialScreen> {
                         icon: Image.asset(
                           AppIconPath.taskIcon,
                           color: AppColor.white500,
-                          height: 24,
+                          height: 24.h,
                         ),
                       ),
                       IconButton(
@@ -84,7 +84,7 @@ class _SocialScreenState extends State<SocialScreen> {
                         icon: Image.asset(
                           AppIconPath.shareIcon,
                           color: AppColor.white500,
-                          height: 24,
+                          height: 24.h,
                         ),
                       ),
                     ],
@@ -158,7 +158,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                 children: [
                                   Image.asset(
                                     AppIconPath.locationIcon,
-                                    height: 20,
+                                    height: 20.h,
                                   ),
                                   SizedBox(width: 5.w),
                                   Flexible(
@@ -373,7 +373,7 @@ class _SocialScreenState extends State<SocialScreen> {
                               text: 'Report Activity',
                               fontColor: AppColor.white500,
                               textAlignment: TextAlign.center,
-                              fontSize: 16.sp,
+                              fontSize: 16,
                               underline: true,
                               underlineColor: Colors.white,
                               underlineWidth: 1.5,

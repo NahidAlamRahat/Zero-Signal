@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -61,7 +62,7 @@ class PersonalInformationScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5E9DF),
+        color: AppColor.overLayBoxColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -79,7 +80,7 @@ class PersonalInformationScreen extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
-              border: Border.all(color: const Color(0xFFFFCB20), width: 2),
+              border: Border.all(color: AppColor.yello, width: 2),
               image: const DecorationImage(
                 image: AssetImage(AppImagePath.profileImage),
                 fit: BoxFit.cover,
@@ -95,23 +96,23 @@ class PersonalInformationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4,
               children: [
-                const Text(
-                  'Liam Johnson',
-                  style: TextStyle(
-                    color: Color(0xFF2C2C2C),
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                  ),
+                 TextWidget(
+                 text:  'Liam Johnson',
+                  // style: TextStyle(
+                  //   color: Color(0xFF2C2C2C),
+                  //   fontSize: 20,
+                  //   fontFamily: 'Poppins',
+                  //   fontWeight: FontWeight.w500,
+                  // ),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  fontColor: AppColor.textColor,
                 ),
-                const Text(
-                  'hola@zerosignal.app',
-                  style: TextStyle(
-                    color: Color(0xFFABABAB),
-                    fontSize: 12,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                  ),
+                 TextWidget(
+                 text:  'hola@zerosignal.app',
+                   fontWeight: FontWeight.w400,
+                   fontColor: AppColor.subTitleColor,
+                   fontSize: 12,
                 ),
               ],
             ),
@@ -128,14 +129,11 @@ class PersonalInformationScreen extends StatelessWidget {
                 color: const Color(0x262E4F3E),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Text(
-                'Edit Profile',
-                style: TextStyle(
-                  color: Color(0xFF2E4F3E),
-                  fontSize: 9,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w400,
-                ),
+              child:  TextWidget(
+               text:  'Edit Profile',
+                fontSize: 9,
+                fontWeight: FontWeight.w400,
+                fontColor: AppColor.backgroundColor,
               ),
             ),
           ),
@@ -158,15 +156,11 @@ class PersonalInformationScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: const Text(
-        'Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it\'s wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.',
-        style: TextStyle(
-          color: Color(0xFF2C2C2C),
-          fontSize: 12,
-          fontFamily: 'Nunito',
-          fontWeight: FontWeight.w400,
-          height: 1.48,
-        ),
+      child:  TextWidget(
+       text:  'Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it\'s wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.',
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        fontColor: AppColor.textColor,
       ),
     );
   }
@@ -189,14 +183,11 @@ class PersonalInformationScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w400,
-          ),
+        TextWidget(
+         text:  label,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          fontColor: AppColor.textColor,
         ),
         Container(
           width: double.infinity,
@@ -205,14 +196,11 @@ class PersonalInformationScreen extends StatelessWidget {
             color: const Color(0xFFF5E9DF),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: Color(0xFF2C2C2C),
-              fontSize: 14,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w400,
-            ),
+          child: TextWidget(
+           text:  value,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            fontColor: AppColor.textColor,
           ),
         ),
       ],

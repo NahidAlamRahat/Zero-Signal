@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../constant/app_colors.dart';
+import '../../../widget/text_widget/text_widgets.dart';
+
 class EmptyStateWidget extends StatelessWidget {
   final VoidCallback onAddSpot;
 
@@ -21,25 +24,19 @@ class EmptyStateWidget extends StatelessWidget {
               color: const Color(0xFF999999),
             ),
             SizedBox(height: 16.h),
-            Text(
-              'No spots yet',
-              style: TextStyle(
-                color: const Color(0xFF2C2C2C),
-                fontSize: 20.sp,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
+            TextWidget(
+             text:  'No spots yet',
+              fontColor: AppColor.textColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
             ),
             SizedBox(height: 8.h),
-            Text(
-              'Start exploring and add your favorite spots',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: const Color(0xFF565656),
-                fontSize: 14.sp,
-                fontFamily: 'Open Sans',
-                fontWeight: FontWeight.w400,
-              ),
+            TextWidget(
+            text:   'Start exploring and add your favorite spots',
+              textAlignment: TextAlign.center,
+              fontColor: AppColor.subTitleColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
             ),
             SizedBox(height: 16.h),
             ElevatedButton(
@@ -52,14 +49,12 @@ class EmptyStateWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
               ),
-              child: Text(
-                'Add Your First Spot',
-                style: TextStyle(
-                  color: const Color(0xFFF1F1F1),
-                  fontSize: 14.sp,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                ),
+              child: TextWidget(
+               text: 'Add Your First Spot',
+                fontColor: AppColor.white500,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                textAlignment: TextAlign.center,
               ),
             ),
           ],

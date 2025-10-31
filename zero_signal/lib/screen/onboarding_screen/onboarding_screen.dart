@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
@@ -23,6 +26,10 @@ class OnboardingScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+
+
+
+
           _buildBackgroundImage(),
           _buildTitleText(),
           _buildGetStartedButton(context),
@@ -45,15 +52,15 @@ class OnboardingScreen extends StatelessWidget {
   Widget _buildTitleText() {
     return  Positioned(
       bottom: 140,
-      left: 0,
-      right: 0,
+      left: 20,
+      right: 20,
       child: TextWidget(
 
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: FontWeight.w600,
         textAlignment: TextAlign.center,
         text: AppStrings.discoverNewWorld,
-        fontColor: Colors.white,
+        fontColor:AppColor.white500,
       ),
     );
   }
@@ -73,21 +80,20 @@ class OnboardingScreen extends StatelessWidget {
           height: 48,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF2E4F3E),
+            color: AppColor.backgroundColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Stack(
             children: [
               // Centered text
-              const Center(
+               Center(
                 child: Text(
                   AppStrings.getStarted,
                   style: TextStyle(
-                    color: Color(0xFFF1F1F1),
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
+                    color: AppColor.white500,
+                    fontSize: 20.sp,
+                    fontFamily: GoogleFonts.poppins().fontFamily,
                     fontWeight: FontWeight.w500,
-                    height: 1.10,
                   ),
                 ),
               ),
@@ -96,16 +102,16 @@ class OnboardingScreen extends StatelessWidget {
                 right: 16,
                 top: 10,
                 child: Container(
-                  width: 28,
-                  height: 28,
+                  width: 28.w,
+                  height: 28.h,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA726),
+                    color: AppColor.buttonArrowBackground,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(
+                  child:  Icon(
                     Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.white,
+                    size: 16.w,
+                    color: AppColor.white500,
                   ),
                 ),
               ),

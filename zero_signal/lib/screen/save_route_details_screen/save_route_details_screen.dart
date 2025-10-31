@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
@@ -238,7 +239,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                 child: Icon(Icons.person, size: 16, color: Colors.white),
               ),
               SizedBox(width: 8),
-              Text('@naturanauta'),
+              TextWidget(text: '@naturanauta'),
             ],
           ),
         ),
@@ -392,13 +393,12 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Comments',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF2D2D2D),
-                  ),
+                TextWidget(
+                 text:  'Comments',
+                  fontColor: AppColor.textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  textAlignment: TextAlign.left,
                 ),
                 GestureDetector(
                   onTap: () => controller.toggleComments(),
@@ -442,13 +442,18 @@ class SaveRouteDetailsScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    comment['name'],
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  TextWidget(
+                   text:  comment['name'],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    fontColor: AppColor.textColor,
                   ),
-                  Text(
-                    comment['date'],
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+
+                  TextWidget(
+                   text:  comment['date'],
+                    fontColor: AppColor.subTitleColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
                 ],
               ),
@@ -459,6 +464,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             text: comment['comment'],
             fontWeight: FontWeight.w400,
             fontSize: 16,
+            fontColor: AppColor.subTitleColor,
             textAlignment: TextAlign.start,
           ),
         ],
@@ -470,32 +476,47 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     return Column(
       children: [
         TextFieldWidget(
+
+          maxLines: 3,
+          minLines: 3,
           borderColor: AppColor.lightGrayishOrange,
           backgroundColor: AppColor.lightGrayishOrange,
           borderRadius: 8,
           hintText: 'Add a comment here....',
+          hintStyle: TextStyle(
+            color: AppColor.subTitleColor,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: GoogleFonts.openSans().fontFamily,
+          ),
         ),
         SizedBox(height: 16),
         Align(
           alignment: Alignment.centerRight,
           child: ButtonWidget(
             backgroundColor: AppColor.backgroundColor,
-            label: 'Comment',
+            label: 'comment ',
+            maxLines: 1,
+            buttonWidth: 130.w,
             fontSize: 14,
             fontWeight: FontWeight.w500,
             buttonHeight: 40,
-            buttonWidth: 100,
             onPressed: () {},
           ),
         ),
         SizedBox(height: 10),
         Center(
-          child: TextWidget(
-            text: 'Update Status',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-            fontColor: AppColor.backgroundColor,
-            underline: true,
+          child: InkWell(
+            onTap: (){
+              Get.toNamed(AppRoutes.updateInformationScreen);
+            },
+            child: TextWidget(
+              text: 'Update Status',
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              fontColor: AppColor.backgroundColor,
+              underline: true,
+            ),
           ),
         ),
       ],

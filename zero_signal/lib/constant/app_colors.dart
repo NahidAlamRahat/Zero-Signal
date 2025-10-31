@@ -30,5 +30,6 @@ class AppColor {
   static const Color darkGay300 =  Color(0xFF727272);
   static const Color boxShadowColor=Color(0x23000000);
   static const Color lineColor=Color(0x99D6C8B0);
+ static const Color buttonArrowBackground =Color.fromRGBO(255, 167, 38, 1);
 
 }

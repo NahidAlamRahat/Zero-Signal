@@ -61,9 +61,9 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                         horizontal: screenWidth * 0.08,
                       ),
                       child: TextWidget(
+                        fontSize: screenWidth * 0.038,
                         text: AppStrings.lifeIsShortAndSignIn,
                         fontColor: Colors.white,
-                        fontSize: screenWidth * 0.045,
                         fontWeight: FontWeight.w400,
                         textAlignment: TextAlign.center,
                       ),
@@ -77,6 +77,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                         vertical: screenHeight * 0.008,
                       ),
                       child: ButtonWidget(
+buttonWidth: screenWidth*0.9,
                         backgroundColor: Colors.transparent,
                         label: 'Sign In',
                         buttonHeight: screenHeight * 0.05,
@@ -95,6 +96,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                         vertical: screenHeight * 0.008,
                       ),
                       child: ButtonWidget(
+                        buttonWidth: screenWidth*0.9,
                         onPressed: () {
                           Get.toNamed(AppRoutes.signUpScreen);
                         },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String? label;
@@ -22,9 +23,11 @@ class ButtonWidget extends StatelessWidget {
   final double iconSpacing; // <-- new spacing between text & icon
   final bool iconOnRight;   // <-- option to put icon on right or left
   final int maxLines;
+  final String? labelFontFamily;
 
   const ButtonWidget({
     super.key,
+    this.labelFontFamily,
     this.label,
     this.maxLines = 1,
     this.icon,
@@ -110,6 +113,7 @@ class ButtonWidget extends StatelessWidget {
             Text(
               label!,
               style: TextStyle(
+
                 color: textColor,
                 fontSize: fontSize.sp,
                 fontWeight: fontWeight ?? FontWeight.w500,
@@ -121,6 +125,7 @@ class ButtonWidget extends StatelessWidget {
             ? Text(
           label!,
           style: TextStyle(
+            fontFamily: labelFontFamily ?? GoogleFonts.poppins().fontFamily,
             color: textColor,
             fontSize: fontSize.sp,
             fontWeight: fontWeight ?? FontWeight.w500,

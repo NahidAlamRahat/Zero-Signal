@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
@@ -55,9 +56,9 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
 
               fontColor: AppColor.textColor,
               fontSize: 16,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 12.h),
 
             // Text input area
             TextFieldWidget(
@@ -74,7 +75,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
               backgroundColor: AppColor.overLayBoxColor,
             ),
 
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Camera button
             Container(
@@ -102,7 +103,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
                 label: 'Submit for Review',
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Thank you message
             Center(
@@ -111,11 +112,12 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
 
                 textAlignment: TextAlign.center,
                 fontColor: AppColor.subTitleColor,
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.w400,
+                fontFamily: GoogleFonts.openSans().fontFamily,
               ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 50.h),
           ],
         ),
       ),

@@ -25,9 +25,9 @@ class TextFieldWidget extends StatefulWidget {
   final Color textColor;
 
   final double fieldHeight;
-  final TextStyle? hintStyle; // <-- বাহির থেকে hintStyle কাস্টমাইজ করা যাবে
-  final TextStyle? textStyle; // <-- বাহির থেকে textStyle কাস্টমাইজ করা যাবে
-  final TextStyle? errorStyle; // <-- বাহির থেকে errorStyle কাস্টমাইজ করা যাবে
+  final TextStyle? hintStyle;
+  final TextStyle? textStyle;
+  final TextStyle? errorStyle;
 
   const TextFieldWidget({
     super.key,

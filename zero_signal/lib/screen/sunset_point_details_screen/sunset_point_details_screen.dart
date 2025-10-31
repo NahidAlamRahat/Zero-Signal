@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 
 import '../../constant/app_colors.dart';
@@ -8,10 +9,10 @@ class SunsetPointDetailsScreen extends StatefulWidget {
   const SunsetPointDetailsScreen({super.key});
 
   @override
-  State<SunsetPointDetailsScreen> createState() => _SunsetPointDetailsScreenState();
+  State<SunsetPointDetailsScreen> createState() => _ListViewDetailsScreenState();
 }
 
-class _SunsetPointDetailsScreenState extends State<SunsetPointDetailsScreen> {
+class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
   bool isFavorite = false;
 
   @override
@@ -61,9 +62,10 @@ class _SunsetPointDetailsScreenState extends State<SunsetPointDetailsScreen> {
               color: Color(0xFF2C2C2C),
             ),
           ),
-           Expanded(
+
+          Expanded(
             child: TextWidget(
-             text:  'Sunset Point Details',
+              text:  'Sunset Point Details',
               textAlignment: TextAlign.center,
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -93,10 +95,9 @@ class _SunsetPointDetailsScreenState extends State<SunsetPointDetailsScreen> {
 
   Widget _buildDetailsSection() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding:  EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 20,
         children: [
           // Title and Location
           _buildTitleSection(),
@@ -114,17 +115,15 @@ class _SunsetPointDetailsScreenState extends State<SunsetPointDetailsScreen> {
   Widget _buildTitleSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
       children: [
-        const Text(
-          'Sunset Point',
-          style: TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 24,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
-          ),
+        SizedBox(height: 16.h,),
+        TextWidget(
+          text: 'Sunset Point',
+          fontColor: AppColor.textColor,
+          fontSize: 24,
+          fontWeight: FontWeight.w500,
         ),
+        SizedBox(height: 4.h,),
         Row(
           children: [
             const Icon(
@@ -133,194 +132,54 @@ class _SunsetPointDetailsScreenState extends State<SunsetPointDetailsScreen> {
               color: Colors.red,
             ),
             const SizedBox(width: 4),
-            const Text(
-              'Espot, Catalonia',
-              style: TextStyle(
-                color: Color(0xFF727272),
-                fontSize: 14,
-                fontFamily: 'Open Sans',
-                fontWeight: FontWeight.w400,
-              ),
+            TextWidget(
+              text: 'Espot, Catalonia',
+              fontColor: AppColor.darkGay300,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
             ),
           ],
         ),
+        SizedBox(height: 4.h,),
+        TextWidget(
+          text: 'Near Olot, Catalonia',
+          fontColor: AppColor.darkGay300,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        SizedBox(height: 16.h,),
       ],
     );
   }
 
-  Widget _buildStatsRow() {
-    return Row(
-      children: [
-        _buildStatItem(Icons.visibility, '127', 'Views'),
-        const SizedBox(width: 24),
-        _buildStatItem(Icons.calendar_today, 'Aug 15', 'Added'),
-        const SizedBox(width: 24),
-        _buildStatItem(Icons.star, '4.8', 'Rating'),
-      ],
-    );
-  }
 
-  Widget _buildStatItem(IconData icon, String value, String label) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 16,
-          color: const Color(0xFF2E4F3E),
-        ),
-        const SizedBox(width: 4),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                color: Color(0xFF2C2C2C),
-                fontSize: 14,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Color(0xFF727272),
-                fontSize: 12,
-                fontFamily: 'Open Sans',
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   Widget _buildDescriptionSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 12,
       children: [
-        const Text(
-          'Description',
-          style: TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 20,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
-          ),
+        TextWidget(
+          text: 'Description',
+          fontColor: AppColor.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
         ),
-        const Text(
-          'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. It\'s the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
-          style: TextStyle(
-            color: Color(0xFF727272),
-            fontSize: 16,
-            fontFamily: 'Open Sans',
-            fontWeight: FontWeight.w400,
-            height: 1.48,
-          ),
+        SizedBox(height: 16.h,),
+        TextWidget(
+          textAlignment: TextAlign.start,
+          text: 'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. It\'s the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
+          fontColor: AppColor.darkGay300,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
         ),
       ],
     );
   }
 
-  Widget _buildAdditionalInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 16,
-      children: [
-        const Text(
-          'Details',
-          style: TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 20,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-
-        _buildInfoRow('Best time to visit', 'Golden hour (6-7 PM)'),
-        _buildInfoRow('Accessibility', 'Easy walk, 10 minutes'),
-        _buildInfoRow('Facilities', 'Parking, Restrooms'),
-        _buildInfoRow('Entry fee', 'Free'),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: const TextStyle(
-                color: Color(0xFF727272),
-                fontSize: 14,
-                fontFamily: 'Open Sans',
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                color: Color(0xFF2C2C2C),
-                fontSize: 14,
-                fontFamily: 'Open Sans',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 
-  void _showFavoriteMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-            isFavorite
-                ? 'Added to favorites'
-                : 'Removed from favorites'
-        ),
-        backgroundColor: const Color(0xFF2E4F3E),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 
-  void _shareImage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Sharing Sunset Point...'),
-        backgroundColor: Color(0xFF2E4F3E),
-      ),
-    );
-  }
 
-  void _getDirections() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening directions...'),
-        backgroundColor: Color(0xFF2E4F3E),
-      ),
-    );
-  }
 
-  void _editSpot() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening edit mode...'),
-        backgroundColor: Color(0xFF2E4F3E),
-      ),
-    );
-  }
+
 }
