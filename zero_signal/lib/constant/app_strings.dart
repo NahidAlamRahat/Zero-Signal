@@ -16,7 +16,7 @@ class AppStrings {
   static const String forgotPassword = "Forgot Password?";
   static const String signIn = "Sign In";
   static const String orSignInWith = "or sign in with";
-  static const String dontHaveAccount = "Don't have an account? ";
+  static const String dontHaveAccount = "Don't have an account.   ";
   static const String resetPasswordInstruction = "Enter your email below to reset your password";
   static const String verify = "Verify";
   static const String resetPassword = "Reset Password";

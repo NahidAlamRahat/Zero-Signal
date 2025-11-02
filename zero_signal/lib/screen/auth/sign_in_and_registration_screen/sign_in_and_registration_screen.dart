@@ -36,12 +36,11 @@ class SignInAndRegistrationScreen extends StatelessWidget {
               left: screenWidth * 0.04,
               right: screenWidth * 0.04,
               child: GlassEffact(
-               // height: screenHeight * 0.35,
+                // height: screenHeight * 0.35,
                 width: screenWidth * 0.92,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     SizedBox(
                       height: 25.h,
                     ),
@@ -77,7 +76,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                         vertical: screenHeight * 0.008,
                       ),
                       child: ButtonWidget(
-buttonWidth: screenWidth*0.9,
+                        buttonWidth: screenWidth * 0.9,
                         backgroundColor: Colors.transparent,
                         label: 'Sign In',
                         buttonHeight: screenHeight * 0.05,
@@ -96,7 +95,7 @@ buttonWidth: screenWidth*0.9,
                         vertical: screenHeight * 0.008,
                       ),
                       child: ButtonWidget(
-                        buttonWidth: screenWidth*0.9,
+                        buttonWidth: screenWidth * 0.9,
                         onPressed: () {
                           Get.toNamed(AppRoutes.signUpScreen);
                         },

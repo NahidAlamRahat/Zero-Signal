@@ -20,6 +20,7 @@ class AppColor {
   static const Color base_50=Color(0xFFEAEDEC);
   static const Color textColor=Color(0xFF2C2C2C);
   static const Color white500=Color(0xFFF1F1F1);
+  static  Color white300=Color.fromRGBO(246, 246, 246, 1);
   static const Color overLayBoxColor=Color(0xFFF5E9DF);
   // static const Color red=Color(0xFFFB6057);
   static const Color secondary400= Color(0xFFDED3C0);

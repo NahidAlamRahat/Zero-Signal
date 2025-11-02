@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -26,8 +27,8 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
-        height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
 
@@ -59,9 +60,10 @@ class _SignInScreenState extends State<SignInScreen> {
                               Center(
                                 child: TextWidget(
                                   text: AppStrings.neverMissASpot,
-                                  fontColor: Colors.white,
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.w600,
+                                  fontColor: AppColor.white500,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
                                 ),
                               ),
                                SizedBox(height: 8.w),
@@ -70,62 +72,70 @@ class _SignInScreenState extends State<SignInScreen> {
                               Center(
                                 child: TextWidget(
                                   text: AppStrings.findAndVisitNature,
-                                  fontColor: Colors.white70,
-                                  fontSize: 16.sp,
+                                  fontColor: AppColor.white300,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w400,
+                                  fontFamily: GoogleFonts.openSans().fontFamily,
                                 ),
                               ),
-                               SizedBox(height: 32.w),
+                               SizedBox(height: 28.w),
                         
                               // Email Label
                               TextWidget(
                                 textAlignment: TextAlign.left,
                                 text: AppStrings.email,
-                                fontColor: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
+                                fontColor: AppColor.white500,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
                               ),
                                SizedBox(height: 8.w),
                         
                               // Email TextField
                               TextFieldWidget(
-                                textColor: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fieldHeight: 44,
+                                textColor: AppColor.white500,
                                 hintText: AppStrings.enterYourEmail,
-                                textStyle:TextStyle(fontSize: 14.sp) ,
-                                hintColor: Colors.white54,
+                              fontSize: 14,
+                                hintColor: AppColor.white500,
+                                hintFontSize: 14,
                                 backgroundColor: Colors.transparent,
-                                borderColor: Colors.white,
-                                focusedBorderColor: Colors.white,
-                                borderRadius: 8.r,
+                                borderColor: AppColor.white500,
+                                focusedBorderColor:AppColor.white500,
+                                borderRadius: 8,
                                 borderWidth: 1.0,
                                 keyboardType: TextInputType.emailAddress,
                               ),
-                               SizedBox(height: 15.w),
+                               SizedBox(height: 20.w),
                         
                               // Password Label
                               TextWidget(
                                 textAlignment: TextAlign.left,
                                 text: AppStrings.password,
-                                fontColor: Colors.white,
+                                fontColor: AppColor.white500,
                                 fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
                               ),
                               const SizedBox(height: 8),
                         
                               // Password TextField
-                            TextFieldWidget(
-                              textColor: Colors.white,
-                              hintText: AppStrings.enterYourPassword,
-                              textStyle:TextStyle(fontSize: 14.sp) ,
-                              hintColor: Colors.white54,
-                              backgroundColor: Colors.transparent,
-                              borderColor: Colors.white,
-                              focusedBorderColor: Colors.white,
-                              borderRadius: 8.r,
-                              borderWidth: 1.0,
-                              keyboardType: TextInputType.emailAddress,
-                              suffixIcon: true,
-                            ),
+                              TextFieldWidget(
+                                fieldHeight: 44,
+                                textColor: AppColor.white500,
+                                hintText: AppStrings.enterYourPassword,
+                                fontWeight: FontWeight.w400,
+                                hintColor: AppColor.white500,
+                                hintFontSize: 14,
+                                backgroundColor: Colors.transparent,
+                                borderColor: AppColor.white500,
+                                focusedBorderColor:AppColor.white500,
+                                borderRadius: 8,
+                                borderWidth: 1.0,
+                                keyboardType: TextInputType.emailAddress,
+                                fontSize: 14,
+                                suffixIcon: true,
+
+                              ),
                                SizedBox(height: 12.w),
                         
                               // Remember Me & Forgot Password Row
@@ -149,8 +159,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                               _rememberMe = value ?? false;
                                             });
                                           },
-                                          activeColor: Colors.blue,
-                                          checkColor: Colors.white,
+                                          activeColor: AppColor.white500,
+                                          checkColor: AppColor.white500,
                                           side: BorderSide(color: Colors.white54),
                                         ),
                                       ),
@@ -158,8 +168,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
                                       SizedBox(width: 8.w,),
                                       TextWidget(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         text: AppStrings.rememberMe,
-                                        fontColor: Colors.white70,
+                                        fontColor: AppColor.white500,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -173,6 +185,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                       Get.toNamed(AppRoutes.forgotPasswordScreen);
                                     },
                                     child: TextWidget(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       text: AppStrings.forgotPassword,
                                       fontColor: AppColor.yello,
                                       fontSize: 14,
@@ -181,7 +195,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 15),
+                               SizedBox(height: 50.h),
                         
                               // Sign In Button
                               SizedBox(
@@ -190,24 +204,24 @@ class _SignInScreenState extends State<SignInScreen> {
                                   backgroundColor:AppColor.backgroundColor,
                                   label: AppStrings.signIn,
                                   buttonHeight: 48,
-                                  textColor: Colors.white,
+                                  textColor: AppColor.white500,
                                   onPressed: (){
                                     Get.toNamed(AppRoutes.bottomNav);
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                               SizedBox(height: 28.h),
                         
                               // Or sign in with text
                               Center(
                                 child: TextWidget(
                                   text: AppStrings.orSignInWith,
-                                  fontColor: Colors.white70,
-                                  fontSize: 14.sp,
+                                  fontColor: AppColor.white500,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                               SizedBox(height: 20.w),
+                               SizedBox(height: 28.w),
                         
                               // Google Sign In Button
                               Center(
@@ -231,7 +245,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   ),
                                 ),
                               ),
-                              SpaceWidget(spaceHeight: 28,),
+
+                              SizedBox(height: 28.h,),
                               // Sign Up Link
                               Center(
                                 child: Row(
@@ -239,8 +254,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   children: [
                                     TextWidget(
                                       text: AppStrings.dontHaveAccount,
-                                      fontColor: Color(0xFFF1F1F1),
-                                      fontSize: 14,
+                                      fontColor: AppColor.white500,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                     ),
                                     GestureDetector(
@@ -250,15 +265,18 @@ class _SignInScreenState extends State<SignInScreen> {
                                       },
                                       child: TextWidget(
                                         text: AppStrings.signUp,
+                                        underline: true,
+                                        underlineColor: AppColor.yello,
                                         fontColor: AppColor.yello,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w600,
+                                        underlineWidth: 1.5,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              SpaceWidget(spaceHeight: 28,),
+                              SizedBox(height: 28.h,)
                             ],
                           ),
                         ),

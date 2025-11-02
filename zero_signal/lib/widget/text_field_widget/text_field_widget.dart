@@ -8,7 +8,7 @@ class TextFieldWidget extends StatefulWidget {
   final bool? suffixIcon; // For password toggle
   final TextInputType? keyboardType;
   final int maxLines;
-  final int? minLines; // <-- বাহির থেকে minLines দেওয়া যাবে
+  final int? minLines;
   final VoidCallback? onTapSuffix;
   final Function(String submit)? onFieldSubmitted;
 
@@ -25,9 +25,17 @@ class TextFieldWidget extends StatefulWidget {
   final Color textColor;
 
   final double fieldHeight;
+  final double? fontSize; // Text font size
+  final double? hintFontSize; // Hint font size
+  final double? errorFontSize; // Error font size
+  final double? horizontalPadding; // Content horizontal padding
+  final double? verticalPadding; // Content vertical padding
+  final double? iconPadding; // Suffix icon padding
+
   final TextStyle? hintStyle;
   final TextStyle? textStyle;
   final TextStyle? errorStyle;
+  final FontWeight? fontWeight;
 
   const TextFieldWidget({
     super.key,
@@ -37,7 +45,7 @@ class TextFieldWidget extends StatefulWidget {
     this.suffixIcon,
     this.keyboardType,
     this.maxLines = 1,
-    this.minLines, // <-- Constructor এ যুক্ত করা হলো
+    this.minLines,
     this.onTapSuffix,
     this.onFieldSubmitted,
     this.borderColor = const Color(0xFF181818),
@@ -50,9 +58,17 @@ class TextFieldWidget extends StatefulWidget {
     this.hintColor = Colors.grey,
     this.textColor = const Color(0xFF1A1A1A),
     this.fieldHeight = 50,
+    this.fontSize = 14,
+    this.hintFontSize = 14,
+    this.errorFontSize = 12,
+    this.horizontalPadding = 16,
+    this.verticalPadding,
+    this.iconPadding = 13,
     this.hintStyle,
     this.textStyle,
     this.errorStyle,
+    this.fontWeight,
+
   });
 
   @override
@@ -72,10 +88,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   Widget build(BuildContext context) {
     return Container(
       // Single line হলে fixed height, multi-line হলে auto height
-      height: widget.maxLines == 1 ? widget.fieldHeight : null,
+      height: widget.maxLines == 1 ? widget.fieldHeight.h : null,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
+        borderRadius: BorderRadius.circular(widget.borderRadius.r),
       ),
       child: TextFormField(
         onFieldSubmitted: widget.onFieldSubmitted,
@@ -84,11 +100,11 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
-        minLines: widget.minLines, // <-- এখন কাজ করবে
+        minLines: widget.minLines,
         style: widget.textStyle ??
             TextStyle(
               color: widget.textColor,
-              fontSize: 14.sp, // default font size
+              fontSize: widget.fontSize!.sp,
             ),
         decoration: InputDecoration(
           filled: true,
@@ -97,13 +113,13 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           hintStyle: widget.hintStyle ??
               TextStyle(
                 color: widget.hintColor,
-                fontWeight: FontWeight.w400,
-                fontSize: 14.sp,
+                fontWeight: widget.fontWeight ??  FontWeight.w400,
+                fontSize: widget.hintFontSize!.sp,
               ),
           errorStyle: widget.errorStyle ??
               TextStyle(
                 color: Colors.red,
-                fontSize: 12.sp,
+                fontSize: widget.errorFontSize!.sp,
                 fontWeight: FontWeight.w400,
               ),
           prefixIcon: widget.prefixIcon,
@@ -115,44 +131,46 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               });
             },
             child: Padding(
-              padding: const EdgeInsets.all(13),
+              padding: EdgeInsets.all(widget.iconPadding!.w),
               child: Icon(
                 obscureText ? Icons.visibility_off : Icons.visibility,
                 color: Colors.grey.shade400,
+                size: 20.sp,
               ),
             ),
           )
               : widget.customSuffixIcon,
           contentPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: (widget.fieldHeight - 20) / 2,
+            horizontal: widget.horizontalPadding!.w,
+            vertical: widget.verticalPadding?.h ??
+                ((widget.fieldHeight - 20) / 2).h,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
             borderSide: BorderSide(
               color: widget.borderColor,
-              width: widget.borderWidth,
+              width: widget.borderWidth.w,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
             borderSide: BorderSide(
               color: widget.focusedBorderColor,
-              width: widget.borderWidth,
+              width: widget.borderWidth.w,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
             borderSide: BorderSide(
               color: Colors.red,
-              width: widget.borderWidth,
+              width: widget.borderWidth.w,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderRadius: BorderRadius.circular(widget.borderRadius.r),
             borderSide: BorderSide(
               color: Colors.red,
-              width: widget.borderWidth,
+              width: widget.borderWidth.w,
             ),
           ),
         ),

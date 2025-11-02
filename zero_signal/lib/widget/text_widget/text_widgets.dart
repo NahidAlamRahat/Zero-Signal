@@ -44,11 +44,10 @@ class TextWidget extends StatelessWidget {
         fontSize: fontSize.sp,
         fontStyle: fontStyle,
         color: fontColor,
-       // fontFamily: fontFamily,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
         decorationColor: underline ? underlineColor : null,
         decorationThickness: underline ? underlineWidth : null,
-      ),
+      ).copyWith(fontFamily: fontFamily),
     );
   }
 }
