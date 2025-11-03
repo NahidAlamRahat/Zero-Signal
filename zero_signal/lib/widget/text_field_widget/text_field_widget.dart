@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final TextEditingController? controller;
@@ -63,7 +64,7 @@ class TextFieldWidget extends StatefulWidget {
     this.errorFontSize = 12,
     this.horizontalPadding = 16,
     this.verticalPadding,
-    this.iconPadding = 13,
+    this.iconPadding = 0,
     this.hintStyle,
     this.textStyle,
     this.errorStyle,
@@ -131,15 +132,22 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               });
             },
             child: Padding(
-              padding: EdgeInsets.all(widget.iconPadding!.w),
+              padding: EdgeInsets.only(right: 0.w),
               child: Icon(
                 obscureText ? Icons.visibility_off : Icons.visibility,
-                color: Colors.grey.shade400,
+                color: AppColor.white500,
                 size: 20.sp,
               ),
             ),
           )
-              : widget.customSuffixIcon,
+              : widget.customSuffixIcon != null
+              ? UnconstrainedBox(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 0.w),
+                    child: widget.customSuffixIcon,
+                  ),
+                )
+              : null,
           contentPadding: EdgeInsets.symmetric(
             horizontal: widget.horizontalPadding!.w,
             vertical: widget.verticalPadding?.h ??
