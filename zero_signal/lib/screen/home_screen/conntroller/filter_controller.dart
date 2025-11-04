@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
 class FilterController extends GetxController {
-  // Selected filters - Observable for reactive updates
-  final selectedFilters = <String>[].obs;
+  // Selected filters
+  final selectedFilters = <String>[];
 
   // Filter categories and options
   final Map<String, List<String>> filterCategories = {
@@ -42,7 +42,7 @@ class FilterController extends GetxController {
     } else {
       selectedFilters.add(option);
     }
-    // No need for update() with .obs
+    update(); // Update UI
   }
 
   /// Check if filter is selected
@@ -58,6 +58,7 @@ class FilterController extends GetxController {
   /// Clear all filters
   void clearAll() {
     selectedFilters.clear();
+    update(); // Update UI
   }
 
   /// Get all filter options

@@ -10,7 +10,7 @@ class UserBottomNavController extends GetxController {
   var selectedIndex = 0.obs;
 
   final List<Widget> widgetOptions = [
-     HomeScreen(),
+    const HomeScreen(),
     MapRoutesScreen(),
     const SocialScreen(),
      ProfileSectionScreen(),

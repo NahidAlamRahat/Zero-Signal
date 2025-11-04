@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constant/app_colors.dart';
 import '../../../constant/app_image_path.dart';
+import '../conntroller/home_screen_controller.dart';
 
 class MapTypeBottomSheet extends StatefulWidget {
   final String selectedMapType;
@@ -19,14 +21,6 @@ class MapTypeBottomSheet extends StatefulWidget {
 }
 
 class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
-  String selectedType = '';
-
-  @override
-  void initState() {
-    super.initState();
-    selectedType = widget.selectedMapType;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,25 +61,27 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
           const SizedBox(height: 30),
 
           // Map Type Options
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildMapTypeOption(
-                'OutDoor',
-                AppImagePath.normalMap,
-                Icons.map_outlined,
-              ),
-              _buildMapTypeOption(
-                'Satellite',
-                AppImagePath.roadMap,
-                Icons.satellite_alt,
-              ),
-              _buildMapTypeOption(
-                'Terrain',
-                AppImagePath.mountainMap,
-                Icons.terrain,
-              ),
-            ],
+          GetBuilder<HomeScreenController>(
+            builder: (controller) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildMapTypeOption(
+                  'OutDoor',
+                  AppImagePath.normalMap,
+                  Icons.map_outlined,
+                ),
+                _buildMapTypeOption(
+                  'Satellite',
+                  AppImagePath.roadMap,
+                  Icons.satellite_alt,
+                ),
+                _buildMapTypeOption(
+                  'Terrain',
+                  AppImagePath.mountainMap,
+                  Icons.terrain,
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 30),
@@ -107,13 +103,11 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
   }
 
   Widget _buildMapTypeOption(String type, String imagePath, IconData fallbackIcon) {
-    final bool isSelected = selectedType == type;
+    final controller = Get.find<HomeScreenController>();
+    final bool isSelected = controller.selectedMapType == type;
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedType = type;
-        });
         widget.onMapTypeSelected(type);
         Navigator.pop(context);
       },
