@@ -34,4 +34,5 @@ class AppColor {
  static const Color buttonArrowBackground =Color.fromRGBO(255, 167, 38, 1);
   static const Color green =Color.fromRGBO(69, 234, 105, 1);
 
+
 }
