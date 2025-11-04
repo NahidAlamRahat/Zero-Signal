@@ -14,7 +14,6 @@ class AppBindings extends Bindings {
 
 
 
-
   }
 
 }

@@ -59,18 +59,16 @@ class FilterBottomSheet extends StatelessWidget {
           Flexible(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GetBuilder<FilterController>(
-                builder: (controller) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Build each category
-                    ...controller.filterCategories.entries.map((category) {
-                      return _buildFilterCategory(
-                          controller, category.key, category.value);
-                    }),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Build each category
+                  ...controller.filterCategories.entries.map((category) {
+                    return _buildFilterCategory(
+                        controller, category.key, category.value);
+                  }),
+                  const SizedBox(height: 20),
+                ],
               ),
             ),
           ),
@@ -135,7 +133,7 @@ class FilterBottomSheet extends StatelessWidget {
             ),
           ),
         ),
-        Wrap(
+        Obx(() => Wrap(
           spacing: 8,
           runSpacing: 8,
           children: options.map((option) {
@@ -173,7 +171,7 @@ class FilterBottomSheet extends StatelessWidget {
               ),
             );
           }).toList(),
-        ),
+        )),
       ],
     );
   }
