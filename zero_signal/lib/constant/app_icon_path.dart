@@ -51,6 +51,7 @@ class AppIconPath {
   static const String editIcon = "assets/icons/editIcon.png";
   static const String microphoneIcon = "assets/microphone_icon.png";
   static const String sendChatIcon = "assets/send_icon.png";
+  static const String addGreenbutton = "assets/addGreenbutton.png";
 
 
 

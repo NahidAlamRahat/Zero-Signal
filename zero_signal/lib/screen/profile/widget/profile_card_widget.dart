@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 
+import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../widget/space_widget.dart';
+import '../../../widget/text_widget/text_widgets.dart';
 import '../controller/profile_controller.dart';
 
 class ProfileCardWidget extends StatelessWidget {
@@ -26,7 +29,7 @@ class ProfileCardWidget extends StatelessWidget {
           height: 146.h,
           decoration: BoxDecoration(
             color: const Color(0xFFF5E9DF),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
             boxShadow: [
               BoxShadow(
                 color: const Color(0x23000000),
@@ -53,8 +56,8 @@ class ProfileCardWidget extends StatelessWidget {
         ),
         // Top Right Corner Image
         Positioned(
-          top: 10,
-          right: 10,
+          top: 10.h,
+          right: 10.w,
           child: InkWell(
             onTap: (){
               Get.toNamed(AppRoutes.contactSupportScreen);
@@ -84,8 +87,8 @@ class ProfileCardWidget extends StatelessWidget {
         controller.navigateToRoute(AppRoutes.personalInformationScreen);
       },
       child: Container(
-        width: 48,
-        height: 48,
+        width: 48.w,
+        height: 48.w,
         decoration: BoxDecoration(
           border: Border.all(color: const Color(0xFFFFCB20), width: 2),
           borderRadius: BorderRadius.circular(24),
@@ -100,42 +103,36 @@ class ProfileCardWidget extends StatelessWidget {
 
   Widget _buildUserName() {
     return Obx(
-          () => Text(
-        controller.userName.value,
-        style: TextStyle(
-          color: const Color(0xFF2C2C2C),
-          fontSize: 12.sp,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w400,
-        ),
+          () => TextWidget(
+       text:  controller.userName.value,
+
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        fontColor: AppColor.textColor,
       ),
     );
   }
 
   Widget _buildUserEmail() {
     return Obx(
-          () => Text(
-        controller.userEmail.value,
-        style: TextStyle(
-          color: const Color(0xFF565656),
-          fontSize: 10.sp,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w400,
-        ),
+          () => TextWidget(
+       text:  controller.userEmail.value,
+
+            fontColor: AppColor.subTitleColor,
+            fontWeight: FontWeight.w400,
+            fontSize: 10,
+
       ),
     );
   }
 
   Widget _buildUserBio() {
     return Obx(
-          () => Text(
-        controller.userBio.value,
-        style: TextStyle(
-          color: const Color(0xFF2C2C2C),
-          fontSize: 10.sp,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w400,
-        ),
+          () => TextWidget(
+       text:  controller.userBio.value,
+            fontColor: AppColor.textColor,
+            fontWeight: FontWeight.w400,
+            fontSize: 10,
       ),
     );
   }
@@ -148,9 +145,9 @@ class ProfileCardWidget extends StatelessWidget {
             TextSpan(
               text: '${controller.userPoints.value} ',
               style: TextStyle(
-                color: const Color(0xFF2E4F3E),
+                color: AppColor.backgroundColor,
                 fontSize: 16.sp,
-                fontFamily: 'Poppins',
+                fontFamily: GoogleFonts.poppins().fontFamily,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -159,7 +156,7 @@ class ProfileCardWidget extends StatelessWidget {
               style: TextStyle(
                 color: const Color(0xFF2E4F3E),
                 fontSize: 10.sp,
-                fontFamily: 'Poppins',
+                fontFamily: GoogleFonts.poppins().fontFamily,
                 fontWeight: FontWeight.w400,
               ),
             ),

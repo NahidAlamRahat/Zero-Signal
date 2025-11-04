@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../gen/assets.gen.dart';
 import '../../widget/button_widget/button_widget.dart';
 
@@ -65,13 +66,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
               ),
 
               // Difficulty Section
-              const Text(
-                'Difficulty',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
+              const TextWidget(
+               text:  'Difficulty',
+                // style: TextStyle(
+                //   fontSize: 16,
+                //   fontWeight: FontWeight.w600,
+                //   color: Colors.black,
+                // ),
+                fontColor: AppColor.textColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
               const SizedBox(height: 16),
               SingleChildScrollView(
@@ -95,13 +99,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Distance:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
+                  TextWidget(
+                   text:  'Distance:',
+                    // style: TextStyle(
+                    //   fontSize: 16,
+                    //   fontWeight: FontWeight.w400,
+                    //   color: AppColor.subTitleColor,
+                    // ),
+                    fontColor: AppColor.subTitleColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                   ),
                   Text(
                     '0m to +250km',
@@ -135,13 +142,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
 
               // Type of route Section
-              const Text(
-                'Type of route',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
+              const TextWidget(
+               text:  'Type of route',
+
+                fontColor: AppColor.textColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
               const SizedBox(height: 16),
               Row(
@@ -207,14 +213,15 @@ class _FiltersScreenState extends State<FiltersScreen> {
             SizedBox(height: 8.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 12.w,
-                  fontWeight: FontWeight.w500,
-                  color: isSelected ? const Color(0xFF2C2C2C) : const Color(0xFF565656),
-                ),
-                textAlign: TextAlign.center,
+              child: TextWidget(
+               text:  title,
+                // style: TextStyle(
+                //   fontSize: 12.w,
+                //   fontWeight: FontWeight.w500,
+                //   color: isSelected ? const Color(0xFF2C2C2C) : const Color(0xFF565656),
+                // ),
+                // textAlign: TextAlign.center,
+                fontColor: isSelected ? AppColor.darkGray500 : AppColor.darkGray400,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -239,13 +246,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
           color: isSelected ? AppColor.soilColor : Color(0xFFF5E9DF),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(
-          difficulty,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
+        child: TextWidget(
+        text:   difficulty,
+
+          fontColor: AppColor.textColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
         ),
       ),
     );
@@ -265,14 +271,17 @@ class _FiltersScreenState extends State<FiltersScreen> {
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(
-          routeType,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
+        child: TextWidget(
+        text:   routeType,
+          textAlignment: TextAlign.center,
+          // style: TextStyle(
+          //   fontSize: 14,
+          //   fontWeight: FontWeight.w500,
+          //   color: Colors.black,
+          // ),
+          fontColor: AppColor.textColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
         ),
       ),
     );

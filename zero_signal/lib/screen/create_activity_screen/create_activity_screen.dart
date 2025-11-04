@@ -28,6 +28,8 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     return Scaffold(
       backgroundColor: AppColor.creamBackgroundColor,
       appBar: AppBar(
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
 
         backgroundColor: AppColor.creamBackgroundColor,
         elevation: 0,
@@ -46,34 +48,46 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding:  EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextWidget(text: 'Activity Title',fontWeight: FontWeight.w400,),
+            SizedBox(
+              height: 8.h,
+            ),
             TextFieldWidget(
+              textColor:Color(0xFF484949),
               hintText: 'Title of the activity',
               borderColor: Colors.transparent,
               backgroundColor: AppColor.lightGrayishOrange,
-              borderRadius: 12,
+              borderRadius: 8,
             ),
 
             const SizedBox(height: 12),
 
             TextWidget(text: 'Date',fontWeight: FontWeight. w400,),
+            SizedBox(
+              height: 8.h,
+            ),
             TextFieldWidget(
-              customSuffixIcon: Image.asset(Assets.icons.calender.path, height: 12.h,width: 11.w,),
+              customSuffixIcon: Image.asset(Assets.icons.calender.path, height: 18.h,width: 18.w,),
               hintText: 'dd/mm/yyyy',
               borderColor: Colors.transparent,
               backgroundColor: AppColor.lightGrayishOrange,
-              borderRadius: 12,
+              borderRadius: 8,
             ),
 
             const SizedBox(height: 12),
 
-            TextWidget(text: 'Do you want to do a route of your favorites?',
+            TextWidget(
+              textAlignment: TextAlign.start,
+              text: 'Do you want to do a route of your favorites?',
               fontSize: 16,
               fontWeight: FontWeight.w400,
+            ),
+            SizedBox(
+              height: 8.h,
             ),
             CustomDropdown<String>(
               items: [],
@@ -91,6 +105,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
             const SizedBox(height: 12),
 
             TextWidget(text: 'Location',fontWeight: FontWeight. w400,),
+
+
+             SizedBox(height: 8.h),
             TextFieldWidget(
               customSuffixIcon: Icon(Icons.close,color: AppColor.backgroundColor),
               prefixIcon: Icon(Icons.search,color: AppColor.yello,size: 18,),
@@ -106,6 +123,10 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
+
+            SizedBox(
+              height: 8.h,
+            ),
             CustomDropdown<String>(
               items: [
                 'Walking',
@@ -115,6 +136,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 'Motorcycle',
                 'SUV',
                 'Road Trip',
+                'Other'
               ],
               hint: 'Select type',
               selectedValue: selectedValue,
@@ -131,6 +153,8 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
             SizedBox(height: 12,),
 
             TextWidget(text: 'Description',fontWeight: FontWeight.w400,),
+
+            SizedBox(height: 8.h),
             TextFieldWidget(
               hintText: 'Description of the activity ',
               minLines: 4,
@@ -154,7 +178,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
             SizedBox(height: 12.h,),
 
-            TextWidget(text: 'Maximum Number of Attendees',fontWeight: FontWeight.w400,),
+            TextWidget(
+
+              text: 'Maximum Number of Attendees',fontWeight: FontWeight.w400,),
             TextFieldWidget(
               hintText: 'Enter Number',
               borderColor: Colors.transparent,
@@ -177,7 +203,10 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 backgroundColor: AppColor.backgroundColor,
                 label: 'Publish',
               ),
-            )
+            ),
+
+
+            SizedBox(height: 30.h),
 
           ],
         ),

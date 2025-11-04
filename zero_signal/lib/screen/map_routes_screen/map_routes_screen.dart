@@ -5,8 +5,10 @@ import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/map_routes_screen/widget/route_card_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
+import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
 
 class MapRoutesScreen extends StatefulWidget {
@@ -84,7 +86,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             ),
           ),
           Positioned(
-            bottom: 300.h,
+            bottom: 310.h,
             right: 20,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -105,9 +107,9 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                     Get.toNamed(AppRoutes.shareSpotScreen);
                   },
                   child: Image.asset(
-                    AppIconPath.addIcon,
-                    width: 40,
-                    height: 40,
+                    Assets.icons.addGreenbutton.path,
+                    width: 40.w,
+                    height: 40.w,
                   ),
                 ),
               ],
@@ -115,14 +117,14 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
           ),
 
           Positioned(
-            bottom: 80.h,
+            bottom: 0.h,
             left: 0,
             right: 0,
             child: GestureDetector(
                 onTap: () {
                   Get.toNamed(AppRoutes.saveRouteDetailsScreen);
                 },
-                child: RouteCard()),
+                child: SafeArea(child: RouteCard())),
           )
         ],
       ),
@@ -202,13 +204,12 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Map Type',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
+              const TextWidget(
+               text:  'Map Type',
+
+                fontColor: AppColor.darkGray500,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
               GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -310,13 +311,16 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            type,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: isSelected ? Colors.black : Colors.black87,
-            ),
+          TextWidget(
+           text:  type,
+            // style: TextStyle(
+            //   fontSize: 14,
+            //   fontWeight: FontWeight.w500,
+            //   color: isSelected ? Colors.black : Colors.black87,
+            // ),
+            fontColor: isSelected ? AppColor.backgroundColor : Colors.black87,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ],
       ),

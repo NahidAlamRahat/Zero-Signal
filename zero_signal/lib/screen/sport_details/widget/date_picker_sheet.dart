@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../constant/app_colors.dart';
@@ -19,7 +20,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
   Widget build(BuildContext context) {
     return Container(
 
-      margin: const EdgeInsets.all(16),
+    //  margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColor.creamBackgroundColor,
         borderRadius: BorderRadius.circular(24),
@@ -50,7 +51,10 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
             ),
           ),
 
-          Divider(),
+          Divider(
+            height: 1,
+            color: Color(0xFFBEC8C3),
+          ),
           SpaceWidget(spaceHeight: 10),
 
           // Calendar
@@ -58,7 +62,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColor.lightGrayishOrange,
+              color: Color(0xffF5E9DF),
               borderRadius: BorderRadius.circular(16),
             ),
             child: TableCalendar(
@@ -168,25 +172,26 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                   child: TextButton(
                     onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
-                      backgroundColor: const Color(0xFFD9D3CC),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: AppColor.secondary400,
+                      padding:  EdgeInsets.symmetric(vertical: 14.h),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
+                    child:  Text(
                       'Cancel',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black87,
+                        color: AppColor.subTitleColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 60),
                 Expanded(
                   child: ElevatedButton(
+
                     onPressed: () {
                       // Confirm action
                       Navigator.pop(context);
@@ -199,8 +204,9 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2D5F4F),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: AppColor.backgroundColor
+                      ,
+                      padding:  EdgeInsets.symmetric(vertical: 14.h),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -219,7 +225,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
             ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 10),
         ],
       ),
     );

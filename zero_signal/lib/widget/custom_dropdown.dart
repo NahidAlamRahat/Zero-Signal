@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomDropdown<T> extends StatelessWidget {
   final List<T> items;
@@ -27,6 +28,14 @@ class CustomDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
+      icon: Icon(
+          color: Color(
+
+
+              0xFF484949),
+
+          size: 28.sp,
+          Icons.keyboard_arrow_down),
       value: selectedValue,
       isExpanded: true,
       decoration: InputDecoration(

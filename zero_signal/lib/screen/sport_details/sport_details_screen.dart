@@ -78,321 +78,323 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         ),
       ),
       backgroundColor: AppColor.creamBackgroundColor,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with image
-          Container(
-            height: 280,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                child: Image.asset(
-                  AppImagePath.viewImage,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Icon(Icons.image_not_supported, size: 50),
-                      ),
-                    );
-                  },
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with image
+            Container(
+              height: 280,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  child: Image.asset(
+                    AppImagePath.viewImage,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(Icons.image_not_supported, size: 50),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-
-           SizedBox(height: 6.h),
-
-          // Title and location
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextWidget(
-                            text: 'Lakeside Campsite',
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                            fontColor: AppColor.textColor,
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: const [
-                              Icon(Icons.location_on,
-                                  color: Colors.red, size: 16),
-                              SizedBox(width: 4),
-                              TextWidget(
-                                text: 'Espat, Catalonia',
-                                fontColor: AppColor.darkGay300,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ],
-                          ),
-                           SizedBox(height: 16.h),
-
-                          // Rating and user info
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    showUserOptionsDialog(context);
-                                  },
-                                  child: Row(
-                                    children: const [
-                                      CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: Colors.brown,
-                                        child: Icon(
-                                          Icons.person,
-                                          size: 16,
-                                          color: AppColor.white500,
+        
+             SizedBox(height: 6.h),
+        
+            // Title and location
+            Expanded(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextWidget(
+                              text: 'Lakeside Campsite',
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                              fontColor: AppColor.textColor,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: const [
+                                Icon(Icons.location_on,
+                                    color: Colors.red, size: 16),
+                                SizedBox(width: 4),
+                                TextWidget(
+                                  text: 'Espat, Catalonia',
+                                  fontColor: AppColor.darkGay300,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                             SizedBox(height: 16.h),
+        
+                            // Rating and user info
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      showUserOptionsDialog(context);
+                                    },
+                                    child: Row(
+                                      children: const [
+                                        CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: Colors.brown,
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 16,
+                                            color: AppColor.white500,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      TextWidget(
-                                        text: '@naturanauta',
-                                      ),
-                                    ],
+                                        SizedBox(width: 8),
+                                        TextWidget(
+                                          text: '@naturanauta',
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Icon(Icons.star, color: AppColor.yello,size: 18,),
-                              TextWidget(
-                                text: '(17 lugares / 6 plane)',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16,
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Action buttons
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ButtonWidget(
-                                  backgroundColor: AppColor.backgroundColor,
-                                  label: 'How To Arrive',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  buttonHeight: 48,
-                                  onPressed: () {},
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: ButtonWidget(
-                                  backgroundColor:
-                                    AppColor.overLayBoxColor,
-                                  label: 'Add Favorites',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: AppColor.textColor,
-                                  onPressed: () {},
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: ButtonWidget(
-                                  backgroundColor:
-                                  AppColor.overLayBoxColor,
-                                  label: 'Assist',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: AppColor.textColor,
-                                  onPressed: () {
-                                    showDatePickerSheet(context);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Visitor info
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: AppColor.lightGrayishOrange,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: TextWidget(
-                              text: '5 user will visit this place on Sunday',
-                              fontColor: AppColor.textColor,
-                              fontSize: 14,
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Description section
-                          TextWidget(
-                            text: 'Description',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            fontColor: AppColor.textColor,
-                          ),
-                          const SizedBox(height: 12),
-                          TextWidget(
-                            text: 'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
-                            fontSize: 16,
-                            fontColor: AppColor.darkGay300,
-                            textAlignment: TextAlign.start,
-                            fontWeight: FontWeight.w400,
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Comments section
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextWidget(
-                                text: 'Comments',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                fontColor: AppColor.textColor,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    showAllComments = !showAllComments;
-                                  });
-                                },
-                                child: TextWidget(
-                                  text: showAllComments
-                                      ? 'Show less'
-                                      : 'See more ($remainingComments)',
+                                Icon(Icons.star, color: AppColor.yello,size: 18,),
+                                TextWidget(
+                                  text: '(17 lugares / 6 plane)',
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
+                                ),
+                              ],
+                            ),
+        
+                            const SizedBox(height: 20),
+        
+                            // Action buttons
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ButtonWidget(
+                                    backgroundColor: AppColor.backgroundColor,
+                                    label: 'How To Arrive',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    buttonHeight: 48,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: ButtonWidget(
+                                    backgroundColor:
+                                      AppColor.overLayBoxColor,
+                                    label: 'Add Favorites',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: AppColor.textColor,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: ButtonWidget(
+                                    backgroundColor:
+                                    AppColor.overLayBoxColor,
+                                    label: 'Assist',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: AppColor.textColor,
+                                    onPressed: () {
+                                      showDatePickerSheet(context);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+        
+                            const SizedBox(height: 20),
+        
+                            // Visitor info
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightGrayishOrange,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: TextWidget(
+                                text: '5 user will visit this place on Sunday',
+                                fontColor: AppColor.textColor,
+                                fontSize: 14,
+                              ),
+                            ),
+        
+                            const SizedBox(height: 24),
+        
+                            // Description section
+                            TextWidget(
+                              text: 'Description',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              fontColor: AppColor.textColor,
+                            ),
+                            const SizedBox(height: 12),
+                            TextWidget(
+                              text: 'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
+                              fontSize: 16,
+                              fontColor: AppColor.darkGay300,
+                              textAlignment: TextAlign.start,
+                              fontWeight: FontWeight.w400,
+                            ),
+        
+                            const SizedBox(height: 24),
+        
+                            // Comments section
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextWidget(
+                                  text: 'Comments',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  fontColor: AppColor.textColor,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      showAllComments = !showAllComments;
+                                    });
+                                  },
+                                  child: TextWidget(
+                                    text: showAllComments
+                                        ? 'Show less'
+                                        : 'See more ($remainingComments)',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    fontColor: AppColor.backgroundColor,
+                                    underline: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SpaceWidget(spaceHeight: 16),
+        
+                            // Comments List
+                            ...commentsToShow.map((comment) {
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: AppColor.creamBackgroundColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: comment['avatar'],
+                                          child: Icon(
+                                            comment['avatarIcon'],
+                                            color: comment['avatarIconColor'],
+                                            size: 20,
+                                          ),
+                                        ),
+                                         SizedBox(width: 12.w),
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            TextWidget(
+                                              text: comment['name'],
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                            ),
+                                            TextWidget(
+                                              text: comment['date'],
+                                              fontColor: AppColor.subTitleColor,
+                                              fontSize: 12,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    TextWidget(
+                                      text: comment['comment'],
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16,
+                                      textAlignment: TextAlign.start,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+        
+                            // Add comment section
+                            TextFieldWidget(
+                              borderColor: AppColor.lightGrayishOrange,
+                              backgroundColor: AppColor.lightGrayishOrange,
+                              borderRadius: 8,
+                              hintText: 'Add a comment here....',
+                            ),
+                            const SizedBox(height: 16),
+        
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: ButtonWidget(
+                                backgroundColor: AppColor.backgroundColor,
+                                label: 'Comment',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                buttonHeight: 40,
+                                buttonWidth: 100,
+                                onPressed: () {
+                                  // Handle comment submission
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+        
+                            Center(
+                              child: InkWell(
+                                onTap: (){
+                                  Get.toNamed(AppRoutes.updateInformationScreen);
+                                },
+                                child: TextWidget(
+                                  text: 'Update Status',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
                                   fontColor: AppColor.backgroundColor,
                                   underline: true,
                                 ),
                               ),
-                            ],
-                          ),
-                          SpaceWidget(spaceHeight: 16),
-
-                          // Comments List
-                          ...commentsToShow.map((comment) {
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              decoration: BoxDecoration(
-                                color: AppColor.creamBackgroundColor,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 20,
-                                        backgroundColor: comment['avatar'],
-                                        child: Icon(
-                                          comment['avatarIcon'],
-                                          color: comment['avatarIconColor'],
-                                          size: 20,
-                                        ),
-                                      ),
-                                       SizedBox(width: 12.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          TextWidget(
-                                            text: comment['name'],
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                          TextWidget(
-                                            text: comment['date'],
-                                            fontColor: AppColor.subTitleColor,
-                                            fontSize: 12,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  TextWidget(
-                                    text: comment['comment'],
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    textAlignment: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-
-                          // Add comment section
-                          TextFieldWidget(
-                            borderColor: AppColor.lightGrayishOrange,
-                            backgroundColor: AppColor.lightGrayishOrange,
-                            borderRadius: 8,
-                            hintText: 'Add a comment here....',
-                          ),
-                          const SizedBox(height: 16),
-
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: ButtonWidget(
-                              backgroundColor: AppColor.backgroundColor,
-                              label: 'Comment',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              buttonHeight: 40,
-                              buttonWidth: 100,
-                              onPressed: () {
-                                // Handle comment submission
-                              },
                             ),
-                          ),
-                          const SizedBox(height: 10),
-
-                          Center(
-                            child: InkWell(
-                              onTap: (){
-                                Get.toNamed(AppRoutes.updateInformationScreen);
-                              },
-                              child: TextWidget(
-                                text: 'Update Status',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                fontColor: AppColor.backgroundColor,
-                                underline: true,
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-                        ],
+        
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -520,10 +522,21 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   /// Date picker bottom sheet
   void showDatePickerSheet(BuildContext context) {
     showModalBottomSheet(
+
       context: context,
+
+
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => const DatePickerSheet(),
+      builder: (context) => SafeArea(
+        child: Container(
+          width: Get.width,
+             //   height: Get.height*0.5,
+          color: AppColor.creamBackgroundColor,
+          child: const DatePickerSheet(),
+        ),
+      ),
+
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/screen/profile/widget/menuItems_card_widget.dart';
 import 'package:zero_signal/screen/profile/widget/profile_card_widget.dart';
@@ -17,7 +18,7 @@ class ProfileSectionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF4E9),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 46),
+        padding:  EdgeInsets.only(right: 20.w,left: 20.w,top: 70.h,),
         child: Column(
           spacing: 16,
           children: [

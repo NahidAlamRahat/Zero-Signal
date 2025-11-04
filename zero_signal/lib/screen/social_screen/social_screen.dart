@@ -29,6 +29,7 @@ class _SocialScreenState extends State<SocialScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
+
             image: AssetImage(AppImagePath.socialBackgroundImage),
             fit: BoxFit.cover,
           ),
@@ -94,302 +95,300 @@ class _SocialScreenState extends State<SocialScreen> {
             ],
           ),
           SizedBox(height: 20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GlassContainer(
-              //  height: 512.h,
-                width: 350.w,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          text: "Mountailn Hike",
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.white500,
-                        ),
-                        CustomText(
-                          text: "April 24",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColor.white500,
-                        ),
-                        SizedBox(height: 5.h),
-                        CustomText(
-                          textAlign: TextAlign.start,
-                          text:
-                              "Join me for a scenic hike in the mountains. Everyone is welcome!",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColor.white500,
-                        ),
-                        SizedBox(height: 20.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                child: GlassContainer(
+                  //  height: 512.h,
+                  width:Get.width,
+                  child: Padding(
+                    padding:  EdgeInsets.all(20.r),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(
+                            text: "Mountailn Hike",
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.white500,
+                          ),
+                          CustomText(
+                            text: "April 24",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColor.white500,
+                          ),
+                          SizedBox(height: 12.h),
+                          CustomText(
+                            textAlign: TextAlign.start,
+                            text:
+                            "Join me for a scenic hike in the mountains. Everyone is welcome!",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColor.white500,
+                          ),
+                          SizedBox(height: 20.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        AppIconPath.batchIcon,
+                                        height: 16.h,
+                                        width: 16.w,
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      CustomText(
+                                        text:
+                                        "@naturanauta • 4,8 ✰\n(17 luggers / 6 planes)",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColor.white500,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Image.asset(
-                                      AppIconPath.batchIcon,
-                                      height: 20,
+                                      AppIconPath.locationIcon,
+                                      height: 20.h,
                                     ),
+                                    SizedBox(width: 5.w),
+                                    Flexible(
+                                      child: CustomText(
+                                        overflow: TextOverflow.ellipsis,
+                                        text: "Girona, Catalonia",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColor.white500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    Image.asset(AppIconPath.groupIcon, height: 20.w, width: 20.w,),
                                     SizedBox(height: 5.h),
                                     CustomText(
-                                      text:
-                                          "@naturanauta • 4,8 ✰\n(17 luggers / 6 planes)",
+                                      text: "12 people attending",
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       color: AppColor.white500,
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Image.asset(
-                                    AppIconPath.locationIcon,
-                                    height: 20.h,
-                                  ),
-                                  SizedBox(width: 5.w),
-                                  Flexible(
-                                    child: CustomText(
-                                      overflow: TextOverflow.ellipsis,
-                                      text: "Girona, Catalonia",
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    SizedBox(width: 20.w),
+                                    Image.asset(
+                                      AppIconPath.addPeopleIcon,
+                                      height: 20.h,
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    CustomText(
+                                      text: "15 attendants max.",
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       color: AppColor.white500,
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    SizedBox(width: 20.w),
+                                    Image.asset(AppIconPath.saveIcon, height: 20),
+                                    SizedBox(height: 5.h),
+                                    CustomText(
+                                      text: "@Saved",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.white500,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
 
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Column(
+                          SizedBox(height: 20.h),
+                          CustomText(
+                            text: "Attendants",
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.white500,
+                          ),
+                          SizedBox(height: 20.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
                                 children: [
-                                  Image.asset(AppIconPath.groupIcon, height: 20.w, width: 20.w,),
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: AssetImage(
+                                      AppImagePath.profileImage1,
+                                    ),
+                                  ),
                                   SizedBox(height: 5.h),
                                   CustomText(
-                                    text: "12 people attending",
-                                    fontSize: 14,
+                                    text: "@alexa, 28",
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     color: AppColor.white500,
                                   ),
                                 ],
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Column(
+                              Column(
                                 children: [
-                                  SizedBox(width: 20.w),
-                                  Image.asset(
-                                    AppIconPath.addPeopleIcon,
-                                    height: 20.h,
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: AssetImage(
+                                      AppImagePath.profileImage2,
+                                    ),
                                   ),
                                   SizedBox(height: 5.h),
                                   CustomText(
-                                    text: "15 attendants max.",
-                                    fontSize: 14,
+                                    text: "@john.d, 32",
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     color: AppColor.white500,
                                   ),
                                 ],
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Column(
+                              Column(
                                 children: [
-                                  SizedBox(width: 20.w),
-                                  Image.asset(AppIconPath.saveIcon, height: 20),
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: AssetImage(
+                                      AppImagePath.profileImage3,
+                                    ),
+                                  ),
                                   SizedBox(height: 5.h),
                                   CustomText(
-                                    text: "@Saved",
-                                    fontSize: 16,
+                                    text: "@samira_k, 25",
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     color: AppColor.white500,
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
+                              Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: AssetImage(
+                                      AppImagePath.profileImage4,
+                                    ),
+                                  ),
+                                  CustomText(
+                                    text: "@alexa, 28",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColor.white500,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 32.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
 
-                        SizedBox(height: 20.h),
-                        CustomText(
-                          text: "Attendants",
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: AppColor.white500,
-                        ),
-                        SizedBox(height: 20.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: AssetImage(
-                                    AppImagePath.profileImage1,
-                                  ),
+                                child: CustomElevatedButton(
+                                  fontWeight: FontWeight.w500,
+                                  backgroundColor: Color(0xFFfc6057),
+                                  leftIcon: Icons.close,
+                                  text: "Follow",
+                                  onPressed: () {},
                                 ),
-                                SizedBox(height: 5.h),
-                                CustomText(
-                                  text: "@alexa, 28",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.white500,
+                              ),
+                              Expanded(
+                                child: CustomElevatedButton(
+                                  fontWeight: FontWeight.w500,
+                                  backgroundColor: Color(0xFF2e4f3e),
+                                  leftIcon: Icons.done,
+                                  text: "I'm in!",
+                                  onPressed: () {
+                                    Get.toNamed(AppRoutes.activityListsScreen);
+                                  },
                                 ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: AssetImage(
-                                    AppImagePath.profileImage2,
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                                CustomText(
-                                  text: "@john.d, 32",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.white500,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: AssetImage(
-                                    AppImagePath.profileImage3,
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                                CustomText(
-                                  text: "@samira_k, 25",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.white500,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: AssetImage(
-                                    AppImagePath.profileImage4,
-                                  ),
-                                ),
-                                CustomText(
-                                  text: "@alexa, 28",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.white500,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 32.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                AppIconPath.saveIcon,
+                                height: 24,
+                                width: 24,
+                              ),
 
-                              child: CustomElevatedButton(
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              CustomText(
+                                text: "Save",
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                backgroundColor: Color(0xFFfc6057),
-                                leftIcon: Icons.close,
-                                text: "Follow",
-                                onPressed: () {},
+                                color: AppColor.white500,
                               ),
-                            ),
-                            Expanded(
-                              child: CustomElevatedButton(
-                                fontWeight: FontWeight.w500,
-                                backgroundColor: Color(0xFF2e4f3e),
-                                leftIcon: Icons.done,
-                                text: "I'm in!",
-                                onPressed: () {
-                                  Get.toNamed(AppRoutes.activityListsScreen);
-                                },
+
+                            ],
+                          ),
+                          SpaceWidget(spaceHeight: 8,),
+                          Center(
+                            child: InkWell(
+                              onTap: () {
+                                showReportBottomSheet(context);
+                              },
+                              child: TextWidget(
+                                text: 'Report Activity',
+                                fontColor: AppColor.white500,
+                                textAlignment: TextAlign.center,
+                                fontSize: 16,
+                                underline: true,
+                                underlineColor: Colors.white,
+                                underlineWidth: 1.5,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              AppIconPath.saveIcon,
-                              height: 24,
-                              width: 24,
-                            ),
-
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            CustomText(
-                              text: "Save",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: AppColor.white500,
-                            ),
-
-                          ],
-                        ),
-                        SpaceWidget(spaceHeight: 8,),
-                        Center(
-                          child: InkWell(
-                            onTap: () {
-                              showReportBottomSheet(context);
-                            },
-                            child: TextWidget(
-                              text: 'Report Activity',
-                              fontColor: AppColor.white500,
-                              textAlignment: TextAlign.center,
-                              fontSize: 16,
-                              underline: true,
-                              underlineColor: Colors.white,
-                              underlineWidth: 1.5,
                             ),
                           ),
-                        ),
 
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                ),
-              ],
-            ),
-
+              ),
 
 
           ],

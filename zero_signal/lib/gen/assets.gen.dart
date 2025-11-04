@@ -47,6 +47,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/add.png
   AssetGenImage get add => const AssetGenImage('assets/icons/add.png');
 
+  /// File path: assets/icons/addGreenbutton.png
+  AssetGenImage get addGreenbutton =>
+      const AssetGenImage('assets/icons/addGreenbutton.png');
+
   /// File path: assets/icons/addIcon.png
   AssetGenImage get addIcon => const AssetGenImage('assets/icons/addIcon.png');
 
@@ -289,6 +293,7 @@ class $AssetsIconsGen {
     routesImage,
     aboutUsImage,
     add,
+    addGreenbutton,
     addIcon,
     addPeople,
     batch,

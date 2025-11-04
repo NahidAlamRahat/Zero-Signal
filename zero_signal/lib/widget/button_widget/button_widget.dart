@@ -98,6 +98,7 @@ class ButtonWidget extends StatelessWidget {
             Text(
               label!,
               maxLines: maxLines,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: textColor,
                 fontSize: fontSize.sp,
@@ -112,6 +113,8 @@ class ButtonWidget extends StatelessWidget {
             SizedBox(width: iconSpacing.w),
             Text(
               label!,
+              maxLines: maxLines,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
 
                 color: textColor,
@@ -124,6 +127,8 @@ class ButtonWidget extends StatelessWidget {
             : (label != null)
             ? Text(
           label!,
+          maxLines: maxLines,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontFamily: labelFontFamily ?? GoogleFonts.poppins().fontFamily,
             color: textColor,

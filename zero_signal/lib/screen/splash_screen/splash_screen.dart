@@ -52,35 +52,33 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(390, 844),
-      builder: (_, child) => GetBuilder<SplashController>(
-      builder: (controller) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: const SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
-          child: Scaffold(
-            backgroundColor: AppColor.backgroundColor,
-            body: Center(
-              /// app logo with animation
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Image.asset(
-                    AppImagePath.appLogo,
-                    height: 166.h,
-                    width: 171.w,
-                  ),
+    return GetBuilder<SplashController>(
+    builder: (controller) {
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          backgroundColor: AppColor.backgroundColor,
+          body: Center(
+            /// app logo with animation
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Image.asset(
+                  AppImagePath.appLogo,
+                  height: 166.h,
+                  width: 171.w,
                 ),
               ),
             ),
-
           ),
+
+        ),
+      );
+    },
         );
-      },
-    ));
   }
 }
 

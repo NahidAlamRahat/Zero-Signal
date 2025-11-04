@@ -34,7 +34,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       body: Column(
         children: [
           _buildHeaderImage(),
-          SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -42,7 +42,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTitleSection(controller),
-                  SizedBox(height: 8),
+                  SizedBox(height: 10.h),
                   _buildStatsSection(),
                   SizedBox(height: 12.h),
                   _buildActionButtons(),
@@ -54,7 +54,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                   _buildRouteImagesSection(context, controller),
                   SizedBox(height: 16.h),
                   _buildCommentsSection(controller),
-                  SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                 ],
               ),
             ),
@@ -101,13 +101,16 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          'Portlligat - Cap de Creus',
-          style: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF2D2D2D),
-          ),
+        TextWidget(
+         text:  'Portlligat - Cap de Creus',
+          // style: TextStyle(
+          //   fontSize: 24.sp,
+          //   fontWeight: FontWeight.w500,
+          //   color: Color(0xFF2D2D2D),
+          // ),
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w500,
+          fontColor: AppColor.textColor,
         ),
         CircleAvatar(
           backgroundColor: Color(0xFFFFA726),
@@ -155,26 +158,25 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     double height = 20,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      width: 96.w,
+      height: 36.h,
       decoration: ShapeDecoration(
         color: isActive ? Color(0xFF2E4F3E) : Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (imageIcon != null) ...[
             Image.asset(imageIcon, width: width, height: height),
             SizedBox(width: 6.w),
           ],
-          Text(
-            text,
-            style: TextStyle(
-              color: isActive ? Color(0xFFF1F1F1) : Color(0xFF2C2C2C),
-              fontSize: 14.sp,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w400,
-            ),
+          TextWidget(
+            text: text,
+            textAlignment: TextAlign.center,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            fontColor: isActive ? AppColor.white500 : AppColor.textColor,
           ),
         ],
       ),
@@ -187,25 +189,30 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       children: [
         Expanded(
           child: ButtonWidget(
+
             backgroundColor: AppColor.backgroundColor,
             label: 'Follow Route',
 
-            fontSize: 12,
+            fontSize: 10,
             fontWeight: FontWeight.w400,
-            buttonHeight: 40,
+            buttonHeight: 33,
+            buttonWidth: 120,
+            maxLines: 1,
             onPressed: () => Get.toNamed(AppRoutes.fullMapScreen),
           ),
         ),
         SizedBox(width: 12),
         Expanded(
           child: ButtonWidget(
-            backgroundColor: Color.fromRGBO(245, 233, 223, 1),
+            backgroundColor: AppColor.overLayBoxColor,
             label: 'Add Favorites',
-            fontSize: 12,
-            buttonHeight: 40,
-            fontWeight: FontWeight.w500,
-            textColor: Colors.black,
+            buttonWidth: 120,
+            fontSize: 10,
+            buttonHeight: 33,
+            fontWeight: FontWeight.w400,
+            textColor: AppColor.textColor,
             onPressed: () {},
+            maxLines: 1,
           ),
         ),
         SizedBox(width: 12),
@@ -214,9 +221,10 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             backgroundColor: Color.fromRGBO(245, 233, 223, 1),
             label: 'Create Outing',
             buttonHeight: 40,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            textColor: Colors.black,
+            fontSize: 10,
+            fontWeight: FontWeight.w400,
+            maxLines: 1,
+            textColor:AppColor.textColor,
             onPressed: () {},
           ),
         ),
@@ -234,12 +242,16 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: 12,
+                radius: 18,
                 backgroundColor: Colors.brown,
                 child: Icon(Icons.person, size: 16, color: Colors.white),
               ),
               SizedBox(width: 8),
-              TextWidget(text: '@naturanauta'),
+              TextWidget(text: '@naturanauta',
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                fontColor: AppColor.textColor,
+              ),
             ],
           ),
         ),
@@ -249,7 +261,8 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             TextWidget(
               text: '4,8 (57)  (17 luggers / 6 planes)',
               fontWeight: FontWeight.w400,
-              fontSize: 12,
+              fontSize: 16,
+              fontColor: AppColor.subTitleColor,
             ),
           ],
         ),
@@ -262,10 +275,11 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       context: context,
       builder: (context) => ShowCustomDialog(
         backgroundColor: AppColor.creamBackgroundColor,
+
         title: '@naturanauta',
-        titleStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+        titleStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
         description: "I'm a nature lover and outdoor enthusiast",
-        descriptionStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        descriptionStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
         image: Image.asset(AppImagePath.profileImage),
         actionsLayout: ActionsLayout.column,
         actions: [
@@ -473,53 +487,55 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildAddCommentSection() {
-    return Column(
-      children: [
-        TextFieldWidget(
+    return SafeArea(
+      child: Column(
+        children: [
+          TextFieldWidget(
 
-          maxLines: 3,
-          minLines: 3,
-          borderColor: AppColor.lightGrayishOrange,
-          backgroundColor: AppColor.lightGrayishOrange,
-          borderRadius: 8,
-          hintText: 'Add a comment here....',
-          hintStyle: TextStyle(
-            color: AppColor.subTitleColor,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
-            fontFamily: GoogleFonts.openSans().fontFamily,
-          ),
-        ),
-        SizedBox(height: 16),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ButtonWidget(
-            backgroundColor: AppColor.backgroundColor,
-            label: 'comment ',
-            maxLines: 1,
-            buttonWidth: 130.w,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            buttonHeight: 40,
-            onPressed: () {},
-          ),
-        ),
-        SizedBox(height: 10),
-        Center(
-          child: InkWell(
-            onTap: (){
-              Get.toNamed(AppRoutes.updateInformationScreen);
-            },
-            child: TextWidget(
-              text: 'Update Status',
+            maxLines: 3,
+            minLines: 3,
+            borderColor: AppColor.lightGrayishOrange,
+            backgroundColor: AppColor.lightGrayishOrange,
+            borderRadius: 8,
+            hintText: 'Add a comment here....',
+            hintStyle: TextStyle(
+              color: AppColor.subTitleColor,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
-              fontSize: 14,
-              fontColor: AppColor.backgroundColor,
-              underline: true,
+              fontFamily: GoogleFonts.openSans().fontFamily,
             ),
           ),
-        ),
-      ],
+          SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ButtonWidget(
+              backgroundColor: AppColor.backgroundColor,
+              label: 'comment ',
+              maxLines: 1,
+              buttonWidth: 130.w,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              buttonHeight: 40,
+              onPressed: () {},
+            ),
+          ),
+          SizedBox(height: 10),
+          Center(
+            child: InkWell(
+              onTap: (){
+                Get.toNamed(AppRoutes.updateInformationScreen);
+              },
+              child: TextWidget(
+                text: 'Update Status',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                fontColor: AppColor.backgroundColor,
+                underline: true,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
