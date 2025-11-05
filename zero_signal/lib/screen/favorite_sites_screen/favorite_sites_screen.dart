@@ -23,31 +23,26 @@ class _FavoriteSitesScreenState extends State<FavoriteSitesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(390, 844),
-      builder: (context, child) {
-        return Scaffold(
-          appBar: AppbarWidget(
-            text: 'Favorite Sites',
-            backgroundColor: AppColor.creamBackgroundColor,
-            centerTitle: true,
-          ),
-          backgroundColor: const Color(0xFFFFF4E9),
-          body: SafeArea(
-            child: GetBuilder<MySpotsController>(
-              builder: (_) {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: _buildSpotsList(),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        );
-      },
+    return Scaffold(
+      appBar: AppbarWidget(
+        text: 'Favorite Sites',
+        backgroundColor: AppColor.creamBackgroundColor,
+        centerTitle: true,
+      ),
+      backgroundColor: const Color(0xFFFFF4E9),
+      body: SafeArea(
+        child: GetBuilder<MySpotsController>(
+          builder: (_) {
+            return Column(
+              children: [
+                Expanded(
+                  child: _buildSpotsList(),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 

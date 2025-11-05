@@ -56,15 +56,17 @@ void showPasswordChangedSheet(BuildContext context) {
             const SizedBox(height: 25),
 
             // Continue Button
-           ButtonWidget(
-             onPressed: (){
-               Get.offAllNamed(AppRoutes.signInScreen);
-             },
-             buttonHeight: 48.h,
-             label: AppStrings.continueText,
-             fontWeight: FontWeight.w500,
-             fontSize: 16.sp,
-               backgroundColor: AppColor.backgroundColor,
+           SafeArea(
+             child: ButtonWidget(
+               onPressed: (){
+                 Get.offAllNamed(AppRoutes.signInScreen);
+               },
+               buttonHeight: 48.h,
+               label: AppStrings.continueText,
+               fontWeight: FontWeight.w500,
+               fontSize: 16.sp,
+                 backgroundColor: AppColor.backgroundColor,
+             ),
            ),
             const SizedBox(height: 20),
           ],

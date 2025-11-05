@@ -10,42 +10,39 @@ class ChooseLanguageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(390, 844),
-      builder: (_, child) => Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 250.h),
-            Image.asset(
-              AppImagePath.appLogo,
-              height: 160.w,
-              width: 390.w,
-            ),
-
-            SizedBox(height: 20.h),
-
-            TextWidget(text: AppStrings.chooseYourLanguage,
-            textAlignment: TextAlign.center,
-              fontSize: 28,
-              fontWeight: FontWeight.w500,
-              fontColor: AppColor.blackColor ,
-            ),
-
-            SizedBox(height: 8.h),
-
-            TextWidget(text: AppStrings.selectYourPreferredLanguage,
-              textAlignment: TextAlign.center,
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              fontColor: AppColor.subTitleColor ,
-            ),
-
-            // LanguageSelectionWidget()
-
-
-            ],
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 250.h),
+          Image.asset(
+            AppImagePath.appLogo,
+            height: 160.w,
+            width: 390.w,
           ),
+
+          SizedBox(height: 20.h),
+
+          TextWidget(text: AppStrings.chooseYourLanguage,
+          textAlignment: TextAlign.center,
+            fontSize: 28,
+            fontWeight: FontWeight.w500,
+            fontColor: AppColor.blackColor ,
+          ),
+
+          SizedBox(height: 8.h),
+
+          TextWidget(text: AppStrings.selectYourPreferredLanguage,
+            textAlignment: TextAlign.center,
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+            fontColor: AppColor.subTitleColor ,
+          ),
+
+          // LanguageSelectionWidget()
+
+
+          ],
         ),
       ),
     );
