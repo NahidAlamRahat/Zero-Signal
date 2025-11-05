@@ -18,15 +18,17 @@ class ProfileSectionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF4E9),
       body: SingleChildScrollView(
-        padding:  EdgeInsets.only(right: 20.w,left: 20.w,top: 70.h,),
-        child: Column(
-          spacing: 16,
-          children: [
-            ProfileCardWidget(controller: controller),
-            MenuItemsCardWidget(controller: controller),
-            SettingsCardWidget(controller: controller),
-            SpaceWidget(spaceHeight: 30),
-          ],
+        padding:  EdgeInsets.only(right: 20.w,left: 20.w, top: 30.h),
+        child: SafeArea(
+          child: Column(
+            spacing: 16,
+            children: [
+              ProfileCardWidget(controller: controller),
+              MenuItemsCardWidget(controller: controller),
+              SettingsCardWidget(controller: controller),
+              SpaceWidget(spaceHeight: 30),
+            ],
+          ),
         ),
       ),
     );

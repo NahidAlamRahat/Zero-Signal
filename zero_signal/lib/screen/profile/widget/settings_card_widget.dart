@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../../widget/space_widget.dart';
 import '../controller/profile_controller.dart';
 import 'delete_account_alert_dialog.dart';
@@ -19,9 +22,9 @@ class SettingsCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding:  EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5E9DF),
+        color: AppColor.overLayBoxColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -34,18 +37,17 @@ class SettingsCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'SETTINGS',
-            style: TextStyle(
-              color: Color(0xFF2C2C2C),
+          Padding(
+            padding:  EdgeInsets.only(left: 12.w),
+            child: const TextWidget(
+             text:  'SETTINGS',
+
               fontSize: 12,
-              fontFamily: 'Poppins',
               fontWeight: FontWeight.w400,
+              fontColor: AppColor.blackColor,
             ),
           ),
-          SpaceWidget(spaceHeight: 12),
           _buildDivider(),
-          SpaceWidget(spaceHeight: 16),
           MenuItemWidget(
             icon: Assets.icons.languageImage.path,
             title: 'Language',

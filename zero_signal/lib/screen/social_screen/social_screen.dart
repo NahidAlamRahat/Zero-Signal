@@ -24,12 +24,10 @@ class _SocialScreenState extends State<SocialScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-
             image: AssetImage(AppImagePath.socialBackgroundImage),
             fit: BoxFit.cover,
           ),
@@ -43,65 +41,64 @@ class _SocialScreenState extends State<SocialScreen> {
                 children: [
                   Column(
                     children: [
-                  IconButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.createActivityScreen);
-                    },
-                    icon: Image.asset(
-                      AppIconPath.addIcon2,
-                      color: AppColor.white500,
-                      height: 24.h,
-                    ),
-                  ),
+                      IconButton(
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.createActivityScreen);
+                        },
+                        icon: Image.asset(
+                          AppIconPath.addIcon2,
+                          color: AppColor.white500,
+                          height: 24.h,
+                        ),
+                      ),
                     ],
                   ),
                   Column(
                     children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          AppIconPath.searchIcon,
-                          color: AppColor.white500,
-                          height: 24.h,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(AppRoutes.activityListsScreen);
-                        },
-                        icon: Image.asset(
-                          AppIconPath.taskIcon,
-                          color: AppColor.white500,
-                          height: 24.h,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(AppRoutes.websiteViewScreen);
-
-                        },
-                        icon: Image.asset(
-                          AppIconPath.shareIcon,
-                          color: AppColor.white500,
-                          height: 24.h,
-                        ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Image.asset(
+                              AppIconPath.searchIcon,
+                              color: AppColor.white500,
+                              height: 24.h,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Get.toNamed(AppRoutes.activityListsScreen);
+                            },
+                            icon: Image.asset(
+                              AppIconPath.taskIcon,
+                              color: AppColor.white500,
+                              height: 24.h,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Get.toNamed(AppRoutes.websiteViewScreen);
+                            },
+                            icon: Image.asset(
+                              AppIconPath.shareIcon,
+                              color: AppColor.white500,
+                              height: 24.h,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ),
-          SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: GlassContainer(
                   //  height: 512.h,
-                  width:Get.width,
+                  width: Get.width,
                   child: Padding(
-                    padding:  EdgeInsets.all(20.r),
+                    padding: EdgeInsets.all(20.r),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +119,7 @@ class _SocialScreenState extends State<SocialScreen> {
                           CustomText(
                             textAlign: TextAlign.start,
                             text:
-                            "Join me for a scenic hike in the mountains. Everyone is welcome!",
+                                "Join me for a scenic hike in the mountains. Everyone is welcome!",
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white500,
@@ -134,7 +131,8 @@ class _SocialScreenState extends State<SocialScreen> {
                               Column(
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Image.asset(
                                         AppIconPath.batchIcon,
@@ -144,7 +142,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                       SizedBox(height: 5.h),
                                       CustomText(
                                         text:
-                                        "@naturanauta • 4,8 ✰\n(17 luggers / 6 planes)",
+                                            "@naturanauta • 4,8 ✰\n(17 luggers / 6 planes)",
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,
                                         color: AppColor.white500,
@@ -174,11 +172,9 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ],
                                 ),
                               ),
-
                             ],
                           ),
                           SizedBox(height: 20.h),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -186,7 +182,11 @@ class _SocialScreenState extends State<SocialScreen> {
                                 flex: 1,
                                 child: Column(
                                   children: [
-                                    Image.asset(AppIconPath.groupIcon, height: 20.w, width: 20.w,),
+                                    Image.asset(
+                                      AppIconPath.groupIcon,
+                                      height: 20.w,
+                                      width: 20.w,
+                                    ),
                                     SizedBox(height: 5.h),
                                     CustomText(
                                       text: "12 people attending",
@@ -221,7 +221,8 @@ class _SocialScreenState extends State<SocialScreen> {
                                 child: Column(
                                   children: [
                                     SizedBox(width: 20.w),
-                                    Image.asset(AppIconPath.saveIcon, height: 20),
+                                    Image.asset(AppIconPath.saveIcon,
+                                        height: 20),
                                     SizedBox(height: 5.h),
                                     CustomText(
                                       text: "@Saved",
@@ -234,7 +235,6 @@ class _SocialScreenState extends State<SocialScreen> {
                               ),
                             ],
                           ),
-
                           SizedBox(height: 20.h),
                           CustomText(
                             text: "Attendants",
@@ -263,6 +263,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                 ],
                               ),
+                              SizedBox(width: 8.w),
                               Column(
                                 children: [
                                   CircleAvatar(
@@ -280,6 +281,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                 ],
                               ),
+                              SizedBox(width: 8.w),
                               Column(
                                 children: [
                                   CircleAvatar(
@@ -297,6 +299,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                   ),
                                 ],
                               ),
+                              SizedBox(width: 8.w),
                               Column(
                                 children: [
                                   CircleAvatar(
@@ -320,7 +323,6 @@ class _SocialScreenState extends State<SocialScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-
                                 child: CustomElevatedButton(
                                   fontWeight: FontWeight.w500,
                                   backgroundColor: Color(0xFFfc6057),
@@ -331,6 +333,7 @@ class _SocialScreenState extends State<SocialScreen> {
                               ),
                               Expanded(
                                 child: CustomElevatedButton(
+                                  borderColor: AppColor.backgroundColor,
                                   fontWeight: FontWeight.w500,
                                   backgroundColor: Color(0xFF2e4f3e),
                                   leftIcon: Icons.done,
@@ -351,7 +354,6 @@ class _SocialScreenState extends State<SocialScreen> {
                                 height: 24,
                                 width: 24,
                               ),
-
                               SizedBox(
                                 width: 5.w,
                               ),
@@ -361,10 +363,11 @@ class _SocialScreenState extends State<SocialScreen> {
                                 fontWeight: FontWeight.w500,
                                 color: AppColor.white500,
                               ),
-
                             ],
                           ),
-                          SpaceWidget(spaceHeight: 8,),
+                          SpaceWidget(
+                            spaceHeight: 8,
+                          ),
                           Center(
                             child: InkWell(
                               onTap: () {
@@ -381,20 +384,16 @@ class _SocialScreenState extends State<SocialScreen> {
                               ),
                             ),
                           ),
-
-
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-
-
-          ],
-                  ),
+            ],
+          ),
         ),
-    ),
-        );
+      ),
+    );
   }
 }

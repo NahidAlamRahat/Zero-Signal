@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../constant/app_colors.dart';
+import '../../../widget/button_widget/button_widget.dart';
 import '../../../widget/space_widget.dart';
 
 class DatePickerSheet extends StatefulWidget {
@@ -163,66 +164,30 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
 
           const SizedBox(height: 20),
 
-          // Buttons
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding:  EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: TextButton.styleFrom(
-                      backgroundColor: AppColor.secondary400,
-                      padding:  EdgeInsets.symmetric(vertical: 14.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child:  Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColor.subTitleColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 60),
-                Expanded(
-                  child: ElevatedButton(
 
-                    onPressed: () {
-                      // Confirm action
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Selected: ${_selectedDay?.day}/${_selectedDay?.month}/${_selectedDay?.year}',
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.backgroundColor
-                      ,
-                      padding:  EdgeInsets.symmetric(vertical: 14.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ButtonWidget(
+                backgroundColor: AppColor.secondary400,
+                buttonWidth: 144,
+                label: 'Cancel',
+                textColor: AppColor.subTitleColor,
+                onPressed: () => Navigator.pop(context),
+              ),
+              ButtonWidget(
+                backgroundColor: AppColor.backgroundColor,
+                buttonWidth: 144,
+
+                label: 'Confirm',
+                onPressed: () {
+                  // Return selected date
+                  Navigator.pop(context, _selectedDay);
+                },
+              ),
+            ],),
           ),
 
           const SizedBox(height: 10),

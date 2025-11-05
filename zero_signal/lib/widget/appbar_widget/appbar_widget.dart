@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String? text;
@@ -52,6 +53,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
           Text(
             text ?? "",
             style: TextStyle(
+              fontFamily: GoogleFonts.poppins().fontFamily,
               fontSize: 20.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../constant/app_colors.dart';
 import '../../../widget/icon_widget/icon_widget.dart';
 import '../../../widget/space_widget.dart';
 import '../../../widget/text_widget/text_widgets.dart';
@@ -17,9 +19,9 @@ class MenuItemWidget extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
-    this.titleColor = const Color(0xFF2C2C2C),
-    this.iconWidth = 20,
-    this.iconHeight = 20,
+    this.titleColor =AppColor.textColor,
+    this.iconWidth = 15,
+    this.iconHeight = 15,
   });
 
   @override
@@ -29,7 +31,7 @@ class MenuItemWidget extends StatelessWidget {
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding:  EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -37,8 +39,8 @@ class MenuItemWidget extends StatelessWidget {
               children: [
                 IconWidget(
                   icon: icon,
-                  width: iconWidth,
-                  height: iconHeight,
+                  width: iconWidth.w,
+                  height: iconHeight.h,
                 ),
                 SpaceWidget(spaceWidth: 12),
                 TextWidget(
@@ -49,10 +51,10 @@ class MenuItemWidget extends StatelessWidget {
                 ),
               ],
             ),
-            const Icon(
+             Icon(
               Icons.arrow_forward_ios_rounded,
               color: Colors.black,
-              size: 12,
+              size: 15.h,
             ),
           ],
         ),

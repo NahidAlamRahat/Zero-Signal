@@ -26,7 +26,7 @@ class AppColor {
   static const Color secondary400= Color(0xFFDED3C0);
   static const Color secondary500= Color(0xFFD6C8B0);
 
-  static const Color BGColor=Color(0xFFFFF4E9);
+  static const Color bGColor=Color(0xFFFFF4E9);
   static const Color darkGray500=Color(0xFF2C2C2C);
   static const Color darkGay300 =  Color(0xFF727272);
   static const Color boxShadowColor=Color(0x23000000);
@@ -34,6 +34,7 @@ class AppColor {
  static const Color buttonArrowBackground =Color.fromRGBO(255, 167, 38, 1);
   static const Color green =Color.fromRGBO(69, 234, 105, 1);
   static const Color darkGray400 = Color(0xFF565656);
+
 
 
 }

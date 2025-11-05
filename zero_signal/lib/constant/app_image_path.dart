@@ -26,7 +26,7 @@ class AppImagePath {
   static const String mapImage3  = "assets/images/mapImage3.webp";
 
   //social screen
-  static const String socialBackgroundImage = "assets/images/social_bg.webp";
+  static const String socialBackgroundImage = "assets/images/socialBg.jpg";
   static const String profileImage1 = "assets/images/profile_image1.png";
   static const String profileImage2 = "assets/images/profile_image2.png";
   static const String profileImage3 = "assets/images/profile_image3.png";

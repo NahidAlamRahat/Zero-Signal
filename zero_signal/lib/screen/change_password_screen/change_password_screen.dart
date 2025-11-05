@@ -41,6 +41,8 @@ class ChangePasswordScreen extends StatelessWidget {
               hintText: 'Current Password',
               backgroundColor: AppColor.lightGrayishOrange,
                suffixIcon: true,
+              suffixIconColor: AppColor.blackColor,
+
             ),
 
 
@@ -58,6 +60,8 @@ class ChangePasswordScreen extends StatelessWidget {
               hintText: 'New Password',
               backgroundColor: AppColor.lightGrayishOrange,
               suffixIcon: true,
+              suffixIconColor: AppColor.blackColor,
+
             ),
 
 
@@ -77,6 +81,7 @@ class ChangePasswordScreen extends StatelessWidget {
               hintText: 'Confirm Password',
               backgroundColor: AppColor.lightGrayishOrange,
               suffixIcon: true,
+              suffixIconColor: AppColor.blackColor,
             )
 
 

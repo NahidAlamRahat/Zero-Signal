@@ -77,8 +77,8 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
         title: const TextWidget(
          text:  'Share a New Spot',
 
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
           fontColor: AppColor.blackColor,
 
 
@@ -179,13 +179,12 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
     ),
   );
 
-  Widget _sectionTitle(String title) => Text(
-    title,
-    style: const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      color: Colors.black87,
-    ),
+  Widget _sectionTitle(String title) => TextWidget(
+  text:   title,
+
+    fontColor: AppColor.blackColor,
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
   );
 
   Widget _setLocationBox() => Container(

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/widget/button_widget/button_widget.dart';
+
+import '../widget/text_widget/text_widgets.dart';
 
 class ReportActivityBottomSheet extends StatefulWidget {
   const ReportActivityBottomSheet({super.key});
@@ -20,9 +24,9 @@ class _ReportActivityBottomSheetState extends State<ReportActivityBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFFF5EFE7),
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: AppColor.bGColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -52,28 +56,30 @@ class _ReportActivityBottomSheetState extends State<ReportActivityBottomSheet> {
           ),
 
           // Title
-          const Text(
-            'Report Activity',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
+          const TextWidget(
+           text: 'Report Activity',
+            // style: TextStyle(
+            //   fontSize: 20,
+            //   fontWeight: FontWeight.w600,
+            //   color: Colors.black,
+            // ),
+            fontColor: AppColor.textColor,
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
           ),
 
-          const SizedBox(height: 12),
+           SizedBox(height: 8.h),
 
           // Subtitle
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.0),
-            child: Text(
-              'Please provide details about the issue to help our moderation team.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-                height: 1.4,
-              ),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextWidget(
+             text:  'Please provide details about the issue to help our moderation team.',
+              textAlignment: TextAlign.center,
+
+              fontColor: AppColor.textColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
             ),
           ),
 
@@ -84,25 +90,28 @@ class _ReportActivityBottomSheetState extends State<ReportActivityBottomSheet> {
             padding: EdgeInsets.symmetric(horizontal: 28.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Reason for reporting',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
+              child: TextWidget(
+               text:  'Reason for reporting',
+                // style: TextStyle(
+                //   fontSize: 14,
+                //   fontWeight: FontWeight.w500,
+                //   color: Colors.black,
+                // ),
+                fontColor: AppColor.textColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
 
-          const SizedBox(height: 8),
+           SizedBox(height: 8.h),
 
           // Text field
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TextField(
               controller: _controller,
-              maxLines: 6,
+              maxLines: 4,
               style: const TextStyle(
                 fontSize: 14,
                 color: Colors.black87,
@@ -110,11 +119,11 @@ class _ReportActivityBottomSheetState extends State<ReportActivityBottomSheet> {
               decoration: InputDecoration(
                 hintText: 'e.g., Inappropriate content, spam, harassment.....',
                 hintStyle: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
+                  fontSize: 12,
+                  color: AppColor.subTitleColor
                 ),
                 filled: true,
-                fillColor: const Color(0xFFE8DCC8),
+                fillColor: AppColor.overLayBoxColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -132,30 +141,17 @@ class _ReportActivityBottomSheetState extends State<ReportActivityBottomSheet> {
             child: SizedBox(
               width: double.infinity,
               height: 50,
-              child: ElevatedButton(
+              child: ButtonWidget(
+                label: 'Send to Administration',
+                backgroundColor: AppColor.backgroundColor,
                 onPressed: () {
                   // Handle submit
-                  if (_controller.text.trim().isNotEmpty) {
+                  // if (_controller.text.trim().isNotEmpty) {
                     // Process the report
                     Navigator.pop(context);
-                  }
+                  // }
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.backgroundColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Send to Administration',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              )
             ),
           ),
 
@@ -172,6 +168,6 @@ void showReportBottomSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => const ReportActivityBottomSheet(),
+    builder: (context) => SafeArea(child: const ReportActivityBottomSheet()),
   );
 }

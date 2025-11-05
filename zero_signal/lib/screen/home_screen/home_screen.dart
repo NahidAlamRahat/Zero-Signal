@@ -10,6 +10,7 @@ import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/screen/home_screen/conntroller/home_screen_controller.dart';
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
 import '../map_routes_screen/map_routes_screen.dart';
 
@@ -163,7 +164,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   String _getMarkerIconName(String type) {
-    // Mapbox এ icon names যোগ করুন
     switch (type) {
       case 'restaurant':
         return 'restaurant_marker';
@@ -236,8 +236,32 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // MapBox Widget
               mapbox.MapWidget(
+
                 onMapCreated: controller.onMapCreated,
+                mapOptions: mapbox.MapOptions(
+                    pixelRatio: 1.0,
+
+
+                ),
+
               ),
+              
+              
+              Positioned(
+
+                  top: Get.height*0.5,
+                  left: Get.width*0.5,
+                  height: Get.width*0.4,
+                  child: InkWell(
+                    onTap: (){
+                      Get.toNamed(AppRoutes.spotDetailsScreen);
+                    },
+                    child: Image.asset(
+                    
+                    height: 52.h,
+                    width:34.w,
+                    Assets.icons.realEstate.path),
+                  )),
 
 
               Positioned(
@@ -284,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     InkWell(
                       onTap: (){
-                        Get.toNamed(AppRoutes.spotDetailsScreen);
+                        Get.toNamed(AppRoutes.shareSpotScreen);
                       },
                       child: Container(
                       

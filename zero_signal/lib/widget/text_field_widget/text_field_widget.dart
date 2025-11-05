@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 
@@ -37,9 +38,12 @@ class TextFieldWidget extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? errorStyle;
   final FontWeight? fontWeight;
+  final Color? suffixIconColor;
+  final List<TextInputFormatter>? inputFormatters;
 
   const TextFieldWidget({
     super.key,
+    this.suffixIconColor,
     this.controller,
     this.hintText,
     this.validator,
@@ -69,7 +73,7 @@ class TextFieldWidget extends StatefulWidget {
     this.textStyle,
     this.errorStyle,
     this.fontWeight,
-
+    this.inputFormatters,
   });
 
   @override
@@ -88,7 +92,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Single line হলে fixed height, multi-line হলে auto height
       height: widget.maxLines == 1 ? widget.fieldHeight.h : null,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
@@ -102,6 +105,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
         minLines: widget.minLines,
+        inputFormatters: widget.inputFormatters,
         style: widget.textStyle ??
             TextStyle(
               color: widget.textColor,
@@ -134,8 +138,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             child: Padding(
               padding: EdgeInsets.only(right: 0.w),
               child: Icon(
-                obscureText ? Icons.visibility_off : Icons.visibility,
-                color: AppColor.white500,
+                obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                color:  widget.suffixIconColor ?? AppColor.white500,
                 size: 20.sp,
               ),
             ),

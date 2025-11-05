@@ -32,6 +32,9 @@ class ShowCustomDialog extends StatelessWidget {
 
   final double titleDescriptionSpacing;
   final double topPadding;
+  final double leftPadding;
+  final double rightPadding;
+  final double bottomPadding;
 
   // ✅ Control icon/image
   final bool showIcon;
@@ -47,7 +50,10 @@ class ShowCustomDialog extends StatelessWidget {
 
   const ShowCustomDialog({
     super.key,
-    this.topPadding = 30,
+    this.topPadding = 40,
+    this.leftPadding = 16,
+    this.rightPadding = 16,
+    this.bottomPadding = 16,
     this.icon,
     this.iconSize = 90,
     this.iconColor = Colors.black87,
@@ -79,104 +85,86 @@ class ShowCustomDialog extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: Container(
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(borderRadius),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // ✅ Icon/Image only if enabled
-                  if (showIcon)
-                    SizedBox(
-                      width: iconSize,
-                      height: iconSize,
-                      child: image ??
-                          Icon(
-                            icon,
-                            size: iconSize,
-                            color: iconColor,
-                          ),
-                    ),
+          Container(
+            padding: EdgeInsets.only(
 
-                  // ✅ Title
-                  if (title != null && title!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: TextWidget(
-                       text:  title!,
-                        // style: titleStyle ??
-                        //     const TextStyle(
-                        //       fontSize: 20,
-                        //       fontWeight: FontWeight.w600,
-                        //       color: Colors.black87,
-                        //     ),
-                        fontColor: titleStyle?.color ?? AppColor.textColor,
-                        fontSize: titleStyle?.fontSize ?? 20,
-                        fontWeight: titleStyle?.fontWeight ?? FontWeight.w600,
-                        textAlignment: titleAlignment,
-                      ),
-                    ),
-
-                  // ✅ Description
-                  if (description != null && description!.isNotEmpty)
-                    TextWidget(
-                     text:  description!,
-                      // style: descriptionStyle ??
-                      //     const TextStyle(
-                      //       fontSize: 14,
-                      //       color: Colors.grey,
-                      //       height: 1.4,
-                      //     ),
-                      fontColor: descriptionStyle?.color ?? AppColor.textColor,
-                      fontSize: descriptionStyle?.fontSize ?? 14,
-                      fontWeight: descriptionStyle?.fontWeight ?? FontWeight.w400,
-                      textAlignment: descriptionAlignment,
-                    ),
-
-                   SizedBox(height: 16.h),
-
-                  // ✅ Actions
-                  if (actions != null && actions!.isNotEmpty) ...[
-                    actionsLayout == ActionsLayout.row
-                        ? Row(
-                      mainAxisAlignment:
-                      actionsAlignment, // Row এ horizontal alignment
-                      children: actions!
-                          .map(
-                            (btn) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4.0),
-                          child: btn,
+              left: leftPadding.w,
+              right: rightPadding.w,
+              bottom: borderRadius.h,
+              top: topPadding.h,),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // ✅ Icon/Image only if enabled
+                if (showIcon)
+                  SizedBox(
+                    width: iconSize,
+                    height: iconSize,
+                    child: image ??
+                        Icon(
+                          icon,
+                          size: iconSize,
+                          color: iconColor,
                         ),
-                      )
-                          .toList(),
+                  ),
+
+                // ✅ Title
+                if (title != null && title!.isNotEmpty)
+                  TextWidget(
+                   text:  title!,
+
+                    fontColor: titleStyle?.color ?? AppColor.textColor,
+                    fontSize: titleStyle?.fontSize ?? 20,
+                    fontWeight: titleStyle?.fontWeight ?? FontWeight.w600,
+                    textAlignment: titleAlignment,
+                  ),
+
+                // ✅ Description
+                if (description != null && description!.isNotEmpty)
+                  TextWidget(
+                   text:  description!,
+                    maxLines: 2,
+
+                    fontColor: descriptionStyle?.color ?? AppColor.textColor,
+                    fontSize: descriptionStyle?.fontSize ?? 14,
+                    fontWeight: descriptionStyle?.fontWeight ?? FontWeight.w400,
+                    textAlignment: descriptionAlignment,
+                  ),
+
+                 SizedBox(height: 16.h),
+
+                // ✅ Actions
+                if (actions != null && actions!.isNotEmpty) ...[
+                  actionsLayout == ActionsLayout.row
+                      ? Row(
+                    mainAxisAlignment:
+                    actionsAlignment, // Row এ horizontal alignment
+                    children: actions!
+                        .map(
+                          (btn) => btn,
                     )
-                        : Column(
-                      crossAxisAlignment:
-                      actionsAlignment == MainAxisAlignment.start
-                          ? CrossAxisAlignment.start
-                          : actionsAlignment ==
-                          MainAxisAlignment.end
-                          ? CrossAxisAlignment.end
-                          : CrossAxisAlignment.center, // ✅ Column এ vertical alignment
-                      children: actions!
-                          .map(
-                            (btn) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4.0),
-                          child: btn,
-                        ),
-                      )
-                          .toList(),
-                    ),
-                  ],
+                        .toList(),
+                  )
+                      : Column(
+                    crossAxisAlignment:
+                    actionsAlignment == MainAxisAlignment.start
+                        ? CrossAxisAlignment.start
+                        : actionsAlignment ==
+                        MainAxisAlignment.end
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.center, // ✅ Column এ vertical alignment
+                    children: actions!
+                        .map(
+                          (btn) => btn,
+                    )
+                        .toList(),
+                  ),
                 ],
-              ),
+              ],
             ),
           ),
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
@@ -36,32 +37,32 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                 constraints: const BoxConstraints(),
               ),
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: 20.h),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Want to Delete Account !',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF2C2C2C),
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    height: 1.10,
-                  ),
+                const TextWidget(
+                 text:  'Want to Delete Account !',
+                  textAlignment: TextAlign.center,
+                  // style: TextStyle(
+                  //   color: Color(0xFF2C2C2C),
+                  //   fontSize: 20,
+                  //   fontFamily: 'Poppins',
+                  //   fontWeight: FontWeight.w500,
+                  //   height: 1.10,
+                  // ),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontColor: AppColor.textColor,
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Please confirm your password to remove your account.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF565656),
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    height: 1.10,
-                  ),
+                const TextWidget(
+                text:   'Please confirm your password to remove your account.',
+                  textAlignment: TextAlign.center,
+
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  fontColor: AppColor.subTitleColor,
                 ),
                 const SpaceWidget(spaceHeight: 10,),
 
@@ -70,6 +71,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const TextWidget(text: 'Enter Password',
+
                     textAlignment: TextAlign.start,
                     ),
                     const SpaceWidget(spaceHeight: 8,),
@@ -77,8 +79,10 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                       borderRadius: 8,
                       borderColor: AppColor.creamBackgroundColor,
                       hintText: 'Enter Password',
+                      hintColor: AppColor.subTitleColor,
                       backgroundColor: AppColor.creamBackgroundColor,
                       suffixIcon: true,
+                      suffixIconColor: AppColor.blackColor,
 
                     ),
                   ],
@@ -135,16 +139,13 @@ class DeleteAccountAlertDialog extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
-            height: 1.10,
-          ),
+        child: TextWidget(
+         text:  label,
+          textAlignment: TextAlign.center,
+
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          fontColor: textColor,
         ),
       ),
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String text;
@@ -11,7 +13,7 @@ class CustomElevatedButton extends StatelessWidget {
   final IconData? leftIcon; // The new optional icon on the left
   final IconData? rightIcon; // The original optional icon, now on the right
   final double? iconSize;
-  final FontWeight fontWeight;
+  final FontWeight? fontWeight;
   final double fontSize;
   final Color borderColor;
   final MainAxisAlignment alignment;
@@ -28,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.maximumSize,
     this.leftIcon, // Added this property
     this.rightIcon, // Your original icon, renamed for clarity
-    this.fontWeight = FontWeight.bold,
+    this.fontWeight ,
     this.fontSize = 16,
     this.borderColor = const Color(0xFFB16D2E),
     this.alignment = MainAxisAlignment.center,
@@ -65,9 +67,12 @@ class CustomElevatedButton extends StatelessWidget {
             ],
 
             // The main text
-            Text(
-              text,
-              style: TextStyle(fontSize: fontSize.sp, fontWeight: fontWeight),
+            TextWidget(
+            text:   text,
+              // style: TextStyle(fontSize: fontSize.sp, fontWeight: fontWeight),
+              fontSize: fontSize,
+              fontWeight: fontWeight ?? FontWeight.w500,
+              fontColor: textColor,
             ),
 
             // Conditionally show the RIGHT icon

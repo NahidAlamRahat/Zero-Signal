@@ -302,53 +302,55 @@ class _ChatScreenState extends State<ChatScreen> {
         //   ),
         // ],
       ),
-      child: Row(
-        children: [
-          // Text field
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0x00f5e9df),
-                borderRadius: BorderRadius.circular(13),
-                border: Border.all(color: borderColor),
-              ),
-              child: TextField(
-                controller: _messageController,
-                decoration: const InputDecoration(
-                  hintText: 'Compose your message...',
-                  hintStyle: TextStyle(color: secondaryTextColor),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+      child: SafeArea(
+        child: Row(
+          children: [
+            // Text field
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0x00f5e9df),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(color: borderColor),
+                ),
+                child: TextField(
+                  controller: _messageController,
+                  decoration: const InputDecoration(
+                    hintText: 'Compose your message...',
+                    hintStyle: TextStyle(color: secondaryTextColor),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 8),
-
-          // Mic button
-          _buildImageIconButton(Assets.icons.microphoneIcon.path, () {
-            debugPrint('Mic button pressed');
-          }),
-
-          // Send button
-          _buildImageIconButton(Assets.icons.sendIcon.path, () {
-            if (_messageController.text.isNotEmpty) {
-              // --- UPDATE ---
-              // Use the controller to send the message
-              controller.sendMessage(_messageController.text);
-              _messageController.clear();
-              // Scroll to the bottom to show the new message
-              _scrollController.animateTo(
-                0.0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
-            }
-          }),
-        ],
+            const SizedBox(width: 8),
+        
+            // Mic button
+            _buildImageIconButton(Assets.icons.microphoneIcon.path, () {
+              debugPrint('Mic button pressed');
+            }),
+        
+            // Send button
+            _buildImageIconButton(Assets.icons.sendIcon.path, () {
+              if (_messageController.text.isNotEmpty) {
+                // --- UPDATE ---
+                // Use the controller to send the message
+                controller.sendMessage(_messageController.text);
+                _messageController.clear();
+                // Scroll to the bottom to show the new message
+                _scrollController.animateTo(
+                  0.0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                );
+              }
+            }),
+          ],
+        ),
       ),
     );
   }
