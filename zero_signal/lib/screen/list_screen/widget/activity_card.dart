@@ -35,54 +35,7 @@ class ActivityCard extends StatelessWidget {
         // So we return an empty list here
         return [];
 
-      case 1: // Joined Activities
-        return [
-          // Expanded(
-          //   child: Container(
-          //     height: 40.h,
-          //     decoration: BoxDecoration(
-          //       color: AppColor.red50,
-          //       borderRadius: BorderRadius.circular(8),
-          //     ),
-          //     alignment: Alignment.center,
-          //     child: Text(
-          //       "Leave",
-          //       style: TextStyle(
-          //         color: AppColor.red,
-          //         fontWeight: FontWeight.w500,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(width: 10.w),
-          // Expanded(
-          //   child: Container(
-          //     height: 40.h,
-          //     decoration: BoxDecoration(
-          //       color: AppColor.backgroundColor,
-          //       borderRadius: BorderRadius.circular(8),
-          //     ),
-          //     alignment: Alignment.center,
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Image.asset(
-          //           AppIconPath.chatIcon,
-          //           height: 16.h,
-          //         ),
-          //         SizedBox(width: 6.w),
-          //         Text(
-          //           "Chat",
-          //           style: TextStyle(
-          //             color: Colors.white,
-          //             fontWeight: FontWeight.w500,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-        ];
+
       case 2: // Created Activities
         return [
           Image.asset(
@@ -178,15 +131,18 @@ class ActivityCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
-                  Text(
-                    activity.title,
-                    style: TextStyle(
-                      color: const Color(0xFF2C2C2C),
-                      fontSize: 20.sp,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 1.10,
-                    ),
+                  TextWidget(
+                  text:   activity.title,
+                    // style: TextStyle(
+                    //   color: const Color(0xFF2C2C2C),
+                    //   fontSize: 20.sp,
+                    //   fontFamily: 'Poppins',
+                    //   fontWeight: FontWeight.w500,
+                    //   height: 1.10,
+                    // ),
+                    fontColor: AppColor.textColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
                   ),
 
                   // Category with icon
@@ -205,14 +161,18 @@ class ActivityCard extends StatelessWidget {
                       ),
                       SizedBox(width: 6.w),
                       Expanded(
-                        child: Text(
-                          activity.category,
-                          style: TextStyle(
-                            color: const Color(0xFF727272),
-                            fontSize: 12.sp,
-                            fontFamily: 'Open Sans',
-                            fontWeight: FontWeight.w400,
-                          ),
+                        child: TextWidget(
+                         text:  activity.category,
+                          // style: TextStyle(
+                          //   color: const Color(0xFF727272),
+                          //   fontSize: 12.sp,
+                          //   fontFamily: 'Open Sans',
+                          //   fontWeight: FontWeight.w400,
+                          textAlignment: TextAlign.start,
+                          // ),
+                          fontColor: AppColor.darkGay300,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ],
@@ -221,14 +181,12 @@ class ActivityCard extends StatelessWidget {
                   SizedBox(height: 8.h),
 
                   // Location
-                  Text(
-                    activity.location,
-                    style: TextStyle(
-                      color: const Color(0xFF2C2C2C),
-                      fontSize: 12.sp,
-                      fontFamily: 'Open Sans',
-                      fontWeight: FontWeight.w400,
-                    ),
+                  TextWidget(
+                  text:   activity.location,
+
+                    fontColor: AppColor.textColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
 
                   const Spacer(),
@@ -252,14 +210,17 @@ class ActivityCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Text(
-                          'View',
-                          style: TextStyle(
-                            color: const Color(0xFFF1F1F1),
-                            fontSize: 14.sp,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                          ),
+                        child: TextWidget(
+                         text:  'View',
+                          // style: TextStyle(
+                          //   color: const Color(0xFFF1F1F1),
+                          //   fontSize: 14.sp,
+                          //   fontFamily: 'Poppins',
+                          //   fontWeight: FontWeight.w400,
+                          // ),
+                          fontColor: AppColor.white500,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
@@ -271,6 +232,10 @@ class ActivityCard extends StatelessWidget {
         ),
       );
     }
+
+
+
+
 
     if (tabIndex == 1) { // Near Activities
       return Container(
@@ -391,16 +356,19 @@ class ActivityCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text(
-                              'Left',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: const Color(0xFFFB6057),
-                                fontSize: 16.sp,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500,
-                                height: 1.10,
-                              ),
+                            child: TextWidget(
+                             text:  'Left',
+                              textAlignment: TextAlign.center,
+                              // style: TextStyle(
+                              //   color: const Color(0xFFFB6057),
+                              //   fontSize: 16.sp,
+                              //   fontFamily: 'Poppins',
+                              //   fontWeight: FontWeight.w500,
+                              //   height: 1.10,
+                              // ),
+                              fontColor: AppColor.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
@@ -435,16 +403,13 @@ class ActivityCard extends StatelessWidget {
                                 SizedBox(
                                   width: 4.w,
                                 ),
-                                Text(
-                                  "Chat",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color:Color(0xFFffffff),
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.10,
-                                  ),
+                                TextWidget(
+                                text:   "Chat",
+                                  textAlignment: TextAlign.center,
+
+                                  fontColor: AppColor.white500,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ],
                             ),
@@ -504,15 +469,18 @@ class ActivityCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
-                  Text(
-                    activity.title,
-                    style: TextStyle(
-                      color: const Color(0xFF2C2C2C),
-                      fontSize: 20.sp,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 1.10,
-                    ),
+                  TextWidget(
+                   text:  activity.title,
+                    // style: TextStyle(
+                    //   color: const Color(0xFF2C2C2C),
+                    //   fontSize: 20.sp,
+                    //   fontFamily: 'Poppins',
+                    //   fontWeight: FontWeight.w500,
+                    //   height: 1.10,
+                    // ),
+                    fontColor: AppColor.darkGray500,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
 
                   // Category with icon
@@ -531,14 +499,17 @@ class ActivityCard extends StatelessWidget {
                       ),
                       SizedBox(width: 6.w),
                       Expanded(
-                        child: Text(
-                          activity.category,
-                          style: TextStyle(
-                            color: const Color(0xFF727272),
-                            fontSize: 12.sp,
-                            fontFamily: 'Open Sans',
-                            fontWeight: FontWeight.w400,
-                          ),
+                        child: TextWidget(
+                        text:   activity.category,
+                          // style: TextStyle(
+                          //   color: const Color(0xFF727272),
+                          //   fontSize: 12.sp,
+                          //   fontFamily: 'Open Sans',
+                          //   fontWeight: FontWeight.w400,
+                          // ),
+                          fontColor: AppColor.darkGray500,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ],
@@ -614,7 +585,8 @@ class ActivityCard extends StatelessWidget {
 
 
 
-    return Container(
+    return
+      Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
@@ -710,5 +682,6 @@ class ActivityCard extends StatelessWidget {
         ],
       ),
     );
+
   }
 }

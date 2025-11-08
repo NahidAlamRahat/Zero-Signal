@@ -125,6 +125,7 @@ class HomeScreenController extends GetxController {
 
       await mapboxMap.compass.updateSettings(
         mapbox.CompassSettings(
+
           enabled: true,
           position: mapbox.OrnamentPosition.TOP_RIGHT,
           marginTop: 56.0 + 50.0 + 40.0 + 10.0,

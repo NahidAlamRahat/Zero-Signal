@@ -1,9 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../widget/icon_widget/icon_widget.dart';
 import 'controller/bottom_nav_controller.dart';
 
@@ -12,9 +14,15 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   // Screen dimensions
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // Screen dimensions
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     final isSmallDevice = screenWidth < 360;
     final isMediumDevice = screenWidth >= 360 && screenWidth < 600;
     final isLargeDevice = screenWidth >= 600;
@@ -58,7 +66,9 @@ class BottomNav extends StatelessWidget {
     }
 
     // Responsive padding
-    final horizontalPadding = isSmallDevice ? 12.0 : isMediumDevice ? 14.0 : 16.0;
+    final horizontalPadding = isSmallDevice ? 12.0 : isMediumDevice
+        ? 14.0
+        : 16.0;
 
     return GetBuilder(
       init: UserBottomNavController(),
@@ -72,73 +82,68 @@ class BottomNav extends StatelessWidget {
           bottomNavigationBar: SafeArea(
             child: Container(
               decoration: BoxDecoration(
-                color: controller.selectedIndex.value==1? AppColor.creamBackgroundColor:Colors.transparent
+                  color: controller.selectedIndex.value == 1 ? AppColor
+                      .creamBackgroundColor : Colors.transparent
               ),
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
                 vertical: isSmallDevice ? 12 : 10,
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(borderRadius),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: GNav(
-                    backgroundColor: AppColor.buttonNavBackgroundColor,
-                    gap: navGap,
-                    iconSize: navIconSize,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: navPadding,
-                      vertical: navPadding * 0.8, // Increased vertical padding
-                    ),
-                    tabMargin: _getTabMargin(
-                      controller.selectedIndex.value,
-                      isSmallDevice ? 6 : 8,
-                    ),
-                    duration: const Duration(milliseconds: 400),
-                    tabBackgroundColor: AppColor.backgroundColor,
-                    textStyle: TextStyle(
-                      fontSize: fontSize,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    tabBorderRadius: borderRadius,
-                    tabs: [
-                      _buildGButton(
-                        text: 'Explore',
-                        isSelected: controller.selectedIndex.value == 0,
-                        selectedIcon: AppIconPath.homeIconselect,
-                        unselectedIcon: AppIconPath.homeIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                      _buildGButton(
-                        text: 'Routes',
-                        isSelected: controller.selectedIndex.value == 1,
-                        selectedIcon: AppIconPath.routesSelect,
-                        unselectedIcon: AppIconPath.routeIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                      _buildGButton(
-                        text: 'Social',
-                        isSelected: controller.selectedIndex.value == 2,
-                        selectedIcon: AppIconPath.socialSelect,
-                        unselectedIcon: AppIconPath.socialIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                      _buildGButton(
-                        text: 'Profile',
-                        isSelected: controller.selectedIndex.value == 3,
-                        selectedIcon: AppIconPath.profileSelect,
-                        unselectedIcon: AppIconPath.profileIcon,
-                        selectedSize: iconSelectedSize,
-                        unselectedSize: iconUnselectedSize,
-                      ),
-                    ],
-                    selectedIndex: controller.selectedIndex.value,
-                    onTabChange: (index) => controller.changeIndex(index),
-                  ),
+              child: Container(
+                width: Get.width,
+
+                color: Colors.red,
+
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+
+                    InkWell(
+
+                        onTap: (){
+
+                          controller.changeIndex(0);
+                        },
+                        child: TextWidget(
+                            fontColor: controller.selectedIndex.value == 0 ? AppColor.green : AppColor.textColor,
+                            text: "Home")),
+
+                    InkWell(
+
+                        onTap: (){
+
+                          controller.changeIndex(1);
+                        },
+                        child: TextWidget(
+                            fontColor: controller.selectedIndex.value == 1 ? AppColor.green : AppColor.textColor,
+
+                            text: "Home1")),
+
+                    InkWell(
+
+                        onTap: (){
+
+                          controller.changeIndex(2);
+                        },
+                        child: TextWidget(
+
+                            fontColor: controller.selectedIndex.value == 2 ? AppColor.green : AppColor.textColor,
+
+                            text: "Home2")),
+
+                    InkWell(
+
+                        onTap: (){
+
+                          controller.changeIndex(3);
+                        },
+                        child: TextWidget(
+
+                            fontColor: controller.selectedIndex.value == 3 ? AppColor.green : AppColor.textColor,
+
+                            text: "Home3")),
+
+                  ],
                 ),
               ),
             ),
@@ -148,31 +153,5 @@ class BottomNav extends StatelessWidget {
     );
   }
 
-  GButton _buildGButton({
-    required String text,
-    required bool isSelected,
-    required String selectedIcon,
-    required String unselectedIcon,
-    required double selectedSize,
-    required double unselectedSize,
-  }) {
-    return GButton(
-      text: text,
-      leading: IconWidget(
-        icon: isSelected ? selectedIcon : unselectedIcon,
-        width: isSelected ? selectedSize : unselectedSize,
-        height: isSelected ? selectedSize : unselectedSize,
-      ),
-      icon: Icons.home,
-    );
-  }
 
-  EdgeInsets _getTabMargin(int selectedIndex, double margin) {
-    if (selectedIndex == 3) {
-      return EdgeInsets.only(right: margin);
-    } else if (selectedIndex == 0) {
-      return EdgeInsets.only(left: margin);
-    }
-    return EdgeInsets.zero;
-  }
 }

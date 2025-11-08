@@ -16,7 +16,7 @@ class AppColor {
   static const Color lightGrayishOrange = Color(0xFFF5E9DF);
   static const Color soilColor = Color(0xFFD6C8B0);
   static const Color red50 = Color.fromRGBO(246, 212, 203, 1);
-  static  Color red = Colors.red;
+  static  Color red = Color(0xFFFC6057);
   static const Color base_50=Color(0xFFEAEDEC);
   static const Color textColor=Color(0xFF2C2C2C);
   static const Color white500=Color(0xFFF1F1F1);
