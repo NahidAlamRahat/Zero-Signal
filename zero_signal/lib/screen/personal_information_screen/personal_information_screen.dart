@@ -157,6 +157,7 @@ class PersonalInformationScreen extends StatelessWidget {
         ],
       ),
       child:  TextWidget(
+        textAlignment: TextAlign.start,
        text:  'Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it\'s wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.',
         fontSize: 12,
         fontWeight: FontWeight.w400,
@@ -184,7 +185,8 @@ class PersonalInformationScreen extends StatelessWidget {
       spacing: 8,
       children: [
         TextWidget(
-         text:  label,
+          textAlignment: TextAlign.start,
+          text:  label,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           fontColor: AppColor.textColor,
@@ -197,7 +199,9 @@ class PersonalInformationScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: TextWidget(
-           text:  value,
+            textAlignment: TextAlign.start,
+
+            text:  value,
             fontSize: 14,
             fontWeight: FontWeight.w400,
             fontColor: AppColor.textColor,

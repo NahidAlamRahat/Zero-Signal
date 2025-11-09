@@ -139,7 +139,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
   GetPage(
     name: AppRoutes.viewProfileScreen,
-    page: () => const ViewProfileScreen(),
+    page: () =>  ViewProfileScreen(),
     // binding: GeneralBindings(),
   ),
 

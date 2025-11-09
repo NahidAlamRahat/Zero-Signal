@@ -8,10 +8,10 @@ import '../../constant/app_colors.dart';
 import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
 import '../../widget/text_widget/text_widgets.dart';
+import '../profile/controller/profile_controller.dart';
 import '../profile/widget/menuItem_widget.dart';
 
 class ViewProfileScreen extends StatelessWidget {
-  const ViewProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ViewProfileScreen extends StatelessWidget {
             _buildProfileCard(),
             SizedBox(height: 16.h),
             // Menu Items Card
-            _buildMenuItemsCard(),
+             _buildMenuItemsCard(),
 
 
           ],
@@ -74,7 +74,7 @@ class ViewProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-      
+
               // Name
               TextWidget(
                 text: 'Liam Johnson',
@@ -82,7 +82,7 @@ class ViewProfileScreen extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
-      
+
               // Email
               TextWidget(
                 text: 'hola@zerosignal.app',
@@ -90,7 +90,7 @@ class ViewProfileScreen extends StatelessWidget {
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
               ),
-      
+
               // Bio
               TextWidget(
                 text: 'Outdoor enthusiast & explorer',
@@ -98,7 +98,7 @@ class ViewProfileScreen extends StatelessWidget {
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
               ),
-      
+
               // Points
               TextWidget(
                 textAlignment: TextAlign.start,
@@ -116,13 +116,14 @@ class ViewProfileScreen extends StatelessWidget {
 
   Widget _buildMenuItemsCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
+
       decoration: BoxDecoration(
         color: AppColor.overLayBoxColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         boxShadow: [
           BoxShadow(
-            color: AppColor.boxShadowColor,
+            color: const Color(0x23000000),
             blurRadius: 4,
             offset: const Offset(0, 0),
           )
@@ -135,13 +136,20 @@ class ViewProfileScreen extends StatelessWidget {
             title: 'My Spots',
             onTap: () => Get.toNamed(AppRoutes.mySpotsScreen),
           ),
+          SizedBox(height: 16.h,),
+
           _buildDivider(),
+          SizedBox(height: 10.h,),
+
           MenuItemWidget(
             icon: Assets.icons.routesImage.path,
             title: 'My Routes',
             onTap: () => Get.toNamed(AppRoutes.myRoutesScreen),
           ),
+          SizedBox(height: 16.h,),
+
           _buildDivider(),
+
 
         ],
       ),
