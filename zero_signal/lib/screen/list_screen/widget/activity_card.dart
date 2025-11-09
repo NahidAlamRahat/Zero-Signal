@@ -218,22 +218,29 @@ class ActivityCard extends StatelessWidget {
                         child: ButtonWidget(
                           backgroundColor: AppColor.red50,
                           textColor: AppColor.red,
-                          buttonHeight: 44,
+                          buttonHeight: 43,
                           label: 'Left',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.sunsetPointDetailsScreen);
+                          },
                         ),
                       ),
                       SizedBox(width: 20.w),
                       Expanded(
                         child: ButtonWidget(
+
                           backgroundColor: AppColor.backgroundColor,
                           textColor: AppColor.white500,
-                          buttonHeight: 44,
+                          buttonHeight: 43,
                           icon:Image(image: AssetImage(Assets.icons.chatIcon.path),height: 20.h,width: 20.w, color: AppColor.white500,),
                           label: 'Chat',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.chatScreen);
+                          },
                         ),
                       )
                     ],
@@ -323,7 +330,7 @@ class ActivityCard extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            Get.toNamed(AppRoutes.editProfileScreen);
+                            Get.toNamed(AppRoutes.editActivityScreen);
                           },
                           child: Image.asset(
                             AppIconPath.editIcon,
