@@ -234,7 +234,7 @@ class ActivityCard extends StatelessWidget {
                           backgroundColor: AppColor.backgroundColor,
                           textColor: AppColor.white500,
                           buttonHeight: 43,
-                          icon:Image(image: AssetImage(Assets.icons.chatIcon.path),height: 20.h,width: 20.w, color: AppColor.white500,),
+                          icon:Image(image: AssetImage(Assets.icons.chatIcon2.path),height: 20.h,width: 20.w, ),
                           label: 'Chat',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -354,7 +354,7 @@ class ActivityCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  AppIconPath.chatIcon,
+                                  Assets.icons.chatIcon2.path,
                                   height: 20.h,
                                   width: 20.w,
                                 ),

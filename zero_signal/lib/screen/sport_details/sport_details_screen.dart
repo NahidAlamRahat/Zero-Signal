@@ -18,7 +18,7 @@ class SpotDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppbarWidget(
-        text: 'Sport Details',
+        text: 'Spot Details',
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
         action: Padding(
@@ -114,7 +114,7 @@ class SpotDetailsScreen extends StatelessWidget {
           text:
               'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
           fontColor: AppColor.darkGay300,
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           textAlignment: TextAlign.left,
         ),

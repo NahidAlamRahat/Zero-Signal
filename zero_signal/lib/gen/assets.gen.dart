@@ -87,6 +87,10 @@ class $AssetsIconsGen {
   AssetGenImage get chatIcon =>
       const AssetGenImage('assets/icons/chatIcon.png');
 
+  /// File path: assets/icons/chatIcon2.png
+  AssetGenImage get chatIcon2 =>
+      const AssetGenImage('assets/icons/chatIcon2.png');
+
   /// File path: assets/icons/choiceMap.webp
   AssetGenImage get choiceMap =>
       const AssetGenImage('assets/icons/choiceMap.webp');
@@ -304,6 +308,7 @@ class $AssetsIconsGen {
     car,
     changePasswordImage,
     chatIcon,
+    chatIcon2,
     choiceMap,
     completedIcon,
     deleteAccountImage,
@@ -451,9 +456,9 @@ class $AssetsImagesGen {
   AssetGenImage get signUpBakground =>
       const AssetGenImage('assets/images/signUpBakground.webp');
 
-  /// File path: assets/images/social_bg.webp
+  /// File path: assets/images/socialBg.jpg
   AssetGenImage get socialBg =>
-      const AssetGenImage('assets/images/social_bg.webp');
+      const AssetGenImage('assets/images/socialBg.jpg');
 
   /// File path: assets/images/sunImage.png
   AssetGenImage get sunImage =>

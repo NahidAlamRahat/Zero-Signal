@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 
@@ -26,28 +27,75 @@ class HomeScreenController extends GetxController {
   Future<void> getUserLocation() async {
     bool serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      Get.snackbar("Error", "Location services are disabled.");
+      Get.snackbar(
+        "Location Service Disabled",
+        "Please enable location services in your device settings.",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
       return;
     }
 
     geo.LocationPermission permission = await geo.Geolocator.checkPermission();
+    
+    if (permission == geo.LocationPermission.deniedForever) {
+      // Permission permanently denied - open app settings
+      Get.snackbar(
+        "Permission Required",
+        "Location permission is permanently denied. Please enable it in app settings.",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 4),
+        mainButton: TextButton(
+          onPressed: () async {
+            await geo.Geolocator.openAppSettings();
+          },
+          child: Text("Open Settings", style: TextStyle(color: CupertinoColors.activeBlue)),
+        ),
+      );
+      return;
+    }
+    
     if (permission == geo.LocationPermission.denied) {
       permission = await geo.Geolocator.requestPermission();
       if (permission == geo.LocationPermission.denied) {
-        Get.snackbar("Error", "Location permission denied.");
+        Get.snackbar(
+          "Permission Denied",
+          "Location permission is required to show your location on the map.",
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 3),
+        );
+        return;
+      }
+      
+      if (permission == geo.LocationPermission.deniedForever) {
+        Get.snackbar(
+          "Permission Required",
+          "Location permission is permanently denied. Please enable it in app settings.",
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 4),
+          mainButton: TextButton(
+            onPressed: () async {
+              await geo.Geolocator.openAppSettings();
+            },
+            child: Text("Open Settings", style: TextStyle(color: CupertinoColors.activeBlue)),
+          ),
+        );
         return;
       }
     }
 
-    if (permission == geo.LocationPermission.deniedForever) {
-      Get.snackbar("Error", "Location permission permanently denied.");
-      return;
+    try {
+      currentPosition = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo.LocationAccuracy.high,
+      );
+      update();
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to get location: $e",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
-
-    currentPosition = await geo.Geolocator.getCurrentPosition(
-      desiredAccuracy: geo.LocationAccuracy.high,
-    );
-    update();
   }
 
 
@@ -125,13 +173,19 @@ class HomeScreenController extends GetxController {
 
       await mapboxMap.compass.updateSettings(
         mapbox.CompassSettings(
-
           enabled: true,
           position: mapbox.OrnamentPosition.TOP_RIGHT,
           marginTop: 56.0 + 50.0 + 40.0 + 10.0,
           marginRight: 20.0,
           clickable: true,
           fadeWhenFacingNorth: false,
+        ),
+      );
+
+      // Disable scale bar
+      await mapboxMap.scaleBar.updateSettings(
+        mapbox.ScaleBarSettings(
+          enabled: false,
         ),
       );
 

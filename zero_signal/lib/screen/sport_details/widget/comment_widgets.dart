@@ -56,7 +56,7 @@ class CommentItem extends StatelessWidget {
           TextWidget(
             text: comment['comment'],
             fontWeight: FontWeight.w400,
-            fontSize: 16,
+            fontSize: 14,
             fontColor: AppColor.subTitleColor,
             textAlignment: TextAlign.start,
           ),

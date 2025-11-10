@@ -236,14 +236,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // MapBox Widget
               mapbox.MapWidget(
-
                 onMapCreated: controller.onMapCreated,
                 mapOptions: mapbox.MapOptions(
-                    pixelRatio: 1.0,
-
-
+                  pixelRatio: 1.0,
                 ),
-
               ),
               
               
