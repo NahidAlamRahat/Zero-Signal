@@ -9,6 +9,7 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import '../../../gen/assets.gen.dart';
 import '../../../widget/text_field_widget/text_field_widget.dart';
 
 class CreatePasswordScreen extends StatelessWidget {
@@ -112,7 +113,6 @@ class CreatePasswordScreen extends StatelessWidget {
                         ),
 
                         SpaceWidget(spaceHeight: 44,),
-
                         ButtonWidget(
                           onPressed: (){
                             showPasswordChangedSheet(context);
