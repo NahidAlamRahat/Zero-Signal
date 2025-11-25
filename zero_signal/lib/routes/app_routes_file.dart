@@ -13,6 +13,7 @@ import '../screen/change_language_screen/change_language_screen.dart';
 import '../screen/change_password_screen/change_password_screen.dart';
 import '../screen/chat_screen/chat_screen.dart';
 import '../screen/contact_support_screen/contact_support_screen.dart';
+import '../screen/edit_activity_screen/edit_activity_screen.dart';
 import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/favorite_routes_screen/favorite_routes_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
@@ -138,7 +139,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
   GetPage(
     name: AppRoutes.viewProfileScreen,
-    page: () => const ViewProfileScreen(),
+    page: () =>  ViewProfileScreen(),
     // binding: GeneralBindings(),
   ),
 
@@ -275,5 +276,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     // binding: SplashScreenBinding(),
     page: () =>  UpdateInformationScreen(),
   ),
+
+  GetPage(
+    name: AppRoutes.editActivityScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  EditActivityScreen(),
+  ),
+
 
 ];

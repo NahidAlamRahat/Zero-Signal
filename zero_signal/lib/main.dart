@@ -13,6 +13,11 @@ void main() async{
   //   statusBarIconBrightness: Brightness.dark,
   // ));
 
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+
 runApp(MyApp());
 
 

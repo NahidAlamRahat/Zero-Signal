@@ -52,6 +52,7 @@ class AppRoutes {
   static const chatScreen = "/chatScreen";
   static const sunsetPointDetailsScreen = "/sunsetPointDetailsScreen";
   static const listViewDetailsScreen = "/listViewDetailsScreen";
+  static const editActivityScreen = "/editActivityScreen";
 
 
 }

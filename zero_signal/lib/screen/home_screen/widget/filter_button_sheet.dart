@@ -23,7 +23,7 @@ class FilterBottomSheet extends StatelessWidget {
     return SafeArea(
       child: Container(
         decoration: const BoxDecoration(
-          color: AppColor.creamBackgroundColor,
+          color: AppColor.bGColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -128,48 +128,49 @@ class FilterBottomSheet extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 20, bottom: 12),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+          child: TextWidget(
+          text:   title,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontColor: AppColor.textColor,
           ),
         ),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 20.w,
+          runSpacing: 12.h,
           children: options.map((option) {
             final isSelected = controller.selectedFilters.contains(option);
             return GestureDetector(
               onTap: () => controller.toggleFilter(option),
               child: Material(
-                elevation: 4.0,
+                elevation: 0.0,
                 borderRadius: BorderRadius.circular(20),
-                shadowColor: Colors.black26,
+
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColor.backgroundColor
-                        : AppColor.creamBackgroundColor,
+                        : AppColor.overLayBoxColor,
                     border: Border.all(
                       color: isSelected
                           ? AppColor.backgroundColor
-                          : const Color(0xFFD6C8B0),
+                          :  Color(0xFFD6C8B0),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text(
-                    option,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: isSelected ? Colors.white : Colors.black87,
-                    ),
+                  child: TextWidget(
+                   text:  option,
+                    // style: TextStyle(
+                    //   fontSize: 14,
+                    //   fontWeight: FontWeight.w500,
+                    //   color: isSelected ? Colors.white : Colors.black87,
+                    // ),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    fontColor: isSelected ? Colors.white : Colors.black87,
                   ),
                 ),
               ),

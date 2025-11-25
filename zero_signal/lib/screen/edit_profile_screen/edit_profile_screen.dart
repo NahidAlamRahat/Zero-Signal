@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/utils/date_input_formatter.dart';
+import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
+import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+
+import '../../constant/app_colors.dart';
+import '../../gen/assets.gen.dart';
+import '../../widget/text_widget/text_widgets.dart';
+import '../sport_details/widget/date_picker_sheet.dart';
+
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -19,6 +33,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _dobController = TextEditingController(text: '17 dec, 2024');
   final TextEditingController _addressController = TextEditingController(text: '297 Westheimer Rd. Santa Ana');
 
+  TextEditingController dateController = TextEditingController();
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -34,12 +50,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF4E9),
+      appBar: AppbarWidget(
+        backgroundColor: AppColor.creamBackgroundColor,
+        text: 'Edit Profile ',
+        centerTitle: true,
+      ),
+      backgroundColor: AppColor.bGColor,
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            _buildHeader(),
 
             // Content
             Expanded(
@@ -66,38 +85,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              Icons.arrow_back,
-              size: 24,
-              color: Color(0xFF2C2C2C),
-            ),
-          ),
-          const Expanded(
-            child: Text(
-              'Edit Profile',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF2C2C2C),
-                fontSize: 20,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          const SizedBox(width: 24), // Balance the back button
-        ],
-      ),
-    );
-  }
 
   Widget _buildProfileImage() {
     return Stack(
@@ -171,14 +158,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w400,
-          ),
+        TextWidget(
+         text:  label,
+          // style: const TextStyle(
+          //   color: Color(0xFF2C2C2C),
+          //   fontSize: 16,
+          //   fontFamily: 'Poppins',
+          //   fontWeight: FontWeight.w400,
+          // ),
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          fontColor: AppColor.textColor,
         ),
         Container(
           height: height ?? 44,
@@ -186,23 +176,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             color: const Color(0xFFF5E9DF),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: TextFormField(
+          // child: TextFormField(
+          //   controller: controller,
+          //   maxLines: maxLines,
+          //   style: const TextStyle(
+          //     color: Color(0xFF2C2C2C),
+          //     fontSize: 14,
+          //     fontFamily: 'Poppins',
+          //     fontWeight: FontWeight.w400,
+          //   ),
+          //   decoration: const InputDecoration(
+          //     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          //     border: InputBorder.none,
+          //     hintStyle: TextStyle(
+          //       color: Color(0xFF999999),
+          //       fontSize: 14,
+          //     ),
+          //   ),
+          // ),
+          child: TextFieldWidget(
             controller: controller,
             maxLines: maxLines,
-            style: const TextStyle(
-              color: Color(0xFF2C2C2C),
-              fontSize: 14,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w400,
-            ),
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              border: InputBorder.none,
-              hintStyle: TextStyle(
-                color: Color(0xFF999999),
-                fontSize: 14,
-              ),
-            ),
+            backgroundColor: AppColor.overLayBoxColor,
+            fontWeight: FontWeight.w400,
+            hintColor: AppColor.textColor,
+            textColor: AppColor.textColor,
+            borderColor: AppColor.overLayBoxColor,
+            fontSize: 14,
+            borderRadius: 8,
           ),
         ),
       ],
@@ -214,34 +215,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w400,
-          ),
+        TextWidget(
+        text:   label,
+
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          fontColor: AppColor.textColor,
         ),
         Container(
-          height: 44,
+          //height: 44,
           decoration: BoxDecoration(
             color: const Color(0xFFF5E9DF),
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonFormField<String>(
             value: controller.text.isNotEmpty ? controller.text : null,
-            style: const TextStyle(
-              color: Color(0xFF2C2C2C),
+            style: TextStyle(
+              color: AppColor.textColor,
               fontSize: 14,
-              fontFamily: 'Poppins',
+              fontFamily: GoogleFonts.poppins().fontFamily,
               fontWeight: FontWeight.w400,
             ),
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               border: InputBorder.none,
             ),
-            dropdownColor: const Color(0xFFF5E9DF),
+            dropdownColor: AppColor.overLayBoxColor,
             items: options.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -264,57 +263,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF2C2C2C),
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w400,
-          ),
+        TextWidget(
+         text:  label,
+
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          fontColor: AppColor.textColor,
         ),
-        GestureDetector(
-          onTap: () async {
-            final DateTime? picked = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime.now(),
-            );
-            if (picked != null) {
-              controller.text = "${picked.day} ${_getMonthName(picked.month)}, ${picked.year}";
-              setState(() {});
-            }
-          },
-          child: Container(
-            height: 44,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5E9DF),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    controller.text.isNotEmpty ? controller.text : 'Select date',
-                    style: TextStyle(
-                      color: controller.text.isNotEmpty ? const Color(0xFF2C2C2C) : const Color(0xFF999999),
-                      fontSize: 14,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.calendar_today,
-                  size: 16,
-                  color: Color(0xFF2C2C2C),
-                ),
-              ],
-            ),
-          ),
+
+
+        TextFieldWidget(
+          hintColor: AppColor.subTitleColor,
+          controller: dateController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [DateInputFormatter()],
+          customSuffixIcon: InkWell(
+              onTap: () async {
+                final selectedDate = await showDatePickerSheet(context);
+                if (selectedDate != null) {
+                  setState(() {
+                    dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+
+                  });
+                }
+              },
+              child: Image.asset(
+                Assets.icons.calender.path,
+                height: 18.h,
+                width: 18.w,
+              )),
+          hintText: 'dd/mm/yyyy',
+          borderColor: Colors.transparent,
+          backgroundColor: AppColor.lightGrayishOrange,
+          borderRadius: 8,
         ),
+
+
+
       ],
     );
   }
@@ -356,6 +341,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+
+
+
   void _saveProfile() {
     // Handle profile saving logic here
     print('Name: ${_nameController.text}');
@@ -374,4 +362,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+
+
+  /// Date picker bottom sheet
+  Future<DateTime?> showDatePickerSheet(BuildContext context) async {
+    return await showModalBottomSheet<DateTime>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        child: Container(
+          width: Get.width,
+          //   height: Get.height*0.5,
+          color: AppColor.creamBackgroundColor,
+          child: const DatePickerSheet(),
+        ),
+      ),
+    );
+  }
+
+
+
 }

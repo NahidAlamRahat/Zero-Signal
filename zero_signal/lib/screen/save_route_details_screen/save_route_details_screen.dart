@@ -12,6 +12,7 @@ import 'package:zero_signal/widget/showCustomDialog.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import '../sport_details/widget/user_dialogs.dart';
 import 'controller/save_route_details_screen_controller.dart';
 
 class SaveRouteDetailsScreen extends StatelessWidget {
@@ -238,16 +239,20 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () => _showUserDialog(context),
+          onTap: () => showUserDialog(context),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.brown,
-                child: Icon(Icons.person, size: 16, color: Colors.white),
+              Padding(
+                padding:  EdgeInsets.only(top: 12.h),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.brown,
+                  child: Icon(Icons.person, size: 16, color: Colors.white),
+                ),
               ),
               SizedBox(width: 8),
-              TextWidget(text: '@naturanauta',
+              TextWidget(
+                text: '@naturanauta 4.8',
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 fontColor: AppColor.textColor,
@@ -259,7 +264,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           children: [
             SizedBox(width: 30),
             TextWidget(
-              text: '4,8 (57)  (17 luggers / 6 planes)',
+              text: '  4,8 (57)  (17 luggers / 6 planes)',
               fontWeight: FontWeight.w400,
               fontSize: 16,
               fontColor: AppColor.subTitleColor,
@@ -327,7 +332,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         TextWidget(
          text:  'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
           fontColor: AppColor.darkGay300,
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           textAlignment: TextAlign.left,
         ),
@@ -477,7 +482,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           TextWidget(
             text: comment['comment'],
             fontWeight: FontWeight.w400,
-            fontSize: 16,
+            fontSize: 14,
             fontColor: AppColor.subTitleColor,
             textAlignment: TextAlign.start,
           ),
