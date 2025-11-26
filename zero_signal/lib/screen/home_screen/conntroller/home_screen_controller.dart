@@ -24,6 +24,7 @@ class HomeScreenController extends GetxController {
 
 
 
+
   Future<void> getUserLocation() async {
     bool serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
