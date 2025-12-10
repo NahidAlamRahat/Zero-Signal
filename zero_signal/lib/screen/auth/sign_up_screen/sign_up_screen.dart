@@ -16,9 +16,12 @@ import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../routes/app_routes.dart';
 import '../../../widget/text_widget/text_widgets.dart';
+import 'controller/controller.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+   SignUpScreen({super.key});
+  // final SignUpController controller = Get.put(SignUpController());
+  final SignUpController controller = Get.find<SignUpController>();
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -42,19 +45,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-            
-             SizedBox(height: 14.h,),
-                GlassEffact(
-             //     height: 750.h,
-                  width: 390.w,
-                  child: Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 20.w ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+            child: GetBuilder<SignUpController>(
+              builder: (controller) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                
+                   SizedBox(height: 14.h,),
+                      GlassEffact(
+                   //     height: 750.h,
+                        width: 390.w,
+                        child: Padding(
+                          padding:  EdgeInsets.symmetric(horizontal: 20.w ),
+                          child: Form(
+                            key: controller.formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                         SizedBox(height: 28.h),
                         // Logo
                         Center(
@@ -100,6 +107,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             
                         SizedBox(height: 8.h),
                         TextFieldWidget(
+                          validator: controller.validateName,
+                          controller: controller.userNumberController,
                           fieldHeight: 39,
                           textColor: AppColor.white500,
                           hintText: "Enter User Name",
@@ -128,6 +137,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             
                         SizedBox(height: 8.h),
                         TextFieldWidget(
+                          validator: controller.validateEmail,
+                          controller: controller.emailController,
                           fieldHeight: 39,
                           textColor: AppColor.white500,
                           hintText: "Enter User Email",
@@ -140,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           focusedBorderColor:AppColor.white500,
                           borderRadius: 8,
                           borderWidth: 1.0,
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.emailAddress,
                         ),
                         SizedBox(height: 16.h),
             
@@ -156,7 +167,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             
                         SizedBox(height: 8.h),
                         TextFieldWidget(
-            
+                          validator: controller.validateDateOfBirth,
+                          controller: controller.birthDateController,
                           customSuffixIcon: Image.asset(
                             Assets.icons.calender.path,
                             color: AppColor.white500,
@@ -191,6 +203,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             
                         SizedBox(height: 8.h),
                         TextFieldWidget(
+                          validator: controller.validatePassword,
+                          controller: controller.passwordController,
                           suffixIcon: true,
                           iconPadding: 0,
                           fieldHeight: 39,
@@ -266,15 +280,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // Register Button
                         SizedBox(
                           width: double.infinity,
-                          child: ButtonWidget(
-                            backgroundColor: AppColor.backgroundColor,
-                            label: "Register",
-                            buttonHeight: 46,
-                            textColor: AppColor.white500,
-                            onPressed: () {
-                              // Handle registration
-                               Get.back();
-                            },
+                          child: Visibility(
+                            visible: controller.isLoading==false,
+                            replacement: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            child: ButtonWidget(
+                              backgroundColor: AppColor.backgroundColor,
+                              label: "Register",
+                              buttonHeight: 46,
+                              textColor: AppColor.white500,
+                              onPressed: () {
+                                // Handle registration
+                                controller.onTapSignUpButton();
+                              },
+                            ),
                           ),
                         ),
                         SizedBox(height: 20.h),
@@ -332,11 +352,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         SizedBox(height: 30.h),
             
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
+            );
+              }
             ),
           ),
         ),
