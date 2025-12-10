@@ -2,18 +2,34 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_log/app_log.dart';
+import '../../../../constant/api_end_point.dart';
+import '../../../../repository/auth_repo/verify_otp_repository.dart';
+import '../../../../routes/app_routes.dart';
 import '../../../../widget/app_snack_bar/app_snack_bar.dart';
+import '../model/verify_otp_model.dart';
 
 class ForgotPassVerifyOtpScreenController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final VerifyOtpRepository _verifyOtpController = Get.put(
+    VerifyOtpRepository(),
+  );
 
   late TextEditingController otpTextEditingController;
+
+  bool isLoading = false;
+
+  void _setLoading(bool value) {
+    isLoading = value;
+    update();
+  }
 
 
   var remainingSeconds = 180.obs; // 2.5 minutes
   var canResend = false.obs;
   late String email;
   late Timer _timer;
+  String? successRoute;
+
 
   @override
   void onInit() {
@@ -79,44 +95,61 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
 
 
   /// OnTap Button
-  // Future<void> onTapForgotPassVerifyButton() async {
-  //   if (formKey.currentState!.validate()) {
-  //     try {
-  //       String otp = otpTextEditingController.text.trim();
-  //
-  //       // VerifyOtpModel verifyOtpModel = VerifyOtpModel(
-  //       //   email: email,
-  //       //   otp: otp,
-  //       // );
-  //       var response = await _verifyOtpController.verifyOtp(
-  //           verifyOtpModel: verifyOtpModel, url: ApiUrls.verifyEmail);
-  //
-  //       appLog("response ==> $response");
-  //
-  //       if (response != null && response["data"] != null) {
-  //         String token = response["data"]?["resetToken"];
-  //
-  //         AppSnackBar.success('${_verifyOtpController.successfullyMessage}');
-  //         appLog(
-  //             'success message => ${_verifyOtpController.successfullyMessage}');
-  //
-  //         AppSnackBar.success("Verification Successful");
-  //         Get.offAllNamed(
-  //           AppRoutes.resetPasswordScreen,
-  //           arguments: {'token': token},
-  //         );
-  //       } else {
-  //         AppSnackBar.message('${_verifyOtpController.errorMessage}');
-  //         appLog('error message => ${_verifyOtpController.errorMessage}');
-  //       }
-  //     } catch (e) {
-  //       AppSnackBar.message('${_verifyOtpController.errorMessage}');
-  //     }
-  //   } else {
-  //     AppSnackBar.error("Please fill in all required fields.");
-  //   }
-  // }
+  Future<void> verifyOtpButton() async {
+    if (formKey.currentState?.validate() ?? true) {
+      try {
+        _setLoading(true);
+        String otp = otpTextEditingController.text.trim();
 
+        VerifyOtpModel verifyOtpModel = VerifyOtpModel(
+          email: email.toString(),
+          otp: otp,
+        );
+        var response = await _verifyOtpController.verifyOtp(
+          verifyOtpModel: verifyOtpModel,
+          url: AppApiEndPoint.verifyEmail,
+        );
+
+        appLog("response ==> $response");
+
+        if (response != null && response["data"] != null) {
+          String token = response["data"]?["resetToken"];
+          _setLoading(false);
+
+          AppSnackBar.success('${_verifyOtpController.successfullyMessage}');
+          appLog(
+            'success message => ${_verifyOtpController.successfullyMessage}',
+          );
+
+          AppSnackBar.success("Verification Successful");
+          if (successRoute != null && successRoute!.isNotEmpty) {
+            if (successRoute == AppRoutes.forgotPasswordScreen){
+              Get.toNamed(
+                AppRoutes.forgotPasswordScreen,
+                arguments: {'token': token},
+              );
+            }
+            else{
+              Get.offAllNamed(
+                successRoute!,
+                arguments: {'token': token},
+              );
+            }
+          }
+        } else {
+          AppSnackBar.message('${_verifyOtpController.errorMessage}');
+          _setLoading(false);
+          appLog('error message => ${_verifyOtpController.errorMessage}');
+        }
+      } catch (e) {
+        AppSnackBar.message('${_verifyOtpController.errorMessage}');
+        _setLoading(false);
+      }
+    } else {
+      AppSnackBar.error("Please fill in all required fields.");
+      _setLoading(false);
+    }
+  }
 
 
 }

@@ -14,6 +14,7 @@ class AppApiEndPoint {
   // auth api end point
   static final String authLogin = "/auth/login";
   static final String signUpEndPoint = "/user";
+  static final String verifyEmail ="/auth/verify-email";
 
 
 

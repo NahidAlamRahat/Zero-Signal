@@ -173,26 +173,33 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                               ),
 
                               // Reset Password Button
-                              ButtonWidget(
-                                backgroundColor: AppColor.backgroundColor,
-                                label: AppStrings.resetPassword,
-                                buttonHeight: 46.h,
-                                textColor: Colors.white,
-                                onPressed: () {
-                                  // Handle reset password
-                                  if (controller.otpTextEditingController.text.length == 4) {
-                                    // Process OTP verification
-                                    Get.toNamed(AppRoutes.createPasswordScreen);
-                                  } else {
-                                    // Show error message
-                                    Get.snackbar(
-                                      "Error",
-                                      "Please enter the complete 4-digit code",
-                                      backgroundColor: Colors.red.withOpacity(0.8),
-                                      colorText: Colors.white,
-                                    );
-                                  }
-                                },
+                              GetBuilder<ForgotPassVerifyOtpScreenController>(
+                                builder: (controller) {
+                                  return Visibility(
+                                    visible: controller.isLoading==false,
+                                    replacement: CircularProgressIndicator(),
+                                    child: ButtonWidget(
+                                      backgroundColor: AppColor.backgroundColor,
+                                      label: AppStrings.resetPassword,
+                                      buttonHeight: 46.h,
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        // Handle reset password
+                                        if (controller.otpTextEditingController.text.length == 4) {
+                                         controller.verifyOtpButton();
+                                        } else {
+                                          // Show error message
+                                          Get.snackbar(
+                                            "Error",
+                                            "Please enter the complete 4-digit code",
+                                            backgroundColor: Colors.red.withOpacity(0.8),
+                                            colorText: Colors.white,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  );
+                                }
                               ),
                             ],
                           ),

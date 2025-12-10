@@ -37,7 +37,32 @@ class AppStrings {
   static const String enterUserName = "Enter User Name";
   static const String dateOfBirth = "Date of birth";
 
+//sign up screen
+  static const String termsAndConditions = "Terms & Conditions";
+  static const String privacyPolicy = "Privacy Policy";
+  static const String byCreatingAccountIAccept = "By creating an account, I accept the";
+  static const String andText = "&";
 
+  static const String orText = "OR";
+
+  static const String register = "Register";
+
+  static const String google = "Google";
+
+  static const String userNameLabel = "User Name";
+  // static const String enterUserName = "Enter User Name";
+
+  static const String emailLabel = "Email";
+  static const String enterUserEmail = "Enter Email";
+
+  static const String dateOfBirthLabel = "Date of birth";
+  static const String dateOfBirthHint = "mm/ dd/ yyyy";
+
+  static const String passwordLabel = "Password";
+  // static const String enterPassword = "Enter Password";
+
+  // static const String createYourAccount = "Create your account";
+  // static const String registration = "Registration";
 
 
 }

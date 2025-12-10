@@ -12,15 +12,13 @@ import 'package:zero_signal/widget/glass_effact.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
-
 import '../../../gen/assets.gen.dart';
 import '../../../routes/app_routes.dart';
 import '../../../widget/text_widget/text_widgets.dart';
 import 'controller/controller.dart';
 
 class SignUpScreen extends StatefulWidget {
-   SignUpScreen({super.key});
-  // final SignUpController controller = Get.put(SignUpController());
+  SignUpScreen({super.key});
   final SignUpController controller = Get.find<SignUpController>();
 
   @override
@@ -50,316 +48,317 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                
-                   SizedBox(height: 14.h,),
-                      GlassEffact(
-                   //     height: 750.h,
-                        width: 390.w,
-                        child: Padding(
-                          padding:  EdgeInsets.symmetric(horizontal: 20.w ),
-                          child: Form(
-                            key: controller.formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                        SizedBox(height: 28.h),
-                        // Logo
-                        Center(
-                          child: Image.asset(
-                            AppImagePath.appLogo,
-                            height: 60.h,
-                            width: 61.w,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-            
-                        // Title
-                        Center(
-                          child: TextWidget(
-                            text: AppStrings.registration,
-                            fontColor: AppColor.white500,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-            
-                        // Subtitle
-                        Center(
-                          child: TextWidget(
-                            text: AppStrings.createYourAccount,
-                            fontColor: AppColor.white500,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
-            
-                        // User Name Field
-                        TextWidget(
-                          textAlignment: TextAlign.left,
-                          text: "User Name",
-                          fontColor: AppColor.white500,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-            
-                        ),
-            
-                        SizedBox(height: 8.h),
-                        TextFieldWidget(
-                          validator: controller.validateName,
-                          controller: controller.userNumberController,
-                          fieldHeight: 39,
-                          textColor: AppColor.white500,
-                          hintText: "Enter User Name",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          hintColor: AppColor.white500,
-            
-                          backgroundColor: Colors.transparent,
-                          borderColor: AppColor.white500,
-                          focusedBorderColor:AppColor.white500,
-                          borderRadius: 8,
-                          borderWidth: 1.0,
-                          keyboardType: TextInputType.name,
-                        ),
-                        SizedBox(height: 16.h),
-            
-                        // Email Field
-                        TextWidget(
-                          textAlignment: TextAlign.left,
-                          text: "Email",
-                          fontColor: AppColor.white500,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-            
-                        ),
-            
-                        SizedBox(height: 8.h),
-                        TextFieldWidget(
-                          validator: controller.validateEmail,
-                          controller: controller.emailController,
-                          fieldHeight: 39,
-                          textColor: AppColor.white500,
-                          hintText: "Enter User Email",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          hintColor: AppColor.white500,
-            
-                          backgroundColor: Colors.transparent,
-                          borderColor: AppColor.white500,
-                          focusedBorderColor:AppColor.white500,
-                          borderRadius: 8,
-                          borderWidth: 1.0,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        SizedBox(height: 16.h),
-            
-                        // Date of Birth Field
-                        TextWidget(
-                          textAlignment: TextAlign.left,
-                          text: "Date of birth",
-                          fontColor: AppColor.white500,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-            
-                        ),
-            
-                        SizedBox(height: 8.h),
-                        TextFieldWidget(
-                          validator: controller.validateDateOfBirth,
-                          controller: controller.birthDateController,
-                          customSuffixIcon: Image.asset(
-                            Assets.icons.calender.path,
-                            color: AppColor.white500,
-                            height: 16.h,
-                            width: 16.w,
-                          ),
-                          fieldHeight: 39,
-                          textColor: AppColor.white500,
-                          hintText: "mm/ dd/ yyyy",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          hintColor: AppColor.white500,
-            
-                          backgroundColor: Colors.transparent,
-                          borderColor: AppColor.white500,
-                          focusedBorderColor:AppColor.white500,
-                          borderRadius: 8,
-                          borderWidth: 1.0,
-                          keyboardType: TextInputType.datetime,
-                        ),
-                        SizedBox(height: 16.h),
-            
-                        // Password Field
-                        TextWidget(
-                          textAlignment: TextAlign.left,
-                          text: "Password",
-                          fontColor: AppColor.white500,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-            
-                        ),
-            
-                        SizedBox(height: 8.h),
-                        TextFieldWidget(
-                          validator: controller.validatePassword,
-                          controller: controller.passwordController,
-                          suffixIcon: true,
-                          iconPadding: 0,
-                          fieldHeight: 39,
-                          textColor: AppColor.white500,
-                          hintText: "Enter Password",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          hintColor: AppColor.white500,
-            
-                          backgroundColor: Colors.transparent,
-                          borderColor: AppColor.white500,
-                          focusedBorderColor:AppColor.white500,
-                          borderRadius: 8,
-                          borderWidth: 1.0,
-                          keyboardType: TextInputType.visiblePassword,
-                        ),
-                        SizedBox(height: 8.h),
-            
-                        // Terms and Conditions Checkbox
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 16.h,
-                              width: 16.w,
-                              child: Checkbox(
-                                value: _acceptTerms,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _acceptTerms = value ?? false;
-                                  });
-                                },
-                                activeColor: AppColor.backgroundColor,
-                                checkColor: Colors.white,
-                                side: BorderSide(color: Colors.white54),
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: AppColor.white500,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: [
-                                    TextSpan(text: "By creating an account, I accept the "),
-                                    TextSpan(
-                                      text: "Terms & Conditions",
-                                      style: TextStyle(
-                                        color:AppColor.green,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                    TextSpan(text: " & "),
-                                    TextSpan(
-                                      text: "Privacy Policy",
-                                      style: TextStyle(
-                                        color:AppColor.green,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ],
+                    SizedBox(height: 14.h),
+                    GlassEffact(
+                      width: 390.w,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Form(
+                          key: controller.formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 28.h),
+
+                              /// LOGO
+                              Center(
+                                child: Image.asset(
+                                  AppImagePath.appLogo,
+                                  height: 60.h,
+                                  width: 61.w,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 24.h),
-            
-                        // Register Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: Visibility(
-                            visible: controller.isLoading==false,
-                            replacement: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            child: ButtonWidget(
-                              backgroundColor: AppColor.backgroundColor,
-                              label: "Register",
-                              buttonHeight: 46,
-                              textColor: AppColor.white500,
-                              onPressed: () {
-                                // Handle registration
-                                controller.onTapSignUpButton();
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
-            
-                        // OR Divider
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: 1,
-                                color: AppColor.white500,
+                              SizedBox(height: 16.h),
+
+                              /// Title
+                              Center(
+                                child: TextWidget(
+                                  text: AppStrings.registration,
+                                  fontColor: AppColor.white500,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              child: TextWidget(
-                                text: "OR",
+                              SizedBox(height: 8.h),
+
+                              /// Subtitle
+                              Center(
+                                child: TextWidget(
+                                  text: AppStrings.createYourAccount,
+                                  fontColor: AppColor.white500,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+
+                              /// USER NAME LABEL
+                              TextWidget(
+                                textAlignment: TextAlign.left,
+                                text: AppStrings.userNameLabel,
                                 fontColor: AppColor.white500,
-                                fontSize: 12.sp,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w400,
                               ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                height: 1,
-                                color: AppColor.white500,
+                              SizedBox(height: 8.h),
+
+                              /// USER NAME FIELD
+                              TextFieldWidget(
+                                validator: controller.validateName,
+                                controller: controller.userNumberController,
+                                fieldHeight: 39,
+                                textColor: AppColor.white500,
+                                hintText: AppStrings.enterUserName,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                hintColor: AppColor.white500,
+                                backgroundColor: Colors.transparent,
+                                borderColor: AppColor.white500,
+                                focusedBorderColor: AppColor.white500,
+                                borderRadius: 8,
+                                borderWidth: 1.0,
+                                keyboardType: TextInputType.name,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30.h),
-            
-            
-                        // Google Sign In Button
-                        Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              // Handle Google sign in
-                            },
-                            child: Container(
-                              width: 75.w,
-                              height: 55.h,
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.r),
+                              SizedBox(height: 16.h),
+
+                              /// EMAIL LABEL
+                              TextWidget(
+                                textAlignment: TextAlign.left,
+                                text: AppStrings.emailLabel,
+                                fontColor: AppColor.white500,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
                               ),
-                              child: Image.asset(
-                                AppIconPath.googleIcon,
-                                width: 24.w,
-                                height: 24.h,
+                              SizedBox(height: 8.h),
+
+                              /// EMAIL FIELD
+                              TextFieldWidget(
+                                validator: controller.validateEmail,
+                                controller: controller.emailController,
+                                fieldHeight: 39,
+                                textColor: AppColor.white500,
+                                hintText: AppStrings.enterUserEmail,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                hintColor: AppColor.white500,
+                                backgroundColor: Colors.transparent,
+                                borderColor: AppColor.white500,
+                                focusedBorderColor: AppColor.white500,
+                                borderRadius: 8,
+                                borderWidth: 1.0,
+                                keyboardType: TextInputType.emailAddress,
                               ),
-                            ),
+                              SizedBox(height: 16.h),
+
+                              /// DOB LABEL
+                              TextWidget(
+                                textAlignment: TextAlign.left,
+                                text: AppStrings.dateOfBirthLabel,
+                                fontColor: AppColor.white500,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              SizedBox(height: 8.h),
+
+                              /// DOB FIELD
+                              TextFieldWidget(
+                                validator: controller.validateDateOfBirth,
+                                controller: controller.birthDateController,
+                                customSuffixIcon: Image.asset(
+                                  Assets.icons.calender.path,
+                                  color: AppColor.white500,
+                                  height: 16.h,
+                                  width: 16.w,
+                                ),
+                                fieldHeight: 39,
+                                textColor: AppColor.white500,
+                                hintText: AppStrings.dateOfBirthHint,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                hintColor: AppColor.white500,
+                                backgroundColor: Colors.transparent,
+                                borderColor: AppColor.white500,
+                                focusedBorderColor: AppColor.white500,
+                                borderRadius: 8,
+                                borderWidth: 1.0,
+                                keyboardType: TextInputType.datetime,
+                              ),
+                              SizedBox(height: 16.h),
+
+                              /// PASSWORD LABEL
+                              TextWidget(
+                                textAlignment: TextAlign.left,
+                                text: AppStrings.passwordLabel,
+                                fontColor: AppColor.white500,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              SizedBox(height: 8.h),
+
+                              /// PASSWORD FIELD
+                              TextFieldWidget(
+                                validator: controller.validatePassword,
+                                controller: controller.passwordController,
+                                suffixIcon: true,
+                                iconPadding: 0,
+                                fieldHeight: 39,
+                                textColor: AppColor.white500,
+                                hintText: AppStrings.enterPassword,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                hintColor: AppColor.white500,
+                                backgroundColor: Colors.transparent,
+                                borderColor: AppColor.white500,
+                                focusedBorderColor: AppColor.white500,
+                                borderRadius: 8,
+                                borderWidth: 1.0,
+                                keyboardType: TextInputType.visiblePassword,
+                              ),
+                              SizedBox(height: 8.h),
+
+                              /// TERMS & CONDITIONS
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 16.h,
+                                    width: 16.w,
+                                    child: Checkbox(
+                                      value: _acceptTerms,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _acceptTerms = value ?? false;
+                                        });
+                                      },
+                                      activeColor: AppColor.backgroundColor,
+                                      checkColor: Colors.white,
+                                      side: BorderSide(color: Colors.white54),
+                                      materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Expanded(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: AppColor.white500,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                              text: AppStrings
+                                                  .byCreatingAccountIAccept +
+                                                  " "),
+                                          TextSpan(
+                                            text: AppStrings.termsAndConditions,
+                                            style: TextStyle(
+                                              color: AppColor.green,
+                                              decoration:
+                                              TextDecoration.underline,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                              text: " ${AppStrings.andText} "),
+                                          TextSpan(
+                                            text: AppStrings.privacyPolicy,
+                                            style: TextStyle(
+                                              color: AppColor.green,
+                                              decoration:
+                                              TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 24.h),
+
+                              /// REGISTER BUTTON
+                              SizedBox(
+                                width: double.infinity,
+                                child: Visibility(
+                                  visible:
+                                  controller.isLoading == false,
+                                  replacement: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  child: ButtonWidget(
+                                    backgroundColor:
+                                    AppColor.backgroundColor,
+                                    label: AppStrings.register,
+                                    buttonHeight: 46,
+                                    textColor: AppColor.white500,
+                                    onPressed: () {
+                                      controller.onTapSignUpButton();
+                                    },
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+
+                              /// OR DIVIDER
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: 1,
+                                      color: AppColor.white500,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                    EdgeInsets.symmetric(horizontal: 16.w),
+                                    child: TextWidget(
+                                      text: AppStrings.orText,
+                                      fontColor: AppColor.white500,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: 1,
+                                      color: AppColor.white500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 30.h),
+
+                              /// GOOGLE BUTTON
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 75.w,
+                                    height: 55.h,
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                      BorderRadius.circular(8.r),
+                                    ),
+                                    child: Image.asset(
+                                      AppIconPath.googleIcon,
+                                      width: 24.w,
+                                      height: 24.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 30.h),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 30.h),
-            
-                        ],
                       ),
                     ),
-                  ),
-                ),
-              ],
-            );
-              }
+                  ],
+                );
+              },
             ),
           ),
         ),
