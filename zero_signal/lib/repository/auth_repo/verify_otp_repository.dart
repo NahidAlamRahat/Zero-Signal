@@ -26,7 +26,7 @@ class VerifyOtpRepository extends GetxController {
 
     var response = await ApiService.postApi(
       url,
-      verifyOtpModel,
+      verifyOtpModel.toJson(),
     );
     debugPrint("response == $response");
     debugPrint('url => $url');
@@ -34,23 +34,18 @@ class VerifyOtpRepository extends GetxController {
     _inProgress = false;
 
     if (response.statusCode == 200) {
-
-
-      Get.offAllNamed(AppRoutes.signInScreen);
       appLog('success message => ${response.message}');
-
-
-
 
       appLog('message => ${response.body}');
 
       _successfullyMessage = response.message;
+      Get.offAllNamed(AppRoutes.signInScreen);
 
       appLog('Success message ===> ${response.message} <===');
 
       update();
       appLog("response ${response.statusCode}");
-      return response.body;
+      return true;
     } else {
       appLog('Error message ===> ${response.message} <===');
       _errorMessage = response.message;

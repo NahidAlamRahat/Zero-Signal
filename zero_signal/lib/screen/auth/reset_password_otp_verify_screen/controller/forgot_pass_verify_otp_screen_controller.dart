@@ -99,11 +99,11 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
     if (formKey.currentState?.validate() ?? true) {
       try {
         _setLoading(true);
-        String otp = otpTextEditingController.text.trim();
+        int? otp = int.tryParse(otpTextEditingController.text.trim());
 
         VerifyOtpModel verifyOtpModel = VerifyOtpModel(
           email: email.toString(),
-          otp: otp,
+          otp: otp!,
         );
         var response = await _verifyOtpController.verifyOtp(
           verifyOtpModel: verifyOtpModel,
@@ -116,10 +116,7 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
           String token = response["data"]?["resetToken"];
           _setLoading(false);
 
-          AppSnackBar.success('${_verifyOtpController.successfullyMessage}');
-          appLog(
-            'success message => ${_verifyOtpController.successfullyMessage}',
-          );
+
 
           AppSnackBar.success("Verification Successful");
           if (successRoute != null && successRoute!.isNotEmpty) {

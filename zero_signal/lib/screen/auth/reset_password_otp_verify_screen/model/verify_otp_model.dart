@@ -1,6 +1,6 @@
 class VerifyOtpModel {
   String email;
-  String otp;
+  int otp;
 
   VerifyOtpModel({
     required this.email,
