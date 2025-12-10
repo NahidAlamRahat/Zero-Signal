@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get_connect/http/src/response/response.dart' hide Response;
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:merchent/constant/app_api_end_point.dart';
-import 'package:merchent/service/api_service/service_model/service_model.dart';
-import '../../utils/app_translation/app_static_key.dart';
-import '../../utils/local_database/prefs_helper.dart';
+import 'package:zero_signal/service/api_service/service_model/service_model.dart';
+import '../../constant/api_end_point.dart';
+import '../app_static_key.dart';
+import '../local_database/prefs_helper.dart';
 import '../storage/storage_service.dart';
 
 class ApiService {

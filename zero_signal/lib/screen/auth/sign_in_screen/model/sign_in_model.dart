@@ -9,7 +9,7 @@ class SignInModel {
 
   Map<String, dynamic> toJson() {
     return {
-      "identifier": email,
+      "email": email,
       "password": password,
     };
   }

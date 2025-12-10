@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../app_log/app_log.dart';
+import '../../utils/app_log/app_log.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefsHelper {

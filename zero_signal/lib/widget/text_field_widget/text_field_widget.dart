@@ -49,8 +49,8 @@ class TextFieldWidget extends StatefulWidget {
     this.validator,
     this.suffixIcon,
     this.keyboardType,
-    this.maxLines = 1,
-    this.minLines,
+    this.minLines = 1,
+    this.maxLines = 5,
     this.onTapSuffix,
     this.onFieldSubmitted,
     this.borderColor = const Color(0xFF181818),
@@ -103,8 +103,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         validator: widget.validator,
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
-        maxLines: widget.maxLines,
-        minLines: widget.minLines,
+        maxLines: obscureText ? 1 : widget.maxLines,
+        minLines: obscureText ? 1 : widget.minLines,
         inputFormatters: widget.inputFormatters,
         style: widget.textStyle ??
             TextStyle(
@@ -118,7 +118,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           hintStyle: widget.hintStyle ??
               TextStyle(
                 color: widget.hintColor,
-                fontWeight: widget.fontWeight ??  FontWeight.w400,
+                fontWeight: widget.fontWeight ?? FontWeight.w400,
                 fontSize: widget.hintFontSize!.sp,
               ),
           errorStyle: widget.errorStyle ??
@@ -130,32 +130,34 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon ?? false
               ? GestureDetector(
-            onTap: () {
-              setState(() {
-                obscureText = !obscureText;
-              });
-            },
-            child: Padding(
-              padding: EdgeInsets.only(right: 0.w),
-              child: Icon(
-                obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                color:  widget.suffixIconColor ?? AppColor.white500,
-                size: 20.sp,
-              ),
-            ),
-          )
-              : widget.customSuffixIcon != null
-              ? UnconstrainedBox(
+                  onTap: () {
+                    setState(() {
+                      obscureText = !obscureText;
+                    });
+                  },
                   child: Padding(
                     padding: EdgeInsets.only(right: 0.w),
-                    child: widget.customSuffixIcon,
+                    child: Icon(
+                      obscureText
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: widget.suffixIconColor ?? AppColor.white500,
+                      size: 20.sp,
+                    ),
                   ),
                 )
-              : null,
+              : widget.customSuffixIcon != null
+                  ? UnconstrainedBox(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 0.w),
+                        child: widget.customSuffixIcon,
+                      ),
+                    )
+                  : null,
           contentPadding: EdgeInsets.symmetric(
             horizontal: widget.horizontalPadding!.w,
-            vertical: widget.verticalPadding?.h ??
-                ((widget.fieldHeight - 20) / 2).h,
+            vertical:
+                widget.verticalPadding?.h ?? ((widget.fieldHeight - 20) / 2).h,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius.r),

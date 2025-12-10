@@ -1,10 +1,9 @@
-
 import 'package:get/get.dart';
-import 'package:merchent/constant/app_api_end_point.dart';
 import '../../../../utils/app_log/app_log.dart';
-import '../../api_service/api_services.dart';
-import '../../storage/storage_key.dart';
-import '../../storage/storage_service.dart';
+import '../../constant/api_end_point.dart';
+import '../../service/api_service/api_services.dart';
+import '../../service/storage/storage_key.dart';
+import '../../service/storage/storage_service.dart';
 
 class SignInApiController extends GetxController {
   bool _inProgress = false;
@@ -25,7 +24,7 @@ class SignInApiController extends GetxController {
 
     try {
       final response = await ApiService.postApi(
-        AppApiEndPoint.instance.authLogin,
+        AppApiEndPoint.authLogin,
         signInModel,
       );
 
@@ -53,16 +52,15 @@ class SignInApiController extends GetxController {
         appLog('Login successful for role: $role');
         update(); // Update UI for GetBuilder
         return 200;
-      }
-      else if (response.statusCode == 407) {
+      } else if (response.statusCode == 407) {
         _errorMessage = response.message ?? "OTP verification required";
         appLog('OTP verification required');
         update(); // Update UI for GetBuilder
         return 407;
-      }
-      else {
+      } else {
         _errorMessage = response.message ?? "Login failed";
-        appLog('Login failed - Status: ${response.statusCode}, Message: ${response.message}');
+        appLog(
+            'Login failed - Status: ${response.statusCode}, Message: ${response.message}');
         update(); // Update UI for GetBuilder
         return response.statusCode;
       }
@@ -75,7 +73,3 @@ class SignInApiController extends GetxController {
     }
   }
 }
-
-
-
-
