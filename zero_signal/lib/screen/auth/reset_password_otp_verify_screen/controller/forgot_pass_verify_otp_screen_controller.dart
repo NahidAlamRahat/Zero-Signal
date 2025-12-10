@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import '../../../../../utils/app_log/app_log.dart';
 import '../../../../constant/api_end_point.dart';
 import '../../../../repository/auth_repo/verify_otp_repository.dart';
-import '../../../../routes/app_routes.dart';
 import '../../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/verify_otp_model.dart';
 
 class ForgotPassVerifyOtpScreenController extends GetxController {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(debugLabel: 'forgotPassVerifyOtpForm');
   final VerifyOtpRepository _verifyOtpController = Get.put(
     VerifyOtpRepository(),
   );
@@ -23,18 +23,16 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
     update();
   }
 
-
   var remainingSeconds = 180.obs; // 2.5 minutes
   var canResend = false.obs;
   late String email;
   late Timer _timer;
   String? successRoute;
 
-
   @override
   void onInit() {
     super.onInit();
-   otpTextEditingController = TextEditingController();
+    otpTextEditingController = TextEditingController();
     startTimer();
     if (Get.arguments is Map<String, dynamic>) {
       final args = Get.arguments as Map<String, dynamic>;
@@ -47,11 +45,11 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
 
   @override
   void dispose() {
-   otpTextEditingController.dispose();
+    otpTextEditingController.dispose();
     super.dispose();
   }
 
- /* @override
+  /* @override
   void onClose() {
     _timer.cancel();
     otpTextEditingController.dispose();
@@ -75,7 +73,7 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
   /// Resent Otp code
   void resendCode() async {
     try {
-      bool isSuccess = /*await AuthRepository().resendOtp(email: email);*/   true;
+      bool isSuccess = /*await AuthRepository().resendOtp(email: email);*/ true;
       if (isSuccess) {
         AppSnackBar.success("A new OTP has been sent to your email.");
         remainingSeconds.value = 180; // Reset the timer
@@ -92,7 +90,6 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
     final remainingSec = remainingSeconds.value % 60;
     return '${minutes.toString().padLeft(2, '0')}:${remainingSec.toString().padLeft(2, '0')}';
   }
-
 
   /// OnTap Button
   Future<void> verifyOtpButton() async {
@@ -112,27 +109,19 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
 
         appLog("response ==> $response");
 
-        if (response != null && response["data"] != null) {
-          String token = response["data"]?["resetToken"];
+        if (response == true) {
           _setLoading(false);
 
-
-
-          AppSnackBar.success("Verification Successful");
-          if (successRoute != null && successRoute!.isNotEmpty) {
-            if (successRoute == AppRoutes.forgotPasswordScreen){
-              Get.toNamed(
-                AppRoutes.forgotPasswordScreen,
-                arguments: {'token': token},
-              );
-            }
-            else{
-              Get.offAllNamed(
-                successRoute!,
-                arguments: {'token': token},
-              );
-            }
+          // Display the success message from the repository
+          if (_verifyOtpController.successfullyMessage != null) {
+            AppSnackBar.success(_verifyOtpController.successfullyMessage!);
+          } else {
+            AppSnackBar.success("Verification Successful");
           }
+
+          // Navigate to sign in screen (already handled in repository)
+          /*
+          */
         } else {
           AppSnackBar.message('${_verifyOtpController.errorMessage}');
           _setLoading(false);
@@ -147,6 +136,4 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
       _setLoading(false);
     }
   }
-
-
 }

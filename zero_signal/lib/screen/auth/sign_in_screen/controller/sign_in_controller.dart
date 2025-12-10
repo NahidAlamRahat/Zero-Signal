@@ -7,7 +7,8 @@ import '../../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/sign_in_model.dart';
 
 class SignInController extends GetxController {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(debugLabel: 'signInForm');
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final SignInApiController _signInController = Get.put(SignInApiController());

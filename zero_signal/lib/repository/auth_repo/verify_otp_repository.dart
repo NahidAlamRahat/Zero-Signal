@@ -38,17 +38,29 @@ class VerifyOtpRepository extends GetxController {
 
       appLog('message => ${response.body}');
 
-      _successfullyMessage = response.message;
+      // Extract message from response body
+      if (response.body['message'] != null) {
+        _successfullyMessage = response.body['message'];
+      } else {
+        _successfullyMessage = response.message;
+      }
+
       Get.offAllNamed(AppRoutes.signInScreen);
 
-      appLog('Success message ===> ${response.message} <===');
+      appLog('Success message ===> $_successfullyMessage <===');
 
       update();
       appLog("response ${response.statusCode}");
       return true;
     } else {
       appLog('Error message ===> ${response.message} <===');
-      _errorMessage = response.message;
+
+      // Extract error message from response body if available
+      if (response.body['message'] != null) {
+        _errorMessage = response.body['message'];
+      } else {
+        _errorMessage = response.message;
+      }
 
       update();
       return false;
