@@ -10,9 +10,11 @@ import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../widget/text_field_widget/text_field_widget.dart';
+import 'controller/forgot_password_controller.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+   ForgotPasswordScreen({super.key});
+   final ForgotPasswordOnTapButtonController controller = Get.find<ForgotPasswordOnTapButtonController>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +86,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                           // Email TextField
                           TextFieldWidget(
+                            controller: controller.emailTEController,
                             textColor: Colors.white,
                             hintText: AppStrings.enterYourEmail,
                             hintColor: Colors.white54,
@@ -101,7 +104,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                           ButtonWidget(
                             onPressed: (){
-                              Get.toNamed(AppRoutes.resetPassOtpVerifyScreen);
+                              controller.onTapSentPhoneOtpButton();
                             },
                             buttonWidth: double.infinity,
                             backgroundColor: AppColor.backgroundColor,

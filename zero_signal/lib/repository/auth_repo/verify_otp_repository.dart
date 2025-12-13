@@ -4,6 +4,9 @@ import '../../../../routes/app_routes.dart';
 import '../../../../utils/app_log/app_log.dart';
 import '../../screen/auth/reset_password_otp_verify_screen/model/verify_otp_model.dart';
 import '../../service/api_service/api_services.dart';
+import '../../service/storage/storage_key.dart';
+import '../../service/storage/storage_service.dart';
+
 
 class VerifyOtpRepository extends GetxController {
   late bool _inProgress = false;
@@ -26,7 +29,7 @@ class VerifyOtpRepository extends GetxController {
 
     var response = await ApiService.postApi(
       url,
-      verifyOtpModel.toJson(),
+      verifyOtpModel,
     );
     debugPrint("response == $response");
     debugPrint('url => $url');
@@ -34,33 +37,50 @@ class VerifyOtpRepository extends GetxController {
     _inProgress = false;
 
     if (response.statusCode == 200) {
+
+
+
+      String accessToken = response.body['data']?['accessToken'] ?? "";
+      String refreshToken = response.body['data']?['refreshToken'] ?? "";
+      String role = response.body['data']?['role'] ?? "";
+
+      LocalStorage.token = accessToken;
+
+      LocalStorage.refreshToken = refreshToken;
+      LocalStorage.myRole = role;
+
+      // LocalStorage.userId =userProfileController. profile.value?.sId ?? '';
+
+
+      LocalStorage.setString(
+        LocalStorageKeys.token,
+        LocalStorage.token,
+      );
+      LocalStorage.setString(
+          LocalStorageKeys.refreshToken, LocalStorage.refreshToken);
+      LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
+
+
+      Get.offAllNamed(AppRoutes.signInScreen);
       appLog('success message => ${response.message}');
+
+      appLog('accessToken verify Otp=> $accessToken');
+      appLog('role verify otp == => $role');
+
+
 
       appLog('message => ${response.body}');
 
-      // Extract message from response body
-      if (response.body['message'] != null) {
-        _successfullyMessage = response.body['message'];
-      } else {
-        _successfullyMessage = response.message;
-      }
+      _successfullyMessage = response.message;
 
-      Get.offAllNamed(AppRoutes.signInScreen);
-
-      appLog('Success message ===> $_successfullyMessage <===');
+      appLog('Success message ===> ${response.message} <===');
 
       update();
       appLog("response ${response.statusCode}");
-      return true;
+      return response.body;
     } else {
       appLog('Error message ===> ${response.message} <===');
-
-      // Extract error message from response body if available
-      if (response.body['message'] != null) {
-        _errorMessage = response.body['message'];
-      } else {
-        _errorMessage = response.message;
-      }
+      _errorMessage = response.message;
 
       update();
       return false;
