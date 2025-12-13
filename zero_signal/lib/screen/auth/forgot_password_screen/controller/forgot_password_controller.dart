@@ -52,7 +52,8 @@ class ForgotPasswordOnTapButtonController extends GetxController {
         appLog('success message => ${_forgotPassRepository.errorMessage}');
         Get.toNamed(
           AppRoutes.resetPassOtpVerifyScreen,
-          arguments: {'email': emailTEController.text.trim(),
+          arguments: {
+            'email': emailTEController.text.trim(),
             'successRoute':  AppRoutes.createPasswordScreen
           },
         );

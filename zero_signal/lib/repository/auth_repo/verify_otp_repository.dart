@@ -40,14 +40,14 @@ class VerifyOtpRepository extends GetxController {
 
 
 
-      String accessToken = response.body['data']?['accessToken'] ?? "";
-      String refreshToken = response.body['data']?['refreshToken'] ?? "";
-      String role = response.body['data']?['role'] ?? "";
+      // String accessToken = response.body['data']?['accessToken'] ?? "";
+      // String refreshToken = response.body['data']?['refreshToken'] ?? "";
+      // String role = response.body['data']?['role'] ?? "";
 
-      LocalStorage.token = accessToken;
+      // LocalStorage.token = accessToken;
 
-      LocalStorage.refreshToken = refreshToken;
-      LocalStorage.myRole = role;
+      // LocalStorage.refreshToken = refreshToken;
+      // LocalStorage.myRole = role;
 
       // LocalStorage.userId =userProfileController. profile.value?.sId ?? '';
 
@@ -64,8 +64,8 @@ class VerifyOtpRepository extends GetxController {
       Get.offAllNamed(AppRoutes.signInScreen);
       appLog('success message => ${response.message}');
 
-      appLog('accessToken verify Otp=> $accessToken');
-      appLog('role verify otp == => $role');
+      // appLog('accessToken verify Otp=> $accessToken');
+      // appLog('role verify otp == => $role');
 
 
 
