@@ -8,6 +8,7 @@ import '../screen/auth/sign_in_screen/controller/sign_in_controller.dart';
 import '../screen/auth/sign_up_screen/controller/controller.dart';
 import '../screen/change_password_screen/controller/change_password_controller.dart';
 import '../screen/home_screen/conntroller/filter_controller.dart';
+import '../screen/profile/faq_screen/controller/faq_screen_controller.dart';
 
 class AppBindings extends Bindings {
   @override
@@ -21,6 +22,7 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => ForgotPasswordOnTapButtonController(), fenix: true);
     Get.lazyPut(() => CreatePassController(), fenix: true);
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
+    Get.lazyPut(() => FAQScreenController(), fenix: true);
 
 
 

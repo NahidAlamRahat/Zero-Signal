@@ -2,7 +2,7 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
 import '../../../../utils/app_log/error_log.dart';
-import '../../../repository/condition_repository.dart';
+import '../../../repository/common_repository.dart';
 import '../model/disclaimer_model.dart';
 
 

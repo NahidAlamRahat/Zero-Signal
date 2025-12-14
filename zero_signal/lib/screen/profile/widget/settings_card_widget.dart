@@ -95,7 +95,7 @@ class SettingsCardWidget extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.termsAndConditionsImage.path,
             title: 'FAQ',
-            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: 'FAQ'),
+            onTap: () => controller.navigateToRoute(AppRoutes.faqScreen),
           ),
           _buildDivider(),
           MenuItemWidget(

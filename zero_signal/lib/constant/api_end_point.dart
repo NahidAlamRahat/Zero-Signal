@@ -19,6 +19,7 @@ class AppApiEndPoint {
   static final String resetPasswordEndPoint = "/auth/reset-password";
   static final String changePasswordEndPoint = "/auth/change-password";
   String disclaimer({required String type}) => "/disclaimer?type=$type";
+  static final String faqEndPoint = "/faq";
 
 }
 

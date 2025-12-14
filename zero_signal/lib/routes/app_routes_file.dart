@@ -26,6 +26,7 @@ import '../screen/my_routes_screen/my_spots_screen.dart';
 import '../screen/my_spots_screen/my_spots_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/personal_information_screen/personal_information_screen.dart';
+import '../screen/profile/faq_screen/faq_screen.dart';
 import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
@@ -281,6 +282,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     name: AppRoutes.editActivityScreen,
     // binding: SplashScreenBinding(),
     page: () =>  EditActivityScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.faqScreen,
+    // binding: SplashScreenBinding(),
+    page: () =>  FAQScreen(),
   ),
 
 

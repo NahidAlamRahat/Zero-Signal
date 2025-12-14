@@ -36,6 +36,7 @@ class AppStrings {
   static const String userName = "User Name";
   static const String enterUserName = "Enter User Name";
   static const String dateOfBirth = "Date of birth";
+  static const String faq = "FAQ";
 
 //sign up screen
   static const String termsAndConditions = "Terms & Conditions";
