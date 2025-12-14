@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/screen/create_activity_screen/create_activity_screen.dart';
 import 'package:zero_signal/screen/home_screen/home_screen.dart';
-import '../condition_screen/terms_condition_screen.dart';
 import '../screen/auth/createa_password_screen/create_password_screen.dart';
 import '../screen/auth/forgot_password_screen/forgot_password_screen.dart';
 import '../screen/auth/reset_password_otp_verify_screen/reset_pass_otp_verify_screen.dart';
@@ -13,6 +12,7 @@ import '../screen/change_language_screen/change_language_screen.dart';
 import '../screen/change_password_screen/change_password_screen.dart';
 import '../screen/chat_screen/chat_screen.dart';
 import '../screen/contact_support_screen/contact_support_screen.dart';
+import '../screen/disclaimer_screen/disclaimer_screen.dart';
 import '../screen/edit_activity_screen/edit_activity_screen.dart';
 import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/favorite_routes_screen/favorite_routes_screen.dart';
@@ -185,9 +185,9 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
 
   GetPage(
-    name: AppRoutes.conditionsScreen,
+    name: AppRoutes.disclaimerScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ConditionsScreen(),
+    page: () =>  DisclaimerScreen(),
   ),
 
 

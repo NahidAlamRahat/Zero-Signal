@@ -77,25 +77,25 @@ class SettingsCardWidget extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.aboutUsImage.path,
             title: 'About Us',
-            onTap: () => controller.navigateToRoute(AppRoutes.conditionsScreen, arguments: 'About Us'),
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: {'name': 'About Us','type': 'about'}),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.privacyPolicyImage.path,
             title: 'Privacy Policy',
-            onTap: () => controller.navigateToRoute(AppRoutes.conditionsScreen, arguments: 'Privacy Policy'),
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: {'name': 'Privacy Policy','type': 'privacy'}),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.termsAndConditionsImage.path,
             title: 'Terms & Conditions',
-            onTap: () => controller.navigateToRoute(AppRoutes.conditionsScreen, arguments: 'Terms & Conditions'),
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: {'name': 'Terms & Conditions','type': 'terms'}),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.termsAndConditionsImage.path,
             title: 'FAQ',
-            onTap: () => controller.navigateToRoute(AppRoutes.conditionsScreen, arguments: 'FAQ'),
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: 'FAQ'),
           ),
           _buildDivider(),
           MenuItemWidget(

@@ -18,6 +18,8 @@ class AppApiEndPoint {
   static final String forgotPassEndPoint = "/auth/forget-password";
   static final String resetPasswordEndPoint = "/auth/reset-password";
   static final String changePasswordEndPoint = "/auth/change-password";
+  String disclaimer({required String type}) => "/disclaimer?type=$type";
+
 }
 
 // Move this function outside the class
