@@ -27,7 +27,7 @@ class SplashController extends GetxController {
     } else {
       Get.offAllNamed(AppRoutes.onboardingScreen);
     }
-  } 
+  }
 
   @override
   void onClose() {

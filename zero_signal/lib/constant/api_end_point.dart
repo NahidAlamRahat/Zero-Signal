@@ -17,6 +17,7 @@ class AppApiEndPoint {
   static final String verifyEmail = "/auth/verify-email";
   static final String forgotPassEndPoint = "/auth/forget-password";
   static final String resetPasswordEndPoint = "/auth/reset-password";
+  static final String changePasswordEndPoint = "/auth/change-password";
 }
 
 // Move this function outside the class

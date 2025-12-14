@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
 
 import '../../../routes/app_routes.dart';
+import '../../../service/storage/storage_service.dart';
 
 class ProfileController extends GetxController {
   final userName = 'Liam Johnson'.obs;
@@ -10,6 +11,7 @@ class ProfileController extends GetxController {
   final userPoints = 1540.obs;
 
   void logout() {
+    LocalStorage.removeAllPrefData();
     Get.offAllNamed(AppRoutes.signInScreen);
     appLog('User logged out');
   }
