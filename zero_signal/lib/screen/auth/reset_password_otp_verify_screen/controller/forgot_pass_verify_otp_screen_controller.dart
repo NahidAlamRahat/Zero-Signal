@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_log/app_log.dart';
 import '../../../../constant/api_end_point.dart';
+import '../../../../repository/auth_repo/forgot_pass_repository.dart';
 import '../../../../repository/auth_repo/verify_otp_repository.dart';
 import '../../../../routes/app_routes.dart';
 import '../../../../widget/app_snack_bar/app_snack_bar.dart';
@@ -12,6 +13,8 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
   final VerifyOtpRepository _verifyOtpController = Get.put(
     VerifyOtpRepository(),
   );
+  final ForgotPassRepository _forgotPassRepository = Get.find<ForgotPassRepository>();
+
 
   late TextEditingController otpTextEditingController;
 
@@ -22,7 +25,7 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
     update();
   }
 
-  var remainingSeconds = 180.obs; // 2.5 minutes
+  var remainingSeconds = 30.obs; // 2.5 minutes
   var canResend = false.obs;
   late String email;
   Timer? _timer;
@@ -65,7 +68,10 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
   /// Resent Otp code
   void resendCode() async {
     try {
-      bool isSuccess = /*await AuthRepository().resendOtp(email: email);*/ true;
+      bool isSuccess = await _forgotPassRepository.forgotPass(
+        email:  email,
+      );
+      true;
       if (isSuccess) {
         AppSnackBar.success("A new OTP has been sent to your email.");
         remainingSeconds.value = 180; // Reset the timer

@@ -14,15 +14,9 @@ class AppApiEndPoint {
   // auth api end point
   static final String authLogin = "/auth/login";
   static final String signUpEndPoint = "/user";
-  static final String verifyEmail ="/auth/verify-email";
+  static final String verifyEmail = "/auth/verify-email";
   static final String forgotPassEndPoint = "/auth/forget-password";
-
-
-
-
-
-
-
+  static final String resetPasswordEndPoint = "/auth/reset-password";
 }
 
 // Move this function outside the class
@@ -42,7 +36,9 @@ String _getDomain() {
     }
     return liveServer;
   } catch (e) {
-    errorLog("_getDomain $e", );
+    errorLog(
+      "_getDomain $e",
+    );
     return liveServer;
   }
   // return liveServer;

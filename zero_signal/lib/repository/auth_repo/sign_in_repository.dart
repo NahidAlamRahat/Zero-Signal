@@ -31,25 +31,18 @@ class SignInApiController extends GetxController {
       _inProgress = false;
 
       if (response.statusCode == 200) {
-        String accessToken = response.body['data']?['accessToken'] ?? "";
-        String refreshToken = response.body['data']?['refreshToken'] ?? "";
-        String role = response.body['data']?['role'] ?? "";
+        // API returns JWT token directly as string in data field
+        String jwtToken = response.body['data'] ?? "";
 
-        LocalStorage.token = accessToken;
-        LocalStorage.refreshToken = refreshToken;
-        LocalStorage.myRole = role;
-
+        LocalStorage.token = jwtToken;
         LocalStorage.setString(
           LocalStorageKeys.token,
           LocalStorage.token,
         );
-        LocalStorage.setString(
-            LocalStorageKeys.refreshToken, LocalStorage.refreshToken);
-        LocalStorage.setString(LocalStorageKeys.myRole, LocalStorage.myRole);
 
         _successfullyMessage = response.message ?? "Login successful";
 
-        appLog('Login successful for role: $role');
+        appLog('Login successful, token saved');
         update(); // Update UI for GetBuilder
         return 200;
       } else if (response.statusCode == 407) {
