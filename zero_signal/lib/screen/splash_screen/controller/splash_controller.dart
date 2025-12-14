@@ -1,6 +1,6 @@
-
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
+import '../../../service/storage/storage_service.dart';
 import '../../../utils/app_log/app_log.dart';
 
 class SplashController extends GetxController {
@@ -13,34 +13,21 @@ class SplashController extends GetxController {
   void goToNextScreen() async {
     await Future.delayed(const Duration(seconds: 3));
 
-    // String? accessToken = LocalStorage.token;
-    // String? role = LocalStorage.myRole;
+    // Load all stored data from SharedPreferences first
+    await LocalStorage.getAllPrefData();
 
-    // appLog("Access Token: $accessToken");
-    // appLog("Role: $role");
+    String? accessToken = LocalStorage.token;
 
-/*    if (accessToken != null && accessToken.isNotEmpty) {
+    appLog("Access Token: $accessToken");
+
+    if (accessToken != null && accessToken.isNotEmpty) {
       appLog("accessToken.isNotEmpty : ${accessToken.isNotEmpty}");
 
-
-
-      if (role == "user") {
-        Get.offAllNamed(AppRoutes.userBottomNav);
-      } else if (role == "business") {
-        Get.offAllNamed(AppRoutes.businessBottomNav);
-      } else {
-        Get.offAllNamed(AppRoutes.onboardingScreen);
-      }
+      Get.offAllNamed(AppRoutes.bottomNav);
     } else {
       Get.offAllNamed(AppRoutes.onboardingScreen);
-    }*/
-
-
-    Get.offAllNamed(AppRoutes.onboardingScreen);
-
-
-
-  }
+    }
+  } 
 
   @override
   void onClose() {

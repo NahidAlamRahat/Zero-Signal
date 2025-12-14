@@ -32,8 +32,8 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       scrolledUnderElevation: 0 ,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
-      backgroundColor: backgroundColor ?? Colors.white, // ✅ এখানেই দাও
-      elevation: 0, // transparent দিলে shadow এড়ানোর জন্য
+      backgroundColor: backgroundColor ?? Colors.white,
+      elevation: 0,
       leading: showLeading
           ? (leading ??
           IconButton(
