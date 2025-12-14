@@ -20,9 +20,10 @@ class DisclaimerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.creamBackgroundColor,
       appBar:  AppbarWidget(
         backgroundColor: AppColor.creamBackgroundColor,
-        textWidget: TextWidget(text: controller.args ,
+        textWidget: TextWidget(text: controller.args['name'] ,
           fontWeight: FontWeight.w700,
           fontSize: 18,
         ),

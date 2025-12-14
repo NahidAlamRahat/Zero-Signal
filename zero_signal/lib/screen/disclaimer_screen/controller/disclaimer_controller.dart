@@ -1,5 +1,6 @@
 
 import 'package:get/get.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 import '../../../../utils/app_log/error_log.dart';
 import '../../../repository/condition_repository.dart';
 import '../model/disclaimer_model.dart';
@@ -23,7 +24,7 @@ class DisclaimerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+appLog(args);
     loadData();
   }
 
@@ -32,7 +33,7 @@ class DisclaimerController extends GetxController {
       isLoading(true);
       errorMessage('');
 
-      final response = await commonRepository.fetchDisclaimerData(type: Get.arguments['type']);
+      final response = await commonRepository.fetchDisclaimerData(type: args['type']);
       if (response != null) {
         termsConditions.value = response.data;
         errorMessage('');
