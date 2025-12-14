@@ -38,7 +38,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
           ? (leading ??
           IconButton(
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
