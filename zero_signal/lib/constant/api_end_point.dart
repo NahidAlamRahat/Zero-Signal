@@ -22,7 +22,8 @@ class AppApiEndPoint {
   static final String faqEndPoint = "/faq";
   static final String mySpotEndPoint = "/spot";
   //'Activity' | 'Route' | 'Spot'
-  String favoriteEndPoint(String type) => "/favorite?type=$type";
+  String getFavoriteEndPoint(String type) => "/favorite?type=$type";
+  static String toggleFavoriteEndPoint() => "/favorite";
   String mySpotDetailEndPoint(String id) => "/spot/$id";
   static final String activityEndPoint = "/activity";
 }

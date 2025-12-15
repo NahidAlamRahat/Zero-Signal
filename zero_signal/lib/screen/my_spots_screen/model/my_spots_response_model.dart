@@ -79,6 +79,7 @@ class SpotData {
   final double lng;
   final String createdAt;
   final String updatedAt;
+  bool isFavorite; // Added mutable field for local state
 
   SpotData({
     required this.id,
@@ -93,6 +94,7 @@ class SpotData {
     required this.lng,
     required this.createdAt,
     required this.updatedAt,
+    this.isFavorite = false,
   });
 
   factory SpotData.fromJson(Map<String, dynamic> json) {
@@ -113,6 +115,7 @@ class SpotData {
       lng: (json['lng'] ?? 0).toDouble(),
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
+      isFavorite: json['is_favorite'] ?? false,
     );
   }
 
@@ -130,6 +133,7 @@ class SpotData {
       'lng': lng,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'isFavorite': isFavorite,
     };
   }
 

@@ -176,4 +176,55 @@ class CommonRepository extends GetxController {
       return false;
     }
   }
+
+  /// Toggle favorite status for a spot
+  /// Can be used for favorite toggle functionality
+  ///
+  /// Parameters:
+  /// - id: item ID (mapped to 'item' in body)
+  /// - type: item type (e.g. 'Spot', 'Activity')
+  ///
+  /// Returns: true if successful, false otherwise
+  Future<bool> toggleFavorite(
+      {required String id, required String type}) async {
+    _inProgress = true;
+    _errorMessage = '';
+    _successMessage = '';
+    update();
+
+    try {
+      final response = await ApiService.postApi(
+        AppApiEndPoint.toggleFavoriteEndPoint(),
+        {
+          'item': id,
+          'type': type,
+        },
+      );
+
+      _inProgress = false;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Favorite status updated successfully";
+        appLog('Favorite status updated successfully');
+        update();
+        return true;
+      } else {
+        _errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to update favorite status";
+        appLog(
+            'Favorite toggle failed - Status: ${response.statusCode}, Message: ${response.message}');
+        update();
+        return false;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred";
+      appLog('Favorite toggle API Error: $e');
+      update();
+      return false;
+    }
+  }
 }

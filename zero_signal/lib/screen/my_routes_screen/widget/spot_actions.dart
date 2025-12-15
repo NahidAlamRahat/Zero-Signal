@@ -25,8 +25,8 @@ class SpotActions extends StatelessWidget {
           GestureDetector(
             onTap: onFavoriteTap,
             child: Icon(
-              Icons.favorite_border, // Will be handled by backend API later
-              color: const Color(0xFF999999),
+              spot.isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: spot.isFavorite ? Colors.red : const Color(0xFF999999),
               size: 17.sp,
             ),
           ),

@@ -79,15 +79,43 @@ class MySpotsController extends GetxController {
   }
 
   /// Toggle favorite for a spot
-  void toggleFavorite(SpotData spot) {
-    // This would typically call an API to toggle favorite
-    // For now, just show a message
+  void toggleFavorite(SpotData spot) async {
+    try {
+      final success = await _repository.toggleFavorite(
+        id: spot.id,
+        type: 'Spot',
+      );
 
-    Fluttertoast.showToast(
-      msg: 'Favorite feature coming soon!',
-      backgroundColor: const Color(0xFF2E4F3E),
-      textColor: Colors.white,
-    );
+      if (success) {
+        // Update local state
+        spot.isFavorite = !spot.isFavorite;
+        update();
+
+        Fluttertoast.showToast(
+          msg: _repository.successMessage.isNotEmpty
+              ? _repository.successMessage
+              : 'Favorite updated successfully',
+          backgroundColor: const Color(0xFF2E4F3E),
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_SHORT,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: _repository.errorMessage.isNotEmpty
+              ? _repository.errorMessage
+              : 'Failed to update favorite',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    } catch (e) {
+      appLog('Error toggling favorite: $e');
+      Fluttertoast.showToast(
+        msg: 'An error occurred',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
   }
 
   /// Delete a spot
