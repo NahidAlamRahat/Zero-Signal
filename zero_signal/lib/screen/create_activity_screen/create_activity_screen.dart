@@ -55,26 +55,30 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextWidget(text: 'Activity Title',fontWeight: FontWeight.w400,),
+              TextWidget(
+                text: 'Activity Title',
+                fontWeight: FontWeight.w400,
+              ),
               SizedBox(
                 height: 8.h,
               ),
               TextFieldWidget(
-                textColor:Color(0xFF484949),
+                textColor: Color(0xFF484949),
                 hintText: 'Title of the activity',
                 borderColor: Colors.transparent,
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderRadius: 8,
               ),
-          
               const SizedBox(height: 12),
-          
-              TextWidget(text: 'Date',fontWeight: FontWeight. w400,),
+              TextWidget(
+                text: 'Date',
+                fontWeight: FontWeight.w400,
+              ),
               SizedBox(
                 height: 8.h,
               ),
@@ -83,27 +87,26 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 keyboardType: TextInputType.number,
                 inputFormatters: [DateInputFormatter()],
                 customSuffixIcon: InkWell(
-                  onTap: () async {
-                    final selectedDate = await showDatePickerSheet(context);
-                    if (selectedDate != null) {
-                      setState(() {
-                        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
-                      });
-                    }
-                  },
+                    onTap: () async {
+                      final selectedDate = await showDatePickerSheet(context);
+                      if (selectedDate != null) {
+                        setState(() {
+                          dateController.text =
+                              DateFormat('dd/MM/yyyy').format(selectedDate);
+                        });
+                      }
+                    },
                     child: Image.asset(
-                  Assets.icons.calender.path,
-                  height: 18.h,
-                  width: 18.w,
-                )),
+                      Assets.icons.calender.path,
+                      height: 18.h,
+                      width: 18.w,
+                    )),
                 hintText: 'dd/mm/yyyy',
                 borderColor: Colors.transparent,
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderRadius: 8,
               ),
-          
               const SizedBox(height: 12),
-          
               TextWidget(
                 textAlignment: TextAlign.start,
                 text: 'Do you want to do a route of your favorites?',
@@ -125,29 +128,33 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 dropdownColor: AppColor.lightGrayishOrange,
                 boxColor: AppColor.lightGrayishOrange,
               ),
-          
               const SizedBox(height: 12),
-          
-              TextWidget(text: 'Location',fontWeight: FontWeight. w400,),
-          
-          
-               SizedBox(height: 8.h),
+              TextWidget(
+                text: 'Location',
+                fontWeight: FontWeight.w400,
+              ),
+              SizedBox(height: 8.h),
               TextFieldWidget(
-                customSuffixIcon: Icon(Icons.close,color: AppColor.backgroundColor),
-                prefixIcon: Icon(Icons.search,color: AppColor.yello,size: 18,),
+                customSuffixIcon:
+                    Icon(Icons.close, color: AppColor.backgroundColor),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColor.yello,
+                  size: 18,
+                ),
                 hintText: 'Search place (Google Maps)',
                 borderColor: Colors.transparent,
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderRadius: 12,
               ),
-          
-              SizedBox(height: 12,),
-          
-              TextWidget(text: 'Activity Type',
+              SizedBox(
+                height: 12,
+              ),
+              TextWidget(
+                text: 'Activity Type',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
-          
               SizedBox(
                 height: 8.h,
               ),
@@ -166,18 +173,19 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 selectedValue: selectedValue,
                 borderRadius: 8,
                 onChanged: (value) {
-          
                   selectedValue = value;
                 },
                 borderColor: AppColor.creamBackgroundColor,
                 dropdownColor: AppColor.lightGrayishOrange,
                 boxColor: AppColor.lightGrayishOrange,
               ),
-          
-              SizedBox(height: 12,),
-          
-              TextWidget(text: 'Description',fontWeight: FontWeight.w400,),
-          
+              SizedBox(
+                height: 12,
+              ),
+              TextWidget(
+                text: 'Description',
+                fontWeight: FontWeight.w400,
+              ),
               SizedBox(height: 8.h),
               TextFieldWidget(
                 hintText: 'Description of the activity ',
@@ -187,40 +195,37 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderRadius: 12,
               ),
-          
-              SizedBox(height: 12,),
-          
+              SizedBox(
+                height: 12,
+              ),
               _uploadImagesBox(),
               Align(
                 alignment: Alignment.bottomRight,
-                child: TextWidget(text: 'max 5 photos',
+                child: TextWidget(
+                  text: 'max 5 photos',
                   fontColor: AppColor.yello,
                   textAlignment: TextAlign.end,
                 ),
               ),
-          
-          
-              SizedBox(height: 12.h,),
-          
+              SizedBox(
+                height: 12.h,
+              ),
               TextWidget(
-          
-                text: 'Maximum Number of Attendees',fontWeight: FontWeight.w400,),
+                text: 'Maximum Number of Attendees',
+                fontWeight: FontWeight.w400,
+              ),
               TextFieldWidget(
                 hintText: 'Enter Number',
                 borderColor: Colors.transparent,
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderRadius: 12,
               ),
-          
-          
-          
-              SizedBox(height: 30.h,),
-          
-          
-          
+              SizedBox(
+                height: 30.h,
+              ),
               Center(
                 child: ButtonWidget(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pop(context);
                   },
                   buttonWidth: double.infinity,
@@ -228,10 +233,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                   label: 'Publish',
                 ),
               ),
-          
-          
               SizedBox(height: 30.h),
-          
             ],
           ),
         ),
@@ -239,42 +241,37 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     );
   }
 
-
   // ------------------------------ helpers ------------------------------
 
-
-
-
   Widget _uploadImagesBox() => Container(
-    width: double.infinity,
-    height: 120,
-    decoration: BoxDecoration(
-      color: Color.fromRGBO(245, 233, 223, 1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.add, size: 40, color: Colors.grey.shade600),
-        const SizedBox(height: 8),
-        Text(
-          'Add Images',
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+        width: double.infinity,
+        height: 120,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(245, 233, 223, 1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
         ),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add, size: 40, color: Colors.grey.shade600),
+            const SizedBox(height: 8),
+            Text(
+              'Add Images',
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+            ),
+          ],
+        ),
+      );
 
   Widget _sectionTitle(String title) => Text(
-    title,
-    style: const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      color: Colors.black87,
-    ),
-  );
-
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+        ),
+      );
 
   Widget _buildRouteTypeChip(String routeType) {
     final isSelected = selectedRouteType == routeType;
@@ -289,10 +286,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
           borderRadius: BorderRadius.circular(8),
-
         ),
         child: TextWidget(
-         text: routeType,
+          text: routeType,
           textAlignment: TextAlign.center,
           // style: TextStyle(
           //   fontSize: 14,

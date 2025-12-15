@@ -20,7 +20,8 @@ class AppApiEndPoint {
   static final String changePasswordEndPoint = "/auth/change-password";
   String disclaimer({required String type}) => "/disclaimer?type=$type";
   static final String faqEndPoint = "/faq";
-
+  static final String mySpotEndPoint = "/spot";
+  static final String activityEndPoint = "/activity";
 }
 
 // Move this function outside the class
