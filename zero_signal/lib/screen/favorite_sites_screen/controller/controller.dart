@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../constant/app_icon_path.dart';
@@ -42,45 +43,42 @@ class FavoriteSitesController extends GetxController {
   void toggleFavorite(SpotItem spot) {
     final index = spots.indexWhere((s) => s.id == spot.id);
     if (index != -1) {
-      spots[index] = spots[index].copyWith(isFavorite: !spots[index].isFavorite);
+      spots[index] =
+          spots[index].copyWith(isFavorite: !spots[index].isFavorite);
 
-      Get.snackbar(
-        'Success',
-        spots[index].isFavorite
+      Fluttertoast.showToast(
+        msg: spots[index].isFavorite
             ? '${spot.name} added to favorites'
             : '${spot.name} removed from favorites',
         backgroundColor: const Color(0xFF2E4F3E),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT,
       );
     }
   }
 
   void deleteSpot(SpotItem spot) {
     spots.removeWhere((s) => s.id == spot.id);
-    Get.snackbar(
-      'Deleted',
-      '${spot.name} deleted',
+    Fluttertoast.showToast(
+      msg: '${spot.name} deleted',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
+      textColor: Colors.white,
     );
   }
 
   void addNewSpot() {
-    Get.snackbar(
-      'Coming Soon',
-      'Add new spot feature coming soon!',
+    Fluttertoast.showToast(
+      msg: 'Add new spot feature coming soon!',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
+      textColor: Colors.white,
     );
   }
 
   void onSpotTap(SpotItem spot) {
-    Get.snackbar(
-      'Opening',
-      'Opening ${spot.name}',
+    Fluttertoast.showToast(
+      msg: 'Opening ${spot.name}',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
+      textColor: Colors.white,
     );
   }
 
@@ -109,4 +107,3 @@ class FavoriteSitesController extends GetxController {
     }
   }
 }
-

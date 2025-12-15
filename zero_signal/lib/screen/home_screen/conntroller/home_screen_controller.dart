@@ -1,29 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
+
 class HomeScreenController extends GetxController {
   late mapbox.MapboxMap mapboxMap;
   geo.Position? currentPosition;
 
-  
   // Map style URIs
   static const String defaultStyleUri = 'mapbox://styles/mapbox/streets-v12';
-  static const String satelliteStyleUri = 'mapbox://styles/lede18/cmg91jkk3000r01sf8m1r29ky';
-  static const String terrainStyleUri = 'mapbox://styles/lede18/cmg91k73u000s01qo5ye4bl7q';
-  
+  static const String satelliteStyleUri =
+      'mapbox://styles/lede18/cmg91jkk3000r01sf8m1r29ky';
+  static const String terrainStyleUri =
+      'mapbox://styles/lede18/cmg91k73u000s01qo5ye4bl7q';
+
   // Current selected map type
   String selectedMapType = 'OutDoor';
   List<mapbox.Point> markerList = [
-    mapbox.Point(coordinates: mapbox.Position.fromJson([ 23.77946286151694,  90.40031401135806 ])), // San Francisco
+    mapbox.Point(
+        coordinates: mapbox.Position.fromJson(
+            [23.77946286151694, 90.40031401135806])), // San Francisco
 
 // New York
   ];
-
-
-
 
   Future<void> getUserLocation() async {
     bool serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
@@ -38,48 +39,42 @@ class HomeScreenController extends GetxController {
     }
 
     geo.LocationPermission permission = await geo.Geolocator.checkPermission();
-    
+
     if (permission == geo.LocationPermission.deniedForever) {
       // Permission permanently denied - open app settings
-      Get.snackbar(
-        "Permission Required",
-        "Location permission is permanently denied. Please enable it in app settings.",
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 4),
-        mainButton: TextButton(
-          onPressed: () async {
-            await geo.Geolocator.openAppSettings();
-          },
-          child: Text("Open Settings", style: TextStyle(color: CupertinoColors.activeBlue)),
-        ),
-      );
-      return;
-    }
-    
-    if (permission == geo.LocationPermission.denied) {
-      permission = await geo.Geolocator.requestPermission();
-      if (permission == geo.LocationPermission.denied) {
-        Get.snackbar(
-          "Permission Denied",
-          "Location permission is required to show your location on the map.",
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 3),
+      if (permission == geo.LocationPermission.deniedForever) {
+        // Permission permanently denied - open app settings
+        Fluttertoast.showToast(
+          msg:
+              "Location permission is permanently denied. Please enable it in app settings.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
         );
         return;
       }
-      
+      return;
+    }
+
+    if (permission == geo.LocationPermission.denied) {
+      permission = await geo.Geolocator.requestPermission();
+      if (permission == geo.LocationPermission.denied) {
+        Fluttertoast.showToast(
+          msg:
+              "Location permission is required to show your location on the map.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+        return;
+      }
+
       if (permission == geo.LocationPermission.deniedForever) {
-        Get.snackbar(
-          "Permission Required",
-          "Location permission is permanently denied. Please enable it in app settings.",
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 4),
-          mainButton: TextButton(
-            onPressed: () async {
-              await geo.Geolocator.openAppSettings();
-            },
-            child: Text("Open Settings", style: TextStyle(color: CupertinoColors.activeBlue)),
-          ),
+        Fluttertoast.showToast(
+          msg:
+              "Location permission is permanently denied. Please enable it in app settings.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
         );
         return;
       }
@@ -91,16 +86,13 @@ class HomeScreenController extends GetxController {
       );
       update();
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to get location: $e",
-        snackPosition: SnackPosition.BOTTOM,
+      Fluttertoast.showToast(
+        msg: "Failed to get location: $e",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
     }
   }
-
-
-
 
   /// When map created
   // Future<void> onMapCreated(mapbox.MapboxMap controller) async {
@@ -145,7 +137,6 @@ class HomeScreenController extends GetxController {
   // }
 
   late mapbox.Point markerPoint;
-
 
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
     mapboxMap = controller;
@@ -257,7 +248,7 @@ class HomeScreenController extends GetxController {
       );
     }
   }
-  
+
   /// Update map style based on selection
   Future<void> updateMapStyle(String mapType) async {
     String styleUri;
@@ -279,17 +270,19 @@ class HomeScreenController extends GetxController {
       selectedMapType = mapType;
       update(); // Update UI
     } catch (e) {
-      Get.snackbar(
-        "Error", 
-        "Failed to change map style: $e",
-        snackPosition: SnackPosition.BOTTOM,
+      Fluttertoast.showToast(
+        msg: "Failed to change map style: $e",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
     }
   }
 
   @override
   void onInit() {
-    markerPoint = mapbox.Point(coordinates: mapbox.Position.fromJson([23.78105597835364, 90.40762703426819]));
+    markerPoint = mapbox.Point(
+        coordinates:
+            mapbox.Position.fromJson([23.78105597835364, 90.40762703426819]));
     super.onInit();
   }
 }

@@ -21,6 +21,9 @@ class AppApiEndPoint {
   String disclaimer({required String type}) => "/disclaimer?type=$type";
   static final String faqEndPoint = "/faq";
   static final String mySpotEndPoint = "/spot";
+  //'Activity' | 'Route' | 'Spot'
+  String favoriteEndPoint(String type) => "/favorite?type=$type";
+  String mySpotDetailEndPoint(String id) => "/spot/$id";
   static final String activityEndPoint = "/activity";
 }
 
@@ -33,8 +36,8 @@ String _getDomain() {
   // String liveServer = "http://195.35.9.21:3001";
   // String localServer = "http://10.0.70.30:3002";
   //////////10.0.70.30:3002////////////////////////
-  String liveServer = "http://10.10.7.9:5013";
-  String localServer = "http://10.10.7.9:5013";
+  String liveServer = "https://shariful5000.binarybards.online";
+  String localServer = "https://shariful5000.binarybards.online";
   try {
     if (kDebugMode) {
       return localServer;

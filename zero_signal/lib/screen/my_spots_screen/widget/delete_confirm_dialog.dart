@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../favorite_sites_screen/favorite_sites_screen.dart';
-import '../model/spot_item.dart';
+import '../model/my_spots_response_model.dart';
 
 class DeleteConfirmDialog extends StatelessWidget {
-  final SpotItem spot;
+  final SpotData spot;
   final VoidCallback onConfirm;
 
   const DeleteConfirmDialog({
@@ -17,7 +16,7 @@ class DeleteConfirmDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Delete Spot'),
-      content: Text('Are you sure you want to delete "${spot.name}"?'),
+      content: Text('Are you sure you want to delete "${spot.title}"?'),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),

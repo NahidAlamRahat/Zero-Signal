@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import '../../../constant/app_icon_path.dart';
 import '../../my_spots_screen/model/spot_item.dart';
-
 
 class MyRoutesController extends GetxController {
   final List<SpotItem> spots = [
@@ -41,11 +41,10 @@ class MyRoutesController extends GetxController {
 
   void onSpotTap(SpotItem spot) {
     print('Tapped on spot: ${spot.name}');
-    Get.snackbar(
-      'Spot',
-      'Opening ${spot.name}',
+    Fluttertoast.showToast(
+      msg: 'Opening ${spot.name}',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
+      textColor: Colors.white,
     );
   }
 
@@ -53,14 +52,13 @@ class MyRoutesController extends GetxController {
     spot.isFavorite = !spot.isFavorite;
     update();
 
-    Get.snackbar(
-      'Favorite',
-      spot.isFavorite
+    Fluttertoast.showToast(
+      msg: spot.isFavorite
           ? '${spot.name} added to favorites'
           : '${spot.name} removed from favorites',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
     );
   }
 
@@ -68,21 +66,19 @@ class MyRoutesController extends GetxController {
     spots.removeWhere((s) => s.id == spot.id);
     update();
 
-    Get.snackbar(
-      'Deleted',
-      '${spot.name} deleted',
+    Fluttertoast.showToast(
+      msg: '${spot.name} deleted',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
+      textColor: Colors.white,
     );
   }
 
   void addNewSpot() {
     print('Add new spot tapped');
-    Get.snackbar(
-      'Info',
-      'Add new spot feature coming soon!',
+    Fluttertoast.showToast(
+      msg: 'Add new spot feature coming soon!',
       backgroundColor: const Color(0xFF2E4F3E),
-      colorText: Colors.white,
+      textColor: Colors.white,
     );
   }
 

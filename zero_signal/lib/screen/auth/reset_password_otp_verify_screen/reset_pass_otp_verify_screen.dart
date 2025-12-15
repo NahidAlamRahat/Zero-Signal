@@ -1,6 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -15,22 +15,19 @@ import '../../../utils/app_log/app_log.dart';
 import 'controller/forgot_pass_verify_otp_screen_controller.dart';
 
 class ResetPassOtpVerifyScreen extends StatelessWidget {
-   ResetPassOtpVerifyScreen({super.key});
+  ResetPassOtpVerifyScreen({super.key});
 
-  ForgotPassVerifyOtpScreenController controller = Get.find<ForgotPassVerifyOtpScreenController>();
-
+  ForgotPassVerifyOtpScreenController controller =
+      Get.find<ForgotPassVerifyOtpScreenController>();
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
             height: double.infinity,
-
-
             width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -39,7 +36,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 20.w, vertical: 28.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 28.h),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -48,20 +45,19 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(16.0.w),
                       child: GlassEffact(
-                       // height: 438.h,
+                        // height: 438.h,
                         width: 390.w,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.h,vertical: 28.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.h, vertical: 28.h),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Equal spacing
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly, // Equal spacing
                             children: [
                               // App Logo
-                              Image.asset(
-                                  AppImagePath.appLogo,
-                                  width: 61.w,
-                                  height: 60.h
-                              ),
+                              Image.asset(AppImagePath.appLogo,
+                                  width: 61.w, height: 60.h),
                               SizedBox(
                                 height: 16.h,
                               ),
@@ -76,15 +72,19 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                       text: "Enter ",
-                                      style: TextStyle(color: AppColor.white500),
+                                      style:
+                                          TextStyle(color: AppColor.white500),
                                     ),
                                     TextSpan(
                                       text: "4",
-                                      style: TextStyle(color: Color.fromRGBO(255, 203, 32, 1)),
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(255, 203, 32, 1)),
                                     ),
                                     TextSpan(
                                       text: " digits code",
-                                      style: TextStyle(color:  AppColor.white500),
+                                      style:
+                                          TextStyle(color: AppColor.white500),
                                     ),
                                   ],
                                 ),
@@ -96,8 +96,9 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
 
                               // Subtitle
                               TextWidget(
-                                text: "Enter the four-digit code that was emailed to you.",
-                                fontColor:  AppColor.white500,
+                                text:
+                                    "Enter the four-digit code that was emailed to you.",
+                                fontColor: AppColor.white500,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 textAlignment: TextAlign.center,
@@ -125,15 +126,18 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                           children: [
                                             TextSpan(
                                               text: "Resend code in ",
-                                              style: TextStyle(color:  AppColor.white500),
+                                              style: TextStyle(
+                                                  color: AppColor.white500),
                                             ),
                                             TextSpan(
                                               text: controller.formatTime(),
-                                              style: TextStyle(color: AppColor.yello),
+                                              style: TextStyle(
+                                                  color: AppColor.yello),
                                             ),
                                             TextSpan(
                                               text: " s",
-                                              style: TextStyle(color: AppColor.white500),
+                                              style: TextStyle(
+                                                  color: AppColor.white500),
                                             ),
                                           ],
                                         ),
@@ -142,7 +146,8 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                     // Resend Option
                                     if (controller.canResend.value)
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           TextWidget(
                                             text: "Didn't receive code? ",
@@ -167,55 +172,57 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                 );
                               }),
 
-
                               SizedBox(
                                 height: 32.h,
                               ),
 
                               // Reset Password Button
                               GetBuilder<ForgotPassVerifyOtpScreenController>(
-                                builder: (controller) {
-                                  return Visibility(
-                                    visible: controller.isLoading==false,
-                                    replacement: CircularProgressIndicator(),
-                                    child: ButtonWidget(
-                                      backgroundColor: AppColor.backgroundColor,
-                                      label: AppStrings.resetPassword,
-                                      buttonHeight: 46.h,
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        // Handle reset password
-                                        if (controller.otpTextEditingController.text.length == 4) {
-                                         controller.verifyOtpButton();
-                                        } else {
-                                          // Show error message
-                                          Get.snackbar(
-                                            "Error",
-                                            "Please enter the complete 4-digit code",
-                                            backgroundColor: Colors.red.withOpacity(0.8),
-                                            colorText: Colors.white,
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  );
-                                }
-                              ),
+                                  builder: (controller) {
+                                return Visibility(
+                                  visible: controller.isLoading == false,
+                                  replacement: CircularProgressIndicator(),
+                                  child: ButtonWidget(
+                                    backgroundColor: AppColor.backgroundColor,
+                                    label: AppStrings.resetPassword,
+                                    buttonHeight: 46.h,
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      // Handle reset password
+                                      if (controller.otpTextEditingController
+                                              .text.length ==
+                                          4) {
+                                        controller.verifyOtpButton();
+                                      } else {
+                                        // Show error message
+                                        // Show error message
+                                        Fluttertoast.showToast(
+                                          msg:
+                                              "Please enter the complete 4-digit code",
+                                          backgroundColor:
+                                              Colors.red.withOpacity(0.8),
+                                          textColor: Colors.white,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              }),
                             ],
                           ),
                         ),
                       ),
                     ),
                   ),
-
-
                 ],
               ),
             ),
           ),
-          Positioned(top: 60.h,
-            left: 20.w, child: InkWell(
-                onTap: (){
+          Positioned(
+            top: 60.h,
+            left: 20.w,
+            child: InkWell(
+                onTap: () {
                   Get.back();
                 },
                 child: Icon(Icons.arrow_back_ios_new_rounded)),
@@ -228,13 +235,15 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
   Widget _buildPinCodeTextField(BuildContext context, controller) {
     // Calculate field width dynamically based on screen width
     double screenWidth = MediaQuery.of(context).size.width;
-    double containerPadding = 48.w; // total horizontal padding inside GlassEffact (24.w * 2)
+    double containerPadding =
+        48.w; // total horizontal padding inside GlassEffact (24.w * 2)
     double spacing = 16.w; // space between fields
     double maxFieldWidth = 60.w; // maximum width for large screens
 
     // Calculate dynamic field width so 4 fields + spacing fit inside the GlassEffact
     double calculatedFieldWidth =
-    ((screenWidth - containerPadding - spacing * 3) / 4).clamp(40.w, maxFieldWidth);
+        ((screenWidth - containerPadding - spacing * 3) / 4)
+            .clamp(40.w, maxFieldWidth);
 
     return PinCodeTextField(
       appContext: context,
@@ -277,5 +286,4 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
       },
     );
   }
-
 }

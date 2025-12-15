@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -97,8 +98,7 @@ void showReportDialog(BuildContext context) {
                 height: 8,
               ),
               TextFieldWidget(
-                hintText:
-                    "e.g., inappropriate content, spam, harassment.....",
+                hintText: "e.g., inappropriate content, spam, harassment.....",
                 textColor: AppColor.subTitleColor,
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderColor: AppColor.creamBackgroundColor,
@@ -114,7 +114,11 @@ void showReportDialog(BuildContext context) {
                 buttonWidth: double.infinity,
                 onPressed: () {
                   Get.back();
-                  Get.snackbar("Reported", "Thank you for your feedback!");
+                  Fluttertoast.showToast(
+                    msg: "Thank you for your feedback!",
+                    backgroundColor: AppColor.backgroundColor,
+                    textColor: Colors.white,
+                  );
                 },
                 backgroundColor: AppColor.backgroundColor,
                 textColor: Colors.white,

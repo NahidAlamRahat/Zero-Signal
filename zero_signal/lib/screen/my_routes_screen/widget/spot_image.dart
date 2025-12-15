@@ -23,6 +23,11 @@ class SpotImage extends StatelessWidget {
   }
 
   Widget _buildDynamicImage(String imageUrl) {
+    // If imageUrl is empty, show placeholder
+    if (imageUrl.isEmpty) {
+      return _buildPlaceholder();
+    }
+
     if (imageUrl.startsWith('http')) {
       return Image.network(
         imageUrl,
@@ -36,9 +41,10 @@ class SpotImage extends StatelessWidget {
           }
           return Center(
             child: CircularProgressIndicator(
+              strokeWidth: 2,
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
-                  loadingProgress.expectedTotalBytes!
+                      loadingProgress.expectedTotalBytes!
                   : null,
             ),
           );
@@ -59,7 +65,7 @@ class SpotImage extends StatelessWidget {
     return Container(
       color: const Color(0xFFE0E0E0),
       child: Icon(
-        Icons.image_not_supported_outlined,
+        Icons.image_outlined,
         color: const Color(0xFF999999),
         size: 24.sp,
       ),

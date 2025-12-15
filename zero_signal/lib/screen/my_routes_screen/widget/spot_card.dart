@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../my_spots_screen/model/spot_item.dart';
+import '../../../constant/api_end_point.dart';
+import '../../my_spots_screen/model/my_spots_response_model.dart';
 import 'spot_actions.dart';
 import 'spot_image.dart';
 import 'spot_info.dart';
 
 class SpotCard extends StatelessWidget {
-  final SpotItem spot;
+  final SpotData spot;
   final VoidCallback onTap;
   final VoidCallback onFavoriteTap;
   final VoidCallback onDeleteTap;
@@ -35,11 +36,11 @@ class SpotCard extends StatelessWidget {
           padding: EdgeInsets.all(12.w),
           child: Row(
             children: [
-              SpotImage(imageUrl: spot.imageUrl),
+              SpotImage(imageUrl: _getFullImageUrl(spot.getFirstImageUrl())),
               SizedBox(width: 12.w),
               SpotInfo(
-                name: spot.name,
-                uploadDate: spot.uploadDate,
+                name: spot.title,
+                uploadDate: spot.createdAt,
               ),
               SpotActions(
                 spot: spot,
@@ -51,5 +52,13 @@ class SpotCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Get full image URL with domain prepended
+  String _getFullImageUrl(String imagePath) {
+    if (imagePath.isEmpty || imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    return '${AppApiEndPoint.domain}$imagePath';
   }
 }
