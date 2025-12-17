@@ -15,6 +15,15 @@ class CreatePassController extends GetxController {
   final CreatePasswordRepository _createPasswordRepository =
       Get.put(CreatePasswordRepository());
   final RxBool isLoading = false.obs;
+  String? token;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.arguments is Map) {
+      token = Get.arguments['token'];
+    }
+  }
 
   @override
   void onClose() {
@@ -53,8 +62,10 @@ class CreatePassController extends GetxController {
         confirmPassword: confirmPasswordController.text.trim(),
       );
 
-      final bool isSuccess =
-          await _createPasswordRepository.createPassword(model);
+      final bool isSuccess = await _createPasswordRepository.createPassword(
+        model,
+        token: token,
+      );
 
       isLoading.value = false;
 

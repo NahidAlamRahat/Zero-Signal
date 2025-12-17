@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:zero_signal/repository/auth_repo/forgot_pass_repository.dart';
 import 'package:zero_signal/repository/auth_repo/sign_up_repository.dart';
 import '../screen/auth/choose_language_screen/controller/onboarding_controloler.dart';
 import '../screen/auth/createa_password_screen/controller/create_pass_controller.dart';
@@ -14,19 +15,17 @@ class AppBindings extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => LanguageController());
-    Get.lazyPut(() => ForgotPassVerifyOtpScreenController(),fenix: true);
-    Get.lazyPut(() => FilterController (),);
-    Get.lazyPut(() => SignInController(),fenix: true);
+    Get.lazyPut(() => ForgotPassVerifyOtpScreenController(), fenix: true);
+    Get.lazyPut(
+      () => FilterController(),
+    );
+    Get.lazyPut(() => SignInController(), fenix: true);
     Get.lazyPut(() => SignUpApiController(), fenix: true);
     Get.lazyPut(() => SignUpController(), fenix: true);
     Get.lazyPut(() => ForgotPasswordOnTapButtonController(), fenix: true);
     Get.lazyPut(() => CreatePassController(), fenix: true);
     Get.lazyPut(() => ChangePasswordController(), fenix: true);
     Get.lazyPut(() => FAQScreenController(), fenix: true);
-
-
-
-
+    Get.lazyPut(() => ForgotPassRepository(), fenix: true);
   }
-
 }

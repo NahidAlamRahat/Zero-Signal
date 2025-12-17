@@ -15,14 +15,21 @@ class CreatePasswordRepository extends GetxController {
   String? _successfullyMessage;
   String? get successfullyMessage => _successfullyMessage;
 
-  Future<bool> createPassword(CreatePasswordModel model) async {
+  Future<bool> createPassword(CreatePasswordModel model,
+      {String? token}) async {
     bool isSuccess = false;
     _inProgress = true;
     update();
 
+    Map<String, String>? header;
+    if (token != null) {
+      header = {'Authorization': token};
+    }
+
     var response = await ApiService.postApi(
       AppApiEndPoint.resetPasswordEndPoint,
       model.toJson(),
+      header: header,
     );
 
     if (response.statusCode == 200) {

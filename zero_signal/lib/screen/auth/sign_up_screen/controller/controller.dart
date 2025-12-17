@@ -87,7 +87,10 @@ class SignUpController extends GetxController {
 
         Get.toNamed(
           AppRoutes.resetPassOtpVerifyScreen,
-          arguments: {'email': emailController.text},
+          arguments: {
+            'email': emailController.text,
+            'successRoute': AppRoutes.signInScreen
+          },
         );
       } else {
         AppSnackBar.message('${_signUpApiController.errorMessage}');

@@ -13,8 +13,8 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
   final VerifyOtpRepository _verifyOtpController = Get.put(
     VerifyOtpRepository(),
   );
-  final ForgotPassRepository _forgotPassRepository = Get.find<ForgotPassRepository>();
-
+  final ForgotPassRepository _forgotPassRepository =
+      Get.find<ForgotPassRepository>();
 
   late TextEditingController otpTextEditingController;
 
@@ -69,7 +69,7 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
   void resendCode() async {
     try {
       bool isSuccess = await _forgotPassRepository.forgotPass(
-        email:  email,
+        email: email,
       );
       true;
       if (isSuccess) {
@@ -110,32 +110,34 @@ class ForgotPassVerifyOtpScreenController extends GetxController {
       if (response != null) {
         // Get token from the data field
         // Handle both cases: data as string or data as object with resetToken
-        String? token;
-        if (response["data"] is String) {
-          token = response["data"];
-          token = response["response"];
-        } else if (response["data"] is Map) {
-          token = response["data"]?["resetToken"];
-        }
 
         // Show the API success message
         AppSnackBar.success('${_verifyOtpController.successfullyMessage}');
         appLog(
           'success message => ${_verifyOtpController.successfullyMessage}',
         );
+        appLog('successRoute => $successRoute');
 
         // Navigate to the appropriate screen
         if (successRoute?.isNotEmpty ?? false) {
           if (successRoute == AppRoutes.createPasswordScreen) {
+            String? token;
+            if (response is Map<String, dynamic> &&
+                response.containsKey('data')) {
+              token = response['data'];
+            }
             Get.toNamed(
               AppRoutes.createPasswordScreen,
-              arguments: {'token': token},
+              arguments: {
+                'token': token,
+              },
             );
-          }
-
-          else {
+          } else {
+            // Get.offAllNamed(
+            //   successRoute!,
+            // );
             Get.offAllNamed(
-              successRoute!,
+              AppRoutes.signInScreen,
             );
           }
         }
