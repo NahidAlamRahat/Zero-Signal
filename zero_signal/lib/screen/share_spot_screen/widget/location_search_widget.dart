@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../constant/app_colors.dart';
+import '../../../constant/app_icon_path.dart';
 import '../controller/share_spot_controller.dart';
 import '../model/spot_request_model.dart';
+import 'confirm_location_sheet.dart';
 
 /// Location search widget with Mapbox autocomplete suggestions
 /// Design matches the existing _setLocationBox style
@@ -73,11 +75,13 @@ class LocationSearchWidget extends StatelessWidget {
                         controller.locationController.clear();
                         controller.clearLocationSuggestions();
                       },
-                      child: Icon(
-                        Icons.close,
-                        size: 16.w,
-                        color: AppColor.blackColor.withOpacity(0.5),
+                      child:InkWell(
+                        onTap: () {
+                          showConfirmLocationSheet(context);
+                        },
+                        child: Image.asset(AppIconPath.map, height: 16.h, width: 16.w),
                       ),
+
                     ),
                 ],
               ),
@@ -161,4 +165,17 @@ class LocationSearchWidget extends StatelessWidget {
       ),
     );
   }
+
+
+  void showConfirmLocationSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return const ConfirmLocationSheet();
+      },
+    );
+  }
+
+
 }
