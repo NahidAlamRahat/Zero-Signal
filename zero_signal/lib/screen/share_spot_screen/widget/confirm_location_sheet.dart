@@ -86,20 +86,19 @@ class _ConfirmLocationSheetState extends State<ConfirmLocationSheet> {
                             ),
                             styleUri: defaultStyleUri,
                             onMapCreated: (map) => _onMapCreated(map, lat, lng),
-                            onTapListener:
-                                (mapbox.MapContentGestureContext context) {
+                            onTapListener: (mapbox.MapContentGestureContext
+                                context) async {
                               // Update location when user taps on map
                               final point = context.point;
                               final coordinates = point.coordinates;
-                              controller.selectedLat =
-                                  coordinates.lat.toDouble();
-                              controller.selectedLng =
-                                  coordinates.lng.toDouble();
-                              controller.update();
+                              final lat = coordinates.lat.toDouble();
+                              final lng = coordinates.lng.toDouble();
 
                               // Update marker position
-                              _updateMarker(coordinates.lat.toDouble(),
-                                  coordinates.lng.toDouble());
+                              _updateMarker(lat, lng);
+
+                              // Get address from coordinates using reverse geocoding
+                              await controller.reverseGeocode(lat, lng);
 
                               // Move camera to tapped location
                               mapboxMap?.flyTo(

@@ -193,6 +193,37 @@ class ShareSpotController extends GetxController {
         'Selected location: ${suggestion.placeName} (${suggestion.latitude}, ${suggestion.longitude})');
   }
 
+  /// Reverse geocode: Get address from coordinates
+  Future<void> reverseGeocode(double lat, double lng) async {
+    try {
+      final url =
+          'https://api.mapbox.com/geocoding/v5/mapbox.places/$lng,$lat.json?access_token=$_mapboxAccessToken&limit=1';
+
+      final response = await Dio().get(url);
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final features = data['features'] as List<dynamic>? ?? [];
+
+        if (features.isNotEmpty) {
+          final feature = features.first;
+          final placeName = feature['place_name'] as String;
+
+          // Update controller with the address
+          locationController.text = placeName;
+          selectedAddress = placeName;
+          selectedLat = lat;
+          selectedLng = lng;
+
+          appLog('Reverse geocoded: $placeName');
+          update();
+        }
+      }
+    } catch (e) {
+      appLog('Reverse geocode error: $e');
+    }
+  }
+
   /// Clear location suggestions
   void clearLocationSuggestions() {
     locationSuggestions.clear();
