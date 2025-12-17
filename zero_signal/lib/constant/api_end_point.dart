@@ -26,6 +26,8 @@ class AppApiEndPoint {
   static String toggleFavoriteEndPoint() => "/favorite";
   String mySpotDetailEndPoint(String id) => "/spot/$id";
   static final String activityEndPoint = "/activity";
+  static final String categoryEndPoint = "/category?withSub=true";
+  static final String spotEndPoint = "/spot";
 }
 
 // Move this function outside the class

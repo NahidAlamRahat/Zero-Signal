@@ -5,6 +5,7 @@ import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/generated/assets.dart' hide Icon;
 import 'package:zero_signal/screen/share_spot_screen/widget/confirm_location_sheet.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
+import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
@@ -105,7 +106,16 @@ class _ShareSpotScreenState extends State<ShareSpotScreen> {
               ),
             ),
              SizedBox(height: 24.h),
-
+            _sectionTitle('Title'),
+            SizedBox(height: 12.h),
+            TextFieldWidget(
+              borderColor: AppColor.overLayBoxColor,
+              borderRadius: 12,
+              focusedBorderColor: AppColor.overLayBoxColor,
+              backgroundColor: AppColor.overLayBoxColor,
+              hintText: 'Enter a tile',
+            ),
+            SizedBox(height: 24,),
             // Location
             _sectionTitle('Location'),
              SizedBox(height: 12.h),
