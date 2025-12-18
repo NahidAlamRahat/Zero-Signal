@@ -68,8 +68,7 @@ class MySpotsController extends GetxController {
     appLog('Tapped on spot: ${spot.title}');
 
     // Navigate to spot details screen
-    // Get.toNamed(AppRoutes.spotDetailsScreen, arguments: {'spotId': spot.id});
-
+    Get.toNamed(AppRoutes.sunsetPointDetailsScreen, arguments: spot);
     // For now, just show a message
     Fluttertoast.showToast(
       msg: 'Opening ${spot.title}',

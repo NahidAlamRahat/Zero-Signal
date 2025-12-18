@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:get/get.dart';
+import 'package:zero_signal/constant/api_end_point.dart';
+import 'package:zero_signal/screen/my_spots_screen/model/my_spots_response_model.dart';
 
 import '../../constant/app_colors.dart';
 import '../../widget/text_widget/text_widgets.dart';
@@ -9,11 +11,20 @@ class SunsetPointDetailsScreen extends StatefulWidget {
   const SunsetPointDetailsScreen({super.key});
 
   @override
-  State<SunsetPointDetailsScreen> createState() => _ListViewDetailsScreenState();
+  State<SunsetPointDetailsScreen> createState() =>
+      _ListViewDetailsScreenState();
 }
 
 class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
   bool isFavorite = false;
+  late SpotData spot;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    spot = Get.arguments as SpotData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +50,6 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
                 ),
               ),
             ),
-
-
           ],
         ),
       ),
@@ -62,51 +71,100 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
               color: Color(0xFF2C2C2C),
             ),
           ),
-
           Expanded(
             child: TextWidget(
-              text:  'Sunset Point Details',
+              text: '${spot.title} Details',
               textAlignment: TextAlign.center,
               fontSize: 20,
               fontWeight: FontWeight.w500,
               fontColor: AppColor.textColor,
             ),
           ),
-
         ],
       ),
     );
   }
 
   Widget _buildHeroImage() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 219,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          image: AssetImage(AppImagePath.sunImage),
-          fit: BoxFit.cover,
+    if (spot.images.isEmpty) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        height: 219.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.grey[300],
         ),
-      ),
+        child: const Icon(Icons.image_not_supported, size: 50),
+      );
+    }
 
+    return SizedBox(
+      height: 219.h,
+      child: Stack(
+        children: [
+          PageView.builder(
+            itemCount: spot.images.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              final imageUrl = spot.images[index].startsWith('http')
+                  ? spot.images[index]
+                  : '${AppApiEndPoint.domain}${spot.images[index]}';
+
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            },
+          ),
+          if (spot.images.length > 1)
+            Positioned(
+              bottom: 15.h,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  spot.images.length,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 8.w,
+                    height: 8.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentPage == index
+                          ? AppColor.backgroundColor
+                          : Colors.white.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
   Widget _buildDetailsSection() {
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title and Location
           _buildTitleSection(),
 
-
           // Description
           _buildDescriptionSection(),
-
-
         ],
       ),
     );
@@ -116,15 +174,20 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 16.h,),
+        SizedBox(
+          height: 16.h,
+        ),
         TextWidget(
-          text: 'Sunset Point',
+          text: spot.title,
           fontColor: AppColor.textColor,
           fontSize: 24,
           fontWeight: FontWeight.w500,
         ),
-        SizedBox(height: 4.h,),
+        SizedBox(
+          height: 4.h,
+        ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(
               Icons.location_on,
@@ -132,27 +195,23 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
               color: Colors.red,
             ),
             const SizedBox(width: 4),
-            TextWidget(
-              text: 'Espot, Catalonia',
-              fontColor: AppColor.darkGay300,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
+            Expanded(
+              child: TextWidget(
+                text: spot.address,
+                fontColor: AppColor.darkGay300,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                textAlignment: TextAlign.start,
+              ),
             ),
           ],
         ),
-        SizedBox(height: 4.h,),
-        TextWidget(
-          text: 'Near Olot, Catalonia',
-          fontColor: AppColor.darkGay300,
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
+        SizedBox(
+          height: 16.h,
         ),
-        SizedBox(height: 16.h,),
       ],
     );
   }
-
-
 
   Widget _buildDescriptionSection() {
     return Column(
@@ -164,10 +223,12 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
-        SizedBox(height: 16.h,),
+        SizedBox(
+          height: 16.h,
+        ),
         TextWidget(
           textAlignment: TextAlign.start,
-          text: 'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. It\'s the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
+          text: spot.description,
           fontColor: AppColor.darkGay300,
           fontSize: 16,
           fontWeight: FontWeight.w400,
@@ -175,11 +236,4 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
       ],
     );
   }
-
-
-
-
-
-
-
 }
