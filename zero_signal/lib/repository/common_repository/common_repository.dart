@@ -227,4 +227,67 @@ class CommonRepository extends GetxController {
       return false;
     }
   }
+
+  /// Fetch favorite spots
+  /// Endpoint: /favorite?type=Spot
+  Future<MySpotsResponseModel?> fetchFavoriteSpots({
+    int? page,
+    int? limit,
+  }) async {
+    _inProgress = true;
+    _errorMessage = '';
+    _successMessage = '';
+    update();
+
+    try {
+      Map<String, dynamic> queryParams = {};
+
+      // Add type parameter
+      // queryParams['type'] = 'Spot';
+
+      if (page != null) {
+        queryParams['page'] = page.toString();
+      }
+
+      if (limit != null) {
+        queryParams['limit'] = limit.toString();
+      }
+
+      final response = await ApiService.getApi(
+        AppApiEndPoint.instance.getFavoriteEndPoint("Spot"),
+        queryParams: queryParams.isNotEmpty ? queryParams : null,
+      );
+
+      _inProgress = false;
+
+      if (response.statusCode == 200) {
+        _successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Favorite spots retrieved successfully";
+
+        final MySpotsResponseModel spotsResponse =
+            MySpotsResponseModel.fromJson(
+                Map<String, dynamic>.from(response.body));
+
+        appLog(
+            'Favorite Spots fetched successfully: ${spotsResponse.data.length} spots');
+        update();
+        return spotsResponse;
+      } else {
+        _errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to fetch favorite spots";
+        appLog(
+            'Fetch favorite spots failed - Status: ${response.statusCode}, Message: ${response.message}');
+        update();
+        return null;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred";
+      appLog('Fetch favorite spots API Error: $e');
+      update();
+      return null;
+    }
+  }
 }

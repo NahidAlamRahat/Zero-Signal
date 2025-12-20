@@ -17,7 +17,7 @@ class MySpotsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        text: 'My Spots',
+        text: controller.isFavoriteMode ? 'Favorite Sites' : 'My Spots',
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
       ),
