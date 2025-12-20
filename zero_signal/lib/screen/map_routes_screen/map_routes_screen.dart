@@ -205,8 +205,7 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const TextWidget(
-               text:  'Map Type',
-
+                text: 'Map Type',
                 fontColor: AppColor.darkGray500,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -312,7 +311,7 @@ class _MapTypeBottomSheetState extends State<MapTypeBottomSheet> {
           ),
           const SizedBox(height: 8),
           TextWidget(
-           text:  type,
+            text: type,
             // style: TextStyle(
             //   fontSize: 14,
             //   fontWeight: FontWeight.w500,

@@ -27,6 +27,7 @@ class AppApiEndPoint {
   String mySpotDetailEndPoint(String id) => "/spot/$id";
   static final String activityEndPoint = "/activity";
   static final String categoryEndPoint = "/category?withSub=true";
+  static final String routeEndPoint = "/route";
   static final String spotEndPoint = "/spot";
 }
 
