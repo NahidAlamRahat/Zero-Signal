@@ -26,4 +26,27 @@ class ProfileRepository {
       return null;
     }
   }
+
+  Future<bool> updateProfile({
+    required Map<String, String> body,
+    List<MultipartBody>? multipartBody,
+  }) async {
+    try {
+      final response = await ApiService.patchMultipartApi(
+        AppApiEndPoint.updateProfile,
+        body,
+        multipartBody: multipartBody,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        AppSnackBar.error(response.message);
+        return false;
+      }
+    } catch (e) {
+      errorLog(e);
+      return false;
+    }
+  }
 }

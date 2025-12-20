@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -12,8 +11,9 @@ import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../constant/app_colors.dart';
 import '../../gen/assets.gen.dart';
 import '../../widget/text_widget/text_widgets.dart';
+import '../profile/controller/profile_controller.dart';
 import '../sport_details/widget/date_picker_sheet.dart';
-
+import 'controller/edit_profile_controller.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -23,70 +23,43 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final TextEditingController _nameController = TextEditingController(text: 'Liam Johnson');
-  final TextEditingController _oneSentenceController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController(
-      text: 'Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it\'s wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.'
-  );
-  final TextEditingController _emailController = TextEditingController(text: 'hola@zerosignal.app');
-  final TextEditingController _genderController = TextEditingController(text: 'Male');
-  final TextEditingController _dobController = TextEditingController(text: '17 dec, 2024');
-  final TextEditingController _addressController = TextEditingController(text: '297 Westheimer Rd. Santa Ana');
-
-  TextEditingController dateController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _oneSentenceController.dispose();
-    _descriptionController.dispose();
-    _emailController.dispose();
-    _genderController.dispose();
-    _dobController.dispose();
-    _addressController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppbarWidget(
-        backgroundColor: AppColor.creamBackgroundColor,
-        text: 'Edit Profile ',
-        centerTitle: true,
-      ),
-      backgroundColor: AppColor.bGColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  spacing: 20,
-                  children: [
-                    // Profile Image
-                    _buildProfileImage(),
-
-                    // Form Fields
-                    _buildFormFields(),
-
-                    // Save Button
-                    _buildSaveButton(),
-                  ],
+    return GetBuilder<EditProfileController>(
+      init: EditProfileController(),
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppbarWidget(
+            backgroundColor: AppColor.creamBackgroundColor,
+            text: 'Edit Profile ',
+            centerTitle: true,
+          ),
+          backgroundColor: AppColor.bGColor,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      spacing: 20,
+                      children: [
+                        _buildProfileImage(controller),
+                        _buildFormFields(controller),
+                        _buildSaveButton(controller),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-
-  Widget _buildProfileImage() {
+  Widget _buildProfileImage(EditProfileController controller) {
     return Stack(
       children: [
         Container(
@@ -95,10 +68,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
             border: Border.all(color: const Color(0xFF484949), width: 3),
-            image: const DecorationImage(
-              image: AssetImage(AppImagePath.profileImage),
-              fit: BoxFit.cover,
-            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: controller.imageFile != null
+                ? Image.file(
+                    controller.imageFile!,
+                    fit: BoxFit.cover,
+                  )
+                : (Get.find<ProfileController>().userImage.value.isNotEmpty
+                    ? Image.network(
+                        Get.find<ProfileController>().userImage.value,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(AppImagePath.profileImage,
+                                fit: BoxFit.cover),
+                      )
+                    : Image.asset(AppImagePath.profileImage,
+                        fit: BoxFit.cover)),
           ),
         ),
         Positioned(
@@ -106,7 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           right: 0,
           child: GestureDetector(
             onTap: () {
-              // Handle image edit
+              controller.pickImage();
             },
             child: Container(
               width: 24,
@@ -128,44 +115,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildFormFields() {
+  Widget _buildFormFields(EditProfileController controller) {
     return Column(
       spacing: 16,
       children: [
-        _buildTextField('Full Name', _nameController),
-        _buildTextField('Me in one sentence', _oneSentenceController),
+        _buildTextField('Full Name', controller.nameController),
+        _buildTextField('Me in one sentence', controller.oneLineBioController),
         _buildTextField(
           'Description',
-          _descriptionController,
+          controller.descriptionController,
           maxLines: 4,
           height: 100,
         ),
-        _buildTextField('Email', _emailController),
-        _buildDropdownField('Gender', _genderController, ['Male', 'Female', 'Other']),
-        _buildDateField('Date of birth', _dobController),
-        _buildTextField('Address', _addressController),
+        _buildTextField('Email', controller.emailController, readOnly: true),
+        _buildDropdownField(
+            'Gender', controller.genderController, ['Male', 'Female', 'Other']),
+        _buildDateField('Date of birth', controller.dobController),
+        _buildTextField('Address', controller.addressController),
       ],
     );
   }
 
   Widget _buildTextField(
-      String label,
-      TextEditingController controller, {
-        int maxLines = 1,
-        double? height,
-      }) {
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+    double? height,
+    bool readOnly = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
         TextWidget(
-         text:  label,
-          // style: const TextStyle(
-          //   color: Color(0xFF2C2C2C),
-          //   fontSize: 16,
-          //   fontFamily: 'Poppins',
-          //   fontWeight: FontWeight.w400,
-          // ),
+          text: label,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           fontColor: AppColor.textColor,
@@ -176,60 +159,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             color: const Color(0xFFF5E9DF),
             borderRadius: BorderRadius.circular(8),
           ),
-          // child: TextFormField(
-          //   controller: controller,
-          //   maxLines: maxLines,
-          //   style: const TextStyle(
-          //     color: Color(0xFF2C2C2C),
-          //     fontSize: 14,
-          //     fontFamily: 'Poppins',
-          //     fontWeight: FontWeight.w400,
-          //   ),
-          //   decoration: const InputDecoration(
-          //     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          //     border: InputBorder.none,
-          //     hintStyle: TextStyle(
-          //       color: Color(0xFF999999),
-          //       fontSize: 14,
-          //     ),
-          //   ),
-          // ),
           child: TextFieldWidget(
             controller: controller,
             maxLines: maxLines,
-            backgroundColor: AppColor.overLayBoxColor,
+            backgroundColor: readOnly
+                ? AppColor.lightGrayishOrange
+                : AppColor.overLayBoxColor,
             fontWeight: FontWeight.w400,
             hintColor: AppColor.textColor,
             textColor: AppColor.textColor,
             borderColor: AppColor.overLayBoxColor,
             fontSize: 14,
             borderRadius: 8,
+            readOnly: readOnly,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildDropdownField(String label, TextEditingController controller, List<String> options) {
+  Widget _buildDropdownField(
+      String label, TextEditingController controller, List<String> options) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
         TextWidget(
-        text:   label,
-
+          text: label,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           fontColor: AppColor.textColor,
         ),
         Container(
-          //height: 44,
           decoration: BoxDecoration(
             color: const Color(0xFFF5E9DF),
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonFormField<String>(
-            value: controller.text.isNotEmpty ? controller.text : null,
+            value: options.contains(controller.text) ? controller.text : null,
             style: TextStyle(
               color: AppColor.textColor,
               fontSize: 14,
@@ -237,7 +204,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               fontWeight: FontWeight.w400,
             ),
             decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               border: InputBorder.none,
             ),
             dropdownColor: AppColor.overLayBoxColor,
@@ -248,9 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               );
             }).toList(),
             onChanged: (String? newValue) {
-              setState(() {
-                controller.text = newValue ?? '';
-              });
+              controller.text = newValue ?? '';
             },
           ),
         ),
@@ -264,27 +230,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       spacing: 8,
       children: [
         TextWidget(
-         text:  label,
-
+          text: label,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           fontColor: AppColor.textColor,
         ),
-
-
         TextFieldWidget(
           hintColor: AppColor.subTitleColor,
-          controller: dateController,
+          controller: controller,
           keyboardType: TextInputType.number,
           inputFormatters: [DateInputFormatter()],
           customSuffixIcon: InkWell(
               onTap: () async {
                 final selectedDate = await showDatePickerSheet(context);
                 if (selectedDate != null) {
-                  setState(() {
-                    dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
-
-                  });
+                  controller.text =
+                      DateFormat('yyyy-MM-dd').format(selectedDate);
                 }
               },
               child: Image.asset(
@@ -292,79 +253,54 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 height: 18.h,
                 width: 18.w,
               )),
-          hintText: 'dd/mm/yyyy',
+          hintText: 'yyyy-mm-dd',
           borderColor: Colors.transparent,
           backgroundColor: AppColor.lightGrayishOrange,
           borderRadius: 8,
         ),
-
-
-
       ],
     );
   }
 
-  String _getMonthName(int month) {
-    const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return months[month];
-  }
-
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(EditProfileController controller) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 20),
-      child: ElevatedButton(
-        onPressed: () {
-          // Handle save action
-          _saveProfile();
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2E4F3E),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: const Text(
-          'Save & Continue',
-          style: TextStyle(
-            color: Color(0xFFF1F1F1),
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+      child: Obx(() => ElevatedButton(
+            onPressed: controller.isLoading.value
+                ? null
+                : () {
+                    controller.updateProfile();
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2E4F3E),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: controller.isLoading.value
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Text(
+                    'Save & Continue',
+                    style: TextStyle(
+                      color: Color(0xFFF1F1F1),
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+          )),
     );
   }
 
-
-
-
-  void _saveProfile() {
-    // Handle profile saving logic here
-    print('Name: ${_nameController.text}');
-    print('One sentence: ${_oneSentenceController.text}');
-    print('Description: ${_descriptionController.text}');
-    print('Email: ${_emailController.text}');
-    print('Gender: ${_genderController.text}');
-    print('DOB: ${_dobController.text}');
-    print('Address: ${_addressController.text}');
-
-    // Show success message or navigate back
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile updated successfully!'),
-        backgroundColor: Color(0xFF2E4F3E),
-      ),
-    );
-  }
-
-
-  /// Date picker bottom sheet
   Future<DateTime?> showDatePickerSheet(BuildContext context) async {
     return await showModalBottomSheet<DateTime>(
       context: context,
@@ -373,14 +309,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       builder: (context) => SafeArea(
         child: Container(
           width: Get.width,
-          //   height: Get.height*0.5,
           color: AppColor.creamBackgroundColor,
           child: const DatePickerSheet(),
         ),
       ),
     );
   }
-
-
-
 }

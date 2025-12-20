@@ -40,6 +40,7 @@ class TextFieldWidget extends StatefulWidget {
   final FontWeight? fontWeight;
   final Color? suffixIconColor;
   final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly;
 
   const TextFieldWidget({
     super.key,
@@ -74,6 +75,7 @@ class TextFieldWidget extends StatefulWidget {
     this.errorStyle,
     this.fontWeight,
     this.inputFormatters,
+    this.readOnly = false,
   });
 
   @override
@@ -101,6 +103,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         onFieldSubmitted: widget.onFieldSubmitted,
         controller: widget.controller,
         validator: widget.validator,
+        readOnly: widget.readOnly,
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: obscureText ? 1 : widget.maxLines,

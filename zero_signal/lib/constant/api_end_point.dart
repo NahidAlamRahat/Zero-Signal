@@ -30,6 +30,7 @@ class AppApiEndPoint {
   static final String routeEndPoint = "/route";
   static final String spotEndPoint = "/spot";
   static final String getProfile = "/user/profile";
+  static final String updateProfile = "/user/profile";
 }
 
 // Move this function outside the class
