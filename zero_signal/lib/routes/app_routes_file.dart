@@ -22,7 +22,7 @@ import 'package:zero_signal/screen/social_screen/social_screen.dart';
 import '../screen/list_screen/list_screen.dart';
 import '../screen/list_view_details_screen/list_view_details_screen.dart';
 import '../screen/manage_download_screen/manage_download_screen.dart';
-import '../screen/my_routes_screen/my_spots_screen.dart';
+import '../screen/my_routes_screen/my_routes_screen.dart';
 import '../screen/my_spots_screen/my_spots_screen.dart';
 import '../screen/onboarding_screen/onboarding_screen.dart';
 import '../screen/personal_information_screen/personal_information_screen.dart';
