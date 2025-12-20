@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 
+import '../../../constant/api_end_point.dart';
 import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../widget/space_widget.dart';
@@ -93,7 +94,7 @@ class ProfileCardWidget extends StatelessWidget {
           border: Border.all(color: const Color(0xFFFFCB20), width: 2),
           borderRadius: BorderRadius.circular(24),
           image: DecorationImage(
-            image: AssetImage(AppImagePath.profileImage),
+            image: Image.network(controller.userImage.value).image,
             fit: BoxFit.cover,
           ),
         ),
