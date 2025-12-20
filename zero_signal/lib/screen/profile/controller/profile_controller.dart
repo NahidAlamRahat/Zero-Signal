@@ -10,10 +10,13 @@ class ProfileController extends GetxController {
   final ProfileRepository _profileRepository = ProfileRepository();
   final userName = 'User Name'.obs;
   final userEmail = 'user@email.com'.obs;
-  final userBio = 'Outdoor enthusiast & explorer'.obs;
+  final oneLineBio = 'Outdoor enthusiast & explorer'.obs;
   final userPoints = 0.obs;
   final userImage = ''.obs;
-
+  final userGender = 'Male'.obs;
+  final userDob = '17 dec, 2024'.obs;
+  final userAddress = '297 Westheimer Rd. Santa Ana'.obs;
+  final bio = ''.obs;
   final isLoading = false.obs;
 
   @override
@@ -28,8 +31,12 @@ class ProfileController extends GetxController {
     if (profileModel != null && profileModel.data != null) {
       userName.value = profileModel.data?.name ?? "";
       userEmail.value = profileModel.data?.email ?? "";
-      userBio.value = profileModel.data?.meInOneSentence ?? "";
+      oneLineBio.value = profileModel.data?.meInOneSentence ?? "";
       userImage.value = profileModel.data?.image ?? "";
+      userGender.value = profileModel.data?.gender ?? "";
+      userDob.value = profileModel.data?.dateOfBirth ?? "";
+      userAddress.value = profileModel.data?.address ?? "";
+      bio.value = profileModel.data?.bio ?? "";
     }
     isLoading.value = false;
   }

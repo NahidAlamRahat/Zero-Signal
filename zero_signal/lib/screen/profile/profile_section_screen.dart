@@ -7,7 +7,6 @@ import 'package:zero_signal/screen/profile/widget/settings_card_widget.dart';
 import '../../widget/space_widget.dart';
 import 'controller/profile_controller.dart';
 
-
 class ProfileSectionScreen extends StatelessWidget {
   ProfileSectionScreen({super.key});
 
@@ -17,17 +16,23 @@ class ProfileSectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF4E9),
-      body: SingleChildScrollView(
-        padding:  EdgeInsets.only(right: 20.w,left: 20.w, top: 30.h),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await controller.getProfile();
+        },
         child: SafeArea(
-          child: Column(
-            spacing: 16,
-            children: [
-              ProfileCardWidget(controller: controller),
-              MenuItemsCardWidget(controller: controller),
-              SettingsCardWidget(controller: controller),
-              SpaceWidget(spaceHeight: 30),
-            ],
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(right: 20.w, left: 20.w, top: 30.h),
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              spacing: 16,
+              children: [
+                ProfileCardWidget(controller: controller),
+                MenuItemsCardWidget(controller: controller),
+                SettingsCardWidget(controller: controller),
+                SpaceWidget(spaceHeight: 30),
+              ],
+            ),
           ),
         ),
       ),

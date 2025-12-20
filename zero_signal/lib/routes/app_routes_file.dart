@@ -53,7 +53,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () => const SplashScreen(),
   ),
 
- /* GetPage(
+  /* GetPage(
     name: AppRoutes.chooseLanguageScreen,
     // binding: SplashScreenBinding(),
     page: () => ChooseLanguageScreen(),
@@ -107,7 +107,6 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () => HomeScreen(),
   ),
 
-
   GetPage(
     name: AppRoutes.bottomNav,
     page: () => const BottomNav(),
@@ -140,7 +139,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
   GetPage(
     name: AppRoutes.viewProfileScreen,
-    page: () =>  ViewProfileScreen(),
+    page: () => ViewProfileScreen(),
     // binding: GeneralBindings(),
   ),
 
@@ -150,15 +149,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     // binding: GeneralBindings(),
   ),
 
-
-
   //Social Screen
   GetPage(
     name: AppRoutes.socialScreen,
     // binding: SplashScreenBinding(),
     page: () => const SocialScreen(),
   ),
-
 
   GetPage(
     name: AppRoutes.editProfileScreen,
@@ -169,7 +165,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   GetPage(
     name: AppRoutes.personalInformationScreen,
     // binding: SplashScreenBinding(),
-    page: () => const PersonalInformationScreen(),
+    page: () => PersonalInformationScreen(),
   ),
   GetPage(
     name: AppRoutes.mySpotsScreen,
@@ -177,118 +173,105 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     page: () => MySpotsScreen(),
   ),
 
-
   GetPage(
     name: AppRoutes.myRoutesScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  MyRoutesScreen(),
+    page: () => MyRoutesScreen(),
   ),
-
 
   GetPage(
     name: AppRoutes.disclaimerScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  DisclaimerScreen(),
+    page: () => DisclaimerScreen(),
   ),
-
 
   GetPage(
     name: AppRoutes.onboardingScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  OnboardingScreen(),
+    page: () => OnboardingScreen(),
   ),
-
-
-
 
   GetPage(
     name: AppRoutes.contactSupportScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ContactSupportScreen(),
+    page: () => ContactSupportScreen(),
   ),
-
-
 
   GetPage(
     name: AppRoutes.favoriteRoutesScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  FavoriteRoutesScreen(),
+    page: () => FavoriteRoutesScreen(),
   ),
 
   GetPage(
     name: AppRoutes.changeLanguageScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ChangeLanguageScreen(),
+    page: () => ChangeLanguageScreen(),
   ),
 
   GetPage(
     name: AppRoutes.changePasswordScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ChangePasswordScreen(),
+    page: () => ChangePasswordScreen(),
   ),
 
   GetPage(
     name: AppRoutes.manageDownloadScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ManageDownloadScreen(),
+    page: () => ManageDownloadScreen(),
   ),
-
 
   GetPage(
     name: AppRoutes.activityListsScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ActivityListsScreen(),
+    page: () => ActivityListsScreen(),
   ),
 
   GetPage(
     name: AppRoutes.websiteViewScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  WebsiteViewScreen(),
+    page: () => WebsiteViewScreen(),
   ),
 
   GetPage(
     name: AppRoutes.createActivityScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  CreateActivityScreen(),
+    page: () => CreateActivityScreen(),
   ),
-
 
   GetPage(
     name: AppRoutes.chatScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ChatScreen(),
+    page: () => ChatScreen(),
   ),
 
   GetPage(
     name: AppRoutes.sunsetPointDetailsScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  SunsetPointDetailsScreen(),
+    page: () => SunsetPointDetailsScreen(),
   ),
 
   GetPage(
     name: AppRoutes.listViewDetailsScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  ListViewDetailsScreen(),
+    page: () => ListViewDetailsScreen(),
   ),
-
 
   GetPage(
     name: AppRoutes.updateInformationScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  UpdateInformationScreen(),
+    page: () => UpdateInformationScreen(),
   ),
 
   GetPage(
     name: AppRoutes.editActivityScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  EditActivityScreen(),
+    page: () => EditActivityScreen(),
   ),
 
   GetPage(
     name: AppRoutes.faqScreen,
     // binding: SplashScreenBinding(),
-    page: () =>  FAQScreen(),
+    page: () => FAQScreen(),
   ),
-
-
 ];

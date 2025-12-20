@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 
-import '../../../constant/api_end_point.dart';
 import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../widget/space_widget.dart';
@@ -60,7 +60,7 @@ class ProfileCardWidget extends StatelessWidget {
           top: 10.h,
           right: 10.w,
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Get.toNamed(AppRoutes.contactSupportScreen);
             },
             child: Container(
@@ -87,26 +87,39 @@ class ProfileCardWidget extends StatelessWidget {
       onTap: () {
         controller.navigateToRoute(AppRoutes.personalInformationScreen);
       },
-      child: Container(
-        width: 48.w,
-        height: 48.w,
-        decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFFFCB20), width: 2),
-          borderRadius: BorderRadius.circular(24),
-          image: DecorationImage(
-            image: Image.network(controller.userImage.value).image,
-            fit: BoxFit.cover,
+      child: Obx(() {
+        final imagePath = controller.userImage.value;
+        ImageProvider imageProvider;
+
+        if (imagePath.isEmpty) {
+          imageProvider = AssetImage(AppImagePath.profileImage);
+        } else {
+          imageProvider = NetworkImage(imagePath);
+        }
+
+        return Container(
+          width: 48.w,
+          height: 48.w,
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFFFFCB20), width: 2),
+            borderRadius: BorderRadius.circular(24),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+              onError: (exception, stackTrace) {
+                // Return fallback image
+              },
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
   Widget _buildUserName() {
     return Obx(
-          () => TextWidget(
-       text:  controller.userName.value,
-
+      () => TextWidget(
+        text: controller.userName.value,
         fontSize: 12,
         fontWeight: FontWeight.w400,
         fontColor: AppColor.textColor,
@@ -116,31 +129,29 @@ class ProfileCardWidget extends StatelessWidget {
 
   Widget _buildUserEmail() {
     return Obx(
-          () => TextWidget(
-       text:  controller.userEmail.value,
-
-            fontColor: AppColor.subTitleColor,
-            fontWeight: FontWeight.w400,
-            fontSize: 10,
-
+      () => TextWidget(
+        text: controller.userEmail.value,
+        fontColor: AppColor.subTitleColor,
+        fontWeight: FontWeight.w400,
+        fontSize: 10,
       ),
     );
   }
 
   Widget _buildUserBio() {
     return Obx(
-          () => TextWidget(
-       text:  controller.userBio.value,
-            fontColor: AppColor.textColor,
-            fontWeight: FontWeight.w400,
-            fontSize: 10,
+      () => TextWidget(
+        text: controller.oneLineBio.value,
+        fontColor: AppColor.textColor,
+        fontWeight: FontWeight.w400,
+        fontSize: 10,
       ),
     );
   }
 
   Widget _buildUserPoints() {
     return Obx(
-          () => Text.rich(
+      () => Text.rich(
         TextSpan(
           children: [
             TextSpan(
