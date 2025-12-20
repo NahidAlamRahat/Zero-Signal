@@ -13,6 +13,7 @@ import '../../gen/assets.gen.dart';
 import '../../widget/text_widget/text_widgets.dart';
 import '../profile/controller/profile_controller.dart';
 import '../sport_details/widget/date_picker_sheet.dart';
+import '../../constant/api_end_point.dart';
 import 'controller/edit_profile_controller.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -78,7 +79,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   )
                 : (Get.find<ProfileController>().userImage.value.isNotEmpty
                     ? Image.network(
-                        Get.find<ProfileController>().userImage.value,
+                        AppApiEndPoint.domain +
+                            Get.find<ProfileController>().userImage.value,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) =>
                             Image.asset(AppImagePath.profileImage,

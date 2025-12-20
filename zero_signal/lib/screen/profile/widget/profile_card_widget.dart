@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/api_end_point.dart';
 
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -88,7 +89,7 @@ class ProfileCardWidget extends StatelessWidget {
         controller.navigateToRoute(AppRoutes.personalInformationScreen);
       },
       child: Obx(() {
-        final imagePath = controller.userImage.value;
+        final imagePath = AppApiEndPoint.domain + controller.userImage.value;
         ImageProvider imageProvider;
 
         if (imagePath.isEmpty) {

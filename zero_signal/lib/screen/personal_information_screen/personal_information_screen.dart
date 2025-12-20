@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/api_end_point.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -83,7 +84,8 @@ class PersonalInformationScreen extends StatelessWidget {
               border: Border.all(color: AppColor.yello, width: 2),
             ),
             child: Obx(() {
-              final imagePath = profileController.userImage.value;
+              final imagePath =
+                  AppApiEndPoint.domain + profileController.userImage.value;
               ImageProvider imageProvider;
 
               if (imagePath.isEmpty) {
