@@ -42,7 +42,7 @@ class RouteActions extends StatelessWidget {
               size: 18.sp,
             ),
           ),
-          SizedBox(height: 18.h),
+          SizedBox(height: 10.h),
           GestureDetector(
             onTap: onDeleteTap,
             child: Image.asset(
