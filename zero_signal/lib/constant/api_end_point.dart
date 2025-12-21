@@ -25,7 +25,6 @@ class AppApiEndPoint {
   String getFavoriteEndPoint(String type) => "/favorite?type=$type";
   static String toggleFavoriteEndPoint() => "/favorite";
   String mySpotDetailEndPoint(String id) => "/spot/$id";
-  static final String activityEndPoint = "/activity";
   static final String categoryEndPoint = "/category?withSub=true";
   static final String routeEndPoint = "/route";
   static final String spotEndPoint = "/spot";
@@ -33,6 +32,8 @@ class AppApiEndPoint {
   static final String updateProfile = "/user/profile";
   static final String supportEndPoint = "/support";
   String routeDetailEndPoint(String id) => "/route/$id";
+  String routeTypeEndPoint() => "/category/route-type";
+  static final String activityEndPoint = "/activity";
 }
 
 // Move this function outside the class
