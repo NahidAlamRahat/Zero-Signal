@@ -6,6 +6,51 @@ import '../service/api_service/api_services.dart';
 import '../utils/app_log/app_log.dart';
 import '../widget/app_snack_bar/app_snack_bar.dart';
 
+// Spot model for coordinates API response
+class SpotCoordinateModel {
+  final String id;
+  final String title;
+  final String description;
+  final String address;
+  final double latitude;
+  final double longitude;
+  final String type;
+  final List<String> images;
+  final String user;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  SpotCoordinateModel({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+    required this.type,
+    required this.images,
+    required this.user,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory SpotCoordinateModel.fromJson(Map<String, dynamic> json) {
+    return SpotCoordinateModel(
+      id: json['_id']?.toString() ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      address: json['address'] ?? '',
+      latitude: (json['lat'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['lng'] as num?)?.toDouble() ?? 0.0,
+      type: json['type'] ?? '',
+      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      user: json['user']?.toString() ?? '',
+      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
+    );
+  }
+}
+
 /// Spot Repository: Handles spot-related API calls
 class SpotRepository {
   bool _inProgress = false;
@@ -114,6 +159,74 @@ class SpotRepository {
       appLog('Create spot API Error: $e');
       AppSnackBar.error(_errorMessage);
       return false;
+    }
+  }
+
+  /// Fetch spots by coordinates
+  /// Endpoint: GET /spot/coordinates?lng={longitude}&radius={radius}&lat={latitude}
+  Future<List<SpotCoordinateModel>?> fetchSpotsByCoordinates({
+    required double latitude,
+    required double longitude,
+    required double radius, // radius in meters
+  }) async {
+    _inProgress = true;
+    _errorMessage = '';
+    _successMessage = '';
+
+    try {
+      // Build query parameters
+      final Map<String, dynamic> queryParams = {
+        'lat': latitude.toString(),
+        'lng': longitude.toString(),
+        'radius': radius.toString(),
+      };
+
+      final response = await ApiService.getApi(
+        AppApiEndPoint.spotCoordinatesEndPoint,
+        queryParams: queryParams,
+      );
+
+      _inProgress = false;
+
+      if (response.statusCode == 200) {
+        _successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Spots retrieved successfully";
+
+        // Parse the response data
+        List<dynamic> data;
+        if (response.body is List) {
+          data = List<dynamic>.from(response.body as List);
+        } else if (response.body is Map && response.body['data'] != null) {
+          final dynamic dataField = response.body['data'];
+          if (dataField is List) {
+            data = List<dynamic>.from(dataField);
+          } else {
+            data = [];
+          }
+        } else {
+          data = [];
+        }
+        
+        final List<SpotCoordinateModel> spots = data
+            .map((spotJson) => SpotCoordinateModel.fromJson(spotJson))
+            .toList();
+
+        appLog('Spots by coordinates fetched successfully: ${spots.length} spots');
+        return spots;
+      } else {
+        _errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to fetch spots";
+        appLog(
+            'Fetch spots by coordinates failed - Status: ${response.statusCode}, Message: ${response.message}');
+        return null;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred";
+      appLog('Fetch spots by coordinates API Error: $e');
+      return null;
     }
   }
 }

@@ -4,10 +4,25 @@ import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
+import 'package:dio/dio.dart';
+import '../../../repository/spot_repository.dart';
 
 class HomeScreenController extends GetxController {
+  late mapbox. MapWidget mapWidget;
   late mapbox.MapboxMap mapboxMap;
   geo.Position? currentPosition;
+  final TextEditingController searchController = TextEditingController();
+  final String mapboxAccessToken =
+      'pk.eyJ1IjoibGVkZTE4IiwiYSI6ImNtZzgzcmxodDAyejIybXIzcHUyZGRyMzgifQ.jbe1XMovv8MF5TGitB9PwQ';
+
+  List<dynamic> searchSuggestions = [];
+  bool isSearching = false;
+  
+  // Spot related properties
+  final SpotRepository _spotRepository = SpotRepository();
+  List<SpotCoordinateModel> nearbySpots = [];
+  bool isLoadingSpots = false;
+  mapbox.PointAnnotationManager? pointAnnotationManager;
 
   // Map style URIs
   static const String defaultStyleUri = 'mapbox://styles/mapbox/streets-v12';
@@ -138,9 +153,31 @@ class HomeScreenController extends GetxController {
 
   late mapbox.Point markerPoint;
 
+  /// Load marker icon from assets and register it in map style
+  Future<void> _loadMarkerIcon() async {
+    try {
+      print('Skipping custom icon loading - using simple colored dots');
+      // For Mapbox compatibility, we'll use simple colored dots
+    } catch (e) {
+      print('Error in icon setup: $e');
+    }
+  }
+
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
     mapboxMap = controller;
     await getUserLocation();
+
+    // Set style to streets-v12 which has marker-15 sprite
+    await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+    
+    // Wait a bit for style to load
+    await Future.delayed(Duration(seconds: 1));
+
+    // Load marker icon
+    await _loadMarkerIcon();
+
+    // Create point annotation manager for markers
+    pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
 
     if (currentPosition != null) {
       await mapboxMap.setCamera(
@@ -181,8 +218,108 @@ class HomeScreenController extends GetxController {
         ),
       );
 
-      // Add static markers
-      //await _addSingleMarker();
+      // Fetch nearby spots when map is ready
+      await fetchNearbySpots();
+    }
+  }
+
+  /// Fetch nearby spots from API
+  Future<void> fetchNearbySpots({double radius = 5000.0}) async {
+    if (currentPosition == null) {
+      Fluttertoast.showToast(
+        msg: "Location not available. Please enable GPS.",
+        backgroundColor: Colors.orange,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    isLoadingSpots = true;
+    update();
+
+    try {
+      final spots = await _spotRepository.fetchSpotsByCoordinates(
+        latitude: currentPosition!.latitude,
+        longitude: currentPosition!.longitude,
+        radius: radius, // Default 200 meters radius
+      );
+
+      if (spots != null) {
+        nearbySpots = spots;
+        print('DEBUG: Found ${spots.length} spots from API');
+        for (int i = 0; i < spots.length; i++) {
+          print('DEBUG: Spot $i: ${spots[i].title} at (${spots[i].latitude}, ${spots[i].longitude})');
+        }
+        await _addSpotMarkersToMap();
+        
+        Fluttertoast.showToast(
+          msg: "Found ${spots.length} nearby spots",
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: _spotRepository.errorMessage.isNotEmpty 
+              ? _spotRepository.errorMessage 
+              : "Failed to fetch spots",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Error fetching spots: $e",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } finally {
+      isLoadingSpots = false;
+      update();
+    }
+  }
+
+  /// Add spot markers to the map
+  Future<void> _addSpotMarkersToMap() async {
+    if (pointAnnotationManager == null || nearbySpots.isEmpty) return;
+
+    try {
+      // Clear existing markers
+      await pointAnnotationManager!.deleteAll();
+      print('Cleared existing markers');
+
+      // Add markers for each spot
+      for (final spot in nearbySpots) {
+        print('Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
+        
+        await pointAnnotationManager!.create(
+          mapbox.PointAnnotationOptions(
+            geometry: mapbox.Point(
+              coordinates: mapbox.Position.fromJson([spot.longitude, spot.latitude]),
+            ),
+            iconImage: "marker-15",
+            iconSize: 1.5,
+            textField: spot.title,
+            textSize: 12,
+            textOffset: [0, 1.5],
+          ),
+        );
+      }
+      print('Successfully added ${nearbySpots.length} markers to the map');
+
+      // Move camera to the first spot so markers are visible even if user is far away.
+      final first = nearbySpots.first;
+      await mapboxMap.flyTo(
+        mapbox.CameraOptions(
+          center: mapbox.Point(
+            coordinates:
+                mapbox.Position.fromJson([first.longitude, first.latitude]),
+          ),
+          zoom: 14,
+        ),
+        mapbox.MapAnimationOptions(duration: 1200),
+      );
+    } catch (e) {
+      print('Error adding spot markers: $e');
     }
   }
 
@@ -246,6 +383,9 @@ class HomeScreenController extends GetxController {
           startDelay: 0,
         ),
       );
+      
+      // Refresh nearby spots after updating location
+      await fetchNearbySpots();
     }
   }
 
@@ -278,8 +418,88 @@ class HomeScreenController extends GetxController {
     }
   }
 
+  /// Fetch suggestions as user types
+  Future<void> fetchSuggestions(String query) async {
+    if (query.isEmpty) {
+      searchSuggestions = [];
+      isSearching = false;
+      update();
+      return;
+    }
+
+    isSearching = true;
+    update();
+
+    try {
+      final String url =
+          "https://api.mapbox.com/geocoding/v5/mapbox.places/$query.json?access_token=$mapboxAccessToken&autocomplete=true&limit=5";
+
+      final dio = Dio();
+      final response = await dio.get(url);
+
+      if (response.statusCode == 200) {
+        searchSuggestions = response.data['features'];
+      }
+    } catch (e) {
+      debugPrint('Suggestion Error: $e');
+    } finally {
+      isSearching = false;
+      update();
+    }
+  }
+
+  /// Search for a location and move camera
+  Future<void> searchLocation(String query) async {
+    if (query.isEmpty) return;
+
+    // Clear suggestions when a search is executed
+    searchSuggestions = [];
+    update();
+
+    try {
+      final String url =
+          "https://api.mapbox.com/geocoding/v5/mapbox.places/$query.json?access_token=$mapboxAccessToken&limit=1";
+
+      final dio = Dio();
+      final response = await dio.get(url);
+
+      if (response.statusCode == 200 && response.data['features'].isNotEmpty) {
+        final feature = response.data['features'][0];
+        final List<dynamic> center = feature['center']; // [longitude, latitude]
+
+        await mapboxMap.flyTo(
+          mapbox.CameraOptions(
+            center: mapbox.Point(
+              coordinates: mapbox.Position.fromJson(
+                  [center[0].toDouble(), center[1].toDouble()]),
+            ),
+            zoom: 14.0,
+          ),
+          mapbox.MapAnimationOptions(duration: 2000),
+        );
+      } else {
+        Fluttertoast.showToast(msg: "Location not found");
+      }
+    } catch (e) {
+      debugPrint('Search Error: $e');
+      Fluttertoast.showToast(msg: "Error searching location");
+    }
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
+  }
+
   @override
   void onInit() {
+    mapWidget =  mapbox.MapWidget(
+      cameraOptions: mapbox.CameraOptions(),
+   
+
+    );
+
     markerPoint = mapbox.Point(
         coordinates:
             mapbox.Position.fromJson([23.78105597835364, 90.40762703426819]));

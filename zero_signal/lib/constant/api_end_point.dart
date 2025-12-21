@@ -28,6 +28,7 @@ class AppApiEndPoint {
   static final String activityEndPoint = "/activity";
   static final String categoryEndPoint = "/category?withSub=true";
   static final String spotEndPoint = "/spot";
+  static final String spotCoordinatesEndPoint = "/spot/coordinates";
 }
 
 // Move this function outside the class
