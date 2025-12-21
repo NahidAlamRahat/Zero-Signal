@@ -18,4 +18,39 @@ class RouteRepository extends CommonRepository {
     }
     return null;
   }
+
+  Future<bool> deleteRoute(String id) async {
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
+    update();
+
+    try {
+      final response = await ApiService.deleteApi(
+        url: AppApiEndPoint.instance.routeDetailEndPoint(id),
+        body: {},
+      );
+
+      inProgress = false;
+
+      if (response.statusCode == 200) {
+        successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Route deleted successfully";
+        update();
+        return true;
+      } else {
+        errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to delete route";
+        update();
+        return false;
+      }
+    } catch (e) {
+      inProgress = false;
+      errorMessage = "Network error occurred";
+      update();
+      return false;
+    }
+  }
 }

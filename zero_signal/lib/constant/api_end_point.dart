@@ -32,6 +32,7 @@ class AppApiEndPoint {
   static final String getProfile = "/user/profile";
   static final String updateProfile = "/user/profile";
   static final String supportEndPoint = "/support";
+  String routeDetailEndPoint(String id) => "/route/$id";
 }
 
 // Move this function outside the class

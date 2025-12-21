@@ -100,12 +100,25 @@ class MyRoutesController extends GetxController {
     }
   }
 
-  void deleteRoute(RouteData route) {
-    // Call delete api
-    // TODO: Implement delete functionality
-    print("Delete route: ${route.title}");
-    // Optimistic update for demo
-    routes.remove(route);
-    update();
+  Future<void> deleteRoute(RouteData route) async {
+    if (route.sId == null) return;
+
+    final result = await _routeRepository.deleteRoute(route.sId!);
+
+    if (result) {
+      routes.remove(route);
+      AppSnackBar.success(
+        _routeRepository.successMessage.isNotEmpty
+            ? _routeRepository.successMessage
+            : "Route deleted successfully",
+      );
+      update();
+    } else {
+      AppSnackBar.error(
+        _routeRepository.errorMessage.isNotEmpty
+            ? _routeRepository.errorMessage
+            : "Failed to delete route",
+      );
+    }
   }
 }
