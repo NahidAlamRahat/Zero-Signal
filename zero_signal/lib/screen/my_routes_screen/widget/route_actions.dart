@@ -36,9 +36,12 @@ class RouteActions extends StatelessWidget {
           GestureDetector(
             onTap: onFavoriteTap,
             child: Icon(
-              Icons
-                  .favorite_border, // Defaulting to border as JSON didn't have isFavorite
-              color: const Color(0xFF999999),
+              (route.isFavorite ?? false)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: (route.isFavorite ?? false)
+                  ? Colors.red
+                  : const Color(0xFF999999),
               size: 18.sp,
             ),
           ),

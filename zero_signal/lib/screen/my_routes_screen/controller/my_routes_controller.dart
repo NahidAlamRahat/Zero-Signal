@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../repository/route_repository/route_repository.dart';
+import '../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/route_model.dart';
 
 class MyRoutesController extends GetxController {
@@ -74,10 +75,29 @@ class MyRoutesController extends GetxController {
     print("Route tapped: ${route.title}");
   }
 
-  void toggleFavorite(RouteData route) {
-    // Call favorite api
-    // TODO: Implement toggle favorite
-    print("Toggle favorite: ${route.title}");
+  Future<void> toggleFavorite(RouteData route) async {
+    if (route.sId == null) return;
+
+    final result = await _routeRepository.toggleFavorite(
+      id: route.sId!,
+      type: "Route",
+    );
+
+    if (result) {
+      route.isFavorite = !(route.isFavorite ?? false);
+      AppSnackBar.success(
+        route.isFavorite == true
+            ? "Route added to favorites"
+            : "Route removed from favorites",
+      );
+      update();
+    } else {
+      AppSnackBar.error(
+        _routeRepository.errorMessage.isNotEmpty
+            ? _routeRepository.errorMessage
+            : "Failed to update favorite status",
+      );
+    }
   }
 
   void deleteRoute(RouteData route) {

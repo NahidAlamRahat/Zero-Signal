@@ -78,6 +78,7 @@ class RouteData {
   int? iV;
   Distance? distance;
   Duration? duration;
+  bool? isFavorite;
 
   RouteData(
       {this.location,
@@ -97,7 +98,8 @@ class RouteData {
       this.updatedAt,
       this.iV,
       this.distance,
-      this.duration});
+      this.duration,
+      this.isFavorite});
 
   RouteData.fromJson(Map<String, dynamic> json) {
     location =
@@ -125,6 +127,7 @@ class RouteData {
         json['distance'] != null ? Distance.fromJson(json['distance']) : null;
     duration =
         json['duration'] != null ? Duration.fromJson(json['duration']) : null;
+    isFavorite = json['isFavorite'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -155,6 +158,7 @@ class RouteData {
     if (duration != null) {
       data['duration'] = duration!.toJson();
     }
+    data['isFavorite'] = isFavorite;
     return data;
   }
 
