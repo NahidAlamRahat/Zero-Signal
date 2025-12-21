@@ -5,8 +5,8 @@ import '../../constant/app_colors.dart';
 import '../../widget/appbar_widget/appbar_widget.dart';
 import '../my_routes_screen/widget/delete_confirm_dialog.dart';
 import '../my_routes_screen/widget/empty_state_widget.dart';
-import '../my_routes_screen/widget/spot_card.dart';
 import '../my_spots_screen/controller/my_spots_controller.dart';
+import '../my_spots_screen/widget/spot_card.dart';
 
 class FavoriteRoutesScreen extends StatelessWidget {
   FavoriteRoutesScreen({super.key});

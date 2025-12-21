@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
 import '../../favorite_sites_screen/favorite_sites_screen.dart';
-import '../model/spot_item.dart';
+import '../model/my_spots_response_model.dart';
 
 class SpotActions extends StatelessWidget {
-  final SpotItem spot;
+  final SpotData spot;
   final VoidCallback onFavoriteTap;
   final VoidCallback onDeleteTap;
 
@@ -32,7 +32,7 @@ class SpotActions extends StatelessWidget {
               size: 18.sp,
             ),
           ),
-          SizedBox(height: 18.h),
+          SizedBox(height: 8.h),
           GestureDetector(
             onTap: onDeleteTap,
             child: Image.asset(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/screen/my_spots_screen/widget/spot_actions.dart';
+import 'package:zero_signal/screen/my_spots_screen/widget/spot_image.dart';
+import 'package:zero_signal/screen/my_spots_screen/widget/spot_info.dart';
 import '../../../constant/api_end_point.dart';
-import '../../my_routes_screen/widget/spot_actions.dart';
-import '../../my_routes_screen/widget/spot_image.dart';
-import '../../my_routes_screen/widget/spot_info.dart';
 import '../model/my_spots_response_model.dart';
 
 class SpotCard extends StatelessWidget {
@@ -43,7 +43,7 @@ class SpotCard extends StatelessWidget {
                 uploadDate: spot.createdAt,
               ),
               SpotActions(
-                spot: spot,
+                spot:spot,
                 onFavoriteTap: onFavoriteTap,
                 onDeleteTap: onDeleteTap,
               ),
