@@ -39,6 +39,7 @@ class _SocialScreenState extends State<SocialScreen> {
             await controller.fetchActivityFeed();
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
                 SizedBox(height: 50.h),

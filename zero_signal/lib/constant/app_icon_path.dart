@@ -40,6 +40,7 @@ class AppIconPath {
   static const String locationIcon = "assets/icons/location.png";
   static const String groupIcon = "assets/icons/group.png";
   static const String saveIcon = "assets/icons/save.png";
+  static const String isSavedIcon = "assets/icons/is_saved.png";
   static const String addPeopleIcon = "assets/icons/add_people.png";
 
   static const String mySpotsIcon = "assets/icons/my_sport_list.png";
@@ -52,6 +53,7 @@ class AppIconPath {
   static const String microphoneIcon = "assets/microphone_icon.png";
   static const String sendChatIcon = "assets/send_icon.png";
   static const String addGreenbutton = "assets/addGreenbutton.png";
+
 
 
 
