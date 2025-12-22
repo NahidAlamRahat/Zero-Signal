@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:dio/dio.dart';
@@ -156,28 +159,107 @@ class HomeScreenController extends GetxController {
   /// Load marker icon from assets and register it in map style
   Future<void> _loadMarkerIcon() async {
     try {
-      print('Skipping custom icon loading - using simple colored dots');
-      // For Mapbox compatibility, we'll use simple colored dots
+      print('DEBUG: Loading custom marker icon');
+      
+      // Load the marker image from assets
+      final ByteData data = await rootBundle.load('assets/icons/location.png');
+      final uint8List = data.buffer.asUint8List();
+      print('DEBUG: Loaded marker from assets, size: ${uint8List.length} bytes');
+      
+      // Decode the image to get its actual dimensions
+      final image = await decodeImageFromList(uint8List);
+      print('DEBUG: Image dimensions: ${image.width}x${image.height}');
+      
+      // Create MbxImage with actual image dimensions
+      final mbxImage = mapbox.MbxImage(
+        width: image.width,
+        height: image.height,
+        data: uint8List,
+      );
+      
+      // Add the image to the map style
+      await mapboxMap.style.addStyleImage(
+        "custom-marker",
+        1.0,
+        mbxImage,
+        false,
+        [],
+        [],
+        null,
+      );
+      print('DEBUG: Custom marker image added to style');
+      
     } catch (e) {
-      print('Error in icon setup: $e');
+      print('ERROR: Failed to load marker icon: $e');
     }
+  }
+
+  /// Create a simple red dot marker image
+  Future<Uint8List> _createSimpleMarkerImage() async {
+    try {
+      // For simplicity, use a pre-made marker image from assets
+      final ByteData data = await rootBundle.load('assets/icons/location.png');
+      print('DEBUG: Loaded marker from assets');
+      return data.buffer.asUint8List();
+    } catch (e) {
+      print('DEBUG: Assets icon not found: $e');
+      // If asset doesn't exist, return empty list
+
+      return _createFallbackMarkerBytes();
+    }
+  }
+
+  /// Create a fallback marker (simple colored pixel)
+  Uint8List _createFallbackMarkerBytes() {
+    // Create a simple 16x16 PNG with red color
+    // This is a minimal PNG file representation of a red dot
+    final bytes = <int>[
+      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG signature
+      0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52, // IHDR chunk
+      0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10,
+      0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0xF3, 0xFF,
+      0x61, 0x00, 0x00, 0x00, 0x4A, 0x49, 0x44, 0x41,
+      0x54, 0x78, 0x9C, 0xED, 0xC1, 0x01, 0x0D, 0x00,
+      0x00, 0x00, 0xC2, 0xA0, 0xF5, 0x4F, 0x6D, 0x0E,
+      0x37, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0xB0, 0xFF, 0x00, 0x01, 0xFE, 0x7B, 0xEE,
+      0x41, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
+      0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
+    ];
+    return Uint8List.fromList(bytes);
   }
 
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
     mapboxMap = controller;
+    print('DEBUG: Map created, initializing...');
+    
     await getUserLocation();
 
     // Set style to streets-v12 which has marker-15 sprite
-    await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+    try {
+      await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+      print('DEBUG: Style loaded successfully');
+    } catch (e) {
+      print('DEBUG: Error loading style: $e');
+    }
     
-    // Wait a bit for style to load
-    await Future.delayed(Duration(seconds: 1));
+    // Wait longer for style to load completely
+    await Future.delayed(Duration(seconds: 2));
 
     // Load marker icon
     await _loadMarkerIcon();
 
     // Create point annotation manager for markers
-    pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+    try {
+      pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+      print('DEBUG: Point annotation manager created');
+    } catch (e) {
+      print('DEBUG: Error creating annotation manager: $e');
+    }
 
     if (currentPosition != null) {
       await mapboxMap.setCamera(
@@ -280,31 +362,48 @@ class HomeScreenController extends GetxController {
 
   /// Add spot markers to the map
   Future<void> _addSpotMarkersToMap() async {
-    if (pointAnnotationManager == null || nearbySpots.isEmpty) return;
+    print('DEBUG: _addSpotMarkersToMap called');
+    print('DEBUG: pointAnnotationManager: $pointAnnotationManager');
+    print('DEBUG: nearbySpots.length: ${nearbySpots.length}');
+    
+    if (pointAnnotationManager == null) {
+      print('ERROR: pointAnnotationManager is null!');
+      return;
+    }
+    
+    if (nearbySpots.isEmpty) {
+      print('WARNING: nearbySpots is empty!');
+      return;
+    }
 
     try {
       // Clear existing markers
       await pointAnnotationManager!.deleteAll();
-      print('Cleared existing markers');
+      print('DEBUG: Cleared existing markers');
 
       // Add markers for each spot
       for (final spot in nearbySpots) {
-        print('Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
+        print('DEBUG: Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
         
-        await pointAnnotationManager!.create(
-          mapbox.PointAnnotationOptions(
-            geometry: mapbox.Point(
-              coordinates: mapbox.Position.fromJson([spot.longitude, spot.latitude]),
+        try {
+          await pointAnnotationManager!.create(
+            mapbox.PointAnnotationOptions(
+              geometry: mapbox.Point(
+                coordinates: mapbox.Position.fromJson([spot.longitude, spot.latitude]),
+              ),
+              iconImage: "custom-marker", // Use the custom marker we loaded
+              iconSize: 1.0,
+              textField: spot.title,
+              textSize: 12,
+              textOffset: [0, 2.0],
+              textColor: Colors.black.value,
             ),
-            iconImage: "marker-15",
-            iconSize: 1.5,
-            textField: spot.title,
-            textSize: 12,
-            textOffset: [0, 1.5],
-          ),
-        );
+          );
+        } catch (markerError) {
+          print('ERROR: Failed to create marker for ${spot.title}: $markerError');
+        }
       }
-      print('Successfully added ${nearbySpots.length} markers to the map');
+      print('DEBUG: Successfully added ${nearbySpots.length} markers to the map');
 
       // Move camera to the first spot so markers are visible even if user is far away.
       final first = nearbySpots.first;
@@ -494,10 +593,9 @@ class HomeScreenController extends GetxController {
 
   @override
   void onInit() {
-    mapWidget =  mapbox.MapWidget(
+    mapWidget = mapbox.MapWidget(
+      onMapCreated: onMapCreated,
       cameraOptions: mapbox.CameraOptions(),
-   
-
     );
 
     markerPoint = mapbox.Point(
