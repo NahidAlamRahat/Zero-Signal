@@ -268,43 +268,58 @@ class _SocialScreenState extends State<SocialScreen> {
                                     color: AppColor.white500,
                                   ),
                                   SizedBox(height: 20.h),
-                                  SizedBox(
-                                    height: 80.h,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: item.participants?.length ?? 0,
-                                      itemBuilder: (context, pIndex) {
-                                        final participant =
-                                            item.participants![pIndex];
-                                        return Padding(
-                                          padding: EdgeInsets.only(right: 16.w),
-                                          child: Column(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 20,
-                                                backgroundImage: NetworkImage(
-                                                  participant.image ?? "",
-                                                ),
-                                                onBackgroundImageError:
-                                                    (_, __) => AssetImage(
-                                                  AppImagePath.profileImage1,
-                                                ),
-                                              ),
-                                              SizedBox(height: 5.h),
-                                              CustomText(
-                                                text:
-                                                    "@${participant.username ?? ''}, 28",
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColor.white500,
-                                              ),
-                                            ],
+                                  (item.participants == null ||
+                                          item.participants!.isEmpty)
+                                      ? Center(
+                                          child: CustomText(
+                                            text: "No Attendants",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColor.white500,
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 32.h),
+                                        )
+                                      : SizedBox(
+                                          height: 80.h,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount:
+                                                item.participants?.length ?? 0,
+                                            itemBuilder: (context, pIndex) {
+                                              final participant =
+                                                  item.participants![pIndex];
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 16.w),
+                                                child: Column(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 20,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                        participant.image ?? "",
+                                                      ),
+                                                      onBackgroundImageError:
+                                                          (_, __) => AssetImage(
+                                                        AppImagePath
+                                                            .profileImage1,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5.h),
+                                                    CustomText(
+                                                      text:
+                                                          "@${participant.username ?? ''}, 28",
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColor.white500,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                  SizedBox(height: 20.h),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
