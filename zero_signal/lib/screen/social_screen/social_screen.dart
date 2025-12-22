@@ -367,16 +367,28 @@ class _SocialScreenState extends State<SocialScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.asset(
-                                          AppIconPath.saveIcon,
-                                          height: 24,
-                                          width: 24,
+                                        InkWell(
+                                          onTap: () {
+                                            if (item.sId != null) {
+                                              controller.saveActivity(
+                                                  item.sId!, index);
+                                            }
+                                          },
+                                          child: Image.asset(
+                                            (item.isSaved == true)
+                                                ? AppIconPath.isSavedIcon
+                                                : AppIconPath.saveIcon,
+                                            height: 24,
+                                            width: 24,
+                                          ),
                                         ),
                                         SizedBox(
                                           width: 5.w,
                                         ),
                                         CustomText(
-                                          text: "Save",
+                                          text: (item.isSaved == true)
+                                              ? "Saved"
+                                              : "Save",
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: AppColor.white500,

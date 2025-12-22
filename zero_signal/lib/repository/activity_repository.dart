@@ -69,4 +69,25 @@ class ActivityRepository {
       return null;
     }
   }
+
+  Future<Map<String, dynamic>?> saveActivity({
+    required String activityId,
+  }) async {
+    try {
+      final response = await ApiService.postApi(
+        AppApiEndPoint.activitySaveEndPoint,
+        {"activity": activityId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body as Map<String, dynamic>;
+      } else {
+        AppSnackBar.error(response.message);
+        return null;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to save activity");
+      return null;
+    }
+  }
 }

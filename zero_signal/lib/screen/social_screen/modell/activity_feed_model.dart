@@ -77,6 +77,7 @@ class ActivityFeedData {
   double? distance;
   List<User>? participants;
   int? saved;
+  bool? isSaved;
 
   ActivityFeedData(
       {this.sId,
@@ -95,6 +96,7 @@ class ActivityFeedData {
       this.location,
       this.distance,
       this.participants,
+      this.isSaved,
       this.saved});
 
   ActivityFeedData.fromJson(Map<String, dynamic> json) {
@@ -121,6 +123,7 @@ class ActivityFeedData {
       });
     }
     saved = json['saved'];
+    isSaved = json['is_saved'];
   }
 
   Map<String, dynamic> toJson() {
@@ -148,6 +151,7 @@ class ActivityFeedData {
       data['perticipants'] = participants!.map((v) => v.toJson()).toList();
     }
     data['saved'] = saved;
+    data['is_saved'] = isSaved;
     return data;
   }
 }

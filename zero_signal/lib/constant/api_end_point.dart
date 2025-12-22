@@ -36,6 +36,8 @@ class AppApiEndPoint {
   static final String activityEndPoint = "/activity";
   String activityFeedEndPoint(lat, lng) =>
       "/activity/feed?lat=$lat&lng=$lng&radius=10000";
+
+  static final String activitySaveEndPoint = "/activity/save";
 }
 
 // Move this function outside the class

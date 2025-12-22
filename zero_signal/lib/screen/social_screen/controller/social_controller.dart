@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:zero_signal/repository/activity_repository.dart';
 import 'package:zero_signal/screen/social_screen/modell/activity_feed_model.dart';
+import 'package:zero_signal/widget/app_snack_bar/app_snack_bar.dart';
 
 class SocialController extends GetxController {
   final ActivityRepository _repository = ActivityRepository();
@@ -86,6 +87,27 @@ class SocialController extends GetxController {
   void removeItem(int index) {
     if (index >= 0 && index < activityFeed.length) {
       activityFeed.removeAt(index);
+    }
+  }
+
+  Future<void> saveActivity(String activityId, int index) async {
+    final response = await _repository.saveActivity(activityId: activityId);
+    if (response != null && response['success'] == true) {
+      AppSnackBar.success(response['message'] ?? "Activity saved successfully");
+
+      // Update local state
+      var item = activityFeed[index];
+      // Toggle isSaved and update saved count locally for immediate feedback
+      bool wasSaved = item.isSaved ?? false;
+      item.isSaved = !wasSaved;
+      if (item.isSaved!) {
+        item.saved = (item.saved ?? 0) + 1;
+      } else {
+        item.saved = (item.saved ?? 0) - 1;
+        if (item.saved! < 0) item.saved = 0;
+      }
+
+      activityFeed[index] = item; // Trigger update
     }
   }
 }
