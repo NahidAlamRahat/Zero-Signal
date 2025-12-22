@@ -82,4 +82,10 @@ class SocialController extends GetxController {
       return dateString;
     }
   }
+
+  void removeItem(int index) {
+    if (index >= 0 && index < activityFeed.length) {
+      activityFeed.removeAt(index);
+    }
+  }
 }

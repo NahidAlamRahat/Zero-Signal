@@ -34,370 +34,385 @@ class _SocialScreenState extends State<SocialScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 50.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(AppRoutes.createActivityScreen);
-                        },
-                        icon: Image.asset(
-                          AppIconPath.addIcon2,
-                          color: AppColor.white500,
-                          height: 24.h,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await controller.fetchActivityFeed();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 50.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.createActivityScreen);
+                          },
+                          icon: Image.asset(
+                            AppIconPath.addIcon2,
+                            color: AppColor.white500,
+                            height: 24.h,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              AppIconPath.searchIcon,
-                              color: AppColor.white500,
-                              height: 24.h,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Get.toNamed(AppRoutes.activityListsScreen);
-                            },
-                            icon: Image.asset(
-                              AppIconPath.taskIcon,
-                              color: AppColor.white500,
-                              height: 24.h,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Get.toNamed(AppRoutes.websiteViewScreen);
-                            },
-                            icon: Image.asset(
-                              AppIconPath.shareIcon,
-                              color: AppColor.white500,
-                              height: 24.h,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              SizedBox(height: 20.h),
-              Obx(() {
-                if (controller.isLoading.value) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (controller.activityFeed.isEmpty) {
-                  return Center(
-                    child: CustomText(
-                      text: "No activities found",
-                      color: AppColor.white500,
+                      ],
                     ),
-                  );
-                }
-                return SizedBox(
-                  height: 600.h,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.activityFeed.length,
-                    itemBuilder: (context, index) {
-                      final item = controller.activityFeed[index];
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: GlassContainer(
-                          width: Get.width - 40.w,
-                          child: Padding(
-                            padding: EdgeInsets.all(20.r),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomText(
-                                    text: item.title ?? "",
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColor.white500,
-                                  ),
-                                  CustomText(
-                                    text: controller.formatDate(item.date),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColor.white500,
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  CustomText(
-                                    textAlign: TextAlign.start,
-                                    text: item.description ?? "",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColor.white500,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: Image.asset(
+                                AppIconPath.searchIcon,
+                                color: AppColor.white500,
+                                height: 24.h,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Get.toNamed(AppRoutes.activityListsScreen);
+                              },
+                              icon: Image.asset(
+                                AppIconPath.taskIcon,
+                                color: AppColor.white500,
+                                height: 24.h,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Get.toNamed(AppRoutes.websiteViewScreen);
+                              },
+                              icon: Image.asset(
+                                AppIconPath.shareIcon,
+                                color: AppColor.white500,
+                                height: 24.h,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                SizedBox(height: 20.h),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.activityFeed.isEmpty) {
+                    return Center(
+                      child: CustomText(
+                        text: "No activities found",
+                        color: AppColor.white500,
+                      ),
+                    );
+                  }
+                  return SizedBox(
+                    height: 600.h,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.activityFeed.length,
+                      itemBuilder: (context, index) {
+                        final item = controller.activityFeed[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: GlassContainer(
+                            width: Get.width - 40.w,
+                            child: Padding(
+                              padding: EdgeInsets.all(20.r),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      text: item.title ?? "",
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColor.white500,
+                                    ),
+                                    CustomText(
+                                      text: controller.formatDate(item.date),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.white500,
+                                    ),
+                                    SizedBox(height: 12.h),
+                                    CustomText(
+                                      textAlign: TextAlign.start,
+                                      text: item.description ?? "",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.white500,
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Image.asset(
+                                                  AppIconPath.batchIcon,
+                                                  height: 16.h,
+                                                  width: 16.w,
+                                                ),
+                                                SizedBox(height: 5.h),
+                                                CustomText(
+                                                  text:
+                                                      "@${item.user?.username ?? 'user'} • 4,8 ✰\n(17 luggers / 6 planes)",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColor.white500,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
                                               Image.asset(
-                                                AppIconPath.batchIcon,
-                                                height: 16.h,
-                                                width: 16.w,
+                                                AppIconPath.locationIcon,
+                                                height: 20.h,
+                                              ),
+                                              SizedBox(width: 5.w),
+                                              Flexible(
+                                                child: CustomText(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  text: item.address ?? "",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColor.white500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Column(
+                                            children: [
+                                              Image.asset(
+                                                AppIconPath.groupIcon,
+                                                height: 20.w,
+                                                width: 20.w,
                                               ),
                                               SizedBox(height: 5.h),
                                               CustomText(
                                                 text:
-                                                    "@${item.user?.username ?? 'user'} • 4,8 ✰\n(17 luggers / 6 planes)",
+                                                    "${item.currentParticipants} people attending",
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColor.white500,
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Image.asset(
-                                              AppIconPath.locationIcon,
-                                              height: 20.h,
-                                            ),
-                                            SizedBox(width: 5.w),
-                                            Flexible(
-                                              child: CustomText(
-                                                overflow: TextOverflow.ellipsis,
-                                                text: item.address ?? "",
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(width: 20.w),
+                                              Image.asset(
+                                                AppIconPath.addPeopleIcon,
+                                                height: 20.h,
+                                              ),
+                                              SizedBox(height: 5.h),
+                                              CustomText(
+                                                text:
+                                                    "${item.maxParticipants} attendants max.",
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColor.white500,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          children: [
-                                            Image.asset(
-                                              AppIconPath.groupIcon,
-                                              height: 20.w,
-                                              width: 20.w,
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            CustomText(
-                                              text:
-                                                  "${item.currentParticipants} people attending",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColor.white500,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          children: [
-                                            SizedBox(width: 20.w),
-                                            Image.asset(
-                                              AppIconPath.addPeopleIcon,
-                                              height: 20.h,
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            CustomText(
-                                              text:
-                                                  "${item.maxParticipants} attendants max.",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColor.white500,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          children: [
-                                            SizedBox(width: 20.w),
-                                            Image.asset(AppIconPath.saveIcon,
-                                                height: 20),
-                                            SizedBox(height: 5.h),
-                                            CustomText(
-                                              text: "${item.saved} Saved",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColor.white500,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  CustomText(
-                                    text: "Attendants",
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColor.white500,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  (item.participants == null ||
-                                          item.participants!.isEmpty)
-                                      ? Center(
-                                          child: CustomText(
-                                            text: "No Attendants",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColor.white500,
+                                            ],
                                           ),
-                                        )
-                                      : SizedBox(
-                                          height: 80.h,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount:
-                                                item.participants?.length ?? 0,
-                                            itemBuilder: (context, pIndex) {
-                                              final participant =
-                                                  item.participants![pIndex];
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 16.w),
-                                                child: Column(
-                                                  children: [
-                                                    CircleAvatar(
-                                                      radius: 20,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                        participant.image ?? "",
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(width: 20.w),
+                                              Image.asset(AppIconPath.saveIcon,
+                                                  height: 20),
+                                              SizedBox(height: 5.h),
+                                              CustomText(
+                                                text: "${item.saved} Saved",
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColor.white500,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    CustomText(
+                                      text: "Attendants",
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColor.white500,
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    (item.participants == null ||
+                                            item.participants!.isEmpty)
+                                        ? Center(
+                                            child: CustomText(
+                                              text: "No Attendants",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColor.white500,
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 80.h,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount:
+                                                  item.participants?.length ??
+                                                      0,
+                                              itemBuilder: (context, pIndex) {
+                                                final participant =
+                                                    item.participants![pIndex];
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 16.w),
+                                                  child: Column(
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 20,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                          participant.image ??
+                                                              "",
+                                                        ),
+                                                        onBackgroundImageError:
+                                                            (_, __) =>
+                                                                AssetImage(
+                                                          AppImagePath
+                                                              .profileImage1,
+                                                        ),
                                                       ),
-                                                      onBackgroundImageError:
-                                                          (_, __) => AssetImage(
-                                                        AppImagePath
-                                                            .profileImage1,
+                                                      SizedBox(height: 5.h),
+                                                      CustomText(
+                                                        text:
+                                                            "@${participant.username ?? ''}, 28",
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColor.white500,
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 5.h),
-                                                    CustomText(
-                                                      text:
-                                                          "@${participant.username ?? ''}, 28",
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColor.white500,
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                    SizedBox(height: 20.h),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: CustomElevatedButton(
+                                            fontWeight: FontWeight.w500,
+                                            backgroundColor: Color(0xFFfc6057),
+                                            leftIcon: Icons.close,
+                                            text: "Not today",
+                                            fontSize: 16,
+                                            onPressed: () {
+                                              controller.removeItem(index);
                                             },
                                           ),
                                         ),
-                                  SizedBox(height: 20.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: CustomElevatedButton(
-                                          fontWeight: FontWeight.w500,
-                                          backgroundColor: Color(0xFFfc6057),
-                                          leftIcon: Icons.close,
-                                          text: "Follow",
-                                          onPressed: () {},
+                                        Expanded(
+                                          child: CustomElevatedButton(
+                                            borderColor:
+                                                AppColor.backgroundColor,
+                                            fontWeight: FontWeight.w500,
+                                            backgroundColor: Color(0xFF2e4f3e),
+                                            leftIcon: Icons.done,
+                                            text: "I'm in!",
+                                            onPressed: () {
+                                              Get.toNamed(AppRoutes
+                                                  .activityListsScreen);
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: CustomElevatedButton(
-                                          borderColor: AppColor.backgroundColor,
-                                          fontWeight: FontWeight.w500,
-                                          backgroundColor: Color(0xFF2e4f3e),
-                                          leftIcon: Icons.done,
-                                          text: "I'm in!",
-                                          onPressed: () {
-                                            Get.toNamed(
-                                                AppRoutes.activityListsScreen);
-                                          },
+                                      ],
+                                    ),
+                                    SizedBox(height: 32.h),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          AppIconPath.saveIcon,
+                                          height: 24,
+                                          width: 24,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 32.h),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        AppIconPath.saveIcon,
-                                        height: 24,
-                                        width: 24,
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      CustomText(
-                                        text: "Save",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColor.white500,
-                                      ),
-                                    ],
-                                  ),
-                                  SpaceWidget(
-                                    spaceHeight: 8,
-                                  ),
-                                  Center(
-                                    child: InkWell(
-                                      onTap: () {
-                                        showReportBottomSheet(context);
-                                      },
-                                      child: TextWidget(
-                                        text: 'Report Activity',
-                                        fontColor: AppColor.white500,
-                                        textAlignment: TextAlign.center,
-                                        fontSize: 16,
-                                        underline: true,
-                                        underlineColor: Colors.white,
-                                        underlineWidth: 1.5,
+                                        SizedBox(
+                                          width: 5.w,
+                                        ),
+                                        CustomText(
+                                          text: "Save",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColor.white500,
+                                        ),
+                                      ],
+                                    ),
+                                    SpaceWidget(
+                                      spaceHeight: 8,
+                                    ),
+                                    Center(
+                                      child: InkWell(
+                                        onTap: () {
+                                          showReportBottomSheet(context);
+                                        },
+                                        child: TextWidget(
+                                          text: 'Report Activity',
+                                          fontColor: AppColor.white500,
+                                          textAlignment: TextAlign.center,
+                                          fontSize: 16,
+                                          underline: true,
+                                          underlineColor: Colors.white,
+                                          underlineWidth: 1.5,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }),
-            ],
+                        );
+                      },
+                    ),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
       ),
