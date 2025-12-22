@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:zero_signal/repository/auth_repo/forgot_pass_repository.dart';
 import 'package:zero_signal/repository/auth_repo/sign_up_repository.dart';
+import 'package:zero_signal/screen/social_screen/controller/social_controller.dart';
 import '../screen/auth/choose_language_screen/controller/onboarding_controloler.dart';
 import '../screen/auth/createa_password_screen/controller/create_pass_controller.dart';
 import '../screen/auth/forgot_password_screen/controller/forgot_password_controller.dart';
@@ -29,5 +30,6 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => FAQScreenController(), fenix: true);
     Get.lazyPut(() => ForgotPassRepository(), fenix: true);
     Get.lazyPut(() => ProfileController(), fenix: true);
+    Get.lazyPut(() => SocialController(), fenix: true);
   }
 }

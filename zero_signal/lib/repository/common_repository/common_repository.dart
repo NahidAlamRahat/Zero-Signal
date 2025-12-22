@@ -7,14 +7,9 @@ import '../../utils/app_log/app_log.dart';
 /// CommonRepository: Reusable repository for common API calls
 /// This can be used across different screens to fetch spots data
 class CommonRepository extends GetxController {
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
-
-  String _errorMessage = '';
-  String get errorMessage => _errorMessage;
-
-  String _successMessage = '';
-  String get successMessage => _successMessage;
+  bool inProgress = false;
+  String errorMessage = '';
+  String successMessage = '';
 
   /// Fetch spots list with optional pagination
   /// Can be used for "My Spots", "All Spots", or any spot listing screen
@@ -28,9 +23,9 @@ class CommonRepository extends GetxController {
     int? page,
     int? limit,
   }) async {
-    _inProgress = true;
-    _errorMessage = '';
-    _successMessage = '';
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
     update();
 
     try {
@@ -49,10 +44,10 @@ class CommonRepository extends GetxController {
         queryParams: queryParams.isNotEmpty ? queryParams : null,
       );
 
-      _inProgress = false;
+      inProgress = false;
 
       if (response.statusCode == 200) {
-        _successMessage = response.message.isNotEmpty
+        successMessage = response.message.isNotEmpty
             ? response.message
             : "Spots retrieved successfully";
 
@@ -65,7 +60,7 @@ class CommonRepository extends GetxController {
         update();
         return spotsResponse;
       } else {
-        _errorMessage = response.message.isNotEmpty
+        errorMessage = response.message.isNotEmpty
             ? response.message
             : "Failed to fetch spots";
         appLog(
@@ -74,8 +69,8 @@ class CommonRepository extends GetxController {
         return null;
       }
     } catch (e) {
-      _inProgress = false;
-      _errorMessage = "Network error occurred";
+      inProgress = false;
+      errorMessage = "Network error occurred";
       appLog('Fetch spots API Error: $e');
       update();
       return null;
@@ -90,9 +85,9 @@ class CommonRepository extends GetxController {
   ///
   /// Returns: SpotData or null if failed
   Future<SpotData?> fetchSpotDetails(String id) async {
-    _inProgress = true;
-    _errorMessage = '';
-    _successMessage = '';
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
     update();
 
     try {
@@ -100,10 +95,10 @@ class CommonRepository extends GetxController {
         AppApiEndPoint.instance.mySpotDetailEndPoint(id),
       );
 
-      _inProgress = false;
+      inProgress = false;
 
       if (response.statusCode == 200) {
-        _successMessage = response.message.isNotEmpty
+        successMessage = response.message.isNotEmpty
             ? response.message
             : "Spot details retrieved successfully";
 
@@ -114,7 +109,7 @@ class CommonRepository extends GetxController {
         update();
         return spotData;
       } else {
-        _errorMessage = response.message.isNotEmpty
+        errorMessage = response.message.isNotEmpty
             ? response.message
             : "Failed to fetch spot details";
         appLog(
@@ -123,8 +118,8 @@ class CommonRepository extends GetxController {
         return null;
       }
     } catch (e) {
-      _inProgress = false;
-      _errorMessage = "Network error occurred";
+      inProgress = false;
+      errorMessage = "Network error occurred";
       appLog('Fetch spot details API Error: $e');
       update();
       return null;
@@ -139,9 +134,9 @@ class CommonRepository extends GetxController {
   ///
   /// Returns: true if successful, false otherwise
   Future<bool> deleteSpot(String id) async {
-    _inProgress = true;
-    _errorMessage = '';
-    _successMessage = '';
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
     update();
 
     try {
@@ -150,17 +145,17 @@ class CommonRepository extends GetxController {
         body: {},
       );
 
-      _inProgress = false;
+      inProgress = false;
 
       if (response.statusCode == 200) {
-        _successMessage = response.message.isNotEmpty
+        successMessage = response.message.isNotEmpty
             ? response.message
             : "Spot deleted successfully";
         appLog('Spot deleted successfully');
         update();
         return true;
       } else {
-        _errorMessage = response.message.isNotEmpty
+        errorMessage = response.message.isNotEmpty
             ? response.message
             : "Failed to delete spot";
         appLog(
@@ -169,8 +164,8 @@ class CommonRepository extends GetxController {
         return false;
       }
     } catch (e) {
-      _inProgress = false;
-      _errorMessage = "Network error occurred";
+      inProgress = false;
+      errorMessage = "Network error occurred";
       appLog('Delete spot API Error: $e');
       update();
       return false;
@@ -187,9 +182,9 @@ class CommonRepository extends GetxController {
   /// Returns: true if successful, false otherwise
   Future<bool> toggleFavorite(
       {required String id, required String type}) async {
-    _inProgress = true;
-    _errorMessage = '';
-    _successMessage = '';
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
     update();
 
     try {
@@ -201,17 +196,17 @@ class CommonRepository extends GetxController {
         },
       );
 
-      _inProgress = false;
+      inProgress = false;
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        _successMessage = response.message.isNotEmpty
+        successMessage = response.message.isNotEmpty
             ? response.message
             : "Favorite status updated successfully";
         appLog('Favorite status updated successfully');
         update();
         return true;
       } else {
-        _errorMessage = response.message.isNotEmpty
+        errorMessage = response.message.isNotEmpty
             ? response.message
             : "Failed to update favorite status";
         appLog(
@@ -220,11 +215,74 @@ class CommonRepository extends GetxController {
         return false;
       }
     } catch (e) {
-      _inProgress = false;
-      _errorMessage = "Network error occurred";
+      inProgress = false;
+      errorMessage = "Network error occurred";
       appLog('Favorite toggle API Error: $e');
       update();
       return false;
+    }
+  }
+
+  /// Fetch favorite spots
+  /// Endpoint: /favorite?type=Spot
+  Future<MySpotsResponseModel?> fetchFavoriteSpots({
+    int? page,
+    int? limit,
+  }) async {
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
+    update();
+
+    try {
+      Map<String, dynamic> queryParams = {};
+
+      // Add type parameter
+      // queryParams['type'] = 'Spot';
+
+      if (page != null) {
+        queryParams['page'] = page.toString();
+      }
+
+      if (limit != null) {
+        queryParams['limit'] = limit.toString();
+      }
+
+      final response = await ApiService.getApi(
+        AppApiEndPoint.instance.getFavoriteEndPoint("Spot"),
+        queryParams: queryParams.isNotEmpty ? queryParams : null,
+      );
+
+      inProgress = false;
+
+      if (response.statusCode == 200) {
+        successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Favorite spots retrieved successfully";
+
+        final MySpotsResponseModel spotsResponse =
+            MySpotsResponseModel.fromJson(
+                Map<String, dynamic>.from(response.body));
+
+        appLog(
+            'Favorite Spots fetched successfully: ${spotsResponse.data.length} spots');
+        update();
+        return spotsResponse;
+      } else {
+        errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to fetch favorite spots";
+        appLog(
+            'Fetch favorite spots failed - Status: ${response.statusCode}, Message: ${response.message}');
+        update();
+        return null;
+      }
+    } catch (e) {
+      inProgress = false;
+      errorMessage = "Network error occurred";
+      appLog('Fetch favorite spots API Error: $e');
+      update();
+      return null;
     }
   }
 }

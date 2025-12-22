@@ -25,12 +25,19 @@ class AppApiEndPoint {
   String getFavoriteEndPoint(String type) => "/favorite?type=$type";
   static String toggleFavoriteEndPoint() => "/favorite";
   String mySpotDetailEndPoint(String id) => "/spot/$id";
-  static final String activityEndPoint = "/activity";
   static final String categoryEndPoint = "/category?withSub=true";
   static final String routeEndPoint = "/route";
   static final String spotEndPoint = "/spot";
   static final String getProfile = "/user/profile";
   static final String updateProfile = "/user/profile";
+  static final String supportEndPoint = "/support";
+  String routeDetailEndPoint(String id) => "/route/$id";
+  String routeTypeEndPoint() => "/category/route-type";
+  static final String activityEndPoint = "/activity";
+  String activityFeedEndPoint(lat, lng) =>
+      "/activity/feed?lat=$lat&lng=$lng&radius=10000";
+
+  static final String activitySaveEndPoint = "/activity/save";
 }
 
 // Move this function outside the class

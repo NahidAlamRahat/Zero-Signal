@@ -19,7 +19,10 @@ class MySpotsResponseModel {
           ? Pagination.fromJson(json['pagination'])
           : null,
       data: json['data'] != null
-          ? (json['data'] as List).map((e) => SpotData.fromJson(e)).toList()
+          ? (json['data'] as List)
+              .where((e) => e != null)
+              .map((e) => SpotData.fromJson(e as Map<String, dynamic>))
+              .toList()
           : [],
     );
   }

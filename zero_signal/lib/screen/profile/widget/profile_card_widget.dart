@@ -83,6 +83,7 @@ class ProfileCardWidget extends StatelessWidget {
     );
   }
 
+
   Widget _buildProfileImage() {
     return GestureDetector(
       onTap: () {
