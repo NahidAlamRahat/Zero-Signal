@@ -90,4 +90,26 @@ class ActivityRepository {
       return null;
     }
   }
+
+  Future<bool> joinActivity({
+    required String activityId,
+  }) async {
+    try {
+      final response = await ApiService.postApi(
+        AppApiEndPoint.instance.activityJoinEndPoint(),
+        {"activity": activityId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        AppSnackBar.success(response.message);
+        return true;
+      } else {
+        AppSnackBar.error(response.message);
+        return false;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to join activity");
+      return false;
+    }
+  }
 }

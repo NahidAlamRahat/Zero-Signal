@@ -38,6 +38,9 @@ class AppApiEndPoint {
       "/activity/feed?lat=$lat&lng=$lng&radius=10000";
 
   static final String activitySaveEndPoint = "/activity/save";
+  String activityJoinEndPoint() => "/activity/join";
+  //'all' | 'created' | 'joined' | 'saved'
+  String activityByTypeEndPoint(String type) => "/activity?type=$type";
 }
 
 // Move this function outside the class
