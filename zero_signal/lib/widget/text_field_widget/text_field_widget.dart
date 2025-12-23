@@ -13,6 +13,7 @@ class TextFieldWidget extends StatefulWidget {
   final int? minLines;
   final VoidCallback? onTapSuffix;
   final Function(String submit)? onFieldSubmitted;
+  final Function(String value)? onChanged;
 
   final Color borderColor; // Normal border
   final Color focusedBorderColor; // Focused border
@@ -75,7 +76,7 @@ class TextFieldWidget extends StatefulWidget {
     this.errorStyle,
     this.fontWeight,
     this.inputFormatters,
-    this.readOnly = false,
+    this.onChanged,
   });
 
   @override
@@ -101,6 +102,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       ),
       child: TextFormField(
         onFieldSubmitted: widget.onFieldSubmitted,
+        onChanged: widget.onChanged,
         controller: widget.controller,
         validator: widget.validator,
         readOnly: widget.readOnly,

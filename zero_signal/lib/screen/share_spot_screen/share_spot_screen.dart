@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/screen/share_spot_screen/widget/location_search_widget.dart';
+import 'package:zero_signal/screen/list_view_details_screen/widget/location_map_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
@@ -71,6 +72,21 @@ class ShareSpotScreen extends StatelessWidget {
                 _sectionTitle('Location'),
                 SizedBox(height: 12.h),
                 const LocationSearchWidget(),
+                SizedBox(height: 16.h),
+                // Location Map Preview
+                GetBuilder<ShareSpotController>(
+                  builder: (controller) {
+                    if (controller.selectedLat != null && controller.selectedLng != null) {
+                      return LocationMapWidget(
+                        latitude: controller.selectedLat!,
+                        longitude: controller.selectedLng!,
+                        markerTitle: 'Selected Location',
+                        height: 250,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 SizedBox(height: 24.h),
 
                 // Description
@@ -166,7 +182,7 @@ class ShareSpotScreen extends StatelessWidget {
                       height: 100,
                       margin: const EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade400),
                       ),
