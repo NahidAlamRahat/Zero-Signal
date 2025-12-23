@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:zero_signal/routes/all_bindings.dart';
 import 'routes/app_routes.dart';
 import 'routes/app_routes_file.dart';
-import 'utils/app_size.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -69,19 +69,12 @@ class LocationSearchWidget extends StatelessWidget {
                         color: AppColor.blackColor,
                       ),
                     )
-                  else if (controller.locationController.text.isNotEmpty)
+                  else
                     GestureDetector(
                       onTap: () {
-                        controller.locationController.clear();
-                        controller.clearLocationSuggestions();
+                        showConfirmLocationSheet(context);
                       },
-                      child:InkWell(
-                        onTap: () {
-                          showConfirmLocationSheet(context);
-                        },
-                        child: Image.asset(AppIconPath.map, height: 16.h, width: 16.w),
-                      ),
-
+                      child: Image.asset(AppIconPath.map, height: 16.h, width: 16.w),
                     ),
                 ],
               ),

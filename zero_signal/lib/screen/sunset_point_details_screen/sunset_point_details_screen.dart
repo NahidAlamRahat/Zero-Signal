@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/api_end_point.dart';
 import 'package:zero_signal/screen/my_spots_screen/model/my_spots_response_model.dart';
+import 'package:zero_signal/screen/list_view_details_screen/widget/location_map_widget.dart';
 
 import '../../constant/app_colors.dart';
 import '../../widget/text_widget/text_widgets.dart';
@@ -143,7 +144,7 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
                       shape: BoxShape.circle,
                       color: _currentPage == index
                           ? AppColor.backgroundColor
-                          : Colors.white.withOpacity(0.5),
+                          : Colors.white.withValues(alpha: 0.5),
                     ),
                   ),
                 ),
@@ -162,6 +163,9 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
         children: [
           // Title and Location
           _buildTitleSection(),
+
+          // Location Map
+          _buildLocationMap(),
 
           // Description
           _buildDescriptionSection(),
@@ -209,6 +213,28 @@ class _ListViewDetailsScreenState extends State<SunsetPointDetailsScreen> {
         SizedBox(
           height: 16.h,
         ),
+      ],
+    );
+  }
+
+  Widget _buildLocationMap() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextWidget(
+          text: 'Location',
+          fontColor: AppColor.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+        SizedBox(height: 12.h),
+        LocationMapWidget(
+          latitude: spot.lat,
+          longitude: spot.lng,
+          markerTitle: spot.title,
+          height: 250,
+        ),
+        SizedBox(height: 20.h),
       ],
     );
   }

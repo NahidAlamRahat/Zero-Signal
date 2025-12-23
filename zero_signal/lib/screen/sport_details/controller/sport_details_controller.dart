@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SportDetailsController extends GetxController {
+  // Spot details data
+  final RxString spotId = ''.obs;
+  final RxString spotTitle = ''.obs;
+  final RxString spotDescription = ''.obs;
+  final RxString spotAddress = ''.obs;
+  final RxDouble spotLatitude = 0.0.obs;
+  final RxDouble spotLongitude = 0.0.obs;
+
   // Observable for showing all comments
   final RxBool showAllComments = false.obs;
 
@@ -82,6 +90,16 @@ class SportDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Get spot data from arguments
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    if (arguments != null) {
+      spotId.value = arguments['spotId'] ?? '';
+      spotTitle.value = arguments['title'] ?? 'Unknown Spot';
+      spotDescription.value = arguments['description'] ?? '';
+      spotAddress.value = arguments['address'] ?? '';
+      spotLatitude.value = arguments['latitude']?.toDouble() ?? 0.0;
+      spotLongitude.value = arguments['longitude']?.toDouble() ?? 0.0;
+    }
     // Initialize with sample images if needed
   }
 

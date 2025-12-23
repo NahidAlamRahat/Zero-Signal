@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
+
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
@@ -9,9 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:dio/dio.dart';
 import '../../../repository/spot_repository.dart';
+import '../../../routes/app_routes.dart';
 
-class HomeScreenController extends GetxController {
-  late mapbox. MapWidget mapWidget;
+class HomeScreenController extends GetxController implements mapbox.OnPointAnnotationClickListener {
+  late mapbox.MapWidget mapWidget;
   late mapbox.MapboxMap mapboxMap;
   geo.Position? currentPosition;
   final TextEditingController searchController = TextEditingController();
@@ -26,6 +28,7 @@ class HomeScreenController extends GetxController {
   List<SpotCoordinateModel> nearbySpots = [];
   bool isLoadingSpots = false;
   mapbox.PointAnnotationManager? pointAnnotationManager;
+  Map<String, SpotCoordinateModel> markerSpotMap = {}; // Map to store spot data by marker ID
 
   // Map style URIs
   static const String defaultStyleUri = 'mapbox://styles/mapbox/streets-v12';
@@ -112,47 +115,7 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  /// When map created
-  // Future<void> onMapCreated(mapbox.MapboxMap controller) async {
-  //   mapboxMap = controller;
-  //   await getUserLocation();
-  //
-  //   if (currentPosition != null) {
-  //     // Move camera to user's location
-  //     await mapboxMap.setCamera(
-  //       mapbox.CameraOptions(
-  //         center: mapbox.Point(
-  //           coordinates: mapbox.Position.fromJson([
-  //             currentPosition!.longitude,
-  //             currentPosition!.latitude,
-  //           ]),
-  //         ),
-  //         zoom: 14.0,
-  //       ),
-  //     );
-  //
-  //     // Enable location blue dot
-  //     await mapboxMap.location.updateSettings(
-  //       mapbox.LocationComponentSettings(
-  //         enabled: true,
-  //         pulsingEnabled: true,
-  //         showAccuracyRing: true,
-  //       ),
-  //     );
-  //
-  //     // Enable compass (positioned below the map choice button)
-  //     await mapboxMap.compass.updateSettings(
-  //       mapbox.CompassSettings(
-  //         enabled: true,
-  //         position: mapbox.OrnamentPosition.TOP_RIGHT,
-  //         marginTop: 56.0 + 50.0 + 40.0 + 10.0, // kToolbarHeight + 50 + button height + spacing
-  //         marginRight: 20.0,
-  //         clickable: true,
-  //         fadeWhenFacingNorth: false,
-  //       ),
-  //     );
-  //   }
-  // }
+
 
   late mapbox.Point markerPoint;
 
@@ -257,6 +220,10 @@ class HomeScreenController extends GetxController {
     try {
       pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
       print('DEBUG: Point annotation manager created');
+      
+      // Add tap listener for markers
+      pointAnnotationManager?.addOnPointAnnotationClickListener(this);
+      print('DEBUG: Marker tap listener added');
     } catch (e) {
       print('DEBUG: Error creating annotation manager: $e');
     }
@@ -377,8 +344,9 @@ class HomeScreenController extends GetxController {
     }
 
     try {
-      // Clear existing markers
+      // Clear existing markers and spot map
       await pointAnnotationManager!.deleteAll();
+      markerSpotMap.clear();
       print('DEBUG: Cleared existing markers');
 
       // Add markers for each spot
@@ -386,7 +354,7 @@ class HomeScreenController extends GetxController {
         print('DEBUG: Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
         
         try {
-          await pointAnnotationManager!.create(
+          final annotation = await pointAnnotationManager!.create(
             mapbox.PointAnnotationOptions(
               geometry: mapbox.Point(
                 coordinates: mapbox.Position.fromJson([spot.longitude, spot.latitude]),
@@ -399,6 +367,11 @@ class HomeScreenController extends GetxController {
               textColor: Colors.black.value,
             ),
           );
+          
+          // Store spot data with marker ID
+          markerSpotMap[annotation.id] = spot;
+          print('DEBUG: Stored spot data for marker: ${annotation.id}');
+          
         } catch (markerError) {
           print('ERROR: Failed to create marker for ${spot.title}: $markerError');
         }
@@ -415,53 +388,47 @@ class HomeScreenController extends GetxController {
           ),
           zoom: 14,
         ),
-        mapbox.MapAnimationOptions(duration: 1200),
+        mapbox.MapAnimationOptions(duration: 2000),
       );
     } catch (e) {
       print('Error adding spot markers: $e');
     }
   }
 
-  // Future<void> _addSingleMarker() async {
-  //   try {
-  //     final pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
-  //
-  //     await pointAnnotationManager.create(
-  //       mapbox.PointAnnotationOptions(
-  //         geometry: markerPoint,
-  //         iconImage: 'assets/icons/location.png', // Replace with your marker icon
-  //         iconSize: 20,
-  //       ),
-  //     );
-  //     update(); // Works because UI uses GetBuilder
-  //   } catch (e) {
-  //     print('Error adding marker: $e');
-  //   }
-  // }
-  //
-  //
-  // Future<void> _addMarkers() async {
-  //   if (markerList.isEmpty) return;
-  //
-  //   try {
-  //     final pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
-  //
-  //     for (var position in markerList) {
-  //       debugPrint('Adding marker at: ${position.coordinates}');
-  //
-  //       await pointAnnotationManager.create(
-  //         mapbox.PointAnnotationOptions(
-  //           geometry: position,
-  //           iconImage: 'assets/icons/location.png', // Ensure this is the correct path
-  //           iconSize: 2000,
-  //         ),
-  //       );
-  //     }
-  //     update(); // Works because UI uses GetBuilder
-  //   } catch (e) {
-  //     debugPrint('Error adding markers: $e');
-  //   }
-  // }
+  @override
+  void onPointAnnotationClick(mapbox.PointAnnotation annotation) {
+    final spot = markerSpotMap[annotation.id];
+    if (spot != null) {
+      print('DEBUG: Marker tapped: ${spot.title}');
+      
+      // Navigate to spot details screen
+      Get.toNamed(
+        AppRoutes.spotDetailsScreen,
+        arguments: {
+          'spotId': spot.id,
+          'title': spot.title,
+          'latitude': spot.latitude,
+          'longitude': spot.longitude,
+          'description': spot.description,
+          'address': spot.address,
+        },
+      );
+      
+      Fluttertoast.showToast(
+        msg: "Opening ${spot.title}",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } else {
+      print('DEBUG: No spot data found for marker: ${annotation.id}');
+      Fluttertoast.showToast(
+        msg: "Spot information not available",
+        backgroundColor: Colors.orange,
+        textColor: Colors.white,
+      );
+    }
+  }
+
   /// Refresh location with smooth animation
   Future<void> refreshLocation() async {
     await getUserLocation();

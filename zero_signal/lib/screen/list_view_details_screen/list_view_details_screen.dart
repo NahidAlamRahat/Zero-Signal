@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:zero_signal/screen/list_view_details_screen/widget/location_map_widget.dart';
 
 import '../../constant/app_colors.dart';
 import '../../widget/text_widget/text_widgets.dart';
@@ -94,11 +95,11 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
           // Title and Location
           _buildTitleSection(),
 
+          // Location Map
+          _buildLocationMap(),
 
           // Description
           _buildDescriptionSection(),
-
-
         ],
       ),
     );
@@ -140,6 +141,28 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
           fontWeight: FontWeight.w400,
         ),
         SizedBox(height: 16.h,),
+      ],
+    );
+  }
+
+  Widget _buildLocationMap() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextWidget(
+          text: 'Location',
+          fontColor: AppColor.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+        SizedBox(height: 12.h),
+        LocationMapWidget(
+          latitude: 42.3601,
+          longitude: -71.0589,
+          markerTitle: 'Sunset Point',
+          height: 250,
+        ),
+        SizedBox(height: 20.h),
       ],
     );
   }

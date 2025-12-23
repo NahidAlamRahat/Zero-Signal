@@ -181,6 +181,10 @@ class SpotRepository {
         'radius': radius.toString(),
       };
 
+      appLog('📡 API Request - Spot Coordinates:');
+      appLog('   Endpoint: ${AppApiEndPoint.spotCoordinatesEndPoint}');
+      appLog('   Params: $queryParams');
+
       final response = await ApiService.getApi(
         AppApiEndPoint.spotCoordinatesEndPoint,
         queryParams: queryParams,
@@ -188,44 +192,58 @@ class SpotRepository {
 
       _inProgress = false;
 
+      appLog('📡 Raw API Response Status: ${response.statusCode}');
+      appLog('📡 Raw API Response Body Type: ${response.body.runtimeType}');
+      appLog('📡 Raw API Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         _successMessage = response.message.isNotEmpty
             ? response.message
             : "Spots retrieved successfully";
 
         // Parse the response data
-        List<dynamic> data;
+        List<dynamic> data = [];
+        
         if (response.body is List) {
-          data = List<dynamic>.from(response.body as List);
-        } else if (response.body is Map && response.body['data'] != null) {
-          final dynamic dataField = response.body['data'];
-          if (dataField is List) {
-            data = List<dynamic>.from(dataField);
+          data = response.body as List<dynamic>;
+          appLog('✅ Response is a List with ${data.length} items');
+        } else if (response.body is Map) {
+          final bodyMap = response.body as Map<dynamic, dynamic>;
+          if (bodyMap.containsKey('data') && bodyMap['data'] != null) {
+            final dynamic dataField = bodyMap['data'];
+            if (dataField is List) {
+              data = dataField as List<dynamic>;
+              appLog('✅ Response is a Map with data field containing ${data.length} items');
+            } else {
+              appLog('⚠️ Response data field is not a List');
+            }
           } else {
-            data = [];
+            appLog('⚠️ Response Map has no data field');
           }
         } else {
-          data = [];
+          appLog('⚠️ Response body is neither List nor Map');
         }
+        
+        appLog('📊 Parsed data count: ${data.length}');
         
         final List<SpotCoordinateModel> spots = data
             .map((spotJson) => SpotCoordinateModel.fromJson(spotJson))
             .toList();
 
-        appLog('Spots by coordinates fetched successfully: ${spots.length} spots');
+        appLog('✅ Spots by coordinates fetched successfully: ${spots.length} spots');
         return spots;
       } else {
         _errorMessage = response.message.isNotEmpty
             ? response.message
             : "Failed to fetch spots";
         appLog(
-            'Fetch spots by coordinates failed - Status: ${response.statusCode}, Message: ${response.message}');
+            '❌ Fetch spots by coordinates failed - Status: ${response.statusCode}, Message: ${response.message}');
         return null;
       }
     } catch (e) {
       _inProgress = false;
       _errorMessage = "Network error occurred";
-      appLog('Fetch spots by coordinates API Error: $e');
+      appLog('❌ Fetch spots by coordinates API Error: $e');
       return null;
     }
   }
