@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/repository/activity_repository.dart';
+import 'package:zero_signal/screen/list_screen/model/activity_list_model.dart';
 
 class ListScreenController extends GetxController {
+  final ActivityRepository _repository = ActivityRepository();
+
   final List<String> tabs = [
     'Near Activities',
     'Joined Activities',
@@ -16,6 +20,9 @@ class ListScreenController extends GetxController {
   int selectedIndex = 0;
   double indicatorLeft = 0;
   double indicatorWidth = 0;
+
+  var isLoading = false.obs;
+  var activities = <ActivityListData>[].obs;
 
   @override
   void onInit() {
@@ -34,8 +41,10 @@ class ListScreenController extends GetxController {
       }
     }
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => updateIndicatorFromKeys());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateIndicatorFromKeys();
+      fetchActivities();
+    });
     scrollController.addListener(updateIndicatorFromKeys);
   }
 
@@ -45,6 +54,43 @@ class ListScreenController extends GetxController {
     update();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => updateIndicatorFromKeys());
+    fetchActivities();
+  }
+
+  Future<void> fetchActivities() async {
+    // Skip fetching for "Near Activities" tab (index 0)
+    if (selectedIndex == 0) {
+      activities.clear();
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      String type = '';
+      switch (selectedIndex) {
+        case 1:
+          type = 'joined';
+          break;
+        case 2:
+          type = 'created';
+          break;
+        case 3:
+          type = 'saved';
+          break;
+      }
+
+      final response = await _repository.getActivitiesByType(type: type);
+      if (response != null && response.data != null) {
+        activities.assignAll(response.data!);
+      } else {
+        activities.clear();
+      }
+    } catch (e) {
+      print("Error fetching activities: $e");
+      activities.clear();
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void updateIndicatorFromKeys() {
