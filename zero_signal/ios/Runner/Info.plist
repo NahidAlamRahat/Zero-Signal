@@ -5,6 +5,10 @@
 
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Location required to display on map.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library to allow you to upload images to support.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We need access to your camera to allow you to take photos for support.</string>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

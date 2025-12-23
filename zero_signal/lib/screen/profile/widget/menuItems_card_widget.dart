@@ -19,7 +19,6 @@ class MenuItemsCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
-
       decoration: BoxDecoration(
         color: AppColor.overLayBoxColor,
         borderRadius: BorderRadius.circular(8.r),
@@ -48,13 +47,15 @@ class MenuItemsCardWidget extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.favoriteSiteImage.path,
             title: 'Favorite Sites',
-            onTap: () => controller.navigateToRoute(AppRoutes.favoriteSitesScreen),
+            onTap: () => controller.navigateToRoute(AppRoutes.mySpotsScreen,
+                arguments: {'type': 'favorite'}),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.favoriteRoutesImage.path,
             title: 'Favorite Routes',
-            onTap: () => controller.navigateToRoute(AppRoutes.favoriteRoutesScreen),
+            onTap: () =>
+                controller.navigateToRoute(AppRoutes.favoriteRoutesScreen),
           ),
         ],
       ),

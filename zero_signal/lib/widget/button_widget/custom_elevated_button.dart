@@ -30,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.maximumSize,
     this.leftIcon, // Added this property
     this.rightIcon, // Your original icon, renamed for clarity
-    this.fontWeight ,
+    this.fontWeight,
     this.fontSize = 16,
     this.borderColor = const Color(0xFFB16D2E),
     this.alignment = MainAxisAlignment.center,
@@ -68,9 +68,9 @@ class CustomElevatedButton extends StatelessWidget {
 
             // The main text
             TextWidget(
-            text:   text,
+              text: text,
               // style: TextStyle(fontSize: fontSize.sp, fontWeight: fontWeight),
-              fontSize: fontSize,
+              fontSize: fontSize.sp,
               fontWeight: fontWeight ?? FontWeight.w500,
               fontColor: textColor,
             ),

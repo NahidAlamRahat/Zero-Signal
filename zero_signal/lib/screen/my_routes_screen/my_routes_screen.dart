@@ -3,30 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../constant/app_colors.dart';
 import '../../widget/appbar_widget/appbar_widget.dart';
-import '../my_routes_screen/widget/delete_confirm_dialog.dart';
-import '../my_routes_screen/widget/empty_state_widget.dart';
-import 'widget/spot_card.dart';
-import 'controller/my_spots_controller.dart';
+import 'controller/my_routes_controller.dart';
+import 'widget/route_card.dart';
+import 'widget/route_delete_dialog.dart';
+import 'widget/route_empty_state.dart';
 
-class MySpotsScreen extends StatelessWidget {
-  MySpotsScreen({super.key});
+class MyRoutesScreen extends StatelessWidget {
+  MyRoutesScreen({super.key});
 
-  final MySpotsController controller = Get.put(MySpotsController());
+  final MyRoutesController controller = Get.put(MyRoutesController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        text: controller.isFavoriteMode ? 'Favorite Sites' : 'My Spots',
+        text: 'My Routes',
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
       ),
       backgroundColor: const Color(0xFFFFF4E9),
       body: SafeArea(
-        child: GetBuilder<MySpotsController>(
+        child: GetBuilder<MyRoutesController>(
           builder: (_) {
             // Show loading indicator
-            if (controller.isLoading && controller.spots.isEmpty) {
+            if (controller.isLoading && controller.routes.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(
                   color: AppColor.backgroundColor,
@@ -36,7 +36,7 @@ class MySpotsScreen extends StatelessWidget {
 
             // Show error message if any
             if (controller.errorMessage.isNotEmpty &&
-                controller.spots.isEmpty) {
+                controller.routes.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +57,7 @@ class MySpotsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 16.h),
                     ElevatedButton(
-                      onPressed: () => controller.refreshSpots(),
+                      onPressed: () => controller.refreshRoutes(),
                       child: const Text('Retry'),
                     ),
                   ],
@@ -68,7 +68,7 @@ class MySpotsScreen extends StatelessWidget {
             return Column(
               children: [
                 Expanded(
-                  child: _buildSpotsList(),
+                  child: _buildRoutesList(context),
                 ),
               ],
             );
@@ -78,32 +78,31 @@ class MySpotsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSpotsList() {
+  Widget _buildRoutesList(BuildContext context) {
     if (controller.isEmpty) {
-      return EmptyStateWidget(
-        onAddSpot: () => controller.addNewSpot(),
+      return RouteEmptyState(
+        onAddRoute: () => controller.addNewSpot(),
       );
     }
 
     return RefreshIndicator(
-      onRefresh: () => controller.refreshSpots(),
+      onRefresh: () => controller.refreshRoutes(),
       child: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        itemCount: controller.spots.length,
+        itemCount: controller.routes.length,
         itemBuilder: (context, index) {
-          final spot = controller.spots[index];
-
-          return SpotCard(
-            spot: spot,
-            onTap: () => controller.onSpotTap(spot),
-            onFavoriteTap: () => controller.toggleFavorite(spot),
+          final route = controller.routes[index];
+          return RouteCard(
+            route: route,
+            onTap: () => controller.onRouteTap(route),
+            onFavoriteTap: () => controller.toggleFavorite(route),
             onDeleteTap: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DeleteConfirmDialog(
-                    spot: spot,
-                    onConfirm: () => controller.deleteSpot(spot),
+                  return RouteDeleteDialog(
+                    route: route,
+                    onConfirm: () => controller.deleteRoute(route),
                   );
                 },
               );

@@ -18,9 +18,14 @@ class MySpotsController extends GetxController {
   int totalPages = 1;
   int totalSpots = 0;
 
+  bool isFavoriteMode = false;
+
   @override
   void onInit() {
     super.onInit();
+    if (Get.arguments != null && Get.arguments is Map) {
+      isFavoriteMode = Get.arguments['type'] == 'favorite';
+    }
     fetchMySpots();
   }
 
@@ -31,10 +36,15 @@ class MySpotsController extends GetxController {
     update();
 
     try {
-      final response = await _repository.fetchSpots(
-        page: page,
-        limit: 10,
-      );
+      final response = isFavoriteMode
+          ? await _repository.fetchFavoriteSpots(
+              page: page,
+              limit: 10,
+            )
+          : await _repository.fetchSpots(
+              page: page,
+              limit: 10,
+            );
 
       isLoading = false;
 
@@ -47,7 +57,14 @@ class MySpotsController extends GetxController {
           totalSpots = response.pagination!.total;
         }
 
-        appLog('My Spots loaded: ${spots.length} spots');
+        if (isFavoriteMode) {
+          for (var spot in spots) {
+            spot.isFavorite = true;
+          }
+        }
+
+        appLog(
+            '${isFavoriteMode ? "Favorite" : "My"} Spots loaded: ${spots.length} spots');
       } else {
         errorMessage = _repository.errorMessage.isNotEmpty
             ? _repository.errorMessage

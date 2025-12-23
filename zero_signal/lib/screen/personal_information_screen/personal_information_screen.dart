@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/api_end_point.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import '../profile/controller/profile_controller.dart';
+
 class PersonalInformationScreen extends StatelessWidget {
-  const PersonalInformationScreen({super.key});
+  PersonalInformationScreen({super.key});
+  final ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        backgroundColor:  AppColor.creamBackgroundColor,
+        backgroundColor: AppColor.creamBackgroundColor,
         textWidget: Align(
           alignment: Alignment.center,
-          child: TextWidget(text: 'Personal Information',
+          child: TextWidget(
+            text: 'Personal Information',
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
         ),
-
       ),
       backgroundColor: const Color(0xFFFFF4E9),
       body: SafeArea(
-
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -56,8 +59,6 @@ class PersonalInformationScreen extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildProfileCard() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -81,11 +82,29 @@ class PersonalInformationScreen extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
               border: Border.all(color: AppColor.yello, width: 2),
-              image: const DecorationImage(
-                image: AssetImage(AppImagePath.profileImage),
-                fit: BoxFit.cover,
-              ),
             ),
+            child: Obx(() {
+              final imagePath =
+                  AppApiEndPoint.domain + profileController.userImage.value;
+              ImageProvider imageProvider;
+
+              if (imagePath.isEmpty) {
+                imageProvider = AssetImage(AppImagePath.profileImage);
+              } else {
+                imageProvider = NetworkImage(imagePath);
+              }
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                    onError: (exception, stackTrace) =>
+                        AssetImage(AppImagePath.profileImage),
+                  ),
+                ),
+              );
+            }),
           ),
 
           const SizedBox(width: 16),
@@ -96,32 +115,26 @@ class PersonalInformationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4,
               children: [
-                 TextWidget(
-                 text:  'Liam Johnson',
-                  // style: TextStyle(
-                  //   color: Color(0xFF2C2C2C),
-                  //   fontSize: 20,
-                  //   fontFamily: 'Poppins',
-                  //   fontWeight: FontWeight.w500,
-                  // ),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  fontColor: AppColor.textColor,
-                ),
-                 TextWidget(
-                 text:  'hola@zerosignal.app',
-                   fontWeight: FontWeight.w400,
-                   fontColor: AppColor.subTitleColor,
-                   fontSize: 12,
-                ),
+                Obx(() => TextWidget(
+                      text: profileController.userName.value,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      fontColor: AppColor.textColor,
+                    )),
+                Obx(() => TextWidget(
+                      text: profileController.userEmail.value,
+                      fontWeight: FontWeight.w400,
+                      fontColor: AppColor.subTitleColor,
+                      fontSize: 12,
+                    )),
               ],
             ),
           ),
 
           // Edit Button
           GestureDetector(
-            onTap: (){
-              Get.toNamed( AppRoutes.editProfileScreen);
+            onTap: () {
+              Get.toNamed(AppRoutes.editProfileScreen);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -129,8 +142,8 @@ class PersonalInformationScreen extends StatelessWidget {
                 color: const Color(0x262E4F3E),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child:  TextWidget(
-               text:  'Edit Profile',
+              child: TextWidget(
+                text: 'Edit Profile',
                 fontSize: 9,
                 fontWeight: FontWeight.w400,
                 fontColor: AppColor.backgroundColor,
@@ -156,27 +169,27 @@ class PersonalInformationScreen extends StatelessWidget {
           ),
         ],
       ),
-      child:  TextWidget(
-        textAlignment: TextAlign.start,
-       text:  'Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it\'s wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.',
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-        fontColor: AppColor.textColor,
-      ),
+      child: Obx(() => TextWidget(
+            textAlignment: TextAlign.start,
+            text: profileController.bio.value,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            fontColor: AppColor.textColor,
+          )),
     );
   }
 
   Widget _buildInformationForm() {
-    return Column(
-      spacing: 16,
-      children: [
-        _buildInfoField('Full Name', 'Liam Johnson'),
-        _buildInfoField('Email', 'hola@zerosignal.app'),
-        _buildInfoField('Gender', 'Male'),
-        _buildInfoField('Date of birth', '17 dec, 2024'),
-        _buildInfoField('Address', '297 Westheimer Rd. Santa Ana'),
-      ],
-    );
+    return Obx(() => Column(
+          spacing: 16,
+          children: [
+            _buildInfoField('Full Name', profileController.userName.value),
+            _buildInfoField('Email', profileController.userEmail.value),
+            _buildInfoField('Gender', profileController.userGender.value),
+            _buildInfoField('Date of birth', profileController.userDob.value),
+            _buildInfoField('Address', profileController.userAddress.value),
+          ],
+        ));
   }
 
   Widget _buildInfoField(String label, String value) {
@@ -186,7 +199,7 @@ class PersonalInformationScreen extends StatelessWidget {
       children: [
         TextWidget(
           textAlignment: TextAlign.start,
-          text:  label,
+          text: label,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           fontColor: AppColor.textColor,
@@ -200,8 +213,7 @@ class PersonalInformationScreen extends StatelessWidget {
           ),
           child: TextWidget(
             textAlignment: TextAlign.start,
-
-            text:  value,
+            text: value,
             fontSize: 14,
             fontWeight: FontWeight.w400,
             fontColor: AppColor.textColor,

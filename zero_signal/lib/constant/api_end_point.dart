@@ -25,8 +25,8 @@ class AppApiEndPoint {
   String getFavoriteEndPoint(String type) => "/favorite?type=$type";
   static String toggleFavoriteEndPoint() => "/favorite";
   String mySpotDetailEndPoint(String id) => "/spot/$id";
-  static final String activityEndPoint = "/activity";
   static final String categoryEndPoint = "/category?withSub=true";
+  static final String routeEndPoint = "/route";
   static final String spotEndPoint = "/spot";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
 

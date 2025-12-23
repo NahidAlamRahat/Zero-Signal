@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constant/api_end_point.dart';
-import '../../my_spots_screen/model/my_spots_response_model.dart';
-import 'spot_actions.dart';
-import 'spot_image.dart';
-import 'spot_info.dart';
+import '../model/route_model.dart';
+import 'route_actions.dart';
+import 'route_image.dart';
+import 'route_info.dart';
 
-class SpotCard extends StatelessWidget {
-  final SpotData spot;
+class RouteCard extends StatelessWidget {
+  final RouteData route;
   final VoidCallback onTap;
   final VoidCallback onFavoriteTap;
   final VoidCallback onDeleteTap;
 
-  const SpotCard({
+  const RouteCard({
     Key? key,
-    required this.spot,
+    required this.route,
     required this.onTap,
     required this.onFavoriteTap,
     required this.onDeleteTap,
@@ -36,14 +36,14 @@ class SpotCard extends StatelessWidget {
           padding: EdgeInsets.all(12.w),
           child: Row(
             children: [
-              SpotImage(imageUrl: _getFullImageUrl(spot.getFirstImageUrl())),
+              RouteImage(imageUrl: _getFullImageUrl(route.getFirstImageUrl())),
               SizedBox(width: 12.w),
-              SpotInfo(
-                name: spot.title,
-                uploadDate: spot.createdAt,
+              RouteInfo(
+                name: route.title ?? "Unknown Route",
+                uploadDate: _formatDate(route.createdAt),
               ),
-              SpotActions(
-                spot: spot,
+              RouteActions(
+                route: route,
                 onFavoriteTap: onFavoriteTap,
                 onDeleteTap: onDeleteTap,
               ),
@@ -56,9 +56,22 @@ class SpotCard extends StatelessWidget {
 
   /// Get full image URL with domain prepended
   String _getFullImageUrl(String imagePath) {
-    if (imagePath.isEmpty || imagePath.startsWith('http')) {
+    if (imagePath.isEmpty) return "";
+    if (imagePath.startsWith('http')) {
       return imagePath;
     }
     return '${AppApiEndPoint.domain}$imagePath';
+  }
+
+  String _formatDate(String? dateString) {
+    if (dateString == null) return "";
+    try {
+      // Simple parsing, assuming ISO string.
+      // You might want to use intl package if available and required for complex formatting.
+      // For now, returning YYYY-MM-DD portion.
+      return dateString.split("T")[0];
+    } catch (e) {
+      return dateString;
+    }
   }
 }

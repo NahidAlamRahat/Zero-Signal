@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SpotImage extends StatelessWidget {
+class RouteImage extends StatelessWidget {
   final String imageUrl;
 
-  const SpotImage({Key? key, required this.imageUrl}) : super(key: key);
+  const RouteImage({Key? key, required this.imageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,6 @@ class SpotImage extends StatelessWidget {
   }
 
   Widget _buildDynamicImage(String imageUrl) {
-    // If imageUrl is empty, show placeholder
-    if (imageUrl.isEmpty) {
-      return _buildPlaceholder();
-    }
-
     if (imageUrl.startsWith('http')) {
       return Image.network(
         imageUrl,
@@ -41,7 +36,6 @@ class SpotImage extends StatelessWidget {
           }
           return Center(
             child: CircularProgressIndicator(
-              strokeWidth: 2,
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
                       loadingProgress.expectedTotalBytes!
@@ -51,13 +45,7 @@ class SpotImage extends StatelessWidget {
         },
       );
     } else {
-      return Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildPlaceholder();
-        },
-      );
+      return _buildPlaceholder();
     }
   }
 
@@ -65,7 +53,7 @@ class SpotImage extends StatelessWidget {
     return Container(
       color: const Color(0xFFE0E0E0),
       child: Icon(
-        Icons.image_outlined,
+        Icons.image_not_supported_outlined,
         color: const Color(0xFF999999),
         size: 24.sp,
       ),

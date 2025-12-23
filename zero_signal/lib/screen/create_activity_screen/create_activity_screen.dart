@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:zero_signal/screen/create_activity_screen/controller/create_activity_controller.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
@@ -14,30 +13,19 @@ import '../../widget/button_widget/button_widget.dart';
 import '../../widget/custom_dropdown.dart';
 import '../sport_details/widget/date_picker_sheet.dart';
 
-class CreateActivityScreen extends StatefulWidget {
+class CreateActivityScreen extends GetView<CreateActivityController> {
   const CreateActivityScreen({super.key});
 
   @override
-  _CreateActivityScreenState createState() => _CreateActivityScreenState();
-}
-
-class _CreateActivityScreenState extends State<CreateActivityScreen> {
-  bool isDropdownOpen = false;
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  String selectedRouteType = 'Round trip';
-
-  String? selectedValue;
-
-
-  @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<CreateActivityController>()) {
+      Get.put(CreateActivityController());
+    }
     return Scaffold(
       backgroundColor: AppColor.creamBackgroundColor,
       appBar: AppBar(
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-
         backgroundColor: AppColor.creamBackgroundColor,
         elevation: 0,
         leading: IconButton(
@@ -54,256 +42,249 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextWidget(
-                text: 'Activity Title',
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              TextFieldWidget(
-                textColor: Color(0xFF484949),
-                hintText: 'Title of the activity',
-                borderColor: Colors.transparent,
-                backgroundColor: AppColor.lightGrayishOrange,
-                borderRadius: 8,
-              ),
-              const SizedBox(height: 12),
-              TextWidget(
-                text: 'Date',
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              TextFieldWidget(
-                controller: dateController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [DateInputFormatter()],
-                customSuffixIcon: InkWell(
+      body: Obx(() {
+        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextWidget(
+                  text: 'Activity Title',
+                  fontWeight: FontWeight.w400,
+                ),
+                SizedBox(height: 8.h),
+                TextFieldWidget(
+                  controller: controller.titleController,
+                  textColor: const Color(0xFF484949),
+                  hintText: 'Title of the activity',
+                  borderColor: Colors.transparent,
+                  backgroundColor: AppColor.lightGrayishOrange,
+                  borderRadius: 8,
+                ),
+                const SizedBox(height: 12),
+                TextWidget(
+                  text: 'Date',
+                  fontWeight: FontWeight.w400,
+                ),
+                SizedBox(height: 8.h),
+                TextFieldWidget(
+                  controller: controller.dateController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [DateInputFormatter()],
+                  customSuffixIcon: InkWell(
                     onTap: () async {
                       final selectedDate = await showDatePickerSheet(context);
                       if (selectedDate != null) {
-                        setState(() {
-                          dateController.text =
-                              DateFormat('dd/MM/yyyy').format(selectedDate);
-                        });
+                        controller.dateController.text =
+                            DateFormat('dd/MM/yyyy').format(selectedDate);
                       }
                     },
                     child: Image.asset(
                       Assets.icons.calender.path,
                       height: 18.h,
                       width: 18.w,
-                    )),
-                hintText: 'dd/mm/yyyy',
-                borderColor: Colors.transparent,
-                backgroundColor: AppColor.lightGrayishOrange,
-                borderRadius: 8,
-              ),
-              const SizedBox(height: 12),
-              TextWidget(
-                textAlignment: TextAlign.start,
-                text: 'Do you want to do a route of your favorites?',
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              CustomDropdown<String>(
-                items: [],
-                hint: 'Select route',
-                selectedValue: selectedValue,
-                borderRadius: 8,
-                onChanged: (value) {
-                  selectedValue = value;
-                },
-                borderColor: AppColor.creamBackgroundColor,
-                dropdownColor: AppColor.lightGrayishOrange,
-                boxColor: AppColor.lightGrayishOrange,
-              ),
-              const SizedBox(height: 12),
-              TextWidget(
-                text: 'Location',
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(height: 8.h),
-              TextFieldWidget(
-                customSuffixIcon:
-                    Icon(Icons.close, color: AppColor.backgroundColor),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppColor.yello,
-                  size: 18,
+                    ),
+                  ),
+                  hintText: 'dd/mm/yyyy',
+                  borderColor: Colors.transparent,
+                  backgroundColor: AppColor.lightGrayishOrange,
+                  borderRadius: 8,
                 ),
-                hintText: 'Search place (Google Maps)',
-                borderColor: Colors.transparent,
-                backgroundColor: AppColor.lightGrayishOrange,
-                borderRadius: 12,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              TextWidget(
-                text: 'Activity Type',
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              CustomDropdown<String>(
-                items: [
-                  'Walking',
-                  'Hiking',
-                  'Running',
-                  'Cycling',
-                  'Motorcycle',
-                  'SUV',
-                  'Road Trip',
-                  'Other'
-                ],
-                hint: 'Select type',
-                selectedValue: selectedValue,
-                borderRadius: 8,
-                onChanged: (value) {
-                  selectedValue = value;
-                },
-                borderColor: AppColor.creamBackgroundColor,
-                dropdownColor: AppColor.lightGrayishOrange,
-                boxColor: AppColor.lightGrayishOrange,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              TextWidget(
-                text: 'Description',
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(height: 8.h),
-              TextFieldWidget(
-                hintText: 'Description of the activity ',
-                minLines: 4,
-                maxLines: 5,
-                borderColor: Colors.transparent,
-                backgroundColor: AppColor.lightGrayishOrange,
-                borderRadius: 12,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              _uploadImagesBox(),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: TextWidget(
-                  text: 'max 5 photos',
-                  fontColor: AppColor.yello,
-                  textAlignment: TextAlign.end,
+                const SizedBox(height: 12),
+                TextWidget(
+                  textAlignment: TextAlign.start,
+                  text: 'Do you want to do a route of your favorites?',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              TextWidget(
-                text: 'Maximum Number of Attendees',
-                fontWeight: FontWeight.w400,
-              ),
-              TextFieldWidget(
-                hintText: 'Enter Number',
-                borderColor: Colors.transparent,
-                backgroundColor: AppColor.lightGrayishOrange,
-                borderRadius: 12,
-              ),
-              SizedBox(
-                height: 30.h,
-              ),
-              Center(
-                child: ButtonWidget(
-                  onPressed: () {
-                    Navigator.pop(context);
+                SizedBox(height: 8.h),
+                CustomDropdown<String>(
+                  items: [],
+                  hint: 'Select route',
+                  selectedValue: null,
+                  borderRadius: 8,
+                  onChanged: (value) {},
+                  borderColor: AppColor.creamBackgroundColor,
+                  dropdownColor: AppColor.lightGrayishOrange,
+                  boxColor: AppColor.lightGrayishOrange,
+                ),
+                const SizedBox(height: 12),
+                TextWidget(
+                  text: 'Location',
+                  fontWeight: FontWeight.w400,
+                ),
+                SizedBox(height: 8.h),
+                TextFieldWidget(
+                  controller: controller.addressController,
+                  customSuffixIcon: IconButton(
+                    icon: Icon(Icons.close, color: AppColor.backgroundColor),
+                    onPressed: () => controller.addressController.clear(),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: AppColor.yello,
+                    size: 18,
+                  ),
+                  hintText: 'Search place (Google Maps)',
+                  borderColor: Colors.transparent,
+                  backgroundColor: AppColor.lightGrayishOrange,
+                  borderRadius: 12,
+                ),
+                const SizedBox(height: 12),
+                TextWidget(
+                  text: 'Activity Type',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+                SizedBox(height: 8.h),
+                CustomDropdown<String>(
+                  items:
+                      controller.routeTypes.map((e) => e.name ?? "").toList(),
+                  hint: 'Select type',
+                  selectedValue: controller.selectedRouteType.value?.name,
+                  borderRadius: 8,
+                  onChanged: (value) {
+                    controller.selectedRouteType.value = controller.routeTypes
+                        .firstWhere((e) => e.name == value);
                   },
-                  buttonWidth: double.infinity,
-                  backgroundColor: AppColor.backgroundColor,
-                  label: 'Publish',
+                  borderColor: AppColor.creamBackgroundColor,
+                  dropdownColor: AppColor.lightGrayishOrange,
+                  boxColor: AppColor.lightGrayishOrange,
                 ),
-              ),
-              SizedBox(height: 30.h),
-            ],
+                const SizedBox(height: 12),
+                TextWidget(
+                  text: 'Description',
+                  fontWeight: FontWeight.w400,
+                ),
+                SizedBox(height: 8.h),
+                TextFieldWidget(
+                  controller: controller.descriptionController,
+                  hintText: 'Description of the activity ',
+                  minLines: 4,
+                  maxLines: 5,
+                  borderColor: Colors.transparent,
+                  backgroundColor: AppColor.lightGrayishOrange,
+                  borderRadius: 12,
+                ),
+                const SizedBox(height: 12),
+                _uploadImagesBox(),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextWidget(
+                    text: 'max 5 photos',
+                    fontColor: AppColor.yello,
+                    textAlignment: TextAlign.end,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                TextWidget(
+                  text: 'Maximum Number of Attendees',
+                  fontWeight: FontWeight.w400,
+                ),
+                TextFieldWidget(
+                  controller: controller.maxParticipantsController,
+                  hintText: 'Enter Number',
+                  keyboardType: TextInputType.number,
+                  borderColor: Colors.transparent,
+                  backgroundColor: AppColor.lightGrayishOrange,
+                  borderRadius: 12,
+                ),
+                SizedBox(height: 30.h),
+                Center(
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator()
+                      : ButtonWidget(
+                          onPressed: () {
+                            controller.publishActivity();
+                          },
+                          buttonWidth: double.infinity,
+                          backgroundColor: AppColor.backgroundColor,
+                          label: 'Publish',
+                        ),
+                ),
+                SizedBox(height: 30.h),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
-  // ------------------------------ helpers ------------------------------
-
-  Widget _uploadImagesBox() => Container(
-        width: double.infinity,
-        height: 120,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(245, 233, 223, 1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add, size: 40, color: Colors.grey.shade600),
-            const SizedBox(height: 8),
-            Text(
-              'Add Images',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+  Widget _uploadImagesBox() => Column(
+        children: [
+          InkWell(
+            onTap: () => controller.pickImages(),
+            child: Container(
+              width: double.infinity,
+              height: 120,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(245, 233, 223, 1),
+                borderRadius: BorderRadius.circular(12),
+                border:
+                    Border.all(color: const Color.fromRGBO(245, 233, 223, 1)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add, size: 40, color: Colors.grey.shade600),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Add Images',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (controller.selectedImages.isNotEmpty) ...[
+            SizedBox(height: 10.h),
+            SizedBox(
+              height: 80.h,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.selectedImages.length,
+                separatorBuilder: (context, index) => SizedBox(width: 10.w),
+                itemBuilder: (context, index) {
+                  return Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          controller.selectedImages[index],
+                          width: 80.w,
+                          height: 80.h,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: InkWell(
+                          onTap: () => controller.removeImage(index),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
-        ),
+        ],
       );
 
-  Widget _sectionTitle(String title) => Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: Colors.black87,
-        ),
-      );
-
-  Widget _buildRouteTypeChip(String routeType) {
-    final isSelected = selectedRouteType == routeType;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedRouteType = routeType;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: TextWidget(
-          text: routeType,
-          textAlignment: TextAlign.center,
-          // style: TextStyle(
-          //   fontSize: 14,
-          //   fontWeight: FontWeight.w500,
-          //   color: Colors.black,
-          // ),
-          fontColor: AppColor.textColor,
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    );
-  }
-
-  /// Date picker bottom sheet
   Future<DateTime?> showDatePickerSheet(BuildContext context) async {
     return await showModalBottomSheet<DateTime>(
       context: context,
@@ -312,18 +293,10 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       builder: (context) => SafeArea(
         child: Container(
           width: Get.width,
-          //   height: Get.height*0.5,
           color: AppColor.creamBackgroundColor,
           child: const DatePickerSheet(),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    descriptionController.dispose();
-    dateController.dispose();
-    super.dispose();
   }
 }

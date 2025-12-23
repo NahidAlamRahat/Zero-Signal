@@ -11,7 +11,6 @@ class RouteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -47,7 +46,6 @@ class RouteCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // Title Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

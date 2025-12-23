@@ -103,7 +103,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextWidget(
-         text:  'Portlligat - Cap de Creus',
+          text: 'Portlligat - Cap de Creus',
           // style: TextStyle(
           //   fontSize: 24.sp,
           //   fontWeight: FontWeight.w500,
@@ -190,10 +190,8 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       children: [
         Expanded(
           child: ButtonWidget(
-
             backgroundColor: AppColor.backgroundColor,
             label: 'Follow Route',
-
             fontSize: 10,
             fontWeight: FontWeight.w400,
             buttonHeight: 33,
@@ -225,7 +223,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             fontSize: 10,
             fontWeight: FontWeight.w400,
             maxLines: 1,
-            textColor:AppColor.textColor,
+            textColor: AppColor.textColor,
             onPressed: () {},
           ),
         ),
@@ -243,7 +241,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           child: Row(
             children: [
               Padding(
-                padding:  EdgeInsets.only(top: 12.h),
+                padding: EdgeInsets.only(top: 12.h),
                 child: CircleAvatar(
                   radius: 20,
                   backgroundColor: Colors.brown,
@@ -280,7 +278,6 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       context: context,
       builder: (context) => ShowCustomDialog(
         backgroundColor: AppColor.creamBackgroundColor,
-
         title: '@naturanauta',
         titleStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
         description: "I'm a nature lover and outdoor enthusiast",
@@ -288,7 +285,11 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         image: Image.asset(AppImagePath.profileImage),
         actionsLayout: ActionsLayout.column,
         actions: [
-          Image.asset(Assets.icons.likeIcon.path,height: 24.h,width: 24.w,),
+          Image.asset(
+            Assets.icons.likeIcon.path,
+            height: 24.h,
+            width: 24.w,
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: ButtonWidget(
@@ -322,15 +323,16 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextWidget(
-         text:  'Description',
-         fontColor: AppColor.textColor,
-         fontSize: 16,
-         fontWeight: FontWeight.w400,
-         textAlignment: TextAlign.left,
+          text: 'Description',
+          fontColor: AppColor.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          textAlignment: TextAlign.left,
         ),
         SizedBox(height: 8.h),
         TextWidget(
-         text:  'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
+          text:
+              'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
           fontColor: AppColor.darkGay300,
           fontSize: 14,
           fontWeight: FontWeight.w400,
@@ -413,7 +415,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextWidget(
-                 text:  'Comments',
+                  text: 'Comments',
                   fontColor: AppColor.textColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -462,14 +464,13 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextWidget(
-                   text:  comment['name'],
+                    text: comment['name'],
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     fontColor: AppColor.textColor,
                   ),
-
                   TextWidget(
-                   text:  comment['date'],
+                    text: comment['date'],
                     fontColor: AppColor.subTitleColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -496,7 +497,6 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       child: Column(
         children: [
           TextFieldWidget(
-
             maxLines: 3,
             minLines: 3,
             borderColor: AppColor.lightGrayishOrange,
@@ -527,7 +527,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           SizedBox(height: 10),
           Center(
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Get.toNamed(AppRoutes.updateInformationScreen);
               },
               child: TextWidget(
@@ -588,8 +588,7 @@ class ImageGalleryDialog extends StatelessWidget {
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(Icons.image,
-                              size: 64, color: Colors.red),
+                          child: Icon(Icons.image, size: 64, color: Colors.red),
                         ),
                 )),
             SizedBox(height: 16),
@@ -622,7 +621,7 @@ class ImageGalleryDialog extends StatelessWidget {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                            child: Image.asset(
+                          child: Image.asset(
                             imgPath,
                             fit: BoxFit.cover,
                             width: double.infinity,

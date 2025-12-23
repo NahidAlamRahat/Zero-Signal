@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SpotInfo extends StatelessWidget {
+class RouteInfo extends StatelessWidget {
   final String name;
   final String uploadDate;
 
-  const SpotInfo({
+  const RouteInfo({
     Key? key,
     required this.name,
     required this.uploadDate,
@@ -26,6 +26,8 @@ class SpotInfo extends StatelessWidget {
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w400,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             'Uploaded on $uploadDate',

@@ -41,6 +41,7 @@ class TextFieldWidget extends StatefulWidget {
   final FontWeight? fontWeight;
   final Color? suffixIconColor;
   final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly;
 
   const TextFieldWidget({
     super.key,
@@ -104,6 +105,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         onChanged: widget.onChanged,
         controller: widget.controller,
         validator: widget.validator,
+        readOnly: widget.readOnly,
         obscureText: obscureText,
         keyboardType: widget.keyboardType,
         maxLines: obscureText ? 1 : widget.maxLines,

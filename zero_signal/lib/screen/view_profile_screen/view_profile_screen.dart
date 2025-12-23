@@ -12,26 +12,24 @@ import '../profile/controller/profile_controller.dart';
 import '../profile/widget/menuItem_widget.dart';
 
 class ViewProfileScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        backgroundColor:  AppColor.creamBackgroundColor,
-
+        backgroundColor: AppColor.creamBackgroundColor,
       ),
       backgroundColor: AppColor.creamBackgroundColor,
       body: SingleChildScrollView(
-        padding:  EdgeInsets.symmetric(horizontal: 20.w, ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.w,
+        ),
         child: Column(
           children: [
             // Profile Card
             _buildProfileCard(),
             SizedBox(height: 16.h),
             // Menu Items Card
-             _buildMenuItemsCard(),
-
-
+            _buildMenuItemsCard(),
           ],
         ),
       ),
@@ -40,18 +38,18 @@ class ViewProfileScreen extends StatelessWidget {
 
   Widget _buildProfileCard() {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Get.toNamed(AppRoutes.personalInformationScreen);
       },
       child: Container(
         width: 390,
         // height: 212,
         decoration: BoxDecoration(
-          color:  AppColor.overLayBoxColor,
+          color: AppColor.overLayBoxColor,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color:  AppColor.boxShadowColor,
+              color: AppColor.boxShadowColor,
               blurRadius: 4,
               offset: const Offset(0, 0),
             )
@@ -66,7 +64,7 @@ class ViewProfileScreen extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  border: Border.all(color:AppColor.yello, width: 2),
+                  border: Border.all(color: AppColor.yello, width: 2),
                   borderRadius: BorderRadius.circular(24),
                   image: DecorationImage(
                     image: AssetImage(AppImagePath.profileImage),
@@ -102,8 +100,9 @@ class ViewProfileScreen extends StatelessWidget {
               // Points
               TextWidget(
                 textAlignment: TextAlign.start,
-                text: "Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it's wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.",
-                fontColor:AppColor.subTitleColor,
+                text:
+                    "Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it's wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.",
+                fontColor: AppColor.subTitleColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
@@ -117,7 +116,6 @@ class ViewProfileScreen extends StatelessWidget {
   Widget _buildMenuItemsCard() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
-
       decoration: BoxDecoration(
         color: AppColor.overLayBoxColor,
         borderRadius: BorderRadius.circular(8.r),
@@ -136,28 +134,26 @@ class ViewProfileScreen extends StatelessWidget {
             title: 'My Spots',
             onTap: () => Get.toNamed(AppRoutes.mySpotsScreen),
           ),
-          SizedBox(height: 16.h,),
-
+          SizedBox(
+            height: 16.h,
+          ),
           _buildDivider(),
-          SizedBox(height: 10.h,),
-
+          SizedBox(
+            height: 10.h,
+          ),
           MenuItemWidget(
             icon: Assets.icons.routesImage.path,
             title: 'My Routes',
             onTap: () => Get.toNamed(AppRoutes.myRoutesScreen),
           ),
-          SizedBox(height: 16.h,),
-
+          SizedBox(
+            height: 16.h,
+          ),
           _buildDivider(),
-
-
         ],
       ),
     );
   }
-
-
-
 
   Widget _buildDivider() {
     return Container(
