@@ -1,39 +1,78 @@
 import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import '../../../constant/api_end_point.dart';
 
 class FilterController extends GetxController {
   // Selected filters
   final selectedFilters = <String>[];
+  
+  // API and loading states
+  final Dio _dio = Dio();
+  bool isLoading = false;
+  String errorMessage = '';
+  
+  // Filter categories and options (will be populated from API)
+  final Map<String, List<String>> filterCategories = <String, List<String>>{};
 
-  // Filter categories and options
-  final Map<String, List<String>> filterCategories = {
-    'Nature & Landscape': [
-      'View Points',
-      'Natural Pool',
-      'River',
-      'Cove',
-      'Waterfall',
-      'Monumental Trees',
-      'Natural Spring',
-      'Swamp',
-      'Thermal Water',
-    ],
-    'Overnight & Rest': [
-      'Verified Overnight Area',
-      'Wild Rest Area',
-      'Hostel',
-      'Camper Area',
-      'Shelter',
-      'Bivouac Area',
-      'Picnic Area',
-    ],
-    'Exploration & Adventure': [
-      'Mines',
-      'Caves',
-      'Hanging Bridges',
-      'Tunnels',
-      'Hidden Passage',
-    ],
-  };
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFilterCategories();
+  }
+
+  /// Fetch filter categories and subcategories from API
+  Future<void> fetchFilterCategories() async {
+    isLoading = true;
+    errorMessage = '';
+    update();
+
+    try {
+      // Use actual API endpoint from AppApiEndPoint
+      final url = "${AppApiEndPoint.instance.baseUrl}${AppApiEndPoint.categoryEndPoint}";
+      
+      print('DEBUG: Fetching categories from: $url');
+      
+      final response = await _dio.get(url);
+      
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print('DEBUG: API response received: $data');
+        
+        // Parse API response and populate filterCategories
+        if (data['success'] == true && data['data'] != null) {
+          filterCategories.clear();
+          
+          for (var category in data['data']) {
+            final categoryName = category['name'] ?? '';
+            final subcategories = <String>[];
+            
+            if (category['subcategories'] != null) {
+              for (var subcategory in category['subcategories']) {
+                subcategories.add(subcategory['name'] ?? '');
+              }
+            }
+            
+            filterCategories[categoryName] = subcategories;
+            print('DEBUG: Added category: $categoryName with ${subcategories.length} subcategories');
+          }
+        } else {
+          print('DEBUG: API response format unexpected');
+          errorMessage = 'Invalid response format from server';
+        }
+      } else {
+        print('DEBUG: API returned status ${response.statusCode}');
+        errorMessage = 'Failed to load categories (Status: ${response.statusCode})';
+      }
+    } catch (e) {
+      print('DEBUG: Error in fetchFilterCategories: $e');
+      errorMessage = 'Error loading categories: $e';
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
+
 
   /// Add/remove filter
   void toggleFilter(String option) {
@@ -68,5 +107,10 @@ class FilterController extends GetxController {
       allOptions.addAll(options);
     });
     return allOptions;
+  }
+
+  /// Refresh categories from API
+  Future<void> refreshCategories() async {
+    await fetchFilterCategories();
   }
 }
