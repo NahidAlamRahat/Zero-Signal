@@ -12,23 +12,31 @@ import 'package:dio/dio.dart';
 import '../../../repository/spot_repository.dart';
 import '../../../routes/app_routes.dart';
 
-class HomeScreenController extends GetxController implements mapbox.OnPointAnnotationClickListener {
+class HomeScreenController extends GetxController
+    implements mapbox.OnPointAnnotationClickListener {
   late mapbox.MapWidget mapWidget;
   late mapbox.MapboxMap mapboxMap;
   geo.Position? currentPosition;
   final TextEditingController searchController = TextEditingController();
+  // Radius control
+  final TextEditingController radiusController =
+      TextEditingController(text: '2');
+  double currentRadiusInMeters = 2.0;
+  Timer? _radiusDebounceTimer;
+
   final String mapboxAccessToken =
       'pk.eyJ1IjoibGVkZTE4IiwiYSI6ImNtZzgzcmxodDAyejIybXIzcHUyZGRyMzgifQ.jbe1XMovv8MF5TGitB9PwQ';
 
   List<dynamic> searchSuggestions = [];
   bool isSearching = false;
-  
+
   // Spot related properties
   final SpotRepository _spotRepository = SpotRepository();
   List<SpotCoordinateModel> nearbySpots = [];
   bool isLoadingSpots = false;
   mapbox.PointAnnotationManager? pointAnnotationManager;
-  Map<String, SpotCoordinateModel> markerSpotMap = {}; // Map to store spot data by marker ID
+  Map<String, SpotCoordinateModel> markerSpotMap =
+      {}; // Map to store spot data by marker ID
 
   // Map style URIs
   static const String defaultStyleUri = 'mapbox://styles/mapbox/streets-v12';
@@ -46,6 +54,24 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
 
 // New York
   ];
+
+  /// Update search radius and fetch spots
+  void updateRadius(String kmValue) {
+    if (_radiusDebounceTimer?.isActive ?? false) _radiusDebounceTimer!.cancel();
+    _radiusDebounceTimer = Timer(const Duration(milliseconds: 800), () {
+      print('DEBUG: Input radius value: "$kmValue"');
+      if (kmValue.isEmpty) return;
+      final double? km = double.tryParse(kmValue);
+      if (km != null && km > 0) {
+        currentRadiusInMeters = km; // User requested KM
+        print(
+            'DEBUG: Radius updated to $currentRadiusInMeters (KM/Units). Fetching spots...');
+        fetchNearbySpots();
+      } else {
+        print('DEBUG: Invalid radius input');
+      }
+    });
+  }
 
   Future<void> getUserLocation() async {
     bool serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
@@ -115,31 +141,30 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
     }
   }
 
-
-
   late mapbox.Point markerPoint;
 
   /// Load marker icon from assets and register it in map style
   Future<void> _loadMarkerIcon() async {
     try {
       print('DEBUG: Loading custom marker icon');
-      
+
       // Load the marker image from assets
       final ByteData data = await rootBundle.load('assets/icons/location.png');
       final uint8List = data.buffer.asUint8List();
-      print('DEBUG: Loaded marker from assets, size: ${uint8List.length} bytes');
-      
+      print(
+          'DEBUG: Loaded marker from assets, size: ${uint8List.length} bytes');
+
       // Decode the image to get its actual dimensions
       final image = await decodeImageFromList(uint8List);
       print('DEBUG: Image dimensions: ${image.width}x${image.height}');
-      
+
       // Create MbxImage with actual image dimensions
       final mbxImage = mapbox.MbxImage(
         width: image.width,
         height: image.height,
         data: uint8List,
       );
-      
+
       // Add the image to the map style
       await mapboxMap.style.addStyleImage(
         "custom-marker",
@@ -151,7 +176,6 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
         null,
       );
       print('DEBUG: Custom marker image added to style');
-      
     } catch (e) {
       print('ERROR: Failed to load marker icon: $e');
     }
@@ -199,7 +223,7 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
     mapboxMap = controller;
     print('DEBUG: Map created, initializing...');
-    
+
     await getUserLocation();
 
     // Set style to streets-v12 which has marker-15 sprite
@@ -209,7 +233,7 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
     } catch (e) {
       print('DEBUG: Error loading style: $e');
     }
-    
+
     // Wait longer for style to load completely
     await Future.delayed(Duration(seconds: 2));
 
@@ -218,9 +242,10 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
 
     // Create point annotation manager for markers
     try {
-      pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+      pointAnnotationManager =
+          await mapboxMap.annotations.createPointAnnotationManager();
       print('DEBUG: Point annotation manager created');
-      
+
       // Add tap listener for markers
       pointAnnotationManager?.addOnPointAnnotationClickListener(this);
       print('DEBUG: Marker tap listener added');
@@ -273,7 +298,7 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
   }
 
   /// Fetch nearby spots from API
-  Future<void> fetchNearbySpots({double radius = 5000.0}) async {
+  Future<void> fetchNearbySpots() async {
     if (currentPosition == null) {
       Fluttertoast.showToast(
         msg: "Location not available. Please enable GPS.",
@@ -290,26 +315,29 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
       final spots = await _spotRepository.fetchSpotsByCoordinates(
         latitude: currentPosition!.latitude,
         longitude: currentPosition!.longitude,
-        radius: radius, // Default 200 meters radius
+        radius: currentRadiusInMeters,
       );
 
       if (spots != null) {
         nearbySpots = spots;
         print('DEBUG: Found ${spots.length} spots from API');
         for (int i = 0; i < spots.length; i++) {
-          print('DEBUG: Spot $i: ${spots[i].title} at (${spots[i].latitude}, ${spots[i].longitude})');
+          print(
+              'DEBUG: Spot $i: ${spots[i].title} at (${spots[i].latitude}, ${spots[i].longitude})');
         }
         await _addSpotMarkersToMap();
-        
+
         Fluttertoast.showToast(
-          msg: "Found ${spots.length} nearby spots",
+          msg:
+              "Found ${spots.length} nearby spots in ${currentRadiusInMeters / 1000}km",
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
       } else {
+        nearbySpots = []; // Clear if null
         Fluttertoast.showToast(
-          msg: _spotRepository.errorMessage.isNotEmpty 
-              ? _spotRepository.errorMessage 
+          msg: _spotRepository.errorMessage.isNotEmpty
+              ? _spotRepository.errorMessage
               : "Failed to fetch spots",
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -332,12 +360,12 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
     print('DEBUG: _addSpotMarkersToMap called');
     print('DEBUG: pointAnnotationManager: $pointAnnotationManager');
     print('DEBUG: nearbySpots.length: ${nearbySpots.length}');
-    
+
     if (pointAnnotationManager == null) {
       print('ERROR: pointAnnotationManager is null!');
       return;
     }
-    
+
     if (nearbySpots.isEmpty) {
       print('WARNING: nearbySpots is empty!');
       return;
@@ -351,13 +379,15 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
 
       // Add markers for each spot
       for (final spot in nearbySpots) {
-        print('DEBUG: Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
-        
+        print(
+            'DEBUG: Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
+
         try {
           final annotation = await pointAnnotationManager!.create(
             mapbox.PointAnnotationOptions(
               geometry: mapbox.Point(
-                coordinates: mapbox.Position.fromJson([spot.longitude, spot.latitude]),
+                coordinates:
+                    mapbox.Position.fromJson([spot.longitude, spot.latitude]),
               ),
               iconImage: "custom-marker", // Use the custom marker we loaded
               iconSize: 1.0,
@@ -367,16 +397,17 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
               textColor: Colors.black.value,
             ),
           );
-          
+
           // Store spot data with marker ID
           markerSpotMap[annotation.id] = spot;
           print('DEBUG: Stored spot data for marker: ${annotation.id}');
-          
         } catch (markerError) {
-          print('ERROR: Failed to create marker for ${spot.title}: $markerError');
+          print(
+              'ERROR: Failed to create marker for ${spot.title}: $markerError');
         }
       }
-      print('DEBUG: Successfully added ${nearbySpots.length} markers to the map');
+      print(
+          'DEBUG: Successfully added ${nearbySpots.length} markers to the map');
 
       // Move camera to the first spot so markers are visible even if user is far away.
       final first = nearbySpots.first;
@@ -400,7 +431,7 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
     final spot = markerSpotMap[annotation.id];
     if (spot != null) {
       print('DEBUG: Marker tapped: ${spot.title}');
-      
+
       // Navigate to spot details screen
       Get.toNamed(
         AppRoutes.spotDetailsScreen,
@@ -413,7 +444,7 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
           'address': spot.address,
         },
       );
-      
+
       Fluttertoast.showToast(
         msg: "Opening ${spot.title}",
         backgroundColor: Colors.green,
@@ -449,7 +480,7 @@ class HomeScreenController extends GetxController implements mapbox.OnPointAnnot
           startDelay: 0,
         ),
       );
-      
+
       // Refresh nearby spots after updating location
       await fetchNearbySpots();
     }

@@ -51,26 +51,22 @@ class _LocationMapWidgetState extends State<LocationMapWidget> {
     );
   }
 
-  Future<void> _onMapCreated(mapbox.MapboxMap controller) async {
-    mapboxMap = controller;
+  @override
+  void didUpdateWidget(LocationMapWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.latitude != widget.latitude ||
+        oldWidget.longitude != widget.longitude) {
+      _updateMapLocation();
+    }
+  }
 
-    try {
-      await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
-    } catch (e) {
-      // Handle error silently
+  Future<void> _updateMapLocation() async {
+    if (pointAnnotationManager != null) {
+      await pointAnnotationManager?.deleteAll();
+      await _addMarker();
     }
 
-    await Future.delayed(Duration(milliseconds: 500));
-
-    try {
-      pointAnnotationManager =
-          await mapboxMap.annotations.createPointAnnotationManager();
-    } catch (e) {
-      // Handle error silently
-    }
-
-    // Set camera to location
-    await mapboxMap.setCamera(
+    await mapboxMap.flyTo(
       mapbox.CameraOptions(
         center: mapbox.Point(
           coordinates: mapbox.Position.fromJson([
@@ -80,9 +76,28 @@ class _LocationMapWidgetState extends State<LocationMapWidget> {
         ),
         zoom: 14.0,
       ),
+      mapbox.MapAnimationOptions(duration: 1000), // Smooth animation
     );
+  }
 
-    // Add marker
+  Future<void> _onMapCreated(mapbox.MapboxMap controller) async {
+    mapboxMap = controller;
+
+    try {
+      await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+    } catch (e) {
+      // Handle error silently
+    }
+
+    // Initialize annotation manager immediately without delay
+    try {
+      pointAnnotationManager =
+          await mapboxMap.annotations.createPointAnnotationManager();
+    } catch (e) {
+      // Handle error silently
+    }
+
+    // Initial marker
     await _addMarker();
 
     // Disable compass

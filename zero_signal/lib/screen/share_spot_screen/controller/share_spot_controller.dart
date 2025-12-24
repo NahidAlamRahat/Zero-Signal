@@ -1,13 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:geolocator/geolocator.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:image_picker/image_picker.dart';
 
+import 'package:zero_signal/constant/api_end_point.dart';
 import '../../../repository/spot_repository.dart';
+import 'package:zero_signal/service/local_database/prefs_helper.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/category_response_model.dart';
@@ -230,6 +234,52 @@ class ShareSpotController extends GetxController {
     update();
   }
 
+  // ==================== CURRENT LOCATION ====================
+
+  Future<void> getCurrentLocation() async {
+    try {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        AppSnackBar.error('Location services are disabled.');
+        return;
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          AppSnackBar.error('Location permissions are denied');
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        AppSnackBar.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+        return;
+      }
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+      final Position position = await Geolocator.getCurrentPosition();
+
+      selectedLat = position.latitude;
+      selectedLng = position.longitude;
+
+      // Update address
+      await reverseGeocode(position.latitude, position.longitude);
+
+      update();
+    } catch (e) {
+      appLog('Error getting current location: $e');
+      AppSnackBar.error('Failed to get current location');
+    }
+  }
+
   // ==================== CATEGORIES ====================
 
   /// Fetch categories from API
@@ -323,28 +373,93 @@ class ShareSpotController extends GetxController {
     update();
 
     try {
-      // Use the first selected subcategory ID
       final String typeId = selectedSubcategoryIds.first;
+      String token = await PrefsHelper.getString("accessToken");
 
-      final success = await _repository.createSpot(
-        title: titleController.text.trim(),
-        description: descriptionController.text.trim(),
-        address: selectedAddress!,
-        type: typeId,
-        images: selectedImages,
+      if (token.isEmpty) {
+        // Retry fetching all data in case it wasn't loaded
+        await PrefsHelper.getAllPrefData();
+        token = PrefsHelper.accessToken;
+
+        if (token.isEmpty) {
+          AppSnackBar.error("Please log in again to post a spot.");
+          isSubmitting = false;
+          update();
+          return;
+        }
+      }
+
+      // Prepare FormData
+      final formData = FormData.fromMap({
+        'title': titleController.text.trim(),
+        'type': typeId,
+        'description': descriptionController.text.trim(),
+        'address': selectedAddress!,
+        'lat': selectedLat!,
+        'lng': selectedLng!,
+      });
+
+      // Add image
+      if (selectedImages.isNotEmpty) {
+        final file = selectedImages.first;
+        formData.files.add(MapEntry(
+          'image',
+          await MultipartFile.fromFile(file.path,
+              filename: file.path.split('/').last),
+        ));
+      }
+
+      final requestUrl =
+          "${AppApiEndPoint.instance.baseUrl}${AppApiEndPoint.createSpotEndPoint}";
+
+      // Log Request
+      appLog({
+        'url': requestUrl,
+        'headers': {'Authorization': 'Bearer $token'},
+        'title': titleController.text.trim(),
+        'type': typeId,
+        'description': descriptionController.text.trim(),
+        'address': selectedAddress!,
+        'lat': selectedLat!,
+        'lng': selectedLng!,
+        'image':
+            selectedImages.isNotEmpty ? selectedImages.first.path : 'No Image',
+      }, source: 'REQUEST PAYLOAD');
+
+      final response = await Dio().post(
+        requestUrl,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      if (success) {
-        Fluttertoast.showToast(
-          msg: 'Spot submitted for review!',
-          backgroundColor: const Color(0xFF2E4F3E),
-          textColor: Colors.white,
-        );
-        Get.back();
+      // Log Response
+      appLog(response.data, source: 'API RESPONSE');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.data['success'] == true) {
+          Fluttertoast.showToast(
+            msg: 'Spot submitted successfully!',
+            backgroundColor: const Color(0xFF2E4F3E),
+            textColor: Colors.white,
+          );
+          Get.back();
+        } else {
+          AppSnackBar.error(response.data['message'] ?? 'Submission failed');
+        }
       }
     } catch (e) {
-      appLog('Error submitting spot: $e');
-      AppSnackBar.error('Failed to submit spot');
+      if (e is DioException) {
+        appLog(e.response?.data ?? e.message, source: 'API ERROR');
+        AppSnackBar.error(
+            'Error: ${e.response?.data['message'] ?? 'Submission failed'}');
+      } else {
+        appLog('Error submitting spot: $e');
+        AppSnackBar.error('Failed to submit spot');
+      }
     }
 
     isSubmitting = false;

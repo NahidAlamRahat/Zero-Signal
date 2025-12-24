@@ -74,7 +74,8 @@ class LocationSearchWidget extends StatelessWidget {
                       onTap: () {
                         showConfirmLocationSheet(context);
                       },
-                      child: Image.asset(AppIconPath.map, height: 16.h, width: 16.w),
+                      child: Image.asset(AppIconPath.map,
+                          height: 16.h, width: 16.w),
                     ),
                 ],
               ),
@@ -159,16 +160,20 @@ class LocationSearchWidget extends StatelessWidget {
     );
   }
 
-
   void showConfirmLocationSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true, // Allows full height and better control
+      enableDrag: false, // Prevents bottom sheet from stealing map gestures
       builder: (BuildContext context) {
-        return const ConfirmLocationSheet();
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: const ConfirmLocationSheet(),
+        );
       },
     );
   }
-
-
 }
