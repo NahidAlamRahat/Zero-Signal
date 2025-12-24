@@ -54,6 +54,7 @@ class AppRoutes {
   static const listViewDetailsScreen = "/listViewDetailsScreen";
   static const editActivityScreen = "/editActivityScreen";
   static const faqScreen = "/faqScreen";
+  static const spotNavigationScreen = "/spotNavigationScreen";
 
 
 }

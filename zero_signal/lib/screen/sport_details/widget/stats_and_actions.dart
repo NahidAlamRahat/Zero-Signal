@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/routes/app_routes.dart';
+import 'package:zero_signal/screen/sport_details/controller/sport_details_controller.dart';
 import 'package:zero_signal/screen/sport_details/widget/date_picker_sheet.dart';
 import 'package:zero_signal/screen/sport_details/widget/user_dialogs.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
@@ -58,6 +59,8 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SportDetailsController>();
+    
     return Row(
       children: [
         Expanded(
@@ -69,7 +72,18 @@ class ActionButtons extends StatelessWidget {
             buttonHeight: 33,
             buttonWidth: 120,
             maxLines: 1,
-            onPressed: () => Get.toNamed(AppRoutes.fullMapScreen),
+            onPressed: () {
+              // Navigate to spot navigation screen with spot data
+              Get.toNamed(
+                AppRoutes.spotNavigationScreen,
+                arguments: {
+                  'spotId': controller.spotId.value,
+                  'title': controller.spotTitle.value,
+                  'latitude': controller.spotLatitude.value,
+                  'longitude': controller.spotLongitude.value,
+                },
+              );
+            },
           ),
         ),
         SizedBox(width: 12),
