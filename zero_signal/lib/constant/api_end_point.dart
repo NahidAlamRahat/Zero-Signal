@@ -47,6 +47,9 @@ class AppApiEndPoint {
 
   static final String mySpotEndPoint = "/spot";
   static final String createSpotEndPoint = "/spot";
+
+  // comment
+  static final String commentEndPoint = "/comment";
 }
 
 // Move this function outside the class

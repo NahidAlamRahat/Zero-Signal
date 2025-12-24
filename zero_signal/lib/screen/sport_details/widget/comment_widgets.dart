@@ -26,11 +26,18 @@ class CommentItem extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: comment['avatar'],
-                child: Icon(
-                  comment['avatarIcon'],
-                  color: comment['avatarIconColor'],
-                  size: 20,
-                ),
+                backgroundImage: (comment['imageUrl'] != null &&
+                        comment['imageUrl'].isNotEmpty)
+                    ? NetworkImage(comment['imageUrl'])
+                    : null,
+                child:
+                    (comment['imageUrl'] == null || comment['imageUrl'].isEmpty)
+                        ? Icon(
+                            comment['avatarIcon'],
+                            color: comment['avatarIconColor'],
+                            size: 20,
+                          )
+                        : null,
               ),
               SizedBox(width: 12),
               Column(
@@ -74,37 +81,37 @@ class CommentsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextWidget(
-              text: 'Comments',
-              fontColor: AppColor.textColor,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              textAlignment: TextAlign.left,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextWidget(
+                  text: 'Comments',
+                  fontColor: AppColor.textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  textAlignment: TextAlign.left,
+                ),
+                GestureDetector(
+                  onTap: () => controller.toggleComments(),
+                  child: TextWidget(
+                    text: controller.showAllComments.value
+                        ? 'Show less'
+                        : 'See more (${controller.remainingCommentsCount})',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    fontColor: AppColor.backgroundColor,
+                    underline: true,
+                  ),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () => controller.toggleComments(),
-              child: TextWidget(
-                text: controller.showAllComments.value
-                    ? 'Show less'
-                    : 'See more (${controller.remainingCommentsCount})',
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                fontColor: AppColor.backgroundColor,
-                underline: true,
-              ),
-            ),
+            ...controller.displayedComments
+                .map((comment) => CommentItem(comment: comment)),
+            AddCommentSection(),
           ],
-        ),
-        ...controller.displayedComments
-            .map((comment) => CommentItem(comment: comment)),
-        AddCommentSection(),
-      ],
-    ));
+        ));
   }
 }
 
@@ -113,10 +120,12 @@ class AddCommentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SportDetailsController>();
     return SafeArea(
       child: Column(
         children: [
           TextFieldWidget(
+            controller: controller.commentController,
             maxLines: 3,
             minLines: 3,
             borderColor: AppColor.lightGrayishOrange,
@@ -133,16 +142,20 @@ class AddCommentSection extends StatelessWidget {
           SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
-            child: ButtonWidget(
-              backgroundColor: AppColor.backgroundColor,
-              label: 'comment ',
-              maxLines: 1,
-              buttonWidth: 130.w,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              buttonHeight: 40,
-              onPressed: () {},
-            ),
+            child: Obx(() => ButtonWidget(
+                  backgroundColor: AppColor.backgroundColor,
+                  label: controller.isPostingComment.value
+                      ? 'Posting...'
+                      : 'Comment',
+                  maxLines: 1,
+                  buttonWidth: 130.w,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  buttonHeight: 40,
+                  onPressed: controller.isPostingComment.value
+                      ? () {}
+                      : () => controller.postComment(),
+                )),
           ),
           SizedBox(height: 10),
           Center(

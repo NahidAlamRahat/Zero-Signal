@@ -53,6 +53,40 @@ class SpotCoordinateModel {
   }
 }
 
+class CommentModel {
+  final String id;
+  final String comment;
+  final String userName;
+  final String userImage;
+  final DateTime createdAt;
+
+  CommentModel({
+    required this.id,
+    required this.comment,
+    required this.userName,
+    required this.userImage,
+    required this.createdAt,
+  });
+
+  factory CommentModel.fromJson(Map<String, dynamic> json) {
+    String name = 'Unknown User';
+    String image = '';
+
+    if (json['user'] is Map) {
+      name = json['user']['name'] ?? 'Unknown User';
+      image = json['user']['image'] ?? '';
+    }
+
+    return CommentModel(
+      id: json['_id']?.toString() ?? '',
+      comment: json['comment'] ?? '',
+      userName: name,
+      userImage: image,
+      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+    );
+  }
+}
+
 /// Spot Repository: Handles spot-related API calls
 class SpotRepository {
   bool _inProgress = false;
@@ -310,6 +344,124 @@ class SpotRepository {
       _errorMessage = "Network error occurred";
       appLog('❌ Fetch spot details API Error: $e');
       return null;
+    }
+  }
+
+  /// Fetch comments for a spot
+  /// Endpoint: GET /comment?spot=:id
+  Future<List<CommentModel>?> fetchComments(String spotId) async {
+    _inProgress = true;
+    _errorMessage = '';
+
+    try {
+      final Map<String, dynamic> queryParams = {
+        'spot': spotId,
+      };
+
+      appLog('📡 API Request - Fetch Comments:');
+      appLog('   Endpoint: ${AppApiEndPoint.commentEndPoint}');
+      appLog('   Params: $queryParams');
+
+      final response = await ApiService.getApi(
+        AppApiEndPoint.commentEndPoint,
+        queryParams: queryParams,
+      );
+
+      _inProgress = false;
+
+      appLog('📡 API Response - Fetch Comments:');
+      appLog('   Status: ${response.statusCode}');
+      try {
+        if (response.body is Map || response.body is List) {
+          JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+          String prettyPrint = encoder.convert(response.body);
+          appLog('   Body: \n$prettyPrint');
+        } else {
+          appLog('   Body: ${response.body}');
+        }
+      } catch (e) {
+        appLog('   Body: ${response.body}');
+      }
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = [];
+
+        if (response.body is Map && response.body['data'] is List) {
+          data = response.body['data'];
+        } else if (response.body is List) {
+          data = response.body as List<dynamic>;
+        }
+
+        final List<CommentModel> comments =
+            data.map((json) => CommentModel.fromJson(json)).toList();
+
+        appLog('✅ Comments fetched successfully: ${comments.length}');
+        return comments;
+      } else {
+        _errorMessage = response.message;
+        appLog('❌ Fetch comments failed: ${_errorMessage}');
+        return null;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred: $e";
+      appLog('❌ Fetch comments API Error: $e');
+      return null;
+    }
+  }
+
+  /// Create a new comment
+  /// Endpoint: POST /comment
+  Future<bool> createComment({
+    required String comment,
+    required String spotId,
+    String type = 'Spot',
+  }) async {
+    _inProgress = true;
+    _errorMessage = '';
+
+    try {
+      final Map<String, dynamic> body = {
+        'comment': comment,
+        'spot': spotId,
+        'type': type,
+      };
+
+      appLog('📡 API Request - Create Comment:');
+      appLog('   Endpoint: ${AppApiEndPoint.commentEndPoint}');
+      appLog('   Body: $body');
+
+      final response = await ApiService.postApi(
+        AppApiEndPoint.commentEndPoint,
+        body,
+      );
+
+      _inProgress = false;
+
+      appLog('📡 API Response - Create Comment:');
+      appLog('   Status: ${response.statusCode}');
+      appLog('   Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Comment posted successfully";
+        appLog('✅ Comment created successfully');
+        return true;
+      } else {
+        _errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to post comment";
+        appLog('❌ Create comment failed: $_errorMessage');
+        AppSnackBar.error(_errorMessage);
+        return false;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred";
+      appLog('❌ Create comment API Error: $e');
+      AppSnackBar.error(_errorMessage);
+      return false;
     }
   }
 }
