@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:zero_signal/screen/home_screen/widget/map_type_bottom_sheet.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
@@ -7,7 +10,7 @@ import 'package:zero_signal/screen/home_screen/conntroller/home_screen_controlle
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../routes/app_routes.dart';
-import '../map_routes_screen/map_routes_screen.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,22 +40,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Search Box
             Expanded(
-              child: GetBuilder<HomeScreenController>(
-                builder: (controller) {
-                  return TextFieldWidget(
-                    controller: controller.searchController,
-                    hintText: 'Search in ZeroSignal',
-                    fieldHeight: 40,
-                    borderColor: Colors.transparent,
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    onChanged: (value) {
-                      controller.fetchSuggestions(value);
-                    },
-                    onFieldSubmitted: (value) {
-                      controller.searchLocation(value);
-                    },
-                  );
-                }),
+              child: GetBuilder<HomeScreenController>(builder: (controller) {
+                return TextFieldWidget(
+                  controller: controller.searchController,
+                  hintText: 'Search in ZeroSignal',
+                  fieldHeight: 40,
+                  borderColor: Colors.transparent,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  onChanged: (value) {
+                    controller.fetchSuggestions(value);
+                  },
+                  onFieldSubmitted: (value) {
+                    controller.searchLocation(value);
+                  },
+                );
+              }),
             ),
             SizedBox(width: 12.w),
 
@@ -87,14 +89,29 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (controller) {
           return Stack(
             children: [
-    controller.mapWidget,
+              mapbox.MapWidget(
+                onMapCreated: controller.onMapCreated,
+                cameraOptions: mapbox.CameraOptions(
+                  center: mapbox.Point(
+                    coordinates: mapbox.Position.fromJson(
+                        [90.4125, 23.8103]), // Default center (Dhaka)
+                  ),
+                  zoom: 12.0,
+                ),
+                styleUri: mapbox.MapboxStyles.MAPBOX_STREETS,
+                key: const ValueKey("mapbox_map"),
+                gestureRecognizers: {
+                  Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer()),
+                },
+              ),
 
-        // mapbox.MapWidget(
-        //         onMapCreated: controller.onMapCreated,
-        //         mapOptions: mapbox.MapOptions(
-        //           pixelRatio: 1.0,
-        //         ),
-        //       ),
+              // mapbox.MapWidget(
+              //         onMapCreated: controller.onMapCreated,
+              //         mapOptions: mapbox.MapOptions(
+              //           pixelRatio: 1.0,
+              //         ),
+              //       ),
 
               // Suggestion List
               if (controller.searchSuggestions.isNotEmpty)
@@ -111,8 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: EdgeInsets.zero,
                       itemCount: controller.searchSuggestions.length,
                       itemBuilder: (context, index) {
-                        final suggestion =
-                            controller.searchSuggestions[index];
+                        final suggestion = controller.searchSuggestions[index];
                         return ListTile(
                           leading: Icon(Icons.location_on,
                               color: AppColor.blackColor),
@@ -121,8 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             controller.searchController.text =
                                 suggestion['place_name'];
-                            controller
-                                .searchLocation(suggestion['place_name']);
+                            controller.searchLocation(suggestion['place_name']);
                           },
                         );
                       },
@@ -136,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: kToolbarHeight + 50.h,
                   left: 20,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(20.r),
@@ -149,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 16.w,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
                         SizedBox(width: 8.w),
@@ -176,6 +193,42 @@ class _HomeScreenState extends State<HomeScreen> {
                     AppIconPath.choiceMap,
                     width: 40,
                     height: 40,
+                  ),
+                ),
+              ),
+
+              // Radius Input Field
+              Positioned(
+                top: kToolbarHeight + 150.h,
+                right: 20,
+                child: Container(
+                  width: 80.w,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(22.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: controller.radiusController,
+                    onChanged: (value) => controller.updateRadius(value),
+                    onSubmitted: (value) => controller.updateRadius(value),
+                    keyboardType: TextInputType.number,
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      prefixIcon:
+                          const Icon(Icons.radar, color: Colors.grey, size: 20),
+                      hintText: 'Km',
+                      hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 9),
+                    ),
                   ),
                 ),
               ),
@@ -213,8 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 47.h,
                         width: 47.h,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColor.blackColor),
+                            shape: BoxShape.circle, color: AppColor.blackColor),
                         child: Image.asset(
                           AppIconPath.addIcon,
                           height: 24.h,

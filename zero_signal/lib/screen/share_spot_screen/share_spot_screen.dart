@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/screen/share_spot_screen/widget/location_search_widget.dart';
-import 'package:zero_signal/screen/list_view_details_screen/widget/location_map_widget.dart';
+
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
@@ -73,22 +73,36 @@ class ShareSpotScreen extends StatelessWidget {
                 SizedBox(height: 12.h),
                 const LocationSearchWidget(),
                 SizedBox(height: 16.h),
-                // Location Map Preview
-                GetBuilder<ShareSpotController>(
-                  builder: (controller) {
-                    if (controller.selectedLat != null && controller.selectedLng != null) {
-                      return LocationMapWidget(
-                        latitude: controller.selectedLat!,
-                        longitude: controller.selectedLng!,
-                        markerTitle: 'Selected Location',
-                        height: 250,
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                SizedBox(height: 24.h),
-
+                // Lat Long Display
+                if (controller.selectedLat != null &&
+                    controller.selectedLng != null) ...[
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionTitle('Latitude'),
+                            SizedBox(height: 8.h),
+                            _coordinateBox(controller.selectedLat.toString()),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionTitle('Longitude'),
+                            SizedBox(height: 8.h),
+                            _coordinateBox(controller.selectedLng.toString()),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+                ],
                 // Description
                 _sectionTitle('Description'),
                 SizedBox(height: 12.h),
@@ -409,10 +423,20 @@ class ShareSpotScreen extends StatelessWidget {
           ],
         ),
       );
-
-
-
-
-
-
+  Widget _coordinateBox(String value) => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(245, 233, 223, 1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          value,
+          style: const TextStyle(
+            color: Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 }
