@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/screen/map_routes_screen/widget/route_card_widget.dart';
@@ -20,6 +21,43 @@ class MapRoutesScreen extends StatefulWidget {
 
 class _MapRoutesScreenState extends State<MapRoutesScreen> {
   String selectedMapType = 'Default';
+  late mapbox.MapboxMap mapboxMap;
+
+  /// Initialize map settings
+  Future<void> _initializeMap() async {
+    try {
+      // Load map style
+      await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+      
+      // Disable compass and scale bar for cleaner look
+      await mapboxMap.compass.updateSettings(
+        mapbox.CompassSettings(enabled: false),
+      );
+      await mapboxMap.scaleBar.updateSettings(
+        mapbox.ScaleBarSettings(enabled: false),
+      );
+    } catch (e) {
+      print('Error initializing map: $e');
+    }
+  }
+
+  /// Center map on current location (Dhaka coordinates for demo)
+  Future<void> _centerMapOnCurrentLocation() async {
+    try {
+      final camera = mapbox.CameraOptions(
+        center: mapbox.Point(
+          coordinates: mapbox.Position.fromJson([90.4125, 23.8103]), // Dhaka coordinates
+        ),
+        zoom: 14.0,
+      );
+      final animationOptions = mapbox.MapAnimationOptions(
+        duration: 1000, // Duration in milliseconds
+      );
+      await mapboxMap.flyTo(camera, animationOptions);
+    } catch (e) {
+      print('Error centering map: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +91,23 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
         ),
       ),
 
-      // Map Background
+      // Interactive Mapbox Map
       body: Stack(
         children: [
-          // Background Image
+          // Mapbox Map Background
           Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                // image: AssetImage(_getMapImageByType()), // Dynamic map image
-                image: AssetImage(AppImagePath.mapImage),
-                fit: BoxFit.cover,
+            child: mapbox.MapWidget(
+              onMapCreated: (map) {
+                mapboxMap = map;
+                _initializeMap();
+              },
+              cameraOptions: mapbox.CameraOptions(
+                center: mapbox.Point(
+                  coordinates: mapbox.Position.fromJson([90.4125, 23.8103]), // Dhaka coordinates
+                ),
+                zoom: 12.0,
               ),
             ),
           ),
@@ -94,8 +137,10 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                 FloatingActionButton(
                   mini: true,
                   backgroundColor: Colors.transparent,
-                  heroTag: "map_btn1", // Changed from "btn1" to "map_btn1"
-                  onPressed: () {},
+                  heroTag: "map_btn1",
+                  onPressed: () {
+                    _centerMapOnCurrentLocation();
+                  },
                   child: Image.asset(AppIconPath.mapIcon),
                 ),
                 const SizedBox(height: 10),
