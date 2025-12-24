@@ -76,6 +76,7 @@ class TextFieldWidget extends StatefulWidget {
     this.errorStyle,
     this.fontWeight,
     this.inputFormatters,
+    this.readOnly = false,
     this.onChanged,
   });
 
