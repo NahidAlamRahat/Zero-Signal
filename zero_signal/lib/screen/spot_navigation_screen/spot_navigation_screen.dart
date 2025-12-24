@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:screenshot/screenshot.dart';
+import 'dart:typed_data';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/screen/spot_navigation_screen/controller/spot_navigation_controller.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
@@ -206,9 +207,12 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
                       SizedBox(width: 8.w),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Capture screenshot and go back to details screen
-                            controller.captureRouteScreenshot();
+                          onPressed: () async {
+                            // Capture screenshot and show preview popup
+                            final imageBytes = await controller.captureRouteScreenshot();
+                            if (imageBytes != null) {
+                              _showScreenshotPopup(imageBytes);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColor.yello,
@@ -235,5 +239,64 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
         ],
       ),
     );
+  }
+
+  /// Show screenshot preview popup for 3 seconds
+  void _showScreenshotPopup(Uint8List imageBytes) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextWidget(
+                text: 'Route Screenshot Captured!',
+                fontColor: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              SizedBox(height: 16.h),
+              Container(
+                height: 300.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Image.memory(
+                    imageBytes,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              TextWidget(
+                text: 'Screenshot saved successfully',
+                fontColor: Colors.grey.shade600,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+
+    // Auto close after 3 seconds and go back
+    Future.delayed(const Duration(seconds: 3), () {
+      if (Get.isDialogOpen ?? false) {
+        Get.back(); // Close dialog
+        Get.back(); // Go back to details screen
+      }
+    });
   }
 }

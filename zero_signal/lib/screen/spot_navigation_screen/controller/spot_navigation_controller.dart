@@ -6,6 +6,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:math';
 import 'dart:io';
+import 'dart:typed_data';
 
 class SpotNavigationController extends GetxController {
   // Mapbox map instance
@@ -350,8 +351,8 @@ class SpotNavigationController extends GetxController {
     return 8.0;
   }
 
-  /// Capture screenshot of the route and return to details screen
-  Future<void> captureRouteScreenshot() async {
+  /// Capture screenshot of the route and return image bytes
+  Future<Uint8List?> captureRouteScreenshot() async {
     try {
       // Capture screenshot
       final imageFile = await screenshotController.capture();
@@ -372,15 +373,15 @@ class SpotNavigationController extends GetxController {
         
         await savedFile.writeAsBytes(imageFile);
         
-        // Show success message (optional, can be removed if not needed)
+        // Show success message
         print('Route screenshot saved: ${savedFile.path}');
+        
+        return imageFile;
       }
     } catch (e) {
       // Handle error silently
       print('Failed to capture screenshot: $e');
     }
-    
-    // Go back to details screen
-    Get.back();
+    return null;
   }
 }
