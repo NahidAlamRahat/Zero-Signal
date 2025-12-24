@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import '../constant/api_end_point.dart';
@@ -43,7 +44,8 @@ class SpotCoordinateModel {
       latitude: (json['lat'] as num?)?.toDouble() ?? 0.0,
       longitude: (json['lng'] as num?)?.toDouble() ?? 0.0,
       type: json['type'] ?? '',
-      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      images:
+          (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       user: json['user']?.toString() ?? '',
       createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
@@ -203,7 +205,7 @@ class SpotRepository {
 
         // Parse the response data
         List<dynamic> data = [];
-        
+
         if (response.body is List) {
           data = response.body as List<dynamic>;
           appLog('✅ Response is a List with ${data.length} items');
@@ -213,7 +215,8 @@ class SpotRepository {
             final dynamic dataField = bodyMap['data'];
             if (dataField is List) {
               data = dataField as List<dynamic>;
-              appLog('✅ Response is a Map with data field containing ${data.length} items');
+              appLog(
+                  '✅ Response is a Map with data field containing ${data.length} items');
             } else {
               appLog('⚠️ Response data field is not a List');
             }
@@ -223,14 +226,15 @@ class SpotRepository {
         } else {
           appLog('⚠️ Response body is neither List nor Map');
         }
-        
+
         appLog('📊 Parsed data count: ${data.length}');
-        
+
         final List<SpotCoordinateModel> spots = data
             .map((spotJson) => SpotCoordinateModel.fromJson(spotJson))
             .toList();
 
-        appLog('✅ Spots by coordinates fetched successfully: ${spots.length} spots');
+        appLog(
+            '✅ Spots by coordinates fetched successfully: ${spots.length} spots');
         return spots;
       } else {
         _errorMessage = response.message.isNotEmpty
@@ -244,6 +248,67 @@ class SpotRepository {
       _inProgress = false;
       _errorMessage = "Network error occurred";
       appLog('❌ Fetch spots by coordinates API Error: $e');
+      return null;
+    }
+  }
+
+  /// Fetch spot details by ID
+  /// Endpoint: GET /spot/:id
+  Future<SpotCoordinateModel?> fetchSpotDetails(String id) async {
+    _inProgress = true;
+    _errorMessage = '';
+    _successMessage = '';
+
+    try {
+      final url = AppApiEndPoint.instance.mySpotDetailEndPoint(id);
+
+      appLog('📡 API Request - Spot Details:');
+      appLog('   Endpoint: $url');
+
+      final response = await ApiService.getApi(url);
+
+      _inProgress = false;
+
+      appLog('📡 API Response - Spot Details:');
+      appLog('   Status: ${response.statusCode}');
+
+      try {
+        if (response.body is Map || response.body is List) {
+          JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+          String prettyPrint = encoder.convert(response.body);
+          appLog('   Body: \n$prettyPrint');
+        } else {
+          appLog('   Body: ${response.body}');
+        }
+      } catch (e) {
+        appLog('   Body: ${response.body}');
+      }
+
+      if (response.statusCode == 200) {
+        _successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Spot details retrieved successfully";
+
+        // Check if data is nested in 'data' key
+        dynamic spotJson = response.body;
+        if (response.body is Map && response.body.containsKey('data')) {
+          spotJson = response.body['data'];
+        }
+
+        final spotData = SpotCoordinateModel.fromJson(spotJson);
+
+        appLog('✅ Spot details fetched successfully: ${spotData.title}');
+        return spotData;
+      } else {
+        _errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to fetch spot details";
+        return null;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred";
+      appLog('❌ Fetch spot details API Error: $e');
       return null;
     }
   }

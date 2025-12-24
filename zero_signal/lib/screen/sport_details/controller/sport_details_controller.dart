@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../repository/spot_repository.dart';
 
 class SportDetailsController extends GetxController {
+  final SpotRepository _repository = SpotRepository();
+
   // Spot details data
   final RxString spotId = ''.obs;
   final RxString spotTitle = ''.obs;
@@ -87,6 +90,28 @@ class SportDetailsController extends GetxController {
     selectedImage.value = imagePath;
   }
 
+  /// Fetch full details from API
+  Future<void> fetchSpotDetails() async {
+    if (spotId.value.isEmpty) return;
+
+    print("DEBUG: Fetching details for spot ID: ${spotId.value}");
+
+    final spot = await _repository.fetchSpotDetails(spotId.value);
+
+    if (spot != null) {
+      spotTitle.value = spot.title;
+      spotDescription.value = spot.description;
+      spotAddress.value = spot.address;
+      spotLatitude.value = spot.latitude;
+      spotLongitude.value = spot.longitude;
+      if (spot.images.isNotEmpty) {
+        images.assignAll(spot.images);
+        selectedImage.value = spot.images.first;
+      }
+      print("DEBUG: Updated spot details from API");
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -99,6 +124,11 @@ class SportDetailsController extends GetxController {
       spotAddress.value = arguments['address'] ?? '';
       spotLatitude.value = arguments['latitude']?.toDouble() ?? 0.0;
       spotLongitude.value = arguments['longitude']?.toDouble() ?? 0.0;
+
+      // Call API to get full details
+      if (spotId.value.isNotEmpty) {
+        fetchSpotDetails();
+      }
     }
     // Initialize with sample images if needed
   }

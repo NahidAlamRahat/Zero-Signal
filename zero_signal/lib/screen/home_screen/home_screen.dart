@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:zero_signal/screen/home_screen/widget/map_type_bottom_sheet.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +10,7 @@ import 'package:zero_signal/screen/home_screen/conntroller/home_screen_controlle
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../routes/app_routes.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -86,7 +89,22 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (controller) {
           return Stack(
             children: [
-              controller.mapWidget,
+              mapbox.MapWidget(
+                onMapCreated: controller.onMapCreated,
+                cameraOptions: mapbox.CameraOptions(
+                  center: mapbox.Point(
+                    coordinates: mapbox.Position.fromJson(
+                        [90.4125, 23.8103]), // Default center (Dhaka)
+                  ),
+                  zoom: 12.0,
+                ),
+                styleUri: mapbox.MapboxStyles.MAPBOX_STREETS,
+                key: const ValueKey("mapbox_map"),
+                gestureRecognizers: {
+                  Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer()),
+                },
+              ),
 
               // mapbox.MapWidget(
               //         onMapCreated: controller.onMapCreated,
