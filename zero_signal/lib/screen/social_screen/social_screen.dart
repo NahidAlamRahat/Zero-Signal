@@ -355,8 +355,10 @@ class _SocialScreenState extends State<SocialScreen> {
                                             leftIcon: Icons.done,
                                             text: "I'm in!",
                                             onPressed: () {
-                                              Get.toNamed(AppRoutes
-                                                  .activityListsScreen);
+                                              if (item.sId != null) {
+                                                controller
+                                                    .joinActivity(item.sId!);
+                                              }
                                             },
                                           ),
                                         ),

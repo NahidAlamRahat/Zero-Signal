@@ -1,5 +1,6 @@
 import 'package:zero_signal/constant/api_end_point.dart';
 import 'package:zero_signal/screen/create_activity_screen/model/route_type_model.dart';
+import 'package:zero_signal/screen/list_screen/model/activity_list_model.dart';
 import 'package:zero_signal/screen/social_screen/modell/activity_feed_model.dart';
 import 'package:zero_signal/service/api_service/api_services.dart';
 import 'package:zero_signal/service/api_service/service_model/service_model.dart';
@@ -87,6 +88,49 @@ class ActivityRepository {
       }
     } catch (e) {
       AppSnackBar.error("Failed to save activity");
+      return null;
+    }
+  }
+
+  Future<bool> joinActivity({
+    required String activityId,
+  }) async {
+    try {
+      final response = await ApiService.postApi(
+        AppApiEndPoint.instance.activityJoinEndPoint(),
+        {"activity": activityId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        AppSnackBar.success(response.message);
+        return true;
+      } else {
+        AppSnackBar.error(response.message);
+        return false;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to join activity");
+      return false;
+    }
+  }
+
+  Future<ActivityListModel?> getActivitiesByType({
+    required String type,
+  }) async {
+    try {
+      final response = await ApiService.getApi(
+        AppApiEndPoint.instance.activityByTypeEndPoint(type),
+      );
+
+      if (response.statusCode == 200) {
+        return ActivityListModel.fromJson(
+            response.body as Map<String, dynamic>);
+      } else {
+        AppSnackBar.error(response.message);
+        return null;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to load activities");
       return null;
     }
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:zero_signal/constant/api_end_point.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../../constant/app_colors.dart';
@@ -48,7 +50,11 @@ class ActivityCard extends StatelessWidget {
               height: 116.h,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                  image: AssetImage(activity.imagePath),
+                  image: activity.imagePath.startsWith('http') ||
+                          activity.imagePath.startsWith('/')
+                      ? NetworkImage(
+                          '${AppApiEndPoint.domain}${activity.imagePath}')
+                      : AssetImage(activity.imagePath) as ImageProvider,
                   fit: BoxFit.cover,
                 ),
                 shape: RoundedRectangleBorder(
@@ -160,7 +166,11 @@ class ActivityCard extends StatelessWidget {
               height: 116.h,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                  image: AssetImage(activity.imagePath),
+                  image: activity.imagePath.startsWith('http') ||
+                          activity.imagePath.startsWith('/')
+                      ? NetworkImage(
+                          '${AppApiEndPoint.domain}${activity.imagePath}')
+                      : AssetImage(activity.imagePath) as ImageProvider,
                   fit: BoxFit.cover,
                 ),
                 shape: RoundedRectangleBorder(
@@ -196,7 +206,7 @@ class ActivityCard extends StatelessWidget {
                       Expanded(
                         child: TextWidget(
                           textAlignment: TextAlign.start,
-                          text: 'May 18',
+                          text: activity.location,
                           fontColor: AppColor.darkGray500,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -206,12 +216,14 @@ class ActivityCard extends StatelessWidget {
                   ),
                   SizedBox(height: 8.h),
                   TextWidget(
-                    text: activity.location,
+                    text: activity.category,
                     fontColor: AppColor.textColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
-                  SizedBox(height: 16.h,),
+                  SizedBox(
+                    height: 16.h,
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -230,11 +242,14 @@ class ActivityCard extends StatelessWidget {
                       SizedBox(width: 20.w),
                       Expanded(
                         child: ButtonWidget(
-
                           backgroundColor: AppColor.backgroundColor,
                           textColor: AppColor.white500,
                           buttonHeight: 43,
-                          icon:Image(image: AssetImage(Assets.icons.chatIcon2.path),height: 20.h,width: 20.w, ),
+                          icon: Image(
+                            image: AssetImage(Assets.icons.chatIcon2.path),
+                            height: 20.h,
+                            width: 20.w,
+                          ),
                           label: 'Chat',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -279,7 +294,11 @@ class ActivityCard extends StatelessWidget {
               height: 116.h,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                  image: AssetImage(activity.imagePath),
+                  image: activity.imagePath.startsWith('http') ||
+                          activity.imagePath.startsWith('/')
+                      ? NetworkImage(
+                          '${AppApiEndPoint.domain}${activity.imagePath}')
+                      : AssetImage(activity.imagePath) as ImageProvider,
                   fit: BoxFit.cover,
                 ),
                 shape: RoundedRectangleBorder(
@@ -406,7 +425,11 @@ class ActivityCard extends StatelessWidget {
             height: 116.h,
             decoration: ShapeDecoration(
               image: DecorationImage(
-                image: AssetImage(activity.imagePath),
+                image: activity.imagePath.startsWith('http') ||
+                        activity.imagePath.startsWith('/')
+                    ? NetworkImage(
+                        '${AppApiEndPoint.domain}${activity.imagePath}')
+                    : AssetImage(activity.imagePath) as ImageProvider,
                 fit: BoxFit.cover,
               ),
               shape: RoundedRectangleBorder(
@@ -439,7 +462,8 @@ class ActivityCard extends StatelessWidget {
                         textAlignment: TextAlign.start,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        text: "Join me on a hike to a stunning water...",
+                        text: activity.description ??
+                            "Join me on a hike to a stunning water...",
                         fontColor: AppColor.subTitleColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -447,7 +471,7 @@ class ActivityCard extends StatelessWidget {
                     ],
                   ),
                   TextWidget(
-                    text: '18 Aug 2023',
+                    text: _formatDate(activity.createdAt),
                     fontColor: AppColor.darkGray500,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -459,5 +483,15 @@ class ActivityCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) return '';
+    try {
+      DateTime date = DateTime.parse(dateString);
+      return DateFormat('d MMM yyyy').format(date);
+    } catch (e) {
+      return dateString;
+    }
   }
 }

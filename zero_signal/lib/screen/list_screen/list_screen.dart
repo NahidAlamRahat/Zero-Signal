@@ -8,8 +8,6 @@ import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import 'controller/list_screen_controller.dart';
 
-
-
 class ActivityListsScreen extends StatefulWidget {
   const ActivityListsScreen({super.key});
 
@@ -45,7 +43,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
     'Joined Activities': [
       ActivityItem(
         title: 'Trail Running',
-        location: 'Near Vic, 48Km',
+        location: 'Near Vic, 20Km',
         category: 'Near Vic',
         imagePath: AppImagePath.image4,
       ),
@@ -76,139 +74,190 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      init: ListScreenController(),
-      builder: (controller) {
-        return Scaffold(
-          backgroundColor: AppColor.creamBackgroundColor,
-          appBar: AppBar(
+    return GetBuilder<ListScreenController>(
+        init: ListScreenController(),
+        builder: (controller) {
+          return Scaffold(
             backgroundColor: AppColor.creamBackgroundColor,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: const Text(
-              'Lists',
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+            appBar: AppBar(
+              backgroundColor: AppColor.creamBackgroundColor,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios,
+                    color: Colors.black87, size: 20),
+                onPressed: () => Navigator.pop(context),
               ),
-            ),
-            centerTitle: true,
-            bottom:  PreferredSize(
-              preferredSize: const Size.fromHeight(56),
-              child: Stack(
-                key: controller.headerKey,
-                children: [
-                  Container(
-                    margin:  EdgeInsets.only(left: 19.w, right: 19.w),
-                    height: 56,
-                    color:Colors.transparent,
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      height: 5,
-                      margin: const EdgeInsets.only(bottom: 4),
-                      color: AppColor.base_50,
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    controller: controller.scrollController,
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      children: [
-                        for (int i = 0; i < controller.tabs.length; i++)
-                          GestureDetector(
-                            onTap: () => controller.select(i),
-                            behavior: HitTestBehavior.opaque,
-                            child: Container(
-                              key: controller.tabKeys[i],
-                              padding:  EdgeInsets.symmetric(horizontal: 14.w, vertical: 12),
-                              child: TextWidget(
-                                fontWeight: i == controller.selectedIndex ? FontWeight.w400 : FontWeight.w300,
-                                fontColor: i == controller.selectedIndex ? AppColor.textColor : AppColor.subTitleColor,
-                                text: controller.tabs[i],),
-                            ),
-                          ),
-                        const SizedBox(width: 8),
-                      ],
-                    ),
-                  ),
-
-                  // Text(
-                  //   controller.tabs[i],
-                  //   style: TextStyle(
-                  //     color: i == controller.selectedIndex ? Colors.black87 : Colors.black54,
-                  //     fontWeight: FontWeight.w600,
-                  //   ),
-                  // )
-
-
-                  Positioned(
-                    bottom: 4,
-                    left: controller.indicatorLeft,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOut,
-                      height: 5,
-                      width: controller.indicatorWidth > 0 ? controller.indicatorWidth : 0,
-                      decoration: BoxDecoration(
-                        color: AppColor.backgroundColor,
-                        borderRadius: BorderRadius.circular(3),
+              title: const Text(
+                'Lists',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              centerTitle: true,
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(56),
+                child: Stack(
+                  key: controller.headerKey,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 19.w, right: 19.w),
+                      height: 56,
+                      color: Colors.transparent,
+                      alignment: Alignment.bottomLeft,
+                      child: Container(
+                        height: 5,
+                        margin: const EdgeInsets.only(bottom: 4),
+                        color: AppColor.base_50,
                       ),
                     ),
-                  ),
-                ],
+                    SingleChildScrollView(
+                      controller: controller.scrollController,
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: [
+                          for (int i = 0; i < controller.tabs.length; i++)
+                            GestureDetector(
+                              onTap: () => controller.select(i),
+                              behavior: HitTestBehavior.opaque,
+                              child: Container(
+                                key: controller.tabKeys[i],
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 14.w, vertical: 12),
+                                child: TextWidget(
+                                  fontWeight: i == controller.selectedIndex
+                                      ? FontWeight.w400
+                                      : FontWeight.w300,
+                                  fontColor: i == controller.selectedIndex
+                                      ? AppColor.textColor
+                                      : AppColor.subTitleColor,
+                                  text: controller.tabs[i],
+                                ),
+                              ),
+                            ),
+                          const SizedBox(width: 8),
+                        ],
+                      ),
+                    ),
+
+                    // Text(
+                    //   controller.tabs[i],
+                    //   style: TextStyle(
+                    //     color: i == controller.selectedIndex ? Colors.black87 : Colors.black54,
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // )
+
+                    Positioned(
+                      bottom: 4,
+                      left: controller.indicatorLeft,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                        height: 5,
+                        width: controller.indicatorWidth > 0
+                            ? controller.indicatorWidth
+                            : 0,
+                        decoration: BoxDecoration(
+                          color: AppColor.backgroundColor,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          body: Column(
-            children: [
+            body: Column(
+              children: [
+                const SizedBox(height: 20),
 
+                // ✅ Activities List
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-              const SizedBox(height: 20),
+                    if (controller.selectedIndex == 0) {
+                      // Near Activities - use hardcoded data for now
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        itemCount:
+                            tabActivities[tabs[controller.selectedIndex]]!
+                                .length,
+                        itemBuilder: (context, index) {
+                          final activity = tabActivities[
+                              tabs[controller.selectedIndex]]![index];
+                          return ActivityCard(
+                            activity: activity,
+                            tabIndex: controller.selectedIndex,
+                          );
+                        },
+                      );
+                    }
 
-              // ✅ Activities List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: tabActivities[tabs[controller.selectedIndex]]!.length,
-                  itemBuilder: (context, index) {
-                    final activity = tabActivities[tabs[controller.selectedIndex]]![index];
-                    // Pass selectedTabIndex directly to ActivityCard
-                    // Now all design handling will be done inside ActivityCard
-                    return ActivityCard(
-                      activity: activity,
-                      tabIndex: controller.selectedIndex,
+                    if (controller.activities.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No activities found',
+                          style: TextStyle(
+                            color: AppColor.textColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Other tabs - use API data
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      itemCount: controller.activities.length,
+                      itemBuilder: (context, index) {
+                        final activityData = controller.activities[index];
+                        // Convert API data to ActivityItem format
+                        final activity = ActivityItem(
+                          title: activityData.title ?? '',
+                          location: activityData.address ?? '',
+                          category: activityData.type ?? '',
+                          imagePath: activityData.images != null &&
+                                  activityData.images!.isNotEmpty
+                              ? activityData.images![0]
+                              : '',
+                          description: activityData.description,
+                          createdAt: activityData.createdAt,
+                        );
+                        return ActivityCard(
+                          activity: activity,
+                          tabIndex: controller.selectedIndex,
+                        );
+                      },
                     );
-                  },
-                ),
-              )
-
-            ],
-          ),
-        );
-      }
-    );
+                  }),
+                )
+              ],
+            ),
+          );
+        });
   }
 }
-
 
 class ActivityItem {
   final String title;
   final String location;
   final String category;
   final String imagePath;
+  final String? description;
+  final String? createdAt;
 
   ActivityItem({
     required this.title,
     required this.location,
     required this.category,
     required this.imagePath,
+    this.description,
+    this.createdAt,
   });
 }
-
-
-
