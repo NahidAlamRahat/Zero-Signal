@@ -38,6 +38,11 @@ class SpotNavigationController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool hasRoute = false.obs;
   final RxBool mapInitialized = false.obs;
+  final RxBool isAnimating = false.obs;
+  
+  // Animation variables
+  final RxList<mapbox.Position> animatedRouteCoordinates = <mapbox.Position>[].obs;
+  final RxInt animationProgress = 0.obs;
 
   /// Get route from Mapbox Directions API
   Future<List<mapbox.Position>?> getMapboxRoute(
@@ -73,17 +78,21 @@ class SpotNavigationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Get spot data from arguments
-    final arguments = Get.arguments as Map<String, dynamic>?;
-    if (arguments != null) {
-      spotId.value = arguments['spotId'] ?? '';
-      spotTitle.value = arguments['title'] ?? 'Unknown Spot';
-      spotLatitude.value = arguments['latitude']?.toDouble() ?? 0.0;
-      spotLongitude.value = arguments['longitude']?.toDouble() ?? 0.0;
+    try {
+      // Get spot data from arguments
+      final arguments = Get.arguments as Map<String, dynamic>?;
+      if (arguments != null) {
+        spotId.value = arguments['spotId'] ?? '';
+        spotTitle.value = arguments['title'] ?? 'Unknown Spot';
+        spotLatitude.value = arguments['latitude']?.toDouble() ?? 0.0;
+        spotLongitude.value = arguments['longitude']?.toDouble() ?? 0.0;
+      }
+      
+      // Get current location
+      getCurrentLocation();
+    } catch (e) {
+      print('Error in controller onInit: $e');
     }
-    
-    // Get current location
-    getCurrentLocation();
   }
 
   /// Get current device location
@@ -163,34 +172,59 @@ class SpotNavigationController extends GetxController {
 
   /// Initialize map
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
-    mapboxMap = controller;
-    mapInitialized.value = true;
-
     try {
-      await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+      mapboxMap = controller;
+      mapInitialized.value = true;
+
+      // Load map style with error handling
+      try {
+        await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
+      } catch (e) {
+        print('Failed to load map style: $e');
+        // Try fallback style
+        try {
+          await mapboxMap.loadStyleURI('mapbox://styles/mapbox/basic-v9');
+        } catch (e2) {
+          print('Failed to load fallback style: $e2');
+        }
+      }
+
+      // Initialize annotation managers with error handling
+      try {
+        pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+      } catch (e) {
+        print('Failed to create point annotation manager: $e');
+      }
+      
+      try {
+        polylineAnnotationManager = await mapboxMap.annotations.createPolylineAnnotationManager();
+      } catch (e) {
+        print('Failed to create polyline annotation manager: $e');
+      }
+
+      // Add markers with delay to ensure map is ready
+      Future.delayed(const Duration(milliseconds: 500), () async {
+        try {
+          await addMarkers();
+        } catch (e) {
+          print('Failed to add markers: $e');
+        }
+      });
+
+      // Disable compass and scale bar
+      try {
+        await mapboxMap.compass.updateSettings(
+          mapbox.CompassSettings(enabled: false),
+        );
+        await mapboxMap.scaleBar.updateSettings(
+          mapbox.ScaleBarSettings(enabled: false),
+        );
+      } catch (e) {
+        print('Failed to update map settings: $e');
+      }
     } catch (e) {
-      // Handle error silently
+      print('Error in onMapCreated: $e');
     }
-
-    // Initialize annotation managers
-    try {
-      pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
-      polylineAnnotationManager = await mapboxMap.annotations.createPolylineAnnotationManager();
-    } catch (e) {
-      // Handle error silently
-    }
-
-    // Add markers and calculate initial route
-    await addMarkers();
-    // Note: calculateRoute is called by user action, not during initialization
-
-    // Disable compass and scale bar
-    await mapboxMap.compass.updateSettings(
-      mapbox.CompassSettings(enabled: false),
-    );
-    await mapboxMap.scaleBar.updateSettings(
-      mapbox.ScaleBarSettings(enabled: false),
-    );
   }
 
   /// Add markers for current location and spot
@@ -247,20 +281,21 @@ class SpotNavigationController extends GetxController {
     isLoading.value = true;
 
     try {
-      // Draw route line between current location and spot
-      await drawRouteLine();
+      // Draw route line between current location and spot (animation disabled for debugging)
+      await drawRouteLine(animate: false);
       await centerMap();
       
       hasRoute.value = true;
     } catch (e) {
       // Handle error silently without snackbar
+      print('Error in calculateRoute: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// Draw route line on map using actual roads
-  Future<void> drawRouteLine() async {
+  /// Draw route line on map using actual roads with animation
+  Future<void> drawRouteLine({bool animate = true}) async {
     if (polylineAnnotationManager == null) return;
 
     try {
@@ -288,14 +323,19 @@ class SpotNavigationController extends GetxController {
         ];
       }
 
-      // Create polyline annotation for route
-      await polylineAnnotationManager!.create(
-        mapbox.PolylineAnnotationOptions(
-          geometry: mapbox.LineString(coordinates: coordinates),
-          lineColor: 0xFF10B981, // Green color for route
-          lineWidth: 4.0,
-        ),
-      );
+      if (animate && coordinates.isNotEmpty) {
+        // Animate the route drawing
+        await _animateRouteDrawing(coordinates);
+      } else {
+        // Draw route immediately without animation
+        await polylineAnnotationManager!.create(
+          mapbox.PolylineAnnotationOptions(
+            geometry: mapbox.LineString(coordinates: coordinates),
+            lineColor: 0xFF10B981, // Green color for route
+            lineWidth: 4.0,
+          ),
+        );
+      }
     } catch (e) {
       // Handle error silently
     }
@@ -349,6 +389,73 @@ class SpotNavigationController extends GetxController {
     if (distance < 20) return 12.0;
     if (distance < 50) return 10.0;
     return 8.0;
+  }
+
+  /// Animate route drawing step by step
+  Future<void> _animateRouteDrawing(List<mapbox.Position> coordinates) async {
+    if (coordinates.isEmpty || polylineAnnotationManager == null) return;
+    
+    try {
+      isAnimating.value = true;
+      animatedRouteCoordinates.clear();
+      animationProgress.value = 0;
+      
+      // Calculate animation steps (draw route over 2 seconds)
+      const int totalDurationMs = 2000;
+      const int frameIntervalMs = 50; // 20 FPS
+      final int totalSteps = (totalDurationMs / frameIntervalMs).round();
+      final int coordinatesPerStep = (coordinates.length / totalSteps).ceil();
+      
+      for (int step = 0; step <= totalSteps; step++) {
+        if (!isAnimating.value) break; // Stop if animation is cancelled
+        
+        // Calculate how many coordinates to show in this step
+        final int endIndex = min((step * coordinatesPerStep), coordinates.length);
+        
+        if (endIndex > 0) {
+          // Get coordinates for current animation frame
+          final currentCoordinates = coordinates.take(endIndex).toList();
+          animatedRouteCoordinates.assignAll(currentCoordinates);
+          animationProgress.value = endIndex;
+          
+          // Clear existing route and draw new partial route
+          try {
+            await polylineAnnotationManager?.deleteAll();
+          } catch (e) {
+            print('Error deleting polyline: $e');
+          }
+          
+          if (currentCoordinates.isNotEmpty) {
+            try {
+              await polylineAnnotationManager!.create(
+                mapbox.PolylineAnnotationOptions(
+                  geometry: mapbox.LineString(coordinates: currentCoordinates),
+                  lineColor: 0xFF10B981, // Green color for route
+                  lineWidth: 4.0,
+                ),
+              );
+            } catch (e) {
+              print('Error creating polyline: $e');
+              break; // Exit animation if polyline creation fails
+            }
+          }
+        }
+        
+        // Wait for next frame
+        if (step < totalSteps) {
+          await Future.delayed(const Duration(milliseconds: frameIntervalMs));
+        }
+      }
+    } catch (e) {
+      print('Error in route animation: $e');
+    } finally {
+      isAnimating.value = false;
+    }
+  }
+
+  /// Cancel route animation
+  void cancelRouteAnimation() {
+    isAnimating.value = false;
   }
 
   /// Capture screenshot of the route and return image bytes

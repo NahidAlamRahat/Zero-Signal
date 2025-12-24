@@ -22,8 +22,18 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controller in initState to ensure it's ready before build
-    controller = Get.put(SpotNavigationController());
+    try {
+      // Initialize controller in initState to ensure it's ready before build
+      controller = Get.put(SpotNavigationController());
+    } catch (e) {
+      print('Error initializing controller: $e');
+      // If controller initialization fails, go back
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Get.back();
+        }
+      });
+    }
   }
 
   @override
@@ -142,18 +152,18 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
                 borderRadius: BorderRadius.circular(12.r),
                 child: Screenshot(
                   controller: controller.screenshotController,
-                  child: GetBuilder<SpotNavigationController>(
-                    builder: (controller) => mapbox.MapWidget(
-                      onMapCreated: controller.onMapCreated,
-                      cameraOptions: mapbox.CameraOptions(
-                        center: mapbox.Point(
-                          coordinates: mapbox.Position.fromJson([
-                            controller.currentLongitude.value,
-                            controller.currentLatitude.value,
-                          ]),
-                        ),
-                        zoom: 14.0,
+                  child: mapbox.MapWidget(
+                    onMapCreated: (map) {
+                      controller.onMapCreated(map);
+                    },
+                    cameraOptions: mapbox.CameraOptions(
+                      center: mapbox.Point(
+                        coordinates: mapbox.Position.fromJson([
+                          controller.currentLongitude.value,
+                          controller.currentLatitude.value,
+                        ]),
                       ),
+                      zoom: 14.0,
                     ),
                   ),
                 ),
@@ -208,10 +218,19 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () async {
-                            // Capture screenshot and show preview popup
-                            final imageBytes = await controller.captureRouteScreenshot();
-                            if (imageBytes != null) {
-                              _showScreenshotPopup(imageBytes);
+                            try {
+                              // Capture screenshot and show preview popup
+                              final imageBytes = await controller.captureRouteScreenshot();
+                              if (imageBytes != null) {
+                                _showScreenshotPopup(imageBytes);
+                              } else {
+                                // If screenshot fails, just go back
+                                Get.back();
+                              }
+                            } catch (e) {
+                              print('Error in Confirm button: $e');
+                              // If anything fails, just go back to details screen
+                              Get.back();
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -241,7 +260,7 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
     );
   }
 
-  /// Show screenshot preview popup for 3 seconds
+  /// Show screenshot preview popup for 3 seconds with distance info
   void _showScreenshotPopup(Uint8List imageBytes) {
     Get.dialog(
       Dialog(
@@ -261,7 +280,22 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 8.h),
+              // Show distance prominently
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: AppColor.backgroundColor,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: TextWidget(
+                  text: 'Distance: ${controller.distance.value.toStringAsFixed(2)} km',
+                  fontColor: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 12.h),
               Container(
                 height: 300.h,
                 width: double.infinity,
@@ -277,7 +311,44 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 12.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 12.w,
+                    height: 12.h,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  TextWidget(
+                    text: 'Your Location',
+                    fontColor: Colors.grey.shade600,
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  SizedBox(width: 16.w),
+                  Container(
+                    width: 12.w,
+                    height: 12.h,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  TextWidget(
+                    text: 'Destination',
+                    fontColor: Colors.grey.shade600,
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
               TextWidget(
                 text: 'Screenshot saved successfully',
                 fontColor: Colors.grey.shade600,
