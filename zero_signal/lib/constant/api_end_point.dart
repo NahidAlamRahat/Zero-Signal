@@ -28,6 +28,19 @@ class AppApiEndPoint {
   static final String categoryEndPoint = "/category?withSub=true";
   static final String routeEndPoint = "/route";
   static final String spotEndPoint = "/spot";
+  static final String getProfile = "/user/profile";
+  static final String updateProfile = "/user/profile";
+  static final String supportEndPoint = "/support";
+  String routeDetailEndPoint(String id) => "/route/$id";
+  String routeTypeEndPoint() => "/category/route-type";
+  static final String activityEndPoint = "/activity";
+  String activityFeedEndPoint(lat, lng) =>
+      "/activity/feed?lat=$lat&lng=$lng&radius=10000";
+
+  static final String activitySaveEndPoint = "/activity/save";
+  String activityJoinEndPoint() => "/activity/join";
+  //'all' | 'created' | 'joined' | 'saved'
+  String activityByTypeEndPoint(String type) => "/activity?type=$type";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
 
   /// ========================= Atik Hridoy =====================

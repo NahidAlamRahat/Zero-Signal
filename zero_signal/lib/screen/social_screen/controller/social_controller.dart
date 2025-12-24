@@ -110,4 +110,19 @@ class SocialController extends GetxController {
       activityFeed[index] = item; // Trigger update
     }
   }
+
+  Future<void> joinActivity(String activityId) async {
+    isLoading.value = true;
+    try {
+      final success = await _repository.joinActivity(activityId: activityId);
+      if (success) {
+        // Navigate to Activity Lists Screen with Joined Activities tab selected
+        Get.toNamed('/activityListsScreen', arguments: {'initialTab': 1});
+      }
+    } catch (e) {
+      print("Error joining activity: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
