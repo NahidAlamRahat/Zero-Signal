@@ -12,6 +12,9 @@ class MapRoutesController extends GetxController {
   var lastApiRequest = ''.obs;
   var lastApiResponse = ''.obs;
   
+  // Auto-select first route
+  var autoSelectedRouteIndex = 0.obs;
+  
   // Location data
   var deviceLat = 23.777628.obs;
   var deviceLng = 90.4076217.obs;
@@ -89,6 +92,12 @@ class MapRoutesController extends GetxController {
       if (response.statusCode == 200 && response.data['success'] == true) {
         routesList.value = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
         appLog('Successfully fetched ${routesList.length} routes', type: LogType.info, source: 'API');
+        
+        // Auto-select first route if available
+        if (routesList.isNotEmpty) {
+          autoSelectedRouteIndex.value = 0;
+          appLog('Auto-selected first route: ${routesList[0]['title']}', type: LogType.info, source: 'API');
+        }
       } else {
         appLog('API returned success=false or error status: ${response.statusCode}', type: LogType.warning, source: 'API');
         routesList.clear();
