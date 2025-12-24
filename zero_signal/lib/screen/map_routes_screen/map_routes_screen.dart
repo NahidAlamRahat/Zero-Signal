@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
@@ -8,9 +10,12 @@ import 'package:zero_signal/screen/map_routes_screen/widget/route_card_widget.da
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import 'dart:async';
 import '../../constant/app_colors.dart';
 import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
+import '../../utils/app_log/app_log.dart';
+import 'controller/map_routes_controller.dart';
 
 class MapRoutesScreen extends StatefulWidget {
   const MapRoutesScreen({super.key});
@@ -22,6 +27,22 @@ class MapRoutesScreen extends StatefulWidget {
 class _MapRoutesScreenState extends State<MapRoutesScreen> {
   String selectedMapType = 'Default';
   late mapbox.MapboxMap mapboxMap;
+  final PageController _pageController = PageController();
+  int currentRouteIndex = 0;
+  late MapRoutesController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    appLog('MapRoutesScreen initialized - using controller', type: LogType.info, source: 'INIT');
+    controller = Get.put(MapRoutesController());
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   /// Initialize map settings
   Future<void> _initializeMap() async {
@@ -37,7 +58,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
         mapbox.ScaleBarSettings(enabled: false),
       );
     } catch (e) {
-      print('Error initializing map: $e');
+      appLog('Error initializing map: $e', type: LogType.error, source: 'MAP');
     }
   }
 
@@ -55,126 +76,184 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
       );
       await mapboxMap.flyTo(camera, animationOptions);
     } catch (e) {
-      print('Error centering map: $e');
+      appLog('Error centering map: $e', type: LogType.error, source: 'MAP');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            // Search Box
-            Expanded(
-              child: TextFieldWidget(
-                hintText: 'Search in ZeroSignal',
-                fieldHeight: 40,
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-              ),
-            ),
-            const SizedBox(width: 10),
+    appLog('=== MapRoutesScreen build() called ===',
+        type: LogType.info, source: 'BUILD');
 
-            // Filtering Icon
-            InkWell(
-              onTap: () {
-                Get.toNamed(AppRoutes.filtersScreen);
-              },
-              child:
-                  Image.asset(AppIconPath.filtaringIcon, width: 65, height: 65),
-            ),
-          ],
-        ),
-      ),
-
-      // Interactive Mapbox Map
-      body: Stack(
-        children: [
-          // Mapbox Map Background
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: mapbox.MapWidget(
-              onMapCreated: (map) {
-                mapboxMap = map;
-                _initializeMap();
-              },
-              cameraOptions: mapbox.CameraOptions(
-                center: mapbox.Point(
-                  coordinates: mapbox.Position.fromJson([90.4125, 23.8103]), // Dhaka coordinates
-                ),
-                zoom: 12.0,
-              ),
-            ),
-          ),
-
-          // Top-right icon (AppBar er niche)
-          Positioned(
-            top: kToolbarHeight + 50.h,
-            right: 20,
-            child: InkWell(
-              onTap: () {
-                // Proper way to show bottom sheet
-                _showMapTypeBottomSheet();
-              },
-              child: Image.asset(
-                AppIconPath.choiceMap,
-                width: 40,
-                height: 40,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 310.h,
-            right: 20,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return GetBuilder<MapRoutesController>(
+      builder: (controller) {
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            title: Row(
               children: [
-                FloatingActionButton(
-                  mini: true,
-                  backgroundColor: Colors.transparent,
-                  heroTag: "map_btn1",
-                  onPressed: () {
-                    _centerMapOnCurrentLocation();
-                  },
-                  child: Image.asset(AppIconPath.mapIcon),
+                Expanded(
+                  child: TextFieldWidget(
+                    hintText: 'Search in ZeroSignal',
+                    fieldHeight: 40,
+                    prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  ),
                 ),
-                const SizedBox(height: 10),
-                FloatingActionButton(
-                  mini: true,
-                  backgroundColor: Colors.transparent,
-                  heroTag: "map_btn2", // Changed from "btn2" to "map_btn2"
-                  onPressed: () {
-                    Get.toNamed(AppRoutes.shareSpotScreen);
+                const SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.filtersScreen);
                   },
                   child: Image.asset(
-                    Assets.icons.addGreenbutton.path,
-                    width: 40.w,
-                    height: 40.w,
+                    AppIconPath.filtaringIcon,
+                    width: 65,
+                    height: 65,
                   ),
                 ),
               ],
             ),
           ),
 
-          Positioned(
-            bottom: 0.h,
-            left: 0,
-            right: 0,
-            child: GestureDetector(
-                onTap: () {
-                  Get.toNamed(AppRoutes.saveRouteDetailsScreen);
-                },
-                child: SafeArea(child: RouteCard())),
-          )
-        ],
-      ),
+          // ================= BODY =================
+          body: Stack(
+            children: [
+              /// MAP
+              Positioned.fill(
+                child: mapbox.MapWidget(
+                  onMapCreated: (map) {
+                    mapboxMap = map;
+                    _initializeMap();
+                  },
+                  cameraOptions: mapbox.CameraOptions(
+                    center: mapbox.Point(
+                      coordinates:
+                          mapbox.Position.fromJson([90.4125, 23.8103]),
+                    ),
+                    zoom: 12.0,
+                  ),
+                  gestureRecognizers: {
+                    Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  },
+                ),
+              ),
 
-      // Floating Buttons
+              /// MAP TYPE BUTTON
+              Positioned(
+                top: kToolbarHeight + 50.h,
+                right: 20,
+                child: InkWell(
+                  onTap: _showMapTypeBottomSheet,
+                  child: Image.asset(
+                    AppIconPath.choiceMap,
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
+              ),
+
+              /// FLOATING BUTTONS
+              Positioned(
+                bottom: 310.h,
+                right: 20,
+                child: Column(
+                  children: [
+                    FloatingActionButton(
+                      mini: true,
+                      heroTag: "map_btn1",
+                      backgroundColor: Colors.transparent,
+                      onPressed: _centerMapOnCurrentLocation,
+                      child: Image.asset(AppIconPath.mapIcon),
+                    ),
+                    const SizedBox(height: 10),
+                    FloatingActionButton(
+                      mini: true,
+                      heroTag: "map_btn2",
+                      backgroundColor: Colors.transparent,
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.shareSpotScreen);
+                      },
+                      child: Image.asset(
+                        Assets.icons.addGreenbutton.path,
+                        width: 40.w,
+                        height: 40.w,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// RADIUS INPUT
+              Positioned(
+                top: kToolbarHeight + 150.h,
+                right: 20,
+                child: Container(
+                  width: 80.w,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(22.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: controller.radiusController,
+                    keyboardType: TextInputType.number,
+                    onChanged: controller.updateRadius,
+                    onSubmitted: controller.updateRadius,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.radar, size: 20),
+                      hintText: 'm',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+
+              /// ROUTE CARDS
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: SafeArea(
+                  child: SizedBox(
+                    height: 240,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: controller.routesList.length,
+                      onPageChanged: (index) {
+                        setState(() => currentRouteIndex = index);
+                      },
+                      itemBuilder: (context, index) {
+                        return RouteCard(
+                          routeData: controller.routesList[index],
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoutes.saveRouteDetailsScreen,
+                              arguments: controller.routesList[index],
+                            );
+                          },
+                          onSave: () {},
+                          onPlace: () {},
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -189,7 +268,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
           setState(() {
             selectedMapType = type;
           });
-          print('Selected Map Type: $type'); // Debug purpose
+          appLog('Selected Map Type: $type', type: LogType.info, source: 'MAP'); // Debug purpose
         },
       ),
     );
