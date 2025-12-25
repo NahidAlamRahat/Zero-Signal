@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/repository/activity_repository.dart';
 import 'package:zero_signal/screen/list_screen/list_screen.dart';
-import 'package:zero_signal/screen/list_screen/model/activity_list_model.dart';
 
 class EditActivityController extends GetxController {
   final ActivityRepository _repository = ActivityRepository();

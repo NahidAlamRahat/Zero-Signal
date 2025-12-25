@@ -41,11 +41,15 @@ class AppApiEndPoint {
   String activityJoinEndPoint() => "/activity/join";
 
   //'all' | 'created' | 'joined' | 'saved'
-  String activityByTypeEndPoint(String type) => "/activity?type=$type";
+  String activityByTypeEndPoint(String type, {int page = 1}) =>
+      "/activity?type=$type&page=$page";
 
   String activityLeaveEndPoint() => "/activity/leave";
   String activityUpdateEndPoint(String id) => "/activity/$id";
   String getSingleActivityEndPoint(String id) => "/activity/$id";
+  String messageEndPoint(String activityId) => "/message/$activityId";
+  String memberListEndPoint(String activityId) =>
+      "/activity/member-list/$activityId";
 }
 
 // Move this function outside the class

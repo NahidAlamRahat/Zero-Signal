@@ -256,7 +256,8 @@ class ActivityCard extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           onPressed: () {
-                            Get.toNamed(AppRoutes.chatScreen);
+                            Get.toNamed(AppRoutes.chatScreen,
+                                arguments: activity.id);
                           },
                         ),
                       )
@@ -363,7 +364,8 @@ class ActivityCard extends StatelessWidget {
                         SizedBox(height: 12.h),
                         InkWell(
                           onTap: () {
-                            Get.toNamed(AppRoutes.chatScreen);
+                            Get.toNamed(AppRoutes.chatScreen,
+                                arguments: activity.id);
                           },
                           child: Container(
                             height: 32.h,

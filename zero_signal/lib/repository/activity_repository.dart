@@ -116,10 +116,11 @@ class ActivityRepository {
 
   Future<ActivityListModel?> getActivitiesByType({
     required String type,
+    int page = 1,
   }) async {
     try {
       final response = await ApiService.getApi(
-        AppApiEndPoint.instance.activityByTypeEndPoint(type),
+        AppApiEndPoint.instance.activityByTypeEndPoint(type, page: page),
       );
 
       if (response.statusCode == 200) {

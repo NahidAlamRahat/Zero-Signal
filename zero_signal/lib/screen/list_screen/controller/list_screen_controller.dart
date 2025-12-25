@@ -25,6 +25,10 @@ class ListScreenController extends GetxController {
   var isLoading = false.obs;
   var activities = <ActivityListData>[].obs;
 
+  int _page = 1;
+  bool _hasMore = true;
+  bool _isLoadingMore = false;
+
   @override
   void onInit() {
     tabKeys = List<GlobalKey>.generate(tabs.length, (_) => GlobalKey());
@@ -46,7 +50,19 @@ class ListScreenController extends GetxController {
       updateIndicatorFromKeys();
       fetchActivities();
     });
-    scrollController.addListener(updateIndicatorFromKeys);
+    scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    updateIndicatorFromKeys();
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 200 &&
+        !isLoading.value &&
+        !_isLoadingMore &&
+        _hasMore &&
+        selectedIndex != 0) {
+      fetchActivities(isLoadMore: true);
+    }
   }
 
   void select(int index) {
@@ -55,28 +71,40 @@ class ListScreenController extends GetxController {
     update();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => updateIndicatorFromKeys());
+
+    // Reset pagination
+    _page = 1;
+    _hasMore = true;
+    activities.clear();
     fetchActivities();
   }
 
-  Future<void> fetchActivities() async {
-    isLoading.value = true;
+  Future<void> fetchActivities({bool isLoadMore = false}) async {
+    if (isLoadMore) {
+      _isLoadingMore = true;
+    } else {
+      isLoading.value = true;
+      _page = 1;
+      _hasMore = true;
+    }
+
     try {
       if (selectedIndex == 0) {
-        // Near Activities
+        // Near Activities (Pagination logic not requested/implemented yet for this tab)
         try {
           LocationPermission permission = await Geolocator.checkPermission();
           if (permission == LocationPermission.denied) {
             permission = await Geolocator.requestPermission();
             if (permission == LocationPermission.denied) {
-              // Handle denied
               isLoading.value = false;
+              _isLoadingMore = false;
               return;
             }
           }
 
           if (permission == LocationPermission.deniedForever) {
-            // Handle denied forever
             isLoading.value = false;
+            _isLoadingMore = false;
             return;
           }
 
@@ -87,7 +115,6 @@ class ListScreenController extends GetxController {
           );
 
           if (response != null && response.data != null) {
-            // Map ActivityFeedData to ActivityListData
             activities.assignAll(response.data!.map((feedData) {
               return ActivityListData(
                 sId: feedData.sId,
@@ -119,11 +146,11 @@ class ListScreenController extends GetxController {
               );
             }).toList());
           } else {
-            activities.clear();
+            if (!isLoadMore) activities.clear();
           }
         } catch (e) {
           print("Error fetching location or feed: $e");
-          activities.clear();
+          if (!isLoadMore) activities.clear();
         }
       } else {
         // Other tabs
@@ -140,18 +167,41 @@ class ListScreenController extends GetxController {
             break;
         }
 
-        final response = await _repository.getActivitiesByType(type: type);
+        final response = await _repository.getActivitiesByType(
+          type: type,
+          page: _page,
+        );
+
         if (response != null && response.data != null) {
-          activities.assignAll(response.data!);
+          if (isLoadMore) {
+            activities.addAll(response.data!);
+          } else {
+            activities.assignAll(response.data!);
+          }
+
+          // Check if there are more pages
+          // Assuming API returns pagination info, specifically 'totalPage' or checking list size
+          if (response.pagination != null) {
+            _hasMore = _page < (response.pagination!.totalPage ?? 1);
+          } else {
+            // Fallback if pagination info missing
+            _hasMore = response.data!.isNotEmpty;
+          }
+
+          if (_hasMore) {
+            _page++;
+          }
         } else {
-          activities.clear();
+          if (!isLoadMore) activities.clear();
+          _hasMore = false;
         }
       }
     } catch (e) {
       print("Error fetching activities: $e");
-      activities.clear();
+      if (!isLoadMore) activities.clear();
     } finally {
       isLoading.value = false;
+      _isLoadingMore = false;
     }
   }
 
