@@ -48,6 +48,8 @@ class AppApiEndPoint {
   static final String mySpotEndPoint = "/spot";
   static final String createSpotEndPoint = "/spot";
   static final String getRouteEndPoint = "/route/geocode";
+  static final String createRoute = "/route";
+  static final String getRouteDetails = "/route";
 
   // comment
   static final String commentEndPoint = "/comment";

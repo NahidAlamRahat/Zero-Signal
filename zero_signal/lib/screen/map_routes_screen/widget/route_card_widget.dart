@@ -3,6 +3,7 @@ import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../../constant/app_colors.dart';
+import '../../../constant/api_end_point.dart';
 
 class RouteCard extends StatelessWidget {
   final Map<String, dynamic> routeData;
@@ -33,7 +34,7 @@ class RouteCard extends StatelessWidget {
     String imageUrl = '';
     if (images.isNotEmpty) {
       imageUrl = images[0].startsWith('/') 
-          ? 'https://shariful5000.binarybards.online${images[0]}'
+          ? '${AppApiEndPoint.domain}${images[0]}'
           : images[0];
     }
 
