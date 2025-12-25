@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
 import 'package:zero_signal/repository/chat_repository.dart';
 import 'package:zero_signal/service/storage/storage_service.dart';
 
@@ -15,6 +17,16 @@ class ChatController extends GetxController {
   final ChatRepository _repository = ChatRepository();
   String activityId = '';
   var isLoading = false.obs;
+
+  // Voice recording
+  final AudioRecorder _audioRecorder = AudioRecorder();
+  var isRecording = false.obs;
+  String? _recordingPath;
+
+  // Message pagination
+  int _messagePage = 1;
+  bool _hasMoreMessages = true;
+  bool _isLoadingMoreMessages = false;
 
   @override
   void onInit() {
@@ -34,16 +46,52 @@ class ChatController extends GetxController {
     }
   }
 
-  Future<void> fetchMessages() async {
+  @override
+  void onClose() {
+    _audioRecorder.dispose();
+    super.onClose();
+  }
+
+  Future<void> fetchMessages({bool isLoadMore = false}) async {
     if (activityId.isEmpty) return;
 
-    isLoading.value = true;
-    final fetchedMessages =
-        await _repository.getMessages(activityId: activityId);
-    isLoading.value = false;
+    if (isLoadMore) {
+      if (!_hasMoreMessages || _isLoadingMoreMessages) return;
+      _isLoadingMoreMessages = true;
+    } else {
+      isLoading.value = true;
+      _messagePage = 1;
+      _hasMoreMessages = true;
+    }
 
-    if (fetchedMessages != null) {
-      messages.assignAll(fetchedMessages);
+    final chatData = await _repository.getMessages(
+      activityId: activityId,
+      page: _messagePage,
+    );
+
+    if (isLoadMore) {
+      _isLoadingMoreMessages = false;
+    } else {
+      isLoading.value = false;
+    }
+
+    if (chatData != null && chatData.messages != null) {
+      if (isLoadMore) {
+        messages.addAll(chatData.messages!);
+      } else {
+        messages.assignAll(chatData.messages!);
+      }
+
+      // Check pagination
+      if (chatData.pagination != null) {
+        _hasMoreMessages = _messagePage < (chatData.pagination!.totalPage ?? 1);
+      } else {
+        _hasMoreMessages = chatData.messages!.isNotEmpty;
+      }
+
+      if (_hasMoreMessages) {
+        _messagePage++;
+      }
     }
   }
 
@@ -94,6 +142,62 @@ class ChatController extends GetxController {
 
     if (success) {
       fetchMessages();
+    }
+  }
+
+  // Voice recording methods
+  Future<void> startRecording() async {
+    try {
+      if (await _audioRecorder.hasPermission()) {
+        final directory = await getTemporaryDirectory();
+        final path =
+            '${directory.path}/audio_${DateTime.now().millisecondsSinceEpoch}.mp3';
+
+        await _audioRecorder.start(
+          const RecordConfig(encoder: AudioEncoder.aacLc),
+          path: path,
+        );
+        _recordingPath = path;
+        isRecording.value = true;
+      }
+    } catch (e) {
+      print('Failed to start recording: $e');
+    }
+  }
+
+  Future<void> stopRecordingAndSend() async {
+    try {
+      await _audioRecorder.stop();
+      isRecording.value = false;
+
+      if (_recordingPath != null) {
+        final file = File(_recordingPath!);
+        if (await file.exists()) {
+          await sendMediaMessage('audio', file);
+        }
+        _recordingPath = null;
+      }
+    } catch (e) {
+      print('Failed to stop recording: $e');
+      isRecording.value = false;
+    }
+  }
+
+  Future<void> cancelRecording() async {
+    try {
+      await _audioRecorder.stop();
+      isRecording.value = false;
+
+      if (_recordingPath != null) {
+        final file = File(_recordingPath!);
+        if (await file.exists()) {
+          await file.delete();
+        }
+        _recordingPath = null;
+      }
+    } catch (e) {
+      print('Failed to cancel recording: $e');
+      isRecording.value = false;
     }
   }
 }

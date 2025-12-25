@@ -16,8 +16,9 @@ class ChatResponse {
 
 class ChatData {
   final List<ChatMessage>? messages;
+  final MessagePagination? pagination;
 
-  ChatData({this.messages});
+  ChatData({this.messages, this.pagination});
 
   factory ChatData.fromJson(Map<String, dynamic> json) {
     return ChatData(
@@ -26,6 +27,27 @@ class ChatData {
               .map((e) => ChatMessage.fromJson(e))
               .toList()
           : null,
+      pagination: json['pagination'] != null
+          ? MessagePagination.fromJson(json['pagination'])
+          : null,
+    );
+  }
+}
+
+class MessagePagination {
+  final int? total;
+  final int? limit;
+  final int? page;
+  final int? totalPage;
+
+  MessagePagination({this.total, this.limit, this.page, this.totalPage});
+
+  factory MessagePagination.fromJson(Map<String, dynamic> json) {
+    return MessagePagination(
+      total: json['total'],
+      limit: json['limit'],
+      page: json['page'],
+      totalPage: json['totalPage'],
     );
   }
 }

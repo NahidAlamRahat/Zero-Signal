@@ -5,6 +5,7 @@ import 'package:zero_signal/gen/assets.gen.dart';
 import '../../constant/app_icon_path.dart';
 import 'controller/chat_controller.dart';
 import 'model/chat_model.dart';
+import 'widget/audio_player_widget.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -30,6 +31,20 @@ class _ChatScreenState extends State<ChatScreen> {
   static const Color buttonBackgroundColor = Color(0xFFE4E7E4);
   static const Color iconColor = Color(0xFF044A42);
   static const Color borderColor = Color(0xFFD4CBB0);
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // Load more when scrolling to the top (since messages are reversed)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      controller.fetchMessages(isLoadMore: true);
+    }
+  }
 
   @override
   void dispose() {
@@ -263,13 +278,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                         ],
                       ),
-                      child: Text(
-                        text,
-                        style: const TextStyle(
-                          color: primaryTextColor,
-                          fontSize: 15,
-                        ),
-                      ),
+                      child: message.type == 'audio'
+                          ? _buildAudioPlayer(message)
+                          : Text(
+                              text,
+                              style: const TextStyle(
+                                color: primaryTextColor,
+                                fontSize: 15,
+                              ),
+                            ),
                     ),
                   ],
                 ),
@@ -301,6 +318,21 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       return '';
     }
+  }
+
+  Widget _buildAudioPlayer(ChatMessage message) {
+    final audioUrl = message.audio;
+    if (audioUrl == null || audioUrl.isEmpty) {
+      return const Text(
+        'Audio message',
+        style: TextStyle(
+          color: primaryTextColor,
+          fontSize: 15,
+        ),
+      );
+    }
+
+    return AudioPlayerWidget(audioUrl: audioUrl);
   }
 
   // Builds the bottom text input field
@@ -345,10 +377,33 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             const SizedBox(width: 8),
 
-            // Mic button
-            _buildImageIconButton(Assets.icons.microphoneIcon.path, () {
-              debugPrint('Mic button pressed');
-            }),
+            // Mic button with long press
+            Obx(() => GestureDetector(
+                  onLongPressStart: (_) {
+                    controller.startRecording();
+                  },
+                  onLongPressEnd: (_) {
+                    controller.stopRecordingAndSend();
+                  },
+                  onLongPressCancel: () {
+                    controller.cancelRecording();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: controller.isRecording.value
+                        ? BoxDecoration(
+                            color: Colors.red.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          )
+                        : null,
+                    child: Image.asset(
+                      Assets.icons.microphoneIcon.path,
+                      width: 32,
+                      height: 32,
+                      color: controller.isRecording.value ? Colors.red : null,
+                    ),
+                  ),
+                )),
 
             // Send button
             _buildImageIconButton(Assets.icons.sendIcon.path, () {

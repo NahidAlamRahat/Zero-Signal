@@ -6,16 +6,19 @@ import 'package:zero_signal/service/api_service/api_services.dart';
 import 'package:zero_signal/widget/app_snack_bar/app_snack_bar.dart';
 
 class ChatRepository {
-  Future<List<ChatMessage>?> getMessages({required String activityId}) async {
+  Future<ChatData?> getMessages({
+    required String activityId,
+    int page = 1,
+  }) async {
     try {
       final response = await ApiService.getApi(
-        AppApiEndPoint.instance.messageEndPoint(activityId),
+        AppApiEndPoint.instance.messageEndPoint(activityId, page: page),
       );
 
       if (response.statusCode == 200) {
         final chatResponse =
             ChatResponse.fromJson(response.body as Map<String, dynamic>);
-        return chatResponse.data?.messages;
+        return chatResponse.data;
       } else {
         AppSnackBar.error(response.message);
         return null;

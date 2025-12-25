@@ -47,7 +47,8 @@ class AppApiEndPoint {
   String activityLeaveEndPoint() => "/activity/leave";
   String activityUpdateEndPoint(String id) => "/activity/$id";
   String getSingleActivityEndPoint(String id) => "/activity/$id";
-  String messageEndPoint(String activityId) => "/message/$activityId";
+  String messageEndPoint(String activityId, {int page = 1}) =>
+      "/message/$activityId?page=$page";
   String memberListEndPoint(String activityId) =>
       "/activity/member-list/$activityId";
   static final String sendMessageEndPoint = "/message";
