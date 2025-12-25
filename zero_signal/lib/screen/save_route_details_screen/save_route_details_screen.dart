@@ -539,17 +539,174 @@ class SaveRouteDetailsScreen extends StatelessWidget {
 
   void _showImageDialog(
       BuildContext context, RouteDetailsController controller, int index) {
-    // Set the initial image when the dialog opens
-    if (index < controller.images.length) {
-      controller.selectImage(controller.images[index]);
+    // Check if this is a map screenshot
+    if (mapScreenshot != null && index == 0) {
+      // Show map screenshot in dialog with zoom
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.zero,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: Stack(
+                children: [
+                  // Interactive image with zoom
+                  InteractiveViewer(
+                    panEnabled: true,
+                    boundaryMargin: EdgeInsets.all(20),
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Image.memory(
+                        mapScreenshot!,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  // Close button
+                  Positioned(
+                    top: 40.h,
+                    right: 20.w,
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        width: 40.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(Icons.close, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  // Zoom instructions
+                  Positioned(
+                    bottom: 20.h,
+                    left: 20.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Text(
+                        'Pinch to zoom',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      // Handle API images
+      final adjustedIndex = mapScreenshot != null ? index - 1 : index;
+      if (adjustedIndex >= 0 && adjustedIndex < controller.images.length) {
+        controller.selectImage(controller.images[adjustedIndex]);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.zero,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Stack(
+                  children: [
+                    // Interactive image with zoom
+                    InteractiveViewer(
+                      panEnabled: true,
+                      boundaryMargin: EdgeInsets.all(20),
+                      minScale: 0.5,
+                      maxScale: 4.0,
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Image.network(
+                          controller.selectedImage.value,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: Icon(Icons.image_not_supported, size: 50),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    // Close button
+                    Positioned(
+                      top: 40.h,
+                      right: 20.w,
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          width: 40.w,
+                          height: 40.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(Icons.close, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    // Zoom instructions
+                    Positioned(
+                      bottom: 20.h,
+                      left: 20.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Text(
+                          'Pinch to zoom',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }
     }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ImageGalleryDialog(controller: controller);
-      },
-    );
   }
 
   // Comments Section
@@ -583,12 +740,17 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             ),
             ...controller.displayedComments
                 .map((comment) => _buildCommentItem(comment)),
-            _buildAddCommentSection(),
+            _buildAddCommentSection(controller),
           ],
         ));
   }
 
   Widget _buildCommentItem(Map<String, dynamic> comment) {
+    // Handle API response format
+    final userName = comment['user']?['name'] ?? comment['name'] ?? 'Anonymous';
+    final commentText = comment['comment'] ?? '';
+    final createdAt = comment['createdAt'] ?? comment['date'] ?? '';
+    
     return Container(
       margin: EdgeInsets.only(bottom: 16, top: 10),
       child: Column(
@@ -598,10 +760,10 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor: comment['avatar'],
+                backgroundColor: Colors.blue[100],
                 child: Icon(
-                  comment['avatarIcon'],
-                  color: comment['avatarIconColor'],
+                  Icons.person,
+                  color: Colors.blue,
                   size: 20,
                 ),
               ),
@@ -610,13 +772,13 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextWidget(
-                    text: comment['name'],
+                    text: userName,
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     fontColor: AppColor.textColor,
                   ),
                   TextWidget(
-                    text: comment['date'],
+                    text: createdAt,
                     fontColor: AppColor.subTitleColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -625,12 +787,12 @@ class SaveRouteDetailsScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 8),
           TextWidget(
-            text: comment['comment'],
+            text: commentText,
             fontWeight: FontWeight.w400,
             fontSize: 14,
-            fontColor: AppColor.subTitleColor,
+            fontColor: AppColor.textColor,
             textAlignment: TextAlign.start,
           ),
         ],
@@ -638,11 +800,12 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAddCommentSection() {
+  Widget _buildAddCommentSection(RouteDetailsController controller) {
     return SafeArea(
       child: Column(
         children: [
           TextFieldWidget(
+            controller: controller.commentController,
             maxLines: 3,
             minLines: 3,
             borderColor: AppColor.lightGrayishOrange,
@@ -659,16 +822,18 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
-            child: ButtonWidget(
+            child: Obx(() => ButtonWidget(
               backgroundColor: AppColor.backgroundColor,
-              label: 'comment ',
+              label: controller.isPostingComment.value ? 'Posting...' : 'Comment',
               maxLines: 1,
               buttonWidth: 130.w,
               fontSize: 14,
               fontWeight: FontWeight.w500,
               buttonHeight: 40,
-              onPressed: () {},
-            ),
+              onPressed: controller.isPostingComment.value 
+                  ? null 
+                  : () => controller.postComment(controller.routeData['_id']),
+            )),
           ),
           SizedBox(height: 10),
           Center(

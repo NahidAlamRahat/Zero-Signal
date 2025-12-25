@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zero_signal/gen/assets.gen.dart';
-import 'package:zero_signal/constant/api_end_point.dart';
-import '../../../repository/route_repository/route_repository.dart';
+import '../../../constant/api_end_point.dart';
+import '../../../service/api_service/api_services.dart';
 import '../../../utils/app_log/app_log.dart';
+import '../../../gen/assets.gen.dart';
 
 class RouteDetailsController extends GetxController {
   // Route data from map screen
@@ -14,6 +14,13 @@ class RouteDetailsController extends GetxController {
   // Selected image for dialog
   var selectedImage = ''.obs;
 
+  // Comments data
+  var comments = <Map<String, dynamic>>[].obs;
+  var isCommentsLoading = false.obs;
+  var commentsErrorMessage = ''.obs;
+  var commentController = TextEditingController();
+  var isPostingComment = false.obs;
+
   // Images list - Using static images for demonstration (will be from API later)
   var images = <String>[
     Assets.images.image1.path,
@@ -21,6 +28,10 @@ class RouteDetailsController extends GetxController {
     Assets.images.image3.path,
     Assets.images.image4.path,
   ].obs;
+
+  // Comments display
+  var showAllComments = false.obs;
+  var displayedComments = <Map<String, dynamic>>[].obs;
 
   // Set route data from map screen
   void setRouteData(Map<String, dynamic> data) {
@@ -52,13 +63,14 @@ class RouteDetailsController extends GetxController {
     update();
 
     try {
-      final repository = RouteRepository();
-      final result = await repository.getRouteDetails(routeId);
+      final response = await ApiService.getApi(
+        AppApiEndPoint.instance.routeDetailEndPoint(routeId),
+      );
       
-      if (result != null) {
-        // Use the route data directly
-        setRouteData(result);
-        appLog('Route details fetched successfully: ${result['title']}', type: LogType.info, source: 'ROUTE_DETAILS');
+      if (response.statusCode == 200 && response.body['success'] == true) {
+        final routeData = response.body['data'];
+        setRouteData(routeData);
+        appLog('Route details fetched successfully: ${routeData['title']}', type: LogType.info, source: 'ROUTE_DETAILS');
       } else {
         errorMessage.value = 'Route not found';
         appLog('Route not found for ID: $routeId', type: LogType.error, source: 'ROUTE_DETAILS');
@@ -73,8 +85,6 @@ class RouteDetailsController extends GetxController {
   }
 
   // Comments data
-  var showAllComments = false.obs;
-
   var allComments = <Map<String, dynamic>>[
     {
       'name': 'Charolette Hanlin',
@@ -121,34 +131,101 @@ class RouteDetailsController extends GetxController {
 
   void toggleComments() {
     showAllComments.value = !showAllComments.value;
+    updateDisplayedComments();
   }
 
-  List<Map<String, dynamic>> get displayedComments {
-    if (allComments.isEmpty) return [];
-    return showAllComments.value ? allComments : [allComments.first];
+  void updateDisplayedComments() {
+    if (comments.isEmpty) {
+      displayedComments.value = [];
+    } else {
+      displayedComments.value = showAllComments.value ? comments : [comments.first];
+    }
+    update();
   }
 
   int get remainingCommentsCount =>
-      allComments.length > 1 ? allComments.length - 1 : 0;
+      comments.length > 1 ? comments.length - 1 : 0;
+
+  // Fetch comments for a route
+  Future<void> fetchComments(String routeId) async {
+    isCommentsLoading.value = true;
+    commentsErrorMessage.value = '';
+    update();
+
+    try {
+      final response = await ApiService.getApi(
+        AppApiEndPoint.commentEndPoint,
+        queryParams: {'spot': routeId, 'type': 'Routes'},
+      );
+      
+      if (response.statusCode == 200 && response.body['success'] == true) {
+        final commentsData = response.body['data'] as List;
+        comments.value = List<Map<String, dynamic>>.from(commentsData);
+        updateDisplayedComments();
+        appLog('Comments fetched successfully: ${comments.length} comments', type: LogType.info, source: 'ROUTE_DETAILS');
+      } else {
+        commentsErrorMessage.value = 'Failed to load comments';
+        appLog('Failed to load comments for route: $routeId', type: LogType.error, source: 'ROUTE_DETAILS');
+      }
+    } catch (e) {
+      commentsErrorMessage.value = 'Failed to load comments';
+      appLog('Error fetching comments: $e', type: LogType.error, source: 'ROUTE_DETAILS');
+    } finally {
+      isCommentsLoading.value = false;
+      update();
+    }
+  }
+
+  // Post a new comment
+  Future<void> postComment(String routeId) async {
+    if (commentController.text.trim().isEmpty) {
+      Get.snackbar('Error', 'Please enter a comment');
+      return;
+    }
+
+    isPostingComment.value = true;
+    update();
+
+    try {
+      final response = await ApiService.postApi(
+        AppApiEndPoint.commentEndPoint,
+        {
+          'spot': routeId, // API expects 'spot' field
+          'type': 'Routes', // Since this is a route, type should be 'Routes'
+          'comment': commentController.text.trim(),
+        },
+      );
+      
+      if (response.statusCode == 200 && response.body['success'] == true) {
+        // Clear the comment field
+        commentController.clear();
+        // Refresh comments
+        await fetchComments(routeId);
+        // Use simple print instead of Get.snackbar to avoid overlay issue
+        print('Comment posted successfully');
+        appLog('Comment posted successfully for route: $routeId', type: LogType.info, source: 'ROUTE_DETAILS');
+      } else {
+        print('Failed to post comment');
+        appLog('Failed to post comment: ${response.body}', type: LogType.error, source: 'ROUTE_DETAILS');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to post comment');
+      appLog('Error posting comment: $e', type: LogType.error, source: 'ROUTE_DETAILS');
+    } finally {
+      isPostingComment.value = false;
+      update();
+    }
+  }
 
   @override
   void onInit() {
     super.onInit();
-    // No need to pre-select an image here, it's handled when the dialog opens
-    // TODO: Call API to fetch real data
-    // fetchRouteImages();
+    updateDisplayedComments();
   }
 
-  // API call - for future use
-  void fetchRouteImages() async {
-    try {
-      // Example API call
-      // var response = await apiService.getRouteImages(routeId);
-      // images.value = response.data.map((item) => item.imageUrl).toList();
-
-      print('Images loaded: ${images.length}');
-    } catch (e) {
-      print('Error loading images: $e');
-    }
+  @override
+  void onClose() {
+    commentController.dispose();
+    super.onClose();
   }
 }
