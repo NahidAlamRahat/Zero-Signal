@@ -104,7 +104,7 @@ class ActivityFeedData {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     title = json['title'];
     description = json['description'];
-    images = json['images'].cast<String>();
+    images = json['images'] != null ? List<String>.from(json['images']) : null;
     type = json['type'];
     address = json['address'];
     date = json['date'];
@@ -115,7 +115,7 @@ class ActivityFeedData {
     iV = json['__v'];
     location =
         json['location'] != null ? Location.fromJson(json['location']) : null;
-    distance = json['distance'];
+    distance = (json['distance'] as num?)?.toDouble();
     if (json['perticipants'] != null) {
       participants = <User>[];
       json['perticipants'].forEach((v) {
@@ -205,7 +205,9 @@ class Location {
 
   Location.fromJson(Map<String, dynamic> json) {
     type = json['type'];
-    coordinates = json['coordinates'].cast<double>();
+    coordinates = json['coordinates'] != null
+        ? List<double>.from(json['coordinates'].map((x) => x.toDouble()))
+        : null;
   }
 
   Map<String, dynamic> toJson() {

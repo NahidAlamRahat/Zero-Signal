@@ -9,6 +9,7 @@ import '../../../constant/app_colors.dart';
 import '../../../constant/app_icon_path.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../routes/app_routes.dart';
+import '../controller/list_screen_controller.dart';
 import '../list_screen.dart';
 
 class ActivityCard extends StatelessWidget {
@@ -235,7 +236,8 @@ class ActivityCard extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           onPressed: () {
-                            Get.toNamed(AppRoutes.sunsetPointDetailsScreen);
+                            Get.find<ListScreenController>()
+                                .leaveActivity(activity.id);
                           },
                         ),
                       ),
@@ -349,7 +351,8 @@ class ActivityCard extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            Get.toNamed(AppRoutes.editActivityScreen);
+                            Get.toNamed(AppRoutes.editActivityScreen,
+                                arguments: activity);
                           },
                           child: Image.asset(
                             AppIconPath.editIcon,

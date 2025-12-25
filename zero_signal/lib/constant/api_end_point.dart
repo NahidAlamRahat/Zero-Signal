@@ -39,8 +39,13 @@ class AppApiEndPoint {
 
   static final String activitySaveEndPoint = "/activity/save";
   String activityJoinEndPoint() => "/activity/join";
+
   //'all' | 'created' | 'joined' | 'saved'
   String activityByTypeEndPoint(String type) => "/activity?type=$type";
+
+  String activityLeaveEndPoint() => "/activity/leave";
+  String activityUpdateEndPoint(String id) => "/activity/$id";
+  String getSingleActivityEndPoint(String id) => "/activity/$id";
 }
 
 // Move this function outside the class

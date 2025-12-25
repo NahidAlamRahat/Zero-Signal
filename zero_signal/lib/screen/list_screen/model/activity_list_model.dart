@@ -52,7 +52,7 @@ class Pagination {
 
 class ActivityListData {
   final String? sId;
-  final String? user;
+  final User? user;
   final String? title;
   final String? description;
   final List<String>? images;
@@ -82,9 +82,18 @@ class ActivityListData {
   });
 
   factory ActivityListData.fromJson(Map<String, dynamic> json) {
+    User? userObj;
+    if (json['user'] != null) {
+      if (json['user'] is String) {
+        userObj = User(sId: json['user']);
+      } else if (json['user'] is Map<String, dynamic>) {
+        userObj = User.fromJson(json['user']);
+      }
+    }
+
     return ActivityListData(
       sId: json['_id'] as String?,
-      user: json['user'] as String?,
+      user: userObj,
       title: json['title'] as String?,
       description: json['description'] as String?,
       images: json['images'] != null
@@ -104,6 +113,32 @@ class ActivityListData {
   }
 }
 
+class User {
+  final String? sId;
+  final String? name;
+  final String? email;
+  final String? image;
+  final String? address;
+
+  User({
+    this.sId,
+    this.name,
+    this.email,
+    this.image,
+    this.address,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      sId: json['_id'] as String?,
+      name: json['name'] as String?,
+      email: json['email'] as String?,
+      image: json['image'] as String?,
+      address: json['address'] as String?,
+    );
+  }
+}
+
 class Location {
   final String? type;
   final List<double>? coordinates;
@@ -117,7 +152,7 @@ class Location {
     return Location(
       type: json['type'] as String?,
       coordinates: json['coordinates'] != null
-          ? List<double>.from(json['coordinates'] as List)
+          ? List<double>.from(json['coordinates'].map((x) => x.toDouble()))
           : null,
     );
   }

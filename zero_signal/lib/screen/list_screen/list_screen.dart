@@ -28,12 +28,14 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
   final Map<String, List<ActivityItem>> tabActivities = {
     'Near Activities': [
       ActivityItem(
+        id: '1',
         title: 'Morning Hike',
         location: 'Near Olot, Catalonia',
         category: 'Giromes',
         imagePath: AppImagePath.image1,
       ),
       ActivityItem(
+        id: '2',
         title: 'Kayak Adventure',
         location: 'de Mar, 34 Km',
         category: 'Near Lloret',
@@ -42,12 +44,14 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
     ],
     'Joined Activities': [
       ActivityItem(
+        id: '3',
         title: 'Trail Running',
         location: 'Near Vic, 20Km',
         category: 'Near Vic',
         imagePath: AppImagePath.image4,
       ),
       ActivityItem(
+        id: '4',
         title: 'Evening Yoga',
         location: 'Near Barcelona',
         category: 'Fitness',
@@ -56,6 +60,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
     ],
     'Created Activities': [
       ActivityItem(
+        id: '5',
         title: 'Cycling',
         location: 'Near Girona',
         category: 'Sports',
@@ -64,6 +69,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
     ],
     'Saved': [
       ActivityItem(
+        id: '6',
         title: 'Photography Walk',
         location: 'Near Madrid',
         category: 'Arts',
@@ -181,24 +187,6 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    if (controller.selectedIndex == 0) {
-                      // Near Activities - use hardcoded data for now
-                      return ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        itemCount:
-                            tabActivities[tabs[controller.selectedIndex]]!
-                                .length,
-                        itemBuilder: (context, index) {
-                          final activity = tabActivities[
-                              tabs[controller.selectedIndex]]![index];
-                          return ActivityCard(
-                            activity: activity,
-                            tabIndex: controller.selectedIndex,
-                          );
-                        },
-                      );
-                    }
-
                     if (controller.activities.isEmpty) {
                       return Center(
                         child: Text(
@@ -211,7 +199,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                       );
                     }
 
-                    // Other tabs - use API data
+                    // Use API data for all tabs (including Near Activities)
                     return ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       itemCount: controller.activities.length,
@@ -219,9 +207,12 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
                         final activityData = controller.activities[index];
                         // Convert API data to ActivityItem format
                         final activity = ActivityItem(
+                          id: activityData.sId ?? '',
                           title: activityData.title ?? '',
-                          location: activityData.address ?? '',
-                          category: activityData.type ?? '',
+                          // User requested: activity.location -> API Type
+                          // User requested: activity.category -> API Address
+                          location: activityData.type ?? '',
+                          category: activityData.address ?? '',
                           imagePath: activityData.images != null &&
                                   activityData.images!.isNotEmpty
                               ? activityData.images![0]
@@ -245,6 +236,7 @@ class _ActivityListsScreenState extends State<ActivityListsScreen> {
 }
 
 class ActivityItem {
+  final String id;
   final String title;
   final String location;
   final String category;
@@ -253,6 +245,7 @@ class ActivityItem {
   final String? createdAt;
 
   ActivityItem({
+    required this.id,
     required this.title,
     required this.location,
     required this.category,

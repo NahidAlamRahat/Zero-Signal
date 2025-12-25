@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:zero_signal/repository/activity_repository.dart';
 import 'package:zero_signal/screen/list_screen/model/activity_list_model.dart';
 
@@ -58,32 +59,93 @@ class ListScreenController extends GetxController {
   }
 
   Future<void> fetchActivities() async {
-    // Skip fetching for "Near Activities" tab (index 0)
-    if (selectedIndex == 0) {
-      activities.clear();
-      return;
-    }
-
     isLoading.value = true;
     try {
-      String type = '';
-      switch (selectedIndex) {
-        case 1:
-          type = 'joined';
-          break;
-        case 2:
-          type = 'created';
-          break;
-        case 3:
-          type = 'saved';
-          break;
-      }
+      if (selectedIndex == 0) {
+        // Near Activities
+        try {
+          LocationPermission permission = await Geolocator.checkPermission();
+          if (permission == LocationPermission.denied) {
+            permission = await Geolocator.requestPermission();
+            if (permission == LocationPermission.denied) {
+              // Handle denied
+              isLoading.value = false;
+              return;
+            }
+          }
 
-      final response = await _repository.getActivitiesByType(type: type);
-      if (response != null && response.data != null) {
-        activities.assignAll(response.data!);
+          if (permission == LocationPermission.deniedForever) {
+            // Handle denied forever
+            isLoading.value = false;
+            return;
+          }
+
+          final position = await Geolocator.getCurrentPosition();
+          final response = await _repository.getActivityFeed(
+            lat: position.latitude,
+            lng: position.longitude,
+          );
+
+          if (response != null && response.data != null) {
+            // Map ActivityFeedData to ActivityListData
+            activities.assignAll(response.data!.map((feedData) {
+              return ActivityListData(
+                sId: feedData.sId,
+                user: feedData.user != null
+                    ? User(
+                        sId: feedData.user?.sId,
+                        name: feedData.user?.name,
+                        email: feedData.user?.email,
+                        image: feedData.user?.image,
+                        address: feedData.user?.address,
+                      )
+                    : null,
+                title: feedData.title,
+                description: feedData.description,
+                images: feedData.images,
+                type: feedData.type,
+                address: feedData.address,
+                date: feedData.date,
+                maxParticipants: feedData.maxParticipants,
+                currentParticipants: feedData.currentParticipants,
+                createdAt: feedData.createdAt,
+                updatedAt: feedData.updatedAt,
+                location: feedData.location != null
+                    ? Location(
+                        type: feedData.location!.type,
+                        coordinates: feedData.location!.coordinates,
+                      )
+                    : null,
+              );
+            }).toList());
+          } else {
+            activities.clear();
+          }
+        } catch (e) {
+          print("Error fetching location or feed: $e");
+          activities.clear();
+        }
       } else {
-        activities.clear();
+        // Other tabs
+        String type = '';
+        switch (selectedIndex) {
+          case 1:
+            type = 'joined';
+            break;
+          case 2:
+            type = 'created';
+            break;
+          case 3:
+            type = 'saved';
+            break;
+        }
+
+        final response = await _repository.getActivitiesByType(type: type);
+        if (response != null && response.data != null) {
+          activities.assignAll(response.data!);
+        } else {
+          activities.clear();
+        }
       }
     } catch (e) {
       print("Error fetching activities: $e");
@@ -118,5 +180,14 @@ class ListScreenController extends GetxController {
       curve: Curves.easeOut,
       alignment: 0.3,
     );
+  }
+
+  Future<void> leaveActivity(String activityId) async {
+    isLoading.value = true;
+    final success = await _repository.leaveActivity(activityId: activityId);
+    isLoading.value = false;
+    if (success) {
+      fetchActivities();
+    }
   }
 }
