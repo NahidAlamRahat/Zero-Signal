@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:zero_signal/repository/chat_repository.dart';
 import 'package:zero_signal/service/storage/storage_service.dart';
@@ -61,24 +62,38 @@ class ChatController extends GetxController {
   }
 
   // --- METHODS TO MANIPULATE DATA ---
-  void sendMessage(String text) {
-    // Optimistic update or call API (API not provided yet for sending)
-    /*
-    final newMessage = ChatMessage(
-      id: 'temp_${DateTime.now().millisecondsSinceEpoch}',
+  Future<void> sendMessage(String text) async {
+    if (text.trim().isEmpty) return;
+
+    // Optimistic update can be tricky with IDs, so for now we'll just wait for API
+    // Or we could append local message then refresh.
+    // Let's stick to API call first.
+
+    final success = await _repository.sendMessage(
+      activityId: activityId,
+      type: 'text',
       text: text,
-      timestamp: DateTime.now(),
-      sender: Participant(
-        id: LocalStorage.userId,
-        name: LocalStorage.myName,
-        image: LocalStorage.myImage,
-      ),
     );
-    messages.insert(0, newMessage);
-    */
-    // For now, doing nothing as API is missing
-    if (kDebugMode) {
-      print("Sending message: $text (API not implemented)");
+
+    if (success) {
+      // Refresh messages to show the new one
+      // In a real socket app, we wouldn't need this manually usually.
+      // Message clearing handled in UI
+      fetchMessages();
+    }
+  }
+
+  // Placeholder for future media sending
+  Future<void> sendMediaMessage(String type, File file) async {
+    final success = await _repository.sendMessage(
+      activityId: activityId,
+      type: type,
+      text: '',
+      file: file,
+    );
+
+    if (success) {
+      fetchMessages();
     }
   }
 }

@@ -50,6 +50,7 @@ class AppApiEndPoint {
   String messageEndPoint(String activityId) => "/message/$activityId";
   String memberListEndPoint(String activityId) =>
       "/activity/member-list/$activityId";
+  static final String sendMessageEndPoint = "/message";
 }
 
 // Move this function outside the class
