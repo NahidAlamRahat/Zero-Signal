@@ -22,18 +22,23 @@ class _SpotNavigationScreenState extends State<SpotNavigationScreen> {
   @override
   void initState() {
     super.initState();
+    print('=== SpotNavigationScreen initState START ===');
     try {
       // Initialize controller in initState to ensure it's ready before build
+      print('Initializing SpotNavigationController...');
       controller = Get.put(SpotNavigationController());
+      print('Controller initialized successfully');
     } catch (e) {
       print('Error initializing controller: $e');
       // If controller initialization fails, go back
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
+          print('Going back due to controller initialization failure');
           Get.back();
         }
       });
     }
+    print('=== SpotNavigationScreen initState END ===');
   }
 
   @override

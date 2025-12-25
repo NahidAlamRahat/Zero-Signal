@@ -4,6 +4,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:dio/dio.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:math';
 import 'dart:io';
 import 'dart:typed_data';
@@ -79,17 +80,26 @@ class SpotNavigationController extends GetxController {
   void onInit() {
     super.onInit();
     try {
+      print('=== SpotNavigationController onInit START ===');
+      
       // Get spot data from arguments
       final arguments = Get.arguments as Map<String, dynamic>?;
+      print('Arguments received: $arguments');
+      
       if (arguments != null) {
         spotId.value = arguments['spotId'] ?? '';
         spotTitle.value = arguments['title'] ?? 'Unknown Spot';
         spotLatitude.value = arguments['latitude']?.toDouble() ?? 0.0;
         spotLongitude.value = arguments['longitude']?.toDouble() ?? 0.0;
+        
+        print('Spot data loaded - Title: ${spotTitle.value}, Lat: ${spotLatitude.value}, Lon: ${spotLongitude.value}');
       }
       
-      // Get current location
-      getCurrentLocation();
+      // Set default location immediately - don't get GPS on init
+      print('Setting default location for immediate screen load...');
+      _setDefaultLocation();
+      
+      print('=== SpotNavigationController onInit END ===');
     } catch (e) {
       print('Error in controller onInit: $e');
     }
@@ -98,39 +108,100 @@ class SpotNavigationController extends GetxController {
   /// Get current device location
   Future<void> getCurrentLocation() async {
     try {
-      // Check location services
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      print('=== getCurrentLocation START ===');
+      
+      // Check location services with timeout
+      print('Checking location services...');
+      bool serviceEnabled;
+      try {
+        serviceEnabled = await Geolocator.isLocationServiceEnabled()
+            .timeout(const Duration(seconds: 5));
+        print('Location service enabled: $serviceEnabled');
+      } catch (e) {
+        print('Location services check timed out: $e, assuming disabled');
+        serviceEnabled = false;
+      }
+      
       if (!serviceEnabled) {
+        print('Location services disabled, using default location');
+        _setDefaultLocation();
         return;
       }
 
-      // Check location permissions
-      LocationPermission permission = await Geolocator.checkPermission();
+      // Check location permissions with timeout
+      print('Checking location permissions...');
+      LocationPermission permission;
+      try {
+        permission = await Geolocator.checkPermission()
+            .timeout(const Duration(seconds: 5));
+        print('Current permission: $permission');
+      } catch (e) {
+        print('Permission check timed out: $e, assuming denied');
+        _setDefaultLocation();
+        return;
+      }
+      
       if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
+        print('Permission denied, requesting...');
+        try {
+          permission = await Geolocator.requestPermission()
+              .timeout(const Duration(seconds: 5));
+          print('Requested permission: $permission');
+        } catch (e) {
+          print('Permission request timed out: $e, using default location');
+          _setDefaultLocation();
+          return;
+        }
+        
         if (permission == LocationPermission.denied) {
+          print('Permission still denied, using default location');
+          _setDefaultLocation();
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
+        print('Permission denied forever, using default location');
+        _setDefaultLocation();
         return;
       }
 
-      // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      // Get current position with timeout
+      print('Getting current position...');
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+          timeLimit: const Duration(seconds: 10),
+        ).timeout(const Duration(seconds: 10));
+        
+        print('Position obtained: Lat: ${position.latitude}, Lon: ${position.longitude}');
 
-      currentLatitude.value = position.latitude;
-      currentLongitude.value = position.longitude;
+        currentLatitude.value = position.latitude;
+        currentLongitude.value = position.longitude;
+        
+        // Calculate distance
+        print('Calculating distance...');
+        calculateDistance();
+        
+      } catch (e) {
+        print('Error getting position: $e, using default location');
+        _setDefaultLocation();
+      }
       
-      // Calculate distance
-      calculateDistance();
-      
+      print('=== getCurrentLocation END ===');
     } catch (e) {
-      // Handle error silently
+      print('Error in getCurrentLocation: $e, using default location');
+      _setDefaultLocation();
     }
+  }
+
+  /// Set default location (Dhaka) as fallback
+  void _setDefaultLocation() {
+    print('Setting default location (Dhaka)');
+    currentLatitude.value = 23.8103; // Dhaka center
+    currentLongitude.value = 90.4125; // Dhaka center
+    calculateDistance();
+    print('Default location set - Lat: ${currentLatitude.value}, Lon: ${currentLongitude.value}');
   }
 
   /// Calculate distance between current location and spot
@@ -273,24 +344,149 @@ class SpotNavigationController extends GetxController {
 
   /// Calculate and draw route between current location and spot
   Future<void> calculateRoute() async {
-    if (currentLatitude.value == 0 || currentLongitude.value == 0 ||
-        spotLatitude.value == 0 || spotLongitude.value == 0) {
+    if (spotLatitude.value == 0 || spotLongitude.value == 0) {
       return;
     }
+
+    // Prevent multiple simultaneous calculations
+    if (isLoading.value) return;
 
     isLoading.value = true;
 
     try {
-      // Draw route line between current location and spot (animation disabled for debugging)
-      await drawRouteLine(animate: false);
-      await centerMap();
+      print('=== calculateRoute START ===');
       
-      hasRoute.value = true;
+      // Try to get real location only when user presses calculate
+      print('Getting current location for route calculation...');
+      await getCurrentLocation();
+      
+      print('Current location: ${currentLatitude.value}, ${currentLongitude.value}');
+      print('Spot location: ${spotLatitude.value}, ${spotLongitude.value}');
+
+      // Use timeout to prevent hanging
+      final routeCoordinates = await compute(_getRouteCoordinates, {
+        'startLat': currentLatitude.value,
+        'startLon': currentLongitude.value,
+        'endLat': spotLatitude.value,
+        'endLon': spotLongitude.value,
+        'accessToken': mapboxAccessToken,
+      }).timeout(const Duration(seconds: 15));
+
+      if (routeCoordinates != null && routeCoordinates.isNotEmpty) {
+        // Draw route on main thread
+        await drawRouteLineFromCoordinates(routeCoordinates);
+        await centerMap();
+        hasRoute.value = true;
+        print('Real route calculated and displayed');
+      } else {
+        // Fallback to straight line immediately
+        await drawStraightLineFallback();
+        await centerMap();
+        hasRoute.value = true;
+        print('Fallback straight line displayed');
+      }
     } catch (e) {
-      // Handle error silently without snackbar
       print('Error in calculateRoute: $e');
+      // Always try fallback to ensure UI responds
+      try {
+        await drawStraightLineFallback();
+        await centerMap();
+        hasRoute.value = true;
+        print('Error fallback route displayed');
+      } catch (e2) {
+        print('Error in fallback route: $e2');
+        hasRoute.value = false;
+      }
     } finally {
+      // Ensure loading state is always reset
       isLoading.value = false;
+      print('=== calculateRoute END ===');
+    }
+  }
+
+  /// Static function for compute to get route coordinates off main thread with timeout
+  static Future<List<mapbox.Position>?> _getRouteCoordinates(Map<String, dynamic> params) async {
+    try {
+      final double startLat = params['startLat'];
+      final double startLon = params['startLon'];
+      final double endLat = params['endLat'];
+      final double endLon = params['endLon'];
+      final String accessToken = params['accessToken'];
+
+      final String url = 'https://api.mapbox.com/directions/v5/mapbox/driving/$startLon,$startLat;$endLon,$endLat'
+          '?access_token=$accessToken'
+          '&geometries=geojson'
+          '&overview=full';
+
+      final Dio dio = Dio();
+      
+      // Set timeout for Dio request
+      dio.options.connectTimeout = const Duration(seconds: 10);
+      dio.options.receiveTimeout = const Duration(seconds: 10);
+      
+      final response = await dio.get(url);
+      
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final routes = data['routes'] as List;
+        if (routes.isNotEmpty) {
+          final geometry = routes[0]['geometry'];
+          final coordinates = geometry['coordinates'] as List;
+          
+          return coordinates.map((coord) {
+            return mapbox.Position(coord[0], coord[1]);
+          }).toList();
+        }
+      }
+    } catch (e) {
+      print('Error in _getRouteCoordinates: $e');
+    }
+    return null;
+  }
+
+  /// Draw route line from pre-calculated coordinates
+  Future<void> drawRouteLineFromCoordinates(List<mapbox.Position> coordinates) async {
+    if (polylineAnnotationManager == null || coordinates.isEmpty) return;
+
+    try {
+      // Clear existing route
+      await polylineAnnotationManager?.deleteAll();
+
+      // Draw route immediately without animation
+      await polylineAnnotationManager!.create(
+        mapbox.PolylineAnnotationOptions(
+          geometry: mapbox.LineString(coordinates: coordinates),
+          lineColor: 0xFF10B981, // Green color for route
+          lineWidth: 4.0,
+        ),
+      );
+    } catch (e) {
+      print('Error in drawRouteLineFromCoordinates: $e');
+    }
+  }
+
+  /// Draw straight line fallback
+  Future<void> drawStraightLineFallback() async {
+    if (polylineAnnotationManager == null) return;
+
+    try {
+      // Clear existing route
+      await polylineAnnotationManager?.deleteAll();
+
+      final coordinates = [
+        mapbox.Position(currentLongitude.value, currentLatitude.value),
+        mapbox.Position(spotLongitude.value, spotLatitude.value),
+      ];
+
+      await polylineAnnotationManager!.create(
+        mapbox.PolylineAnnotationOptions(
+          geometry: mapbox.LineString(coordinates: coordinates),
+          lineColor: 0xFFEF4444, // Red color for fallback
+          lineWidth: 4.0,
+        ),
+      );
+    } catch (e) {
+      print('Error in drawStraightLineFallback: $e');
     }
   }
 
