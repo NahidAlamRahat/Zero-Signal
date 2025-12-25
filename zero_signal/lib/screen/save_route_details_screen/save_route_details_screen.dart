@@ -11,16 +11,31 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/showCustomDialog.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+import 'dart:typed_data';
 
 import '../sport_details/widget/user_dialogs.dart';
 import 'controller/save_route_details_screen_controller.dart';
 
 class SaveRouteDetailsScreen extends StatelessWidget {
-  const SaveRouteDetailsScreen({super.key});
+  final Map<String, dynamic>? routeData;
+  final String? routeId;
+  final Uint8List? mapScreenshot;
+  
+  const SaveRouteDetailsScreen({super.key, this.routeData, this.routeId, this.mapScreenshot});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(RouteDetailsController());
+    
+    // Set route data if provided, or fetch by ID
+    if (routeData != null) {
+      controller.setRouteData(routeData!);
+    } else if (routeId != null) {
+      // Fetch route details by ID
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.fetchRouteDetails(routeId!);
+      });
+    }
 
     return Scaffold(
       appBar: AppbarWidget(
@@ -32,86 +47,163 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: AppColor.creamBackgroundColor,
-      body: Column(
-        children: [
-          _buildHeaderImage(),
-          SizedBox(height: 12.h),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTitleSection(controller),
-                  SizedBox(height: 10.h),
-                  _buildStatsSection(),
-                  SizedBox(height: 12.h),
-                  _buildActionButtons(),
-                  SizedBox(height: 12.h),
-                  _buildUserSection(context),
-                  SizedBox(height: 16.h),
-                  _buildDescriptionSection(),
-                  SizedBox(height: 16.h),
-                  _buildRouteImagesSection(context, controller),
-                  SizedBox(height: 16.h),
-                  _buildCommentsSection(controller),
-                  SizedBox(height: 20.h),
-                ],
-              ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: AppColor.backgroundColor,
             ),
+          );
+        }
+        
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64.sp,
+                  color: Colors.red,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  controller.errorMessage.value,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.red,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16.h),
+                ElevatedButton(
+                  onPressed: () {
+                    if (routeId != null) {
+                      controller.fetchRouteDetails(routeId!);
+                    }
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildHeaderImage(controller),
+              SizedBox(height: 12.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTitleSection(controller),
+                    SizedBox(height: 10.h),
+                    _buildStatsSection(controller),
+                    SizedBox(height: 12.h),
+                    _buildActionButtons(),
+                    SizedBox(height: 12.h),
+                    _buildUserSection(context),
+                    SizedBox(height: 16.h),
+                    _buildDescriptionSection(controller),
+                    SizedBox(height: 16.h),
+                    _buildRouteImagesSection(context, controller),
+                    SizedBox(height: 16.h),
+                    _buildCommentsSection(controller),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      }),
     );
   }
 
   // Header Image
-  Widget _buildHeaderImage() {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.only(
-          right: 20.w,
-          left: 20.w,
-        ),
-        width: double.infinity,
-        height: 219.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(
-            AppImagePath.viewImage,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[300],
-                child: Center(
-                  child: Icon(Icons.image_not_supported, size: 50),
-                ),
-              );
-            },
+  Widget _buildHeaderImage(RouteDetailsController controller) {
+    return Obx(() {
+      final images = controller.images;
+      
+      return Center(
+        child: Container(
+          margin: EdgeInsets.only(
+            right: 20.w,
+            left: 20.w,
+          ),
+          width: double.infinity,
+          height: 219.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: images.isNotEmpty
+                ? Image.network(
+                    images.first,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.map, size: 50, color: Colors.grey[600]),
+                              SizedBox(height: 8),
+                              Text(
+                                'Route Map View',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                              ),
+                      );
+                    },
+                  )
+                : Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.map, size: 50, color: Colors.grey[600]),
+                          SizedBox(height: 8),
+                          Text(
+                            'Route Map View',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   // Title Section
   Widget _buildTitleSection(RouteDetailsController controller) {
-    return Row(
+    return Obx(() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextWidget(
-          text: 'Portlligat - Cap de Creus',
-          // style: TextStyle(
-          //   fontSize: 24.sp,
-          //   fontWeight: FontWeight.w500,
-          //   color: Color(0xFF2D2D2D),
-          // ),
-          fontSize: 20.sp,
-          fontWeight: FontWeight.w500,
-          fontColor: AppColor.textColor,
+        Expanded(
+          child: TextWidget(
+            text: controller.routeData['title'] ?? 'Untitled Route',
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w500,
+            fontColor: AppColor.textColor,
+          ),
         ),
         CircleAvatar(
           backgroundColor: Color(0xFFFFA726),
@@ -123,32 +215,40 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           ),
         ),
       ],
-    );
+    ));
   }
 
   // Stats Section
-  Widget _buildStatsSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildStatChip(
-          text: '12.5 Km',
-          imageIcon: Assets.icons.growth.path,
-          width: 15.w,
-          height: 15.h,
-        ),
-        _buildStatChip(
-          text: 'Medium',
-          imageIcon: Assets.icons.graph.path,
-          width: 14.w,
-          height: 14.h,
-        ),
-        _buildStatChip(
-          text: 'Hiking',
-          isActive: true,
-        ),
-      ],
-    );
+  Widget _buildStatsSection(RouteDetailsController controller) {
+    return Obx(() {
+      final routeData = controller.routeData;
+      final distance = routeData['distance']?['text'] ?? 'Unknown';
+      final duration = routeData['duration']?['text'] ?? 'Unknown';
+      final difficulty = routeData['difficulty'] ?? 'Unknown';
+      final type = routeData['type'] ?? 'Hiking';
+      
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildStatChip(
+            text: distance,
+            imageIcon: Assets.icons.growth.path,
+            width: 15.w,
+            height: 15.h,
+          ),
+          _buildStatChip(
+            text: duration,
+            imageIcon: Assets.icons.graph.path,
+            width: 14.w,
+            height: 14.h,
+          ),
+          _buildStatChip(
+            text: difficulty,
+            isActive: true,
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildStatChip({
@@ -318,33 +418,40 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   }
 
   // Description Section
-  Widget _buildDescriptionSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextWidget(
-          text: 'Description',
-          fontColor: AppColor.textColor,
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          textAlignment: TextAlign.left,
-        ),
-        SizedBox(height: 8.h),
-        TextWidget(
-          text:
-              'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
-          fontColor: AppColor.darkGay300,
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          textAlignment: TextAlign.left,
-        ),
-      ],
-    );
+  Widget _buildDescriptionSection(RouteDetailsController controller) {
+    return Obx(() {
+      final routeData = controller.routeData;
+      final description = routeData['description'] ?? 'No description available';
+      
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextWidget(
+            text: 'Description',
+            fontColor: AppColor.textColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            textAlignment: TextAlign.left,
+          ),
+          SizedBox(height: 8.h),
+          TextWidget(
+            text: description,
+            fontColor: AppColor.darkGay300,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            textAlignment: TextAlign.left,
+          ),
+        ],
+      );
+    });
   }
 
   // Route Images Section
   Widget _buildRouteImagesSection(
       BuildContext context, RouteDetailsController controller) {
+    // Use map screenshot if available, otherwise use API images
+    final hasMapScreenshot = mapScreenshot != null;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -358,35 +465,74 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
-        Obx(() => SizedBox(
-              height: 84.h,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                itemCount: controller.images.length,
-                separatorBuilder: (context, index) => SizedBox(width: 8.w),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      _showImageDialog(context, controller, index);
-                    },
-                    child: Container(
-                      width: 84.w,
-                      height: 84.h,
-                      decoration: ShapeDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(controller.images[index]),
-                          fit: BoxFit.cover,
+        SizedBox(
+          height: 84.h,
+          child: hasMapScreenshot
+              ? ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  itemCount: 1, // Only show map screenshot
+                  separatorBuilder: (context, index) => SizedBox(width: 8.w),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        _showImageDialog(context, controller, index);
+                      },
+                      child: Container(
+                        width: 84.w,
+                        height: 84.h,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(4.r),
+                          child: Image.memory(
+                            mapScreenshot!,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            )),
+                    );
+                  },
+                )
+              : Obx(() => ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  itemCount: controller.images.length,
+                  separatorBuilder: (context, index) => SizedBox(width: 8.w),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        _showImageDialog(context, controller, index);
+                      },
+                      child: Container(
+                        width: 84.w,
+                        height: 84.h,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.r),
+                          child: Image.network(
+                            controller.images[index],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[300],
+                                child: Icon(Icons.image_not_supported, size: 20),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                )),
+        ),
       ],
     );
   }
@@ -636,7 +782,7 @@ class ImageGalleryDialog extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      )
     );
   }
 }

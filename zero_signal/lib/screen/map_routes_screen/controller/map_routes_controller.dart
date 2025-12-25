@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:geolocator/geolocator.dart';
 import '../../../constant/api_end_point.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../../service/api_service/api_services.dart';
@@ -15,20 +17,27 @@ class MapRoutesController extends GetxController {
   // Auto-select first route
   var autoSelectedRouteIndex = 0.obs;
   
+  // Route screenshots storage
+  var routeScreenshots = <String, Uint8List>{}.obs;
+  
   // Location data
   var deviceLat = 23.777628.obs;
   var deviceLng = 90.4076217.obs;
   
+  // Pagination for varied results
+  var currentOffset = 0.obs;
+  static const int resultLimit = 10;
+  
   // Radius control
-  final TextEditingController radiusController = TextEditingController(text: '2');
-  var currentRadiusInMeters = 2000.0.obs;
+  final TextEditingController radiusController = TextEditingController(text: '1');
+  var currentRadiusInMeters = 1000.0.obs;
   Timer? _radiusDebounceTimer;
 
   @override
   void onInit() {
     super.onInit();
     appLog('MapRoutesController initialized', type: LogType.info, source: 'CONTROLLER');
-    fetchRoutes();
+    _getCurrentLocation();
   }
 
   /// Build API endpoint with device coordinates and parameters
@@ -44,10 +53,57 @@ class MapRoutesController extends GetxController {
       'lat': deviceLat.value,
       'lng': deviceLng.value,
       'radius': currentRadiusInMeters.value.toInt(),
-      'difficulty': 'medium', // Default difficulty
-      'type_of_route': 'roundtrip', // Default route type
-      'limit': 10, // Limit number of results
+      // Remove filters to show all routes
+      // 'difficulty': 'medium', // Default difficulty
+      // 'type_of_route': 'roundtrip', // Default route type
+      'limit': resultLimit,
+      'offset': currentOffset.value, // Add offset for pagination
+      '_t': DateTime.now().millisecondsSinceEpoch, // Cache-busting timestamp
     };
+  }
+
+  /// Get current device location
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        appLog('Location services are disabled', type: LogType.warning, source: 'LOCATION');
+        fetchRoutes(); // Fetch with default location
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          appLog('Location permissions are denied', type: LogType.warning, source: 'LOCATION');
+          fetchRoutes(); // Fetch with default location
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        appLog('Location permissions are permanently denied', type: LogType.warning, source: 'LOCATION');
+        fetchRoutes(); // Fetch with default location
+        return;
+      }
+
+      // Get current location
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      deviceLat.value = position.latitude;
+      deviceLng.value = position.longitude;
+      
+      appLog('Current location: ${position.latitude}, ${position.longitude}', type: LogType.info, source: 'LOCATION');
+      
+      // Fetch routes with updated location
+      fetchRoutes();
+    } catch (e) {
+      appLog('Error getting current location: $e', type: LogType.error, source: 'LOCATION');
+      fetchRoutes(); // Fetch with default location on error
+    }
   }
 
   /// Update search radius and fetch routes
@@ -65,6 +121,51 @@ class MapRoutesController extends GetxController {
         appLog('Invalid radius input', type: LogType.warning, source: 'RADIUS');
       }
     });
+  }
+
+  /// Update search radius from slider and fetch routes
+  void updateRadiusFromSlider(double value) {
+    if (_radiusDebounceTimer?.isActive ?? false) _radiusDebounceTimer!.cancel();
+    _radiusDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      // Convert km to meters for API
+      currentRadiusInMeters.value = value * 1000;
+      radiusController.text = value.toStringAsFixed(1);
+      appLog('Radius updated to ${currentRadiusInMeters.value} meters (${value} km). Fetching routes...', type: LogType.info, source: 'RADIUS');
+      currentOffset.value = 0; // Reset offset when radius changes
+      fetchRoutes();
+    });
+  }
+
+  /// Refresh routes with new results (next page)
+  void fetchNextRoutes() {
+    currentOffset.value += resultLimit;
+    appLog('Fetching next routes with offset: ${currentOffset.value}', type: LogType.info, source: 'API');
+    fetchRoutes();
+  }
+
+  /// Refresh routes with previous results (previous page)
+  void fetchPreviousRoutes() {
+    if (currentOffset.value >= resultLimit) {
+      currentOffset.value -= resultLimit;
+      appLog('Fetching previous routes with offset: ${currentOffset.value}', type: LogType.info, source: 'API');
+      fetchRoutes();
+    }
+  }
+
+  /// Reset and fetch routes from beginning
+  void resetAndFetchRoutes() {
+    currentOffset.value = 0;
+    appLog('Resetting offset and fetching routes', type: LogType.info, source: 'API');
+    fetchRoutes();
+  }
+
+  /// Refresh routes with random offset for variety
+  void fetchRandomRoutes() {
+    // Generate a random offset between 0 and 50
+    final randomOffset = (DateTime.now().millisecondsSinceEpoch % 5) * resultLimit;
+    currentOffset.value = randomOffset;
+    appLog('Fetching random routes with offset: $randomOffset', type: LogType.info, source: 'API');
+    fetchRoutes();
   }
 
   /// Fetch routes from API using the geocode endpoint
@@ -116,5 +217,16 @@ class MapRoutesController extends GetxController {
     radiusController.dispose();
     _radiusDebounceTimer?.cancel();
     super.onClose();
+  }
+
+  // Store route screenshot
+  void setRouteScreenshot(String routeId, Uint8List screenshot) {
+    routeScreenshots[routeId] = screenshot;
+    appLog('Screenshot stored for route: $routeId', type: LogType.info, source: 'MAP');
+  }
+
+  // Get route screenshot
+  Uint8List? getRouteScreenshot(String routeId) {
+    return routeScreenshots[routeId];
   }
 }

@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
-import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
-import 'package:zero_signal/screen/map_routes_screen/widget/route_card_widget.dart';
-import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/gen/assets.gen.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
+import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:http/http.dart' as http;
-
-import 'dart:async';
+import 'package:flutter/gestures.dart';
+import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'dart:convert' as convert;
-import '../../constant/app_colors.dart';
-import '../../gen/assets.gen.dart';
-import '../../routes/app_routes.dart';
-import '../../utils/app_log/app_log.dart';
+
+import '../save_route_details_screen/save_route_details_screen.dart';
 import 'controller/map_routes_controller.dart';
+import 'widget/route_card_widget.dart';
+import '../../routes/app_routes.dart';
 
 class MapRoutesScreen extends StatefulWidget {
   const MapRoutesScreen({super.key});
@@ -34,11 +38,17 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
   int currentRouteIndex = 0;
   late MapRoutesController controller;
   
+  // GlobalKey for map screenshot
+  final GlobalKey _mapWidgetKey = GlobalKey();
+  
   // Route display variables
   Map<String, dynamic>? selectedRoute;
   mapbox.PointAnnotationManager? pointAnnotationManager;
   mapbox.CircleAnnotationManager? circleAnnotationManager;
   mapbox.PolylineAnnotationManager? polylineAnnotationManager;
+  
+  // Radius dropdown state
+  bool isRadiusDropdownOpen = false;
 
   @override
   void initState() {
@@ -376,6 +386,33 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
     _displayRouteOnMap(routeData);
   }
 
+  /// Capture map screenshot
+  Future<void> _captureMapScreenshot(Map<String, dynamic> routeData) async {
+    try {
+      final RenderRepaintBoundary? boundary = _mapWidgetKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) {
+        appLog('Could not find map widget boundary for screenshot', type: LogType.warning, source: 'MAP');
+        return;
+      }
+      
+      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      
+      if (byteData != null) {
+        final Uint8List pngBytes = byteData.buffer.asUint8List();
+        
+        // Save screenshot to temporary storage or pass to details screen
+        appLog('Map screenshot captured for route: ${routeData['_id']}', type: LogType.info, source: 'MAP');
+        
+        // Store screenshot in a global variable or pass to the details screen
+        // For now, we'll store it in the controller
+        controller.setRouteScreenshot(routeData['_id'], pngBytes);
+      }
+    } catch (e) {
+      appLog('Error capturing map screenshot: $e', type: LogType.error, source: 'MAP');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     appLog('=== MapRoutesScreen build() called ===',
@@ -418,23 +455,24 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             children: [
               /// MAP
               Positioned.fill(
-                child: mapbox.MapWidget(
-                  onMapCreated: (map) {
-                    mapboxMap = map;
-                    _initializeMap();
-                  },
-                  cameraOptions: mapbox.CameraOptions(
-                    center: mapbox.Point(
-                      coordinates:
-                          mapbox.Position.fromJson([90.4125, 23.8103]),
+                child: RepaintBoundary(
+                  key: _mapWidgetKey,
+                  child: mapbox.MapWidget(
+                    onMapCreated: (map) {
+                      mapboxMap = map;
+                      _initializeMap();
+                    },
+                    cameraOptions: mapbox.CameraOptions(
+                      center: mapbox.Point(
+                        coordinates:
+                            mapbox.Position.fromJson([90.4125, 23.8103]),
+                      ),
+                      zoom: 12.0,
                     ),
-                    zoom: 12.0,
+                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                        Factory<OneSequenceGestureRecognizer>(() => PanGestureRecognizer()),
+                      }.toSet(),
                   ),
-                  gestureRecognizers: {
-                    Factory<OneSequenceGestureRecognizer>(
-                      () => EagerGestureRecognizer(),
-                    ),
-                  },
                 ),
               ),
 
@@ -471,7 +509,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                       heroTag: "map_btn2",
                       backgroundColor: Colors.transparent,
                       onPressed: () {
-                        Get.toNamed(AppRoutes.shareSpotScreen);
+                        Get.toNamed(AppRoutes.shareRouteScreen);
                       },
                       child: Image.asset(
                         Assets.icons.addGreenbutton.path,
@@ -483,35 +521,168 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                 ),
               ),
 
-              /// RADIUS INPUT
+              /// RADIUS DROPDOWN - Top Left Corner
               Positioned(
-                top: kToolbarHeight + 150.h,
-                right: 20,
-                child: Container(
-                  width: 80.w,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(22.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
+                top: kToolbarHeight + 50.h,
+                left: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Radius toggle button
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isRadiusDropdownOpen = !isRadiusDropdownOpen;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.radar, size: 16, color: AppColor.backgroundColor),
+                            const SizedBox(width: 6),
+                            Obx(() => controller.isLoading.value
+                                ? SizedBox(
+                                    width: 12,
+                                    height: 12,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(AppColor.backgroundColor),
+                                    ),
+                                  )
+                                : Text(
+                                    '${(controller.currentRadiusInMeters.value / 1000).toStringAsFixed(1)} km',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColor.backgroundColor,
+                                    ),
+                                  )),
+                            const SizedBox(width: 6),
+                            Icon(
+                              isRadiusDropdownOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                              color: Colors.grey.shade600,
+                              size: 16,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: controller.radiusController,
-                    keyboardType: TextInputType.number,
-                    onChanged: controller.updateRadius,
-                    onSubmitted: controller.updateRadius,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.radar, size: 20),
-                      hintText: 'm',
-                      border: InputBorder.none,
                     ),
-                  ),
+                    
+                    // Expandable radius slider - positioned to the left
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      margin: const EdgeInsets.only(top: 8),
+                      width: isRadiusDropdownOpen ? 200 : 0,
+                      height: isRadiusDropdownOpen ? 180 : 0,
+                      child: isRadiusDropdownOpen
+                          ? Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Search Radius',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Obx(() => controller.isLoading.value
+                                          ? Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: AppColor.backgroundColor.withValues(alpha: 0.1),
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                'Updating...',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: AppColor.backgroundColor,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            )
+                                          : const SizedBox.shrink()),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Obx(() => SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      activeTrackColor: controller.isLoading.value 
+                                          ? Colors.grey.shade400 
+                                          : AppColor.backgroundColor,
+                                      inactiveTrackColor: Colors.grey.shade300,
+                                      thumbColor: controller.isLoading.value 
+                                          ? Colors.grey.shade400 
+                                          : AppColor.backgroundColor,
+                                      overlayColor: AppColor.backgroundColor.withValues(alpha: 0.2),
+                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                      trackHeight: 3,
+                                    ),
+                                    child: Slider(
+                                      value: controller.currentRadiusInMeters.value / 1000, // Convert to km for display
+                                      min: 0.5,
+                                      max: 30.0,
+                                      divisions: 59, // 0.5 km steps (30 - 0.5 = 29.5, *2 = 59)
+                                      onChanged: controller.isLoading.value ? null : controller.updateRadiusFromSlider,
+                                    ),
+                                  )),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '0.5 km',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                      Text(
+                                        '30 km',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 ),
               ),
 
@@ -527,6 +698,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                       controller: _pageController,
                       itemCount: controller.routesList.length,
                       onPageChanged: (index) {
+                        print('PageView changed to index: $index');
                         setState(() => currentRouteIndex = index);
                         // Update map when card is changed
                         if (controller.routesList.isNotEmpty) {
@@ -534,11 +706,27 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                         }
                       },
                       itemBuilder: (context, index) {
+                        print('Building RouteCard for index: $index, total routes: ${controller.routesList.length}');
                         return RouteCard(
                           routeData: controller.routesList[index],
                           onTap: () {
-                            // Display route on map when card is tapped
+                            // First update the map to show this specific route
                             _onRouteSelected(controller.routesList[index]);
+                            
+                            // Then capture screenshot before navigating
+                            Future.delayed(Duration(milliseconds: 500), () {
+                              _captureMapScreenshot(controller.routesList[index]).then((_) {
+                                // Navigate to route details when card is tapped
+                                final routeId = controller.routesList[index]['_id'] as String?;
+                                final screenshot = controller.getRouteScreenshot(routeId ?? '');
+                                if (routeId != null) {
+                                  Get.to(() => SaveRouteDetailsScreen(
+                                    routeId: routeId,
+                                    mapScreenshot: screenshot,
+                                  ));
+                                }
+                              });
+                            });
                           },
                           onSave: () {},
                           onPlace: () {},
