@@ -225,7 +225,6 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       final distance = routeData['distance']?['text'] ?? 'Unknown';
       final duration = routeData['duration']?['text'] ?? 'Unknown';
       final difficulty = routeData['difficulty'] ?? 'Unknown';
-      final type = routeData['type'] ?? 'Hiking';
       
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -373,49 +372,6 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     );
   }
 
-  void _showUserDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => ShowCustomDialog(
-        backgroundColor: AppColor.creamBackgroundColor,
-        title: '@naturanauta',
-        titleStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-        description: "I'm a nature lover and outdoor enthusiast",
-        descriptionStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
-        image: Image.asset(AppImagePath.profileImage),
-        actionsLayout: ActionsLayout.column,
-        actions: [
-          Image.asset(
-            Assets.icons.likeIcon.path,
-            height: 24.h,
-            width: 24.w,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ButtonWidget(
-              onPressed: () => Get.toNamed(AppRoutes.viewProfileScreen),
-              backgroundColor: AppColor.backgroundColor,
-              label: 'View Profile',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              buttonHeight: 40,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ButtonWidget(
-              backgroundColor: Colors.transparent,
-              textColor: Colors.red,
-              label: 'Report user',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              buttonHeight: 40,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // Description Section
   Widget _buildDescriptionSection(RouteDetailsController controller) {

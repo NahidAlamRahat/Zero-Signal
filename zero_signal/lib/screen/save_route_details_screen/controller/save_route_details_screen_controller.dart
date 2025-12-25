@@ -53,6 +53,11 @@ class RouteDetailsController extends GetxController {
       }
     }
     
+    // Fetch comments for this route
+    if (data['_id'] != null) {
+      fetchComments(data['_id']);
+    }
+    
     update();
   }
 
@@ -153,10 +158,14 @@ class RouteDetailsController extends GetxController {
     update();
 
     try {
+      print('Fetching comments for routeId: $routeId');
       final response = await ApiService.getApi(
         AppApiEndPoint.commentEndPoint,
         queryParams: {'spot': routeId, 'type': 'Routes'},
       );
+      
+      print('Comments response status: ${response.statusCode}');
+      print('Comments response body: ${response.body}');
       
       if (response.statusCode == 200 && response.body['success'] == true) {
         final commentsData = response.body['data'] as List;
