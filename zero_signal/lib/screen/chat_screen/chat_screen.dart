@@ -5,6 +5,7 @@ import 'package:zero_signal/gen/assets.gen.dart';
 import '../../constant/app_icon_path.dart';
 import 'controller/chat_controller.dart';
 import 'model/chat_model.dart';
+import 'widget/audio_player_widget.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -30,6 +31,20 @@ class _ChatScreenState extends State<ChatScreen> {
   static const Color buttonBackgroundColor = Color(0xFFE4E7E4);
   static const Color iconColor = Color(0xFF044A42);
   static const Color borderColor = Color(0xFFD4CBB0);
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // Load more when scrolling to the top (since messages are reversed)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      controller.fetchMessages(isLoadMore: true);
+    }
+  }
 
   @override
   void dispose() {
@@ -149,8 +164,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return Obx(() {
       // Sort messages by timestamp, descending (newest first)
       // This is safer than relying on list order.
-      final sortedMessages = controller.messages.toList()
-        ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      final sortedMessages = controller.messages.toList();
+      // ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // createdAt is String, need logic if sorting needed. API usually returns sorted.
 
       return ListView.builder(
         controller: _scrollController,
@@ -167,10 +182,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // Builds a single message bubble
   Widget _buildMessageItem(ChatMessage message) {
-    final isMe = message.isCurrentUser;
+    final senderId = message.sender?.id;
+    final isMe = controller.isCurrentUser(senderId);
+
     final alignment = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     // Kept your bubble color change
     final bubbleColor = isMe ? currentUserBubbleColor : backgroundColor;
+
+    final avatarUrl = message.sender?.image ?? '';
+    final username = message.sender?.username ?? 'Unknown';
+    final text = message.text ?? '';
+    final time = _formatTime(message.createdAt);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -178,9 +200,8 @@ class _ChatScreenState extends State<ChatScreen> {
         crossAxisAlignment: alignment,
         children: [
           Row(
-            mainAxisAlignment: isMe
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Show avatar if not the current user
@@ -190,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   backgroundColor: buttonBackgroundColor,
                   child: ClipOval(
                     child: Image.network(
-                      message.avatarUrl,
+                      avatarUrl,
                       width: 40,
                       height: 40,
                       fit: BoxFit.cover,
@@ -229,7 +250,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     // Username if not the current user
                     if (!isMe)
                       Text(
-                        message.username,
+                        username,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: primaryTextColor,
@@ -257,13 +278,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                         ],
                       ),
-                      child: Text(
-                        message.text,
-                        style: const TextStyle(
-                          color: primaryTextColor,
-                          fontSize: 15,
-                        ),
-                      ),
+                      child: message.type == 'audio'
+                          ? _buildAudioPlayer(message)
+                          : Text(
+                              text,
+                              style: const TextStyle(
+                                color: primaryTextColor,
+                                fontSize: 15,
+                              ),
+                            ),
                     ),
                   ],
                 ),
@@ -273,7 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 // Add a small space between message and timestamp
                 const SizedBox(width: 8),
                 Text(
-                  '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
+                  time,
                   style: const TextStyle(
                     color: secondaryTextColor,
                     fontSize: 12,
@@ -285,6 +308,31 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
+  }
+
+  String _formatTime(String? createdAt) {
+    if (createdAt == null) return '';
+    try {
+      final date = DateTime.parse(createdAt).toLocal();
+      return '${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Widget _buildAudioPlayer(ChatMessage message) {
+    final audioUrl = message.audio;
+    if (audioUrl == null || audioUrl.isEmpty) {
+      return const Text(
+        'Audio message',
+        style: TextStyle(
+          color: primaryTextColor,
+          fontSize: 15,
+        ),
+      );
+    }
+
+    return AudioPlayerWidget(audioUrl: audioUrl);
   }
 
   // Builds the bottom text input field
@@ -328,12 +376,35 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             const SizedBox(width: 8),
-        
-            // Mic button
-            _buildImageIconButton(Assets.icons.microphoneIcon.path, () {
-              debugPrint('Mic button pressed');
-            }),
-        
+
+            // Mic button with long press
+            Obx(() => GestureDetector(
+                  onLongPressStart: (_) {
+                    controller.startRecording();
+                  },
+                  onLongPressEnd: (_) {
+                    controller.stopRecordingAndSend();
+                  },
+                  onLongPressCancel: () {
+                    controller.cancelRecording();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: controller.isRecording.value
+                        ? BoxDecoration(
+                            color: Colors.red.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          )
+                        : null,
+                    child: Image.asset(
+                      Assets.icons.microphoneIcon.path,
+                      width: 32,
+                      height: 32,
+                      color: controller.isRecording.value ? Colors.red : null,
+                    ),
+                  ),
+                )),
+
             // Send button
             _buildImageIconButton(Assets.icons.sendIcon.path, () {
               if (_messageController.text.isNotEmpty) {
@@ -377,9 +448,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Use a smaller width on tablets/large screens,
     // and a percentage of the screen width on smaller phones.
-    final double dialogWidth = screenSize.width > 600
-        ? 500
-        : screenSize.width * 0.9;
+    final double dialogWidth =
+        screenSize.width > 600 ? 500 : screenSize.width * 0.9;
 
     showDialog(
       context: context,
@@ -458,7 +528,7 @@ class _ParticipantsDialogContent extends StatelessWidget {
                         backgroundColor: _ChatScreenState.buttonBackgroundColor,
                         child: ClipOval(
                           child: Image.network(
-                            participant.avatarUrl,
+                            participant.image ?? '',
                             width: 48,
                             height: 48,
                             fit: BoxFit.cover,
@@ -492,7 +562,7 @@ class _ParticipantsDialogContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            participant.username,
+                            participant.username ?? 'Unknown',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -500,13 +570,13 @@ class _ParticipantsDialogContent extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            '${participant.age} years old',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: _ChatScreenState.secondaryTextColor,
-                            ),
-                          ),
+                          // Text(
+                          //   '${participant.age} years old',
+                          //   style: const TextStyle(
+                          //     fontSize: 14,
+                          //     color: _ChatScreenState.secondaryTextColor,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ],

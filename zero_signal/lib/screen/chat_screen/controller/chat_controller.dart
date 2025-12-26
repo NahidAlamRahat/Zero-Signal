@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
+import 'package:zero_signal/repository/chat_repository.dart';
+import 'package:zero_signal/service/storage/storage_service.dart';
 
 import '../model/chat_model.dart';
 
@@ -8,103 +14,190 @@ class ChatController extends GetxController {
   final RxList<Participant> participants = <Participant>[].obs;
   final RxList<ChatMessage> messages = <ChatMessage>[].obs;
 
+  final ChatRepository _repository = ChatRepository();
+  String activityId = '';
+  var isLoading = false.obs;
+
+  // Voice recording
+  final AudioRecorder _audioRecorder = AudioRecorder();
+  var isRecording = false.obs;
+  String? _recordingPath;
+
+  // Message pagination
+  int _messagePage = 1;
+  bool _hasMoreMessages = true;
+  bool _isLoadingMoreMessages = false;
+
   @override
   void onInit() {
     super.onInit();
-    // Load the mock data when the controller is initialized
-    _loadMockData();
+    if (Get.arguments != null) {
+      if (Get.arguments is String) {
+        activityId = Get.arguments as String;
+      } else if (Get.arguments is Map) {
+        // Handle if passed as map, though ActivityCard uses String or Object?
+        // We will update ActivityCard to pass ID specifically or handle object here.
+        // If ActivityCard passes ActivityItem, we extract ID.
+        // Based on ActivityCard analysis, we should change it to pass just ID or we handle it here.
+        // Let's assume we update ActivityCard to pass ID.
+      }
+      fetchMessages();
+      fetchMembers();
+    }
   }
 
-  void _loadMockData() {
-    // Assign the mock data to the observable lists
-    participants.assignAll([
-      Participant(
-        userId: 'p1',
-        username: '@mountainrose',
-        avatarUrl: 'https://placehold.co/100x100/A9B6A3/333333?text=MR',
-        age: 28,
-      ),
-      Participant(
-        userId: 'p2',
-        username: '@natureenthusiast',
-        avatarUrl: 'https://placehold.co/100x100/7E8D85/333333?text=NE',
-        age: 32,
-      ),
-      Participant(
-        userId: 'p3',
-        username: '@peaktrekker',
-        avatarUrl: 'https://placehold.co/100x100/D4CBB0/333333?text=PT',
-        age: 25,
-      ),
-      Participant(
-        userId: 'p4',
-        username: '@adventureseeker',
-        avatarUrl: 'https://placehold.co/100x100/E0B8A9/333333?text=AS',
-        age: 30,
-      ),
-    ]);
+  @override
+  void onClose() {
+    _audioRecorder.dispose();
+    super.onClose();
+  }
 
-    messages.assignAll([
-      ChatMessage(
-        id: 'm1',
-        userId: 'p3',
-        username: '@peaktrekker',
-        avatarUrl: 'https://placehold.co/100x100/D4CBB0/333333?text=PT',
-        text: 'Looking forward to our hike this weekend!',
-        timestamp: DateTime.now().subtract(const Duration(minutes: 10)),
-      ),
-      ChatMessage(
-        id: 'm2',
-        userId: 'p3',
-        username: '@peaktrekker',
-        avatarUrl: 'https://placehold.co/100x100/D4CBB0/333333?text=PT',
-        text:
-            "We'll meet at the trailhead at 9AM. Don't forget to bring enough water!",
-        timestamp: DateTime.now().subtract(const Duration(minutes: 6)),
-      ),
-      ChatMessage(
-        id: 'm3',
-        userId: 'p1',
-        username: '@mountainrose',
-        avatarUrl: 'https://placehold.co/100x100/A9B6A3/333333?text=MR',
-        text: 'Sounds great! I\'ll be bringing snacks for everyone.',
-        timestamp: DateTime.now().subtract(const Duration(minutes: 6)),
-      ),
-      ChatMessage(
-        id: 'm4',
-        userId: 'me', // Current user
-        username: 'Me',
-        avatarUrl: '', // Not needed for current user
-        text: 'I\'ll definitely be there.',
-        timestamp: DateTime.now().subtract(const Duration(minutes: 3)),
-        isCurrentUser: true,
-      ),
-      ChatMessage(
-        id: 'm5',
-        userId: 'p2',
-        username: '@natureenthusiast',
-        avatarUrl: 'https://placehold.co/100x100/7E8D85/333333?text=NE',
-        text: 'Can\'t wait! I\'ll bring a first aid kit just in case.',
-        timestamp: DateTime.now().subtract(const Duration(minutes: 1)),
-      ),
-    ]);
+  Future<void> fetchMessages({bool isLoadMore = false}) async {
+    if (activityId.isEmpty) return;
+
+    if (isLoadMore) {
+      if (!_hasMoreMessages || _isLoadingMoreMessages) return;
+      _isLoadingMoreMessages = true;
+    } else {
+      isLoading.value = true;
+      _messagePage = 1;
+      _hasMoreMessages = true;
+    }
+
+    final chatData = await _repository.getMessages(
+      activityId: activityId,
+      page: _messagePage,
+    );
+
+    if (isLoadMore) {
+      _isLoadingMoreMessages = false;
+    } else {
+      isLoading.value = false;
+    }
+
+    if (chatData != null && chatData.messages != null) {
+      if (isLoadMore) {
+        messages.addAll(chatData.messages!);
+      } else {
+        messages.assignAll(chatData.messages!);
+      }
+
+      // Check pagination
+      if (chatData.pagination != null) {
+        _hasMoreMessages = _messagePage < (chatData.pagination!.totalPage ?? 1);
+      } else {
+        _hasMoreMessages = chatData.messages!.isNotEmpty;
+      }
+
+      if (_hasMoreMessages) {
+        _messagePage++;
+      }
+    }
+  }
+
+  Future<void> fetchMembers() async {
+    if (activityId.isEmpty) return;
+
+    final fetchedMembers = await _repository.getMembers(activityId: activityId);
+    if (fetchedMembers != null) {
+      participants.assignAll(fetchedMembers);
+    }
+  }
+
+  bool isCurrentUser(String? userId) {
+    if (userId == null) return false;
+    return userId == LocalStorage.userId;
   }
 
   // --- METHODS TO MANIPULATE DATA ---
-  // Example: How you would add a new message
-  void sendMessage(String text) {
-    final newMessage = ChatMessage(
-      id: 'm${messages.length + 1}', // Simple unique ID
-      userId: 'me', // Current user
-      username: 'Me',
-      avatarUrl: '',
+  Future<void> sendMessage(String text) async {
+    if (text.trim().isEmpty) return;
+
+    // Optimistic update can be tricky with IDs, so for now we'll just wait for API
+    // Or we could append local message then refresh.
+    // Let's stick to API call first.
+
+    final success = await _repository.sendMessage(
+      activityId: activityId,
+      type: 'text',
       text: text,
-      timestamp: DateTime.now(),
-      isCurrentUser: true,
     );
 
-    // Add to the list. GetX will automatically update the UI.
-    // We insert at index 0 because the list in the UI is reversed.
-    messages.insert(0, newMessage);
+    if (success) {
+      // Refresh messages to show the new one
+      // In a real socket app, we wouldn't need this manually usually.
+      // Message clearing handled in UI
+      fetchMessages();
+    }
+  }
+
+  // Placeholder for future media sending
+  Future<void> sendMediaMessage(String type, File file) async {
+    final success = await _repository.sendMessage(
+      activityId: activityId,
+      type: type,
+      text: '',
+      file: file,
+    );
+
+    if (success) {
+      fetchMessages();
+    }
+  }
+
+  // Voice recording methods
+  Future<void> startRecording() async {
+    try {
+      if (await _audioRecorder.hasPermission()) {
+        final directory = await getTemporaryDirectory();
+        final path =
+            '${directory.path}/audio_${DateTime.now().millisecondsSinceEpoch}.mp3';
+
+        await _audioRecorder.start(
+          const RecordConfig(encoder: AudioEncoder.aacLc),
+          path: path,
+        );
+        _recordingPath = path;
+        isRecording.value = true;
+      }
+    } catch (e) {
+      print('Failed to start recording: $e');
+    }
+  }
+
+  Future<void> stopRecordingAndSend() async {
+    try {
+      await _audioRecorder.stop();
+      isRecording.value = false;
+
+      if (_recordingPath != null) {
+        final file = File(_recordingPath!);
+        if (await file.exists()) {
+          await sendMediaMessage('audio', file);
+        }
+        _recordingPath = null;
+      }
+    } catch (e) {
+      print('Failed to stop recording: $e');
+      isRecording.value = false;
+    }
+  }
+
+  Future<void> cancelRecording() async {
+    try {
+      await _audioRecorder.stop();
+      isRecording.value = false;
+
+      if (_recordingPath != null) {
+        final file = File(_recordingPath!);
+        if (await file.exists()) {
+          await file.delete();
+        }
+        _recordingPath = null;
+      }
+    } catch (e) {
+      print('Failed to cancel recording: $e');
+      isRecording.value = false;
+    }
   }
 }

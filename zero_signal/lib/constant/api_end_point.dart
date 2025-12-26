@@ -39,7 +39,19 @@ class AppApiEndPoint {
 
   static final String activitySaveEndPoint = "/activity/save";
   String activityJoinEndPoint() => "/activity/join";
+
   //'all' | 'created' | 'joined' | 'saved'
+  String activityByTypeEndPoint(String type, {int page = 1}) =>
+      "/activity?type=$type&page=$page";
+
+  String activityLeaveEndPoint() => "/activity/leave";
+  String activityUpdateEndPoint(String id) => "/activity/$id";
+  String getSingleActivityEndPoint(String id) => "/activity/$id";
+  String messageEndPoint(String activityId, {int page = 1}) =>
+      "/message/$activityId?page=$page";
+  String memberListEndPoint(String activityId) =>
+      "/activity/member-list/$activityId";
+  static final String sendMessageEndPoint = "/message";
   String activityByTypeEndPoint(String type) => "/activity?type=$type";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
 

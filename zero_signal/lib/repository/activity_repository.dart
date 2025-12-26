@@ -116,10 +116,11 @@ class ActivityRepository {
 
   Future<ActivityListModel?> getActivitiesByType({
     required String type,
+    int page = 1,
   }) async {
     try {
       final response = await ApiService.getApi(
-        AppApiEndPoint.instance.activityByTypeEndPoint(type),
+        AppApiEndPoint.instance.activityByTypeEndPoint(type, page: page),
       );
 
       if (response.statusCode == 200) {
@@ -131,6 +132,75 @@ class ActivityRepository {
       }
     } catch (e) {
       AppSnackBar.error("Failed to load activities");
+      return null;
+    }
+  }
+
+  Future<bool> leaveActivity({
+    required String activityId,
+  }) async {
+    try {
+      final response = await ApiService.postApi(
+        AppApiEndPoint.instance.activityLeaveEndPoint(),
+        {"activity": activityId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        AppSnackBar.success(response.message);
+        return true;
+      } else {
+        AppSnackBar.error(response.message);
+        return false;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to leave activity");
+      return false;
+    }
+  }
+
+  Future<bool> updateActivity({
+    required String activityId,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final response = await ApiService.patchApi(
+        AppApiEndPoint.instance.activityUpdateEndPoint(activityId),
+        body: body,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        AppSnackBar.success(response.message);
+        return true;
+      } else {
+        AppSnackBar.error(response.message);
+        return false;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to update activity");
+      return false;
+    }
+  }
+
+  Future<ActivityListData?> getSingleActivity({
+    required String activityId,
+  }) async {
+    try {
+      final response = await ApiService.getApi(
+        AppApiEndPoint.instance.getSingleActivityEndPoint(activityId),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.body['data'] != null) {
+          return ActivityListData.fromJson(
+              response.body['data'] as Map<String, dynamic>);
+        }
+        return null;
+      } else {
+        AppSnackBar.error(response.message);
+        return null;
+      }
+    } catch (e) {
+      AppSnackBar.error("Failed to load activity details");
       return null;
     }
   }
