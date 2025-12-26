@@ -21,6 +21,7 @@ class AppRoutes {
   static const homeScreen = "/homeScreen";
   static const bottomNav = "/bottomNav";
   static const shareSpotScreen = "/shareSpotScreen";
+  static const shareRouteScreen = "/shareRouteScreen";
   static const spotDetailsScreen = "/spotDetailsScreen";
 
   static const filtersScreen = "/filtersScreen";
@@ -54,6 +55,7 @@ class AppRoutes {
   static const listViewDetailsScreen = "/listViewDetailsScreen";
   static const editActivityScreen = "/editActivityScreen";
   static const faqScreen = "/faqScreen";
+  static const spotNavigationScreen = "/spotNavigationScreen";
 
 
 }

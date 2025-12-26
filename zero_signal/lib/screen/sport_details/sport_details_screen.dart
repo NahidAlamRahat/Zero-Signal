@@ -37,25 +37,33 @@ class SpotDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextWidget(
-                    text: 'Lakeside Campsite',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                    fontColor: AppColor.textColor,
+                  GetBuilder<SportDetailsController>(
+                    builder: (controller) => TextWidget(
+                      text: controller.spotTitle.value,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                      fontColor: AppColor.textColor,
+                    ),
                   ),
                   SizedBox(height: 4.h),
 
-                  Row(
-                    children: const [
-                      Icon(Icons.location_on, color: Colors.red, size: 16),
-                      SizedBox(width: 4),
-                      TextWidget(
-                        text: 'Espat, Catalonia',
-                        fontColor: AppColor.darkGay300,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ],
+                  GetBuilder<SportDetailsController>(
+                    builder: (controller) => Row(
+                      children: [
+                        Icon(Icons.location_on, color: Colors.red, size: 16),
+                        SizedBox(width: 4),
+                        Expanded(
+                          child: TextWidget(
+                            text: controller.spotAddress.value.isNotEmpty 
+                                ? controller.spotAddress.value 
+                                : 'Location not specified',
+                            fontColor: AppColor.darkGay300,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   SizedBox(height: 16.h),
@@ -99,26 +107,29 @@ class SpotDetailsScreen extends StatelessWidget {
 
   // Description Section
   Widget _buildDescriptionSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextWidget(
-          text: 'Description',
-          fontColor: AppColor.textColor,
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          textAlignment: TextAlign.left,
-        ),
-        SizedBox(height: 8.h),
-        TextWidget(
-          text:
-              'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. Its the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
-          fontColor: AppColor.darkGay300,
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          textAlignment: TextAlign.left,
-        ),
-      ],
+    return GetBuilder<SportDetailsController>(
+      builder: (controller) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextWidget(
+            text: 'Description',
+            fontColor: AppColor.textColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            textAlignment: TextAlign.left,
+          ),
+          SizedBox(height: 8.h),
+          TextWidget(
+            text: controller.spotDescription.value.isNotEmpty 
+                ? controller.spotDescription.value 
+                : 'No description available for this spot.',
+            fontColor: AppColor.darkGay300,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            textAlignment: TextAlign.left,
+          ),
+        ],
+      ),
     );
   }
 }

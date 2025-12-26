@@ -20,7 +20,7 @@ class AppApiEndPoint {
   static final String changePasswordEndPoint = "/auth/change-password";
   String disclaimer({required String type}) => "/disclaimer?type=$type";
   static final String faqEndPoint = "/faq";
-  static final String mySpotEndPoint = "/spot";
+
   //'Activity' | 'Route' | 'Spot'
   String getFavoriteEndPoint(String type) => "/favorite?type=$type";
   static String toggleFavoriteEndPoint() => "/favorite";
@@ -52,6 +52,19 @@ class AppApiEndPoint {
   String memberListEndPoint(String activityId) =>
       "/activity/member-list/$activityId";
   static final String sendMessageEndPoint = "/message";
+  String activityByTypeEndPoint(String type) => "/activity?type=$type";
+  static final String spotCoordinatesEndPoint = "/spot/coordinates";
+
+  /// ========================= Atik Hridoy =====================
+
+  static final String mySpotEndPoint = "/spot";
+  static final String createSpotEndPoint = "/spot";
+  static final String getRouteEndPoint = "/route/geocode";
+  static final String createRoute = "/route";
+  static final String getRouteDetails = "/route";
+
+  // comment
+  static final String commentEndPoint = "/comment";
 }
 
 // Move this function outside the class

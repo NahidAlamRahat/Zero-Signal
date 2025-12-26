@@ -13,8 +13,50 @@ class RouteRepository extends CommonRepository {
       },
     );
 
+    // Debug: Print the actual response
+    print('GET ROUTES RESPONSE: ${response.body}');
+    print('STATUS CODE: ${response.statusCode}');
+
     if (response.statusCode == 200 && response.body['success'] == true) {
       return RouteModel.fromJson(Map<String, dynamic>.from(response.body));
+    } else if (response.statusCode == 200) {
+      // Try to parse even if success field is missing or false
+      try {
+        print('Trying to parse response without success field');
+        final routeModel = RouteModel.fromJson(Map<String, dynamic>.from(response.body));
+        print('Successfully parsed route model with ${routeModel.data?.length ?? 0} routes');
+        return routeModel;
+      } catch (e) {
+        print('Error parsing response: $e');
+      }
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> getRouteDetails(String routeId) async {
+    final response = await ApiService.getApi(
+      '${AppApiEndPoint.routeEndPoint}/$routeId',
+    );
+
+    // Debug: Print the actual response
+    print('GET ROUTE DETAILS RESPONSE: ${response.body}');
+    print('STATUS CODE: ${response.statusCode}');
+
+    if (response.statusCode == 200 && response.body['success'] == true) {
+      // Return the data directly as Map<String, dynamic>
+      return response.body['data'] as Map<String, dynamic>?;
+    } else if (response.statusCode == 200) {
+      // Try to get data even if success field is missing or false
+      try {
+        print('Trying to parse route details response');
+        final data = response.body['data'] as Map<String, dynamic>?;
+        if (data != null) {
+          print('Successfully parsed route details');
+          return data;
+        }
+      } catch (e) {
+        print('Error parsing route details response: $e');
+      }
     }
     return null;
   }

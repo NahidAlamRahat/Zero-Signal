@@ -29,8 +29,10 @@ import '../screen/personal_information_screen/personal_information_screen.dart';
 import '../screen/profile/faq_screen/faq_screen.dart';
 import '../screen/save_route_details_screen/save_route_details_screen.dart';
 import '../screen/share_spot_screen/share_spot_screen.dart';
+import '../screen/share_route_screen/share_route_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
+import '../screen/spot_navigation_screen/spot_navigation_screen.dart';
 import '../screen/sunset_point_details_screen/sunset_point_details_screen.dart';
 import '../screen/update_information_screen/update_information_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
@@ -116,6 +118,12 @@ List<GetPage> appRootRoutesFile = <GetPage>[
   GetPage(
     name: AppRoutes.shareSpotScreen,
     page: () => const ShareSpotScreen(),
+    // binding: GeneralBindings(),
+  ),
+
+  GetPage(
+    name: AppRoutes.shareRouteScreen,
+    page: () => const ShareRouteScreen(),
     // binding: GeneralBindings(),
   ),
 
@@ -273,5 +281,11 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     name: AppRoutes.faqScreen,
     // binding: SplashScreenBinding(),
     page: () => FAQScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.spotNavigationScreen,
+    // binding: SplashScreenBinding(),
+    page: () => const SpotNavigationScreen(),
   ),
 ];

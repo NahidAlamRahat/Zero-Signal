@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../../service/local_database/prefs_helper.dart';
 import '../../../../utils/app_log/app_log.dart';
 import '../../constant/api_end_point.dart';
 import '../../service/api_service/api_services.dart';
@@ -34,15 +35,20 @@ class SignInApiController extends GetxController {
         // API returns JWT token directly as string in data field
         String jwtToken = response.body['data'] ?? "";
 
+        // Save legacy LocalStorage
         LocalStorage.token = jwtToken;
         LocalStorage.setString(
           LocalStorageKeys.token,
           LocalStorage.token,
         );
 
+        // Save to PrefsHelper for consistency with other controllers
+        await PrefsHelper.setString("accessToken", jwtToken);
+        await PrefsHelper.setBool("isLogIn", true);
+
         _successfullyMessage = response.message ?? "Login successful";
 
-        appLog('Login successful, token saved');
+        appLog('Login successful, token saved to PrefsHelper & LocalStorage');
         update(); // Update UI for GetBuilder
         return 200;
       } else if (response.statusCode == 407) {

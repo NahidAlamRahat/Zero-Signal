@@ -12,12 +12,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:zero_signal/constant/api_end_point.dart';
 import '../../../repository/spot_repository.dart';
 import 'package:zero_signal/service/local_database/prefs_helper.dart';
+import 'package:zero_signal/service/storage/storage_service.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../../widget/app_snack_bar/app_snack_bar.dart';
-import '../model/category_response_model.dart';
-import '../model/spot_request_model.dart';
+import '../model/route_request_model.dart';
+import '../../share_spot_screen/model/category_response_model.dart' as spot_model;
 
-class ShareSpotController extends GetxController {
+class ShareRouteController extends GetxController {
   final SpotRepository _repository = SpotRepository();
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -28,29 +29,38 @@ class ShareSpotController extends GetxController {
   // Text Controllers
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
+  final TextEditingController startLocationController = TextEditingController();
+  final TextEditingController endLocationController = TextEditingController();
 
   // State variables
   List<File> selectedImages = [];
   static const int maxImages = 10;
 
-  // Location state
-  List<MapboxPlaceSuggestion> locationSuggestions = [];
-  bool isLocationSearching = false;
-  double? selectedLat;
-  double? selectedLng;
-  String? selectedAddress;
+  // Location state for start point
+  List<MapboxPlaceSuggestion> startLocationSuggestions = [];
+  bool isStartLocationSearching = false;
+  double? startLat;
+  double? startLng;
+  String? startAddress;
+
+  // Location state for end point
+  List<MapboxPlaceSuggestion> endLocationSuggestions = [];
+  bool isEndLocationSearching = false;
+  double? endLat;
+  double? endLng;
+  String? endAddress;
+
   Timer? _debounceTimer;
 
   // Category state
-  List<CategoryData> categories = [];
+  List<spot_model.CategoryData> categories = [];
   bool isCategoriesLoading = false;
   bool isDropdownOpen = false;
   String selectedTypeName = 'Choose types';
 
   // Selected subcategories (can select multiple)
-  List<SubcategoryData> get allSubcategories {
-    List<SubcategoryData> all = [];
+  List<spot_model.SubcategoryData> get allSubcategories {
+    List<spot_model.SubcategoryData> all = [];
     for (var category in categories) {
       all.addAll(category.subcategories);
     }
@@ -63,6 +73,19 @@ class ShareSpotController extends GetxController {
         .map((sub) => sub.id)
         .toList();
   }
+
+  // Route type state
+  String selectedRouteType = 'roundtrip'; // Default to roundtrip
+  final List<String> routeTypes = ['roundtrip', 'single_trip'];
+  bool isRouteTypeDropdownOpen = false;
+
+  // Difficulty state
+  String selectedDifficulty = 'medium'; // Default to medium
+  final List<String> difficultyLevels = ['easy', 'medium', 'hard'];
+  bool isDifficultyDropdownOpen = false;
+
+
+  List<String> selectedFacilities = [];
 
   // Form submission state
   bool isSubmitting = false;
@@ -77,7 +100,8 @@ class ShareSpotController extends GetxController {
   void onClose() {
     titleController.dispose();
     descriptionController.dispose();
-    locationController.dispose();
+    startLocationController.dispose();
+    endLocationController.dispose();
     _debounceTimer?.cancel();
     super.onClose();
   }
@@ -133,25 +157,25 @@ class ShareSpotController extends GetxController {
 
   // ==================== MAPBOX LOCATION SEARCH ====================
 
-  /// Search for locations using Mapbox Places API
-  void searchLocation(String query) {
+  /// Search for start location using Mapbox Places API
+  void searchStartLocation(String query) {
     _debounceTimer?.cancel();
 
     if (query.isEmpty) {
-      locationSuggestions.clear();
+      startLocationSuggestions.clear();
       update();
       return;
     }
 
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      await _performLocationSearch(query);
+      await _performStartLocationSearch(query);
     });
   }
 
-  Future<void> _performLocationSearch(String query) async {
+  Future<void> _performStartLocationSearch(String query) async {
     if (query.isEmpty) return;
 
-    isLocationSearching = true;
+    isStartLocationSearching = true;
     update();
 
     try {
@@ -165,40 +189,104 @@ class ShareSpotController extends GetxController {
         final data = response.data;
         final features = data['features'] as List<dynamic>? ?? [];
 
-        locationSuggestions = features
+        startLocationSuggestions = features
             .map((feature) =>
                 MapboxPlaceSuggestion.fromJson(feature as Map<String, dynamic>))
             .toList();
 
-        appLog('Found ${locationSuggestions.length} location suggestions');
+        appLog('Found ${startLocationSuggestions.length} start location suggestions');
       } else {
-        locationSuggestions.clear();
+        startLocationSuggestions.clear();
         appLog('Mapbox API error: ${response.statusCode}');
       }
     } catch (e) {
-      locationSuggestions.clear();
-      appLog('Location search error: $e');
+      startLocationSuggestions.clear();
+      appLog('Start location search error: $e');
     }
 
-    isLocationSearching = false;
+    isStartLocationSearching = false;
     update();
   }
 
-  /// Select a location from suggestions
-  void selectLocation(MapboxPlaceSuggestion suggestion) {
-    locationController.text = suggestion.placeName;
-    selectedAddress = suggestion.placeName;
-    selectedLat = suggestion.latitude;
-    selectedLng = suggestion.longitude;
-    locationSuggestions.clear();
+  /// Search for end location using Mapbox Places API
+  void searchEndLocation(String query) {
+    _debounceTimer?.cancel();
+
+    if (query.isEmpty) {
+      endLocationSuggestions.clear();
+      update();
+      return;
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      await _performEndLocationSearch(query);
+    });
+  }
+
+  Future<void> _performEndLocationSearch(String query) async {
+    if (query.isEmpty) return;
+
+    isEndLocationSearching = true;
+    update();
+
+    try {
+      final encodedQuery = Uri.encodeComponent(query);
+      final url =
+          'https://api.mapbox.com/geocoding/v5/mapbox.places/$encodedQuery.json?access_token=$_mapboxAccessToken&limit=5';
+
+      final response = await Dio().get(url);
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final features = data['features'] as List<dynamic>? ?? [];
+
+        endLocationSuggestions = features
+            .map((feature) =>
+                MapboxPlaceSuggestion.fromJson(feature as Map<String, dynamic>))
+            .toList();
+
+        appLog('Found ${endLocationSuggestions.length} end location suggestions');
+      } else {
+        endLocationSuggestions.clear();
+        appLog('Mapbox API error: ${response.statusCode}');
+      }
+    } catch (e) {
+      endLocationSuggestions.clear();
+      appLog('End location search error: $e');
+    }
+
+    isEndLocationSearching = false;
+    update();
+  }
+
+  /// Select a start location from suggestions
+  void selectStartLocation(MapboxPlaceSuggestion suggestion) {
+    startLocationController.text = suggestion.placeName;
+    startAddress = suggestion.placeName;
+    startLat = suggestion.latitude;
+    startLng = suggestion.longitude;
+    startLocationSuggestions.clear();
     update();
 
     appLog(
-        'Selected location: ${suggestion.placeName} (${suggestion.latitude}, ${suggestion.longitude})');
+        'Selected start location: ${suggestion.placeName} (${suggestion.latitude}, ${suggestion.longitude})');
+  }
+
+  /// Select an end location from suggestions
+  void selectEndLocation(MapboxPlaceSuggestion suggestion) {
+    endLocationController.text = suggestion.placeName;
+    endAddress = suggestion.placeName;
+    endLat = suggestion.latitude;
+    endLng = suggestion.longitude;
+    endLocationSuggestions.clear();
+    update();
+
+    appLog(
+        'Selected end location: ${suggestion.placeName} (${suggestion.latitude}, ${suggestion.longitude})');
   }
 
   /// Reverse geocode: Get address from coordinates
-  Future<void> reverseGeocode(double lat, double lng) async {
+  Future<void> reverseGeocode(double lat, double lng, {bool isStart = true}) async {
     try {
       final url =
           'https://api.mapbox.com/geocoding/v5/mapbox.places/$lng,$lat.json?access_token=$_mapboxAccessToken&limit=1';
@@ -214,10 +302,17 @@ class ShareSpotController extends GetxController {
           final placeName = feature['place_name'] as String;
 
           // Update controller with the address
-          locationController.text = placeName;
-          selectedAddress = placeName;
-          selectedLat = lat;
-          selectedLng = lng;
+          if (isStart) {
+            startLocationController.text = placeName;
+            startAddress = placeName;
+            startLat = lat;
+            startLng = lng;
+          } else {
+            endLocationController.text = placeName;
+            endAddress = placeName;
+            endLat = lat;
+            endLng = lng;
+          }
 
           appLog('Reverse geocoded: $placeName');
           update();
@@ -229,14 +324,19 @@ class ShareSpotController extends GetxController {
   }
 
   /// Clear location suggestions
-  void clearLocationSuggestions() {
-    locationSuggestions.clear();
+  void clearStartLocationSuggestions() {
+    startLocationSuggestions.clear();
+    update();
+  }
+
+  void clearEndLocationSuggestions() {
+    endLocationSuggestions.clear();
     update();
   }
 
   // ==================== CURRENT LOCATION ====================
 
-  Future<void> getCurrentLocation() async {
+  Future<void> getCurrentStartLocation() async {
     try {
       bool serviceEnabled;
       LocationPermission permission;
@@ -267,11 +367,55 @@ class ShareSpotController extends GetxController {
       // continue accessing the position of the device.
       final Position position = await Geolocator.getCurrentPosition();
 
-      selectedLat = position.latitude;
-      selectedLng = position.longitude;
+      startLat = position.latitude;
+      startLng = position.longitude;
 
       // Update address
-      await reverseGeocode(position.latitude, position.longitude);
+      await reverseGeocode(position.latitude, position.longitude, isStart: true);
+
+      update();
+    } catch (e) {
+      appLog('Error getting current location: $e');
+      AppSnackBar.error('Failed to get current location');
+    }
+  }
+
+  Future<void> getCurrentEndLocation() async {
+    try {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        AppSnackBar.error('Location services are disabled.');
+        return;
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          AppSnackBar.error('Location permissions are denied');
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        AppSnackBar.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+        return;
+      }
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+      final Position position = await Geolocator.getCurrentPosition();
+
+      endLat = position.latitude;
+      endLng = position.longitude;
+
+      // Update address
+      await reverseGeocode(position.latitude, position.longitude, isStart: false);
 
       update();
     } catch (e) {
@@ -307,6 +451,42 @@ class ShareSpotController extends GetxController {
   /// Toggle dropdown visibility
   void toggleDropdown() {
     isDropdownOpen = !isDropdownOpen;
+    update();
+  }
+
+  /// Toggle route type dropdown visibility
+  void toggleRouteTypeDropdown() {
+    isRouteTypeDropdownOpen = !isRouteTypeDropdownOpen;
+    update();
+  }
+
+  /// Select route type
+  void selectRouteType(String routeType) {
+    selectedRouteType = routeType;
+    isRouteTypeDropdownOpen = false;
+    update();
+  }
+
+  /// Toggle difficulty dropdown
+  void toggleDifficultyDropdown() {
+    isDifficultyDropdownOpen = !isDifficultyDropdownOpen;
+    update();
+  }
+
+  /// Select difficulty
+  void selectDifficulty(String difficulty) {
+    selectedDifficulty = difficulty;
+    isDifficultyDropdownOpen = false;
+    update();
+  }
+
+  /// Toggle facility selection
+  void toggleFacility(String facility) {
+    if (selectedFacilities.contains(facility)) {
+      selectedFacilities.remove(facility);
+    } else {
+      selectedFacilities.add(facility);
+    }
     update();
   }
 
@@ -351,17 +531,23 @@ class ShareSpotController extends GetxController {
     if (descriptionController.text.isEmpty) {
       return 'Please enter a description';
     }
-    if (selectedAddress == null || selectedAddress!.isEmpty) {
-      return 'Please set a location';
+    if (startAddress == null || startAddress!.isEmpty) {
+      return 'Please set a start location';
+    }
+    if (endAddress == null || endAddress!.isEmpty) {
+      return 'Please set an end location';
     }
     if (selectedSubcategoryIds.isEmpty) {
-      return 'Please select at least one spot type';
+      return 'Please select at least one route type';
+    }
+    if (selectedRouteType.isEmpty) {
+      return 'Please select a route type';
     }
     return null;
   }
 
-  /// Submit spot for review
-  Future<void> submitSpot() async {
+  /// Submit route for review
+  Future<void> submitRoute() async {
     // Validate form
     final validationError = validateForm();
     if (validationError != null) {
@@ -382,21 +568,28 @@ class ShareSpotController extends GetxController {
         token = PrefsHelper.accessToken;
 
         if (token.isEmpty) {
-          AppSnackBar.error("Please log in again to post a spot.");
+          AppSnackBar.error("Please log in again to post a route.");
           isSubmitting = false;
           update();
           return;
         }
       }
 
+      // Update LocalStorage token for API service
+      await LocalStorage.getAllPrefData();
+
       // Prepare FormData
       final formData = FormData.fromMap({
         'title': titleController.text.trim(),
         'type': typeId,
         'description': descriptionController.text.trim(),
-        'address': selectedAddress!,
-        'lat': selectedLat!,
-        'lng': selectedLng!,
+        'inital_lat': startLat!,
+        'inital_lng': startLng!,
+        'final_lat': endLat!,
+        'final_lng': endLng!,
+        'route_type': selectedRouteType,
+        'difficulty': selectedDifficulty,
+        'facilities': selectedFacilities.join(','),
       });
 
       // Add image
@@ -410,7 +603,7 @@ class ShareSpotController extends GetxController {
       }
 
       final requestUrl =
-          "${AppApiEndPoint.instance.baseUrl}${AppApiEndPoint.createSpotEndPoint}";
+          "${AppApiEndPoint.instance.baseUrl}${AppApiEndPoint.createRoute}";
 
       // Log Request
       appLog({
@@ -419,9 +612,12 @@ class ShareSpotController extends GetxController {
         'title': titleController.text.trim(),
         'type': typeId,
         'description': descriptionController.text.trim(),
-        'address': selectedAddress!,
-        'lat': selectedLat!,
-        'lng': selectedLng!,
+        'inital_lat': startLat!,
+        'inital_lng': startLng!,
+        'final_lat': endLat!,
+        'final_lng': endLng!,
+        'route_type': selectedRouteType,
+        'difficulty': selectedDifficulty,
         'image':
             selectedImages.isNotEmpty ? selectedImages.first.path : 'No Image',
       }, source: 'REQUEST PAYLOAD');
@@ -442,7 +638,7 @@ class ShareSpotController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.data['success'] == true) {
           Fluttertoast.showToast(
-            msg: 'Spot submitted successfully!',
+            msg: 'Route submitted successfully!',
             backgroundColor: const Color(0xFF2E4F3E),
             textColor: Colors.white,
           );
@@ -457,8 +653,8 @@ class ShareSpotController extends GetxController {
         AppSnackBar.error(
             'Error: ${e.response?.data['message'] ?? 'Submission failed'}');
       } else {
-        appLog('Error submitting spot: $e');
-        AppSnackBar.error('Failed to submit spot');
+        appLog('Error submitting route: $e');
+        AppSnackBar.error('Failed to submit route');
       }
     }
 

@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
-import 'package:zero_signal/screen/share_spot_screen/widget/location_search_widget.dart';
+import 'package:zero_signal/screen/share_route_screen/widget/location_search_widget.dart';
 
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
-import 'controller/share_spot_controller.dart';
-import 'model/category_response_model.dart';
+import 'controller/share_route_controller.dart';
+import '../share_spot_screen/model/category_response_model.dart' as spot_model;
 
-class ShareSpotScreen extends StatelessWidget {
-  const ShareSpotScreen({super.key});
+class ShareRouteScreen extends StatelessWidget {
+  const ShareRouteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ShareSpotController>(
-      init: ShareSpotController(),
+    return GetBuilder<ShareRouteController>(
+      init: ShareRouteController(),
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColor.creamBackgroundColor,
@@ -30,7 +30,7 @@ class ShareSpotScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
             title: const TextWidget(
-              text: 'Share a New Spot',
+              text: 'Share a New Route',
               fontWeight: FontWeight.w500,
               fontSize: 20,
               fontColor: AppColor.blackColor,
@@ -65,55 +65,53 @@ class ShareSpotScreen extends StatelessWidget {
                   borderRadius: 12,
                   focusedBorderColor: AppColor.overLayBoxColor,
                   backgroundColor: AppColor.overLayBoxColor,
-                  hintText: 'Enter a tile',
+                  hintText: 'Enter a route title',
                 ),
                 const SizedBox(height: 24),
-                // Location
-                _sectionTitle('Location'),
+                
+                // Start Location
+                _sectionTitle('Start Location'),
                 SizedBox(height: 12.h),
-                const LocationSearchWidget(),
-                SizedBox(height: 16.h),
-                // Lat Long Display
-                if (controller.selectedLat != null &&
-                    controller.selectedLng != null) ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _sectionTitle('Latitude'),
-                            SizedBox(height: 8.h),
-                            _coordinateBox(controller.selectedLat.toString()),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _sectionTitle('Longitude'),
-                            SizedBox(height: 8.h),
-                            _coordinateBox(controller.selectedLng.toString()),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
-                ],
+                LocationSearchWidget(
+                  isStartLocation: true,
+                  hintText: 'Enter start location',
+                ),
+                SizedBox(height: 24.h),
+                
+                // End Location
+                _sectionTitle('End Location'),
+                SizedBox(height: 12.h),
+                LocationSearchWidget(
+                  isStartLocation: false,
+                  hintText: 'Enter end location',
+                ),
+                SizedBox(height: 24.h),
+                
                 // Description
                 _sectionTitle('Description'),
                 SizedBox(height: 12.h),
                 _descriptionBox(controller),
                 SizedBox(height: 24.h),
 
-                // Type Spot
-                _sectionTitle('Type Spot'),
+                // Type Route
+                _sectionTitle('Type Route'),
                 SizedBox(height: 12.h),
                 _typeDropdown(controller),
                 if (controller.isDropdownOpen) _dropdownBody(controller),
+                SizedBox(height: 24.h),
+
+                // Route Type
+                _sectionTitle('Route Type'),
+                SizedBox(height: 12.h),
+                _routeTypeDropdown(controller),
+                if (controller.isRouteTypeDropdownOpen) _routeTypeDropdownBody(controller),
+                SizedBox(height: 24.h),
+
+                // Difficulty
+                _sectionTitle('Difficulty'),
+                SizedBox(height: 12.h),
+                _difficultyDropdown(controller),
+                if (controller.isDifficultyDropdownOpen) _difficultyDropdownBody(controller),
                 SizedBox(height: 60.h),
               ],
             ),
@@ -125,7 +123,7 @@ class ShareSpotScreen extends StatelessWidget {
                 buttonWidth: double.infinity,
                 onPressed: controller.isSubmitting
                     ? null
-                    : () => controller.submitSpot(),
+                    : () => controller.submitRoute(),
                 label: controller.isSubmitting
                     ? 'Submitting...'
                     : 'Submit for Review',
@@ -140,7 +138,7 @@ class ShareSpotScreen extends StatelessWidget {
 
   // ------------------------------ helpers ------------------------------
 
-  Widget _uploadImagesBox(ShareSpotController controller) {
+  Widget _uploadImagesBox(ShareRouteController controller) {
     if (controller.selectedImages.isEmpty) {
       return GestureDetector(
         onTap: () => controller.pickImages(),
@@ -270,7 +268,7 @@ class ShareSpotScreen extends StatelessWidget {
         fontSize: 16,
       );
 
-  Widget _descriptionBox(ShareSpotController controller) => Container(
+  Widget _descriptionBox(ShareRouteController controller) => Container(
         width: double.infinity,
         height: 80,
         decoration: BoxDecoration(
@@ -291,7 +289,7 @@ class ShareSpotScreen extends StatelessWidget {
         ),
       );
 
-  Widget _typeDropdown(ShareSpotController controller) => GestureDetector(
+  Widget _typeDropdown(ShareRouteController controller) => GestureDetector(
         onTap: () => controller.toggleDropdown(),
         child: Container(
           width: double.infinity,
@@ -337,7 +335,7 @@ class ShareSpotScreen extends StatelessWidget {
         ),
       );
 
-  Widget _dropdownBody(ShareSpotController controller) => Container(
+  Widget _dropdownBody(ShareRouteController controller) => Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxHeight: 400),
         decoration: BoxDecoration(
@@ -361,7 +359,7 @@ class ShareSpotScreen extends StatelessWidget {
         ),
       );
 
-  List<Widget> _buildAllCategories(ShareSpotController controller) {
+  List<Widget> _buildAllCategories(ShareRouteController controller) {
     final widgets = <Widget>[];
     for (var category in controller.categories) {
       widgets.add(
@@ -393,10 +391,10 @@ class ShareSpotScreen extends StatelessWidget {
   }
 
   Widget _dropdownCheckboxTile(
-    SubcategoryData item,
+    spot_model.SubcategoryData item,
     String categoryId,
     int index,
-    ShareSpotController controller,
+    ShareRouteController controller,
   ) =>
       GestureDetector(
         onTap: () => controller.toggleSubcategorySelection(categoryId, index),
@@ -423,20 +421,162 @@ class ShareSpotScreen extends StatelessWidget {
           ],
         ),
       );
-  Widget _coordinateBox(String value) => Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(245, 233, 223, 1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          value,
-          style: const TextStyle(
-            color: Colors.black87,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+
+  Widget _routeTypeDropdown(ShareRouteController controller) => GestureDetector(
+        onTap: () => controller.toggleRouteTypeDropdown(),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(245, 233, 223, 1),
+            borderRadius: controller.isRouteTypeDropdownOpen
+                ? const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  )
+                : BorderRadius.circular(12),
+            border: Border.all(color: const Color.fromRGBO(245, 233, 223, 1)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  controller.selectedRouteType == 'roundtrip' 
+                      ? 'Round Trip' 
+                      : 'Circle Trip',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(
+                controller.isRouteTypeDropdownOpen
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
+                color: Colors.grey.shade600,
+              ),
+            ],
           ),
         ),
       );
+
+  Widget _routeTypeDropdownBody(ShareRouteController controller) {
+    return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(245, 233, 223, 1),
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(12),
+            bottomRight: Radius.circular(12),
+          ),
+          border: Border(
+            left: BorderSide(color: Colors.grey.shade300),
+            right: BorderSide(color: Colors.grey.shade300),
+            bottom: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+        child: Column(
+          children: controller.routeTypes.map((routeType) {
+            return ListTile(
+              dense: true,
+              title: Text(
+                routeType == 'roundtrip' ? 'Round Trip' : 'Single Trip',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: controller.selectedRouteType == routeType 
+                      ? const Color(0xFF2D5A3D)
+                      : Colors.black87,
+                  fontWeight: controller.selectedRouteType == routeType 
+                      ? FontWeight.w500
+                      : FontWeight.normal,
+                ),
+              ),
+              trailing: controller.selectedRouteType == routeType
+                  ? const Icon(Icons.check, color: Color(0xFF2D5A3D), size: 20)
+                  : null,
+              onTap: () => controller.selectRouteType(routeType),
+            );
+          }).toList(),
+        ),
+      );
+  }
+
+  Widget _difficultyDropdown(ShareRouteController controller) => GestureDetector(
+        onTap: () => controller.toggleDifficultyDropdown(),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(245, 233, 223, 1),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  controller.selectedDifficulty == 'easy' 
+                      ? 'Easy' 
+                      : controller.selectedDifficulty == 'medium' 
+                          ? 'Medium'
+                          : 'Hard',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(
+                controller.isDifficultyDropdownOpen
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
+                color: Colors.grey.shade600,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _difficultyDropdownBody(ShareRouteController controller) {
+    return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(245, 233, 223, 1),
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(12),
+            bottomRight: Radius.circular(12),
+          ),
+          border: Border(
+            left: BorderSide(color: Colors.grey.shade300),
+            right: BorderSide(color: Colors.grey.shade300),
+            bottom: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+        child: Column(
+          children: controller.difficultyLevels.map((difficulty) {
+            return ListTile(
+              dense: true,
+              title: Text(
+                difficulty == 'easy' ? 'Easy' : difficulty == 'medium' ? 'Medium' : 'Hard',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: controller.selectedDifficulty == difficulty 
+                      ? const Color(0xFF2D5A3D)
+                      : Colors.black87,
+                  fontWeight: controller.selectedDifficulty == difficulty 
+                      ? FontWeight.w500
+                      : FontWeight.normal,
+                ),
+              ),
+              trailing: controller.selectedDifficulty == difficulty
+                  ? const Icon(Icons.check, color: Color(0xFF2D5A3D), size: 20)
+                  : null,
+              onTap: () => controller.selectDifficulty(difficulty),
+            );
+          }).toList(),
+        ),
+      );
+  }
 }

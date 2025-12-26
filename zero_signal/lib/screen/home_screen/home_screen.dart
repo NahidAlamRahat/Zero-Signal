@@ -1,35 +1,16 @@
-import 'dart:math' as Math;
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:zero_signal/screen/home_screen/widget/map_type_bottom_sheet.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart' as geo;
 import 'package:get/get.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/screen/home_screen/conntroller/home_screen_controller.dart';
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
-import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
-import '../map_routes_screen/map_routes_screen.dart';
-
-// Model for Spot
-class SpotModel {
-  final String id;
-  final String name;
-  final double latitude;
-  final double longitude;
-  final String type; // 'restaurant', 'park', 'landmark', etc.
-
-  SpotModel({
-    required this.id,
-    required this.name,
-    required this.latitude,
-    required this.longitude,
-    required this.type,
-  });
-}
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,146 +20,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  geo.Position? currentPosition;
-  List<SpotModel> nearbySpots = [];
-  bool isLoading = true;
+  late HomeScreenController controller;
 
   @override
   void initState() {
     super.initState();
-    _initializeLocation();
+    controller = Get.put(HomeScreenController());
   }
-
-  Future<void> _initializeLocation() async {
-    try {
-  //    await _getCurrentLocation();
-      await _fetchNearbySpots();
-    } catch (e) {
-      print('Error initializing location: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to get location: $e')),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-
-  Future<void> _fetchNearbySpots() async {
-    if (currentPosition == null) return;
-
-    // Sample spots data - Replace with your actual API call
-    final allSpots = [
-      SpotModel(
-        id: '1',
-        name: 'Basmati Singh Stadium',
-        latitude: 24.8607,
-        longitude: 67.0011,
-        type: 'landmark',
-      ),
-      SpotModel(
-        id: '2',
-        name: 'Rani Bagh',
-        latitude: 24.8620,
-        longitude: 67.0025,
-        type: 'park',
-      ),
-      SpotModel(
-        id: '3',
-        name: 'Jantar Mantar',
-        latitude: 24.8545,
-        longitude: 67.0015,
-        type: 'landmark',
-      ),
-      SpotModel(
-        id: '4',
-        name: 'Connaught Place',
-        latitude: 24.8550,
-        longitude: 67.0020,
-        type: 'market',
-      ),
-    ];
-
-    // Filter spots within 5 km radius
-    final nearby = allSpots.where((spot) {
-      double distance = _calculateDistance(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
-        spot.latitude,
-        spot.longitude,
-      );
-      return distance <= 5; // 5 km radius
-    }).toList();
-
-    if (mounted) {
-      setState(() {
-        nearbySpots = nearby;
-      });
-     // await _addMarkersToMap();
-    }
-  }
-
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    const p = 0.017453292519943295; // Math.PI / 180
-    final a = 0.5 -
-        Math.cos((lat2 - lat1) * p) / 2 +
-        Math.cos(lat1 * p) *
-            Math.cos(lat2 * p) *
-            (1 - Math.cos((lon2 - lon1) * p)) /
-            2;
-    return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-  }
-
-  // // Add markers to Mapbox
-  // Future<void> _addMarkersToMap() async {
-  //   if (!mounted) return;
-  //
-  //   try {
-  //     final pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
-  //
-  //     for (var spot in nearbySpots) {
-  //       await pointAnnotationManager.create(
-  //         PointAnnotationOptions(
-  //           geometry: Point(coordinates: Position.fromJson([spot.longitude, spot.latitude])),
-  //           iconImage: _getMarkerIconName(spot.type),
-  //           textField: spot.name,
-  //           textSize: 12,
-  //           textColor: Colors.white.value,
-  //           textHaloColor: Colors.black.value,
-  //           textHaloWidth: 1,
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print('Error adding markers: $e');
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Error adding markers: $e')),
-  //       );
-  //     }
-  //   }
-  // }
-
-  String _getMarkerIconName(String type) {
-    switch (type) {
-      case 'restaurant':
-        return 'restaurant_marker';
-      case 'park':
-        return 'park_marker';
-      case 'landmark':
-        return 'landmark_marker';
-      case 'market':
-        return 'market_marker';
-      default:
-        return 'default_marker';
-    }
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -192,18 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Search Box
             Expanded(
-              child: TextFieldWidget(
-                hintText: 'Search in ZeroSignal',
-                fieldHeight: 40,
-                borderColor: Colors.transparent,
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-              ),
+              child: GetBuilder<HomeScreenController>(builder: (controller) {
+                return TextFieldWidget(
+                  controller: controller.searchController,
+                  hintText: 'Search in ZeroSignal',
+                  fieldHeight: 40,
+                  borderColor: Colors.transparent,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  onChanged: (value) {
+                    controller.fetchSuggestions(value);
+                  },
+                  onFieldSubmitted: (value) {
+                    controller.searchLocation(value);
+                  },
+                );
+              }),
             ),
-             SizedBox(width: 12.w),
+            SizedBox(width: 12.w),
 
             // Download Icon
             Image.asset(AppIconPath.downloadIcon, width: 40.w, height: 40.w),
-             SizedBox(width: 10.w),
+            SizedBox(width: 10.w),
 
             // Filtering Icon
             InkWell(
@@ -216,49 +73,114 @@ class _HomeScreenState extends State<HomeScreen> {
                     initialChildSize: 0.7,
                     minChildSize: 0.5,
                     maxChildSize: 0.9,
-                    builder: (context, scrollController) =>
-                     FilterBottomSheet(),
+                    builder: (context, scrollController) => FilterBottomSheet(),
                   ),
                 );
               },
-              child: Image.asset(AppIconPath.filtaringIcon,
-                  width: 65, height: 65),
+              child:
+                  Image.asset(AppIconPath.filtaringIcon, width: 65, height: 65),
             ),
           ],
         ),
       ),
 
       // Map Background
-      body: GetBuilder(
-        init: HomeScreenController(),
+      body: GetBuilder<HomeScreenController>(
         builder: (controller) {
           return Stack(
             children: [
-              // MapBox Widget
               mapbox.MapWidget(
                 onMapCreated: controller.onMapCreated,
-                mapOptions: mapbox.MapOptions(
-                  pixelRatio: 1.0,
+                cameraOptions: mapbox.CameraOptions(
+                  center: mapbox.Point(
+                    coordinates: mapbox.Position.fromJson(
+                        [90.4125, 23.8103]), // Default center (Dhaka)
+                  ),
+                  zoom: 12.0,
                 ),
+                styleUri: mapbox.MapboxStyles.MAPBOX_STREETS,
+                key: const ValueKey("mapbox_map"),
+                gestureRecognizers: {
+                  Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer()),
+                },
               ),
-              
-              
-              Positioned(
 
-                  top: Get.height*0.5,
-                  left: Get.width*0.5,
-                  height: Get.width*0.4,
-                  child: InkWell(
-                    onTap: (){
-                      Get.toNamed(AppRoutes.spotDetailsScreen);
-                    },
-                    child: Image.asset(
-                    
-                    height: 52.h,
-                    width:34.w,
-                    Assets.icons.realEstate.path),
-                  )),
+              // mapbox.MapWidget(
+              //         onMapCreated: controller.onMapCreated,
+              //         mapOptions: mapbox.MapOptions(
+              //           pixelRatio: 1.0,
+              //         ),
+              //       ),
 
+              // Suggestion List
+              if (controller.searchSuggestions.isNotEmpty)
+                Positioned(
+                  top: 0,
+                  left: 15.w,
+                  right: 15.w,
+                  child: Material(
+                    elevation: 5,
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: Colors.white,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: controller.searchSuggestions.length,
+                      itemBuilder: (context, index) {
+                        final suggestion = controller.searchSuggestions[index];
+                        return ListTile(
+                          leading: Icon(Icons.location_on,
+                              color: AppColor.blackColor),
+                          title: Text(suggestion['place_name'] ?? '',
+                              style: TextStyle(fontSize: 14.sp)),
+                          onTap: () {
+                            controller.searchController.text =
+                                suggestion['place_name'];
+                            controller.searchLocation(suggestion['place_name']);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+              // Spots loading indicator
+              if (controller.isLoadingSpots)
+                Positioned(
+                  top: kToolbarHeight + 50.h,
+                  left: 20,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 16.w,
+                          height: 16.w,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'Loading spots...',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
               Positioned(
                 top: kToolbarHeight + 50.h,
@@ -275,63 +197,89 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // Floating Buttons
+              // Radius Input Field
               Positioned(
-                right: 36.w,
-                bottom:145.h ,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-
-                    InkWell(
-                      onTap: () async {
-                        final controller = Get.find<HomeScreenController>();
-                        await controller.refreshLocation();
-                      },
-                      child: Container(
-                      
-                        height: 47.h,
-                        width: 47.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColor.backgroundColor
-                        ),
-                      
-                        child: Image.asset(AppIconPath.mapIcon, height: 24.h,width: 24.w,) ,
+                top: kToolbarHeight + 150.h,
+                right: 20,
+                child: Container(
+                  width: 80.w,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(22.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
                       ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: controller.radiusController,
+                    onChanged: (value) => controller.updateRadius(value),
+                    onSubmitted: (value) => controller.updateRadius(value),
+                    keyboardType: TextInputType.number,
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      prefixIcon:
+                          const Icon(Icons.radar, color: Colors.grey, size: 20),
+                      hintText: 'Km',
+                      hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 9),
                     ),
-                    const SizedBox(height: 10),
-
-                    InkWell(
-                      onTap: (){
-                        Get.toNamed(AppRoutes.shareSpotScreen);
-                      },
-                      child: Container(
-                      
-                        height: 47.h,
-                        width: 47.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColor.blackColor
-                        ),
-                      
-                        child: Image.asset(AppIconPath.addIcon, height: 24.h,width: 24.w,) ,
-                      ),
-                    ),
-
-
-                  ],
+                  ),
                 ),
               ),
 
-              // Loading Indicator
-              if (isLoading)
-                Center(
-                  child: CircularProgressIndicator(),
+              // Floating Buttons
+              Positioned(
+                right: 36.w,
+                bottom: 145.h,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        await controller.refreshLocation();
+                      },
+                      child: Container(
+                        height: 47.h,
+                        width: 47.h,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColor.backgroundColor),
+                        child: Image.asset(
+                          AppIconPath.mapIcon,
+                          height: 24.h,
+                          width: 24.w,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.shareSpotScreen);
+                      },
+                      child: Container(
+                        height: 47.h,
+                        width: 47.h,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: AppColor.blackColor),
+                        child: Image.asset(
+                          AppIconPath.addIcon,
+                          height: 24.h,
+                          width: 24.w,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
             ],
           );
-        }
+        },
       ),
     );
   }

@@ -22,10 +22,6 @@ class BottomNav extends StatelessWidget {
           ),
           bottomNavigationBar: SafeArea(
             child: Container(
-              decoration: BoxDecoration(
-                  color: controller.selectedIndex.value == 1 ? AppColor
-                      .creamBackgroundColor : Colors.transparent
-              ),
               padding: EdgeInsets.symmetric(
                 horizontal: 14.w,
                 vertical: 10.h,
@@ -35,7 +31,7 @@ class BottomNav extends StatelessWidget {
              // height: 60.h,
 
                 decoration: BoxDecoration(
-                  color: AppColor.buttonNavBackgroundColor,
+                  color: const Color(0xFF73897E),
                   borderRadius: BorderRadius.circular(40.r),
                 ),
                 padding: EdgeInsets.symmetric(horizontal:8.w, vertical: 8.h),
