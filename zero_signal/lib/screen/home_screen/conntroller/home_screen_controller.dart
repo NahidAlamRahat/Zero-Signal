@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
-
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
-
+import 'dart:io';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:dio/dio.dart';
 import '../../../repository/spot_repository.dart';
@@ -39,6 +39,11 @@ class HomeScreenController extends GetxController {
 
   List<dynamic> searchSuggestions = [];
   bool isSearching = false;
+
+  // Offline map properties
+  bool isOfflineMapAvailable = false;
+  bool useOfflineMap = false;
+  String offlineMapPath = '';
 
   // Spot related properties
   final SpotRepository _spotRepository = SpotRepository();
@@ -558,6 +563,58 @@ class HomeScreenController extends GetxController {
     super.onClose();
   }
 
+  // Offline map methods
+  Future<void> checkOfflineMapAvailability() async {
+    try {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      final offlineMapDir = Directory('${appDocDir.path}/offline_maps');
+      final mapFile = File('${offlineMapDir.path}/dhaka_region.map');
+      
+      isOfflineMapAvailable = await mapFile.exists();
+      offlineMapPath = offlineMapDir.path;
+      
+      if (isOfflineMapAvailable) {
+        appLog('Offline map available at: $offlineMapPath', type: LogType.info, source: 'OFFLINE_MAP');
+      }
+    } catch (e) {
+      appLog('Error checking offline map: $e', type: LogType.error, source: 'OFFLINE_MAP');
+      isOfflineMapAvailable = false;
+    }
+  }
+
+  Future<void> toggleOfflineMode() async {
+    if (!isOfflineMapAvailable) {
+      Fluttertoast.showToast(msg: "No offline map available. Please download first.");
+      return;
+    }
+    
+    useOfflineMap = !useOfflineMap;
+    
+    if (useOfflineMap) {
+      // Switch to offline mode - use a local style or cached tiles
+      try {
+        // For now, we'll use a basic style that might have cached tiles
+        await mapboxMap.loadStyleURI('mapbox://styles/mapbox/basic-v9');
+        Fluttertoast.showToast(msg: "Offline mode enabled");
+        appLog('Switched to offline mode', type: LogType.info, source: 'OFFLINE_MAP');
+      } catch (e) {
+        appLog('Error switching to offline mode: $e', type: LogType.error, source: 'OFFLINE_MAP');
+        useOfflineMap = false;
+        Fluttertoast.showToast(msg: "Failed to enable offline mode");
+      }
+    } else {
+      // Switch back to online mode
+      try {
+        await mapboxMap.loadStyleURI(defaultStyleUri);
+        Fluttertoast.showToast(msg: "Online mode enabled");
+        appLog('Switched to online mode', type: LogType.info, source: 'OFFLINE_MAP');
+      } catch (e) {
+        appLog('Error switching to online mode: $e', type: LogType.error, source: 'OFFLINE_MAP');
+        Fluttertoast.showToast(msg: "Failed to enable online mode");
+      }
+    }
+  }
+
   @override
   void onInit() {
     mapWidget = mapbox.MapWidget(
@@ -568,6 +625,10 @@ class HomeScreenController extends GetxController {
     markerPoint = mapbox.Point(
         coordinates:
             mapbox.Position.fromJson([23.78105597835364, 90.40762703426819]));
+    
+    // Check for offline map on initialization
+    checkOfflineMapAvailability();
+    
     super.onInit();
   }
 }

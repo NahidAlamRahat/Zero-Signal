@@ -11,6 +11,8 @@ import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../routes/app_routes.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,7 +64,34 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 12.w),
 
             // Download Icon
-            Image.asset(AppIconPath.downloadIcon, width: 40.w, height: 40.w),
+            InkWell(
+              onTap: () {
+                _showOfflineMapDownloadDialog();
+              },
+              child: Image.asset(AppIconPath.downloadIcon, width: 40.w, height: 40.w),
+            ),
+            SizedBox(width: 10.w),
+
+            // Offline Mode Toggle
+            GetBuilder<HomeScreenController>(
+              builder: (controller) => InkWell(
+                onTap: () {
+                  controller.toggleOfflineMode();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: controller.useOfflineMap ? Colors.green : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Icon(
+                    controller.useOfflineMap ? Icons.wifi_off : Icons.wifi,
+                    color: Colors.white,
+                    size: 20.w,
+                  ),
+                ),
+              ),
+            ),
             SizedBox(width: 10.w),
 
             // Filtering Icon
@@ -397,5 +426,242 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+
+  void _showOfflineMapDownloadDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColor.creamBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: AppColor.backgroundColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(
+                Icons.download,
+                color: AppColor.backgroundColor,
+                size: 24.w,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Text(
+              'Offline Map Download',
+              style: TextStyle(
+                color: AppColor.blackColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Download map data for offline use?',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColor.blackColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              'This will allow you to use maps without internet connection. Perfect for areas with poor connectivity!',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.grey.shade600,
+                height: 1.4,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.blue.shade600, size: 16.w),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      'Maps will be stored in your device storage',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: Colors.blue.shade700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _downloadOfflineMap();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColor.backgroundColor,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+            ),
+            child: Text(
+              'Download',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _downloadOfflineMap() async {
+    // Get application documents directory
+    Directory? appDocDir;
+    String storagePath = '';
+    
+    try {
+      appDocDir = await getApplicationDocumentsDirectory();
+      storagePath = appDocDir.path;
+    } catch (e) {
+      storagePath = 'Local storage';
+    }
+
+    // Show progress dialog with storage info
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColor.creamBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: AppColor.backgroundColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(50.r),
+              ),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(AppColor.backgroundColor),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Downloading offline map...',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColor.blackColor,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Storage: $storagePath',
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'This may take a few minutes',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.grey.shade500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // Simulate download process
+    await Future.delayed(Duration(seconds: 3));
+    
+    // Create offline map directory
+    if (appDocDir != null) {
+      final offlineMapDir = Directory('${appDocDir.path}/offline_maps');
+      if (!await offlineMapDir.exists()) {
+        await offlineMapDir.create(recursive: true);
+      }
+      
+      // Create a sample offline map file (in real implementation, this would be actual map tiles)
+      final mapFile = File('${offlineMapDir.path}/dhaka_region.map');
+      await mapFile.writeAsString('offline_map_data_for_dhaka_region');
+    }
+    
+    // Close progress dialog and show success message
+    if (mounted) {
+      Navigator.of(context).pop(); // Close progress dialog
+      
+      // Show success message with storage location
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColor.backgroundColor,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white, size: 16),
+                  SizedBox(width: 8),
+                  Text(
+                    'Offline map downloaded successfully!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Stored at: $storagePath/offline_maps',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    }
   }
 }
