@@ -21,6 +21,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late HomeScreenController controller;
+  
+  // Radius dropdown state
+  bool isRadiusDropdownOpen = false;
 
   @override
   void initState() {
@@ -182,6 +185,139 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
+              // Radius Dropdown - Just under search box
+              Positioned(
+                top: kToolbarHeight + 60.h,
+                left: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Radius toggle button
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isRadiusDropdownOpen = !isRadiusDropdownOpen;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.radar, size: 16, color: AppColor.backgroundColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              '${controller.currentRadiusInMeters.toStringAsFixed(1)} km',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColor.backgroundColor,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Icon(
+                              isRadiusDropdownOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                              color: Colors.grey.shade600,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    // Expandable radius slider
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      margin: const EdgeInsets.only(top: 8),
+                      width: isRadiusDropdownOpen ? 200 : 0,
+                      height: isRadiusDropdownOpen ? 180 : 0,
+                      child: isRadiusDropdownOpen
+                          ? Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Search Radius',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      activeTrackColor: AppColor.backgroundColor,
+                                      inactiveTrackColor: Colors.grey.shade300,
+                                      thumbColor: AppColor.backgroundColor,
+                                      overlayColor: AppColor.backgroundColor.withValues(alpha: 0.2),
+                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                      trackHeight: 3,
+                                    ),
+                                    child: Slider(
+                                      value: controller.currentRadiusInMeters,
+                                      min: 0.5,
+                                      max: 30.0,
+                                      divisions: 59,
+                                      onChanged: (value) {
+                                        controller.updateRadius(value.toStringAsFixed(1));
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '0.5 km',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                      Text(
+                                        '30 km',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+              ),
+
               Positioned(
                 top: kToolbarHeight + 50.h,
                 right: 20,
@@ -193,42 +329,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     AppIconPath.choiceMap,
                     width: 40,
                     height: 40,
-                  ),
-                ),
-              ),
-
-              // Radius Input Field
-              Positioned(
-                top: kToolbarHeight + 150.h,
-                right: 20,
-                child: Container(
-                  width: 80.w,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(22.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: controller.radiusController,
-                    onChanged: (value) => controller.updateRadius(value),
-                    onSubmitted: (value) => controller.updateRadius(value),
-                    keyboardType: TextInputType.number,
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      prefixIcon:
-                          const Icon(Icons.radar, color: Colors.grey, size: 20),
-                      hintText: 'Km',
-                      hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 9),
-                    ),
                   ),
                 ),
               ),

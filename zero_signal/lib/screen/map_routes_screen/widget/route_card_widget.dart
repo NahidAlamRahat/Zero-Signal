@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
@@ -91,29 +92,29 @@ class RouteCard extends StatelessWidget {
                           children: [
                             Text(
                               title,
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
                               ),
-                              maxLines: 2,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             if (description.isNotEmpty)
                               Text(
                                 description,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 11.sp,
                                   color: Colors.grey[600],
                                 ),
-                                maxLines: 2,
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 2.h),
                             Text(
                               'by $userName',
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 10.sp,
                                 color: Colors.grey[500],
                                 fontStyle: FontStyle.italic,
                               ),
@@ -123,54 +124,33 @@ class RouteCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: onSave,
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFCB20),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  AppIconPath.saveIcon,
-                                  width: 18,
-                                  height: 18,
-                                ),
-                              ),
+                      SizedBox(width: 4.w),
+                      GestureDetector(
+                        onTap: onSave,
+                        child: Container(
+                          width: 28.w,
+                          height: 28.h,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFCB20),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              AppIconPath.saveIcon,
+                              width: 16.w,
+                              height: 16.h,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          GestureDetector(
-                            onTap: onPlace,
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF4CAF50),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.place,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 8.h),
 
-                  // Tags Row 1 - Distance, Type, Difficulty
-                  Row(
+                  // Tags - Distance, Type, Difficulty, Duration
+                  Wrap(
+                    spacing: 4.w,
+                    runSpacing: 4.h,
                     children: [
                       _buildTag(
                         text: distance,
@@ -178,27 +158,18 @@ class RouteCard extends StatelessWidget {
                         textColor: Colors.blue.shade600,
                         borderColor: const Color(0xFF5080FF),
                       ),
-                      const SizedBox(width: 8),
                       _buildTag(
                         text: type,
                         backgroundColor: Colors.green.shade50,
                         textColor: Colors.green.shade600,
                         borderColor: const Color(0xFF399060),
                       ),
-                      const SizedBox(width: 8),
                       _buildTag(
                         text: difficulty,
                         backgroundColor: Colors.orange.shade50,
                         textColor: Colors.orange.shade600,
                         borderColor: const Color(0xFFDE800C),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Tags Row 2 - Duration
-                  Row(
-                    children: [
                       _buildTag(
                         text: duration,
                         backgroundColor: Colors.purple.shade50,

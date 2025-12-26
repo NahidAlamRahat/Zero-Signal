@@ -4,16 +4,26 @@ import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:dio/dio.dart';
 import '../../../repository/spot_repository.dart';
 import '../../../routes/app_routes.dart';
+import '../../../utils/app_log/app_log.dart';
 
-class HomeScreenController extends GetxController
-    implements mapbox.OnPointAnnotationClickListener {
+class PointAnnotationClickListener implements mapbox.OnPointAnnotationClickListener {
+  final HomeScreenController controller;
+  
+  PointAnnotationClickListener(this.controller);
+  
+  @override
+  void onPointAnnotationClick(mapbox.PointAnnotation annotation) {
+    controller.onPointAnnotationTap(annotation);
+  }
+}
+
+class HomeScreenController extends GetxController {
   late mapbox.MapWidget mapWidget;
   late mapbox.MapboxMap mapboxMap;
   geo.Position? currentPosition;
@@ -59,16 +69,15 @@ class HomeScreenController extends GetxController
   void updateRadius(String kmValue) {
     if (_radiusDebounceTimer?.isActive ?? false) _radiusDebounceTimer!.cancel();
     _radiusDebounceTimer = Timer(const Duration(milliseconds: 800), () {
-      print('DEBUG: Input radius value: "$kmValue"');
+      appLog('DEBUG: Input radius value: "$kmValue"');
       if (kmValue.isEmpty) return;
       final double? km = double.tryParse(kmValue);
       if (km != null && km > 0) {
         currentRadiusInMeters = km; // User requested KM
-        print(
-            'DEBUG: Radius updated to $currentRadiusInMeters (KM/Units). Fetching spots...');
+        appLog('DEBUG: Radius updated to $currentRadiusInMeters (KM/Units). Fetching spots...');
         fetchNearbySpots();
       } else {
-        print('DEBUG: Invalid radius input');
+        appLog('DEBUG: Invalid radius input');
       }
     });
   }
@@ -129,7 +138,9 @@ class HomeScreenController extends GetxController
 
     try {
       currentPosition = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high,
+        locationSettings: geo.LocationSettings(
+          accuracy: geo.LocationAccuracy.high,
+        ),
       );
       update();
     } catch (e) {
@@ -146,17 +157,16 @@ class HomeScreenController extends GetxController
   /// Load marker icon from assets and register it in map style
   Future<void> _loadMarkerIcon() async {
     try {
-      print('DEBUG: Loading custom marker icon');
 
       // Load the marker image from assets
       final ByteData data = await rootBundle.load('assets/icons/location.png');
       final uint8List = data.buffer.asUint8List();
-      print(
-          'DEBUG: Loaded marker from assets, size: ${uint8List.length} bytes');
+      
+      
 
       // Decode the image to get its actual dimensions
       final image = await decodeImageFromList(uint8List);
-      print('DEBUG: Image dimensions: ${image.width}x${image.height}');
+      
 
       // Create MbxImage with actual image dimensions
       final mbxImage = mapbox.MbxImage(
@@ -175,63 +185,24 @@ class HomeScreenController extends GetxController
         [],
         null,
       );
-      print('DEBUG: Custom marker image added to style');
     } catch (e) {
-      print('ERROR: Failed to load marker icon: $e');
+      appLog('Failed to load marker icon: $e');
     }
   }
 
-  /// Create a simple red dot marker image
-  Future<Uint8List> _createSimpleMarkerImage() async {
-    try {
-      // For simplicity, use a pre-made marker image from assets
-      final ByteData data = await rootBundle.load('assets/icons/location.png');
-      print('DEBUG: Loaded marker from assets');
-      return data.buffer.asUint8List();
-    } catch (e) {
-      print('DEBUG: Assets icon not found: $e');
-      // If asset doesn't exist, return empty list
 
-      return _createFallbackMarkerBytes();
-    }
-  }
-
-  /// Create a fallback marker (simple colored pixel)
-  Uint8List _createFallbackMarkerBytes() {
-    // Create a simple 16x16 PNG with red color
-    // This is a minimal PNG file representation of a red dot
-    final bytes = <int>[
-      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG signature
-      0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52, // IHDR chunk
-      0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10,
-      0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0xF3, 0xFF,
-      0x61, 0x00, 0x00, 0x00, 0x4A, 0x49, 0x44, 0x41,
-      0x54, 0x78, 0x9C, 0xED, 0xC1, 0x01, 0x0D, 0x00,
-      0x00, 0x00, 0xC2, 0xA0, 0xF5, 0x4F, 0x6D, 0x0E,
-      0x37, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0xB0, 0xFF, 0x00, 0x01, 0xFE, 0x7B, 0xEE,
-      0x41, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
-      0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
-    ];
-    return Uint8List.fromList(bytes);
-  }
 
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
     mapboxMap = controller;
-    print('DEBUG: Map created, initializing...');
+
 
     await getUserLocation();
 
     // Set style to streets-v12 which has marker-15 sprite
     try {
       await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
-      print('DEBUG: Style loaded successfully');
     } catch (e) {
-      print('DEBUG: Error loading style: $e');
+      appLog('Failed to load style: $e');
     }
 
     // Wait longer for style to load completely
@@ -244,13 +215,12 @@ class HomeScreenController extends GetxController
     try {
       pointAnnotationManager =
           await mapboxMap.annotations.createPointAnnotationManager();
-      print('DEBUG: Point annotation manager created');
 
       // Add tap listener for markers
-      pointAnnotationManager?.addOnPointAnnotationClickListener(this);
-      print('DEBUG: Marker tap listener added');
+      final listener = PointAnnotationClickListener(this);
+      pointAnnotationManager?.addOnPointAnnotationClickListener(listener);
     } catch (e) {
-      print('DEBUG: Error creating annotation manager: $e');
+      appLog('Failed to add annotation listener: $e');
     }
 
     if (currentPosition != null) {
@@ -320,9 +290,9 @@ class HomeScreenController extends GetxController
 
       if (spots != null) {
         nearbySpots = spots;
-        print('DEBUG: Found ${spots.length} spots from API');
+        appLog('DEBUG: Found ${spots.length} spots from API');
         for (int i = 0; i < spots.length; i++) {
-          print(
+          appLog(
               'DEBUG: Spot $i: ${spots[i].title} at (${spots[i].latitude}, ${spots[i].longitude})');
         }
         await _addSpotMarkersToMap();
@@ -357,17 +327,17 @@ class HomeScreenController extends GetxController
 
   /// Add spot markers to the map
   Future<void> _addSpotMarkersToMap() async {
-    print('DEBUG: _addSpotMarkersToMap called');
-    print('DEBUG: pointAnnotationManager: $pointAnnotationManager');
-    print('DEBUG: nearbySpots.length: ${nearbySpots.length}');
+    appLog('DEBUG: _addSpotMarkersToMap called');
+    appLog('DEBUG: pointAnnotationManager: $pointAnnotationManager');
+    appLog('DEBUG: nearbySpots.length: ${nearbySpots.length}');
 
     if (pointAnnotationManager == null) {
-      print('ERROR: pointAnnotationManager is null!');
+      appLog('ERROR: pointAnnotationManager is null!');
       return;
     }
 
     if (nearbySpots.isEmpty) {
-      print('WARNING: nearbySpots is empty!');
+      appLog('WARNING: nearbySpots is empty!');
       return;
     }
 
@@ -375,11 +345,11 @@ class HomeScreenController extends GetxController
       // Clear existing markers and spot map
       await pointAnnotationManager!.deleteAll();
       markerSpotMap.clear();
-      print('DEBUG: Cleared existing markers');
+      appLog('DEBUG: Cleared existing markers');
 
       // Add markers for each spot
       for (final spot in nearbySpots) {
-        print(
+        appLog(
             'DEBUG: Adding marker for: ${spot.title} at (${spot.latitude}, ${spot.longitude})');
 
         try {
@@ -394,19 +364,19 @@ class HomeScreenController extends GetxController
               textField: spot.title,
               textSize: 12,
               textOffset: [0, 2.0],
-              textColor: Colors.black.value,
+              textColor: Colors.black.toARGB32(),
             ),
           );
 
           // Store spot data with marker ID
           markerSpotMap[annotation.id] = spot;
-          print('DEBUG: Stored spot data for marker: ${annotation.id}');
+          appLog('DEBUG: Stored spot data for marker: ${annotation.id}');
         } catch (markerError) {
-          print(
+          appLog(
               'ERROR: Failed to create marker for ${spot.title}: $markerError');
         }
       }
-      print(
+      appLog(
           'DEBUG: Successfully added ${nearbySpots.length} markers to the map');
 
       // Move camera to the first spot so markers are visible even if user is far away.
@@ -422,15 +392,14 @@ class HomeScreenController extends GetxController
         mapbox.MapAnimationOptions(duration: 2000),
       );
     } catch (e) {
-      print('Error adding spot markers: $e');
+      appLog('Error adding spot markers: $e');
     }
   }
 
-  @override
-  void onPointAnnotationClick(mapbox.PointAnnotation annotation) {
+  void onPointAnnotationTap(mapbox.PointAnnotation annotation) {
     final spot = markerSpotMap[annotation.id];
     if (spot != null) {
-      print('DEBUG: Marker tapped: ${spot.title}');
+      appLog('DEBUG: Marker tapped: ${spot.title}');
 
       // Navigate to spot details screen
       Get.toNamed(
@@ -451,7 +420,7 @@ class HomeScreenController extends GetxController
         textColor: Colors.white,
       );
     } else {
-      print('DEBUG: No spot data found for marker: ${annotation.id}');
+      appLog('DEBUG: No spot data found for marker: ${annotation.id}');
       Fluttertoast.showToast(
         msg: "Spot information not available",
         backgroundColor: Colors.orange,
@@ -538,7 +507,7 @@ class HomeScreenController extends GetxController
         searchSuggestions = response.data['features'];
       }
     } catch (e) {
-      debugPrint('Suggestion Error: $e');
+      appLog('Suggestion Error: $e');
     } finally {
       isSearching = false;
       update();
@@ -578,7 +547,7 @@ class HomeScreenController extends GetxController
         Fluttertoast.showToast(msg: "Location not found");
       }
     } catch (e) {
-      debugPrint('Search Error: $e');
+      appLog('Search Error: $e');
       Fluttertoast.showToast(msg: "Error searching location");
     }
   }

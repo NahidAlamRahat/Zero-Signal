@@ -76,7 +76,9 @@ class CreatePassController extends GetxController {
             'success message => ${_createPasswordRepository.successfullyMessage}');
 
         // Show the password changed bottom sheet as designed
-        showPasswordChangedSheet(context);
+        if (context.mounted) {
+          showPasswordChangedSheet(context);
+        }
       } else {
         AppSnackBar.message('${_createPasswordRepository.errorMessage}');
         appLog('error message => ${_createPasswordRepository.errorMessage}');

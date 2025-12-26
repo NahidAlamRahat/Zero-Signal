@@ -20,7 +20,7 @@ class SplashController extends GetxController {
 
     appLog("Access Token: $accessToken");
 
-    if (accessToken != null && accessToken.isNotEmpty) {
+    if (accessToken.isNotEmpty) {
       appLog("accessToken.isNotEmpty : ${accessToken.isNotEmpty}");
 
       Get.offAllNamed(AppRoutes.bottomNav);

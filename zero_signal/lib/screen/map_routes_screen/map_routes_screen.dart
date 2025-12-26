@@ -9,15 +9,14 @@ import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
-import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
-import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 
 import '../save_route_details_screen/save_route_details_screen.dart';
 import 'controller/map_routes_controller.dart';
@@ -177,18 +176,18 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
       // Start point circle (green)
       final startCircle = mapbox.CircleAnnotationOptions(
         geometry: mapbox.Point(coordinates: mapbox.Position(initialLng, initialLat)),
-        circleColor: Colors.green.value,
+        circleColor: Colors.green.toARGB32(),
         circleRadius: 8.0,
-        circleStrokeColor: Colors.white.value,
+        circleStrokeColor: Colors.white.toARGB32(),
         circleStrokeWidth: 2.0,
       );
       
       // End point circle (red)
       final endCircle = mapbox.CircleAnnotationOptions(
         geometry: mapbox.Point(coordinates: mapbox.Position(finalLng, finalLat)),
-        circleColor: Colors.red.value,
+        circleColor: Colors.red.toARGB32(),
         circleRadius: 8.0,
-        circleStrokeColor: Colors.white.value,
+        circleStrokeColor: Colors.white.toARGB32(),
         circleStrokeWidth: 2.0,
       );
       
@@ -224,7 +223,10 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
       appLog('Response status: ${response.statusCode}', type: LogType.info, source: 'MAP');
       
       if (response.statusCode == 200) {
+        // http.Response returns body as String, need to jsonDecode
         final data = convert.jsonDecode(response.body);
+        appLog('Decoded data keys: ${data.keys.toList()}', type: LogType.info, source: 'MAP');
+        
         final routes = data['routes'] as List;
         
         if (routes.isNotEmpty) {
@@ -278,7 +280,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             mapbox.Position(finalLng, finalLat),     // End point
           ],
         ),
-        lineColor: Colors.red.value,
+        lineColor: Colors.red.toARGB32(),
         lineWidth: 4.0,
         lineOpacity: 0.8,
       );
@@ -492,7 +494,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
 
               /// FLOATING BUTTONS
               Positioned(
-                bottom: 310.h,
+                bottom: 350.h,
                 right: 20,
                 child: Column(
                   children: [
@@ -698,7 +700,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                       controller: _pageController,
                       itemCount: controller.routesList.length,
                       onPageChanged: (index) {
-                        print('PageView changed to index: $index');
+                        appLog('PageView changed to index: $index', type: LogType.info, source: 'PAGEVIEW');
                         setState(() => currentRouteIndex = index);
                         // Update map when card is changed
                         if (controller.routesList.isNotEmpty) {
@@ -706,7 +708,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                         }
                       },
                       itemBuilder: (context, index) {
-                        print('Building RouteCard for index: $index, total routes: ${controller.routesList.length}');
+                        appLog('Building RouteCard for index: $index, total routes: ${controller.routesList.length}', type: LogType.info, source: 'PAGEVIEW');
                         return RouteCard(
                           routeData: controller.routesList[index],
                           onTap: () {
@@ -758,18 +760,6 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
         },
       ),
     );
-  }
-
-  String _getMapImageByType() {
-    switch (selectedMapType) {
-      case 'Satellite':
-        return AppImagePath.roadMap;
-      case 'Terrain':
-        return AppImagePath.mountainMap;
-      case 'Default':
-      default:
-        return AppImagePath.normalMap;
-    }
   }
 }
 

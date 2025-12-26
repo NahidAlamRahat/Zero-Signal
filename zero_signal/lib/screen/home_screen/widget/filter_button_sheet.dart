@@ -32,7 +32,7 @@ class FilterBottomSheet extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -308,13 +308,13 @@ class FilterBottomSheet extends StatelessWidget {
                     boxShadow: [
                       if (isSelected)
                         BoxShadow(
-                          color: AppColor.backgroundColor.withOpacity(0.3),
+                          color: AppColor.backgroundColor.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       if (!isSelected)
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 4,
                           offset: const Offset(0, 1),
                         ),

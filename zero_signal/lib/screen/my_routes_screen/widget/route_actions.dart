@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
 import '../model/route_model.dart';
 // Note: Assuming 'isFavorite' logic exists or will be handled.
@@ -20,11 +19,11 @@ class RouteActions extends StatelessWidget {
   final VoidCallback onDeleteTap;
 
   const RouteActions({
-    Key? key,
+    super.key,
     required this.route,
     required this.onFavoriteTap,
     required this.onDeleteTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../../constant/api_end_point.dart';
+import '../../../utils/app_log/app_log.dart';
 
 class FilterController extends GetxController {
   // Selected filters
@@ -30,13 +31,13 @@ class FilterController extends GetxController {
       // Use actual API endpoint from AppApiEndPoint
       final url = "${AppApiEndPoint.instance.baseUrl}${AppApiEndPoint.categoryEndPoint}";
       
-      print('DEBUG: Fetching categories from: $url');
+      appLog('DEBUG: Fetching categories from: $url');
       
       final response = await _dio.get(url);
       
       if (response.statusCode == 200) {
         final data = response.data;
-        print('DEBUG: API response received: $data');
+        appLog('DEBUG: API response received: $data');
         
         // Parse API response and populate filterCategories
         if (data['success'] == true && data['data'] != null) {
@@ -53,18 +54,18 @@ class FilterController extends GetxController {
             }
             
             filterCategories[categoryName] = subcategories;
-            print('DEBUG: Added category: $categoryName with ${subcategories.length} subcategories');
+            appLog('DEBUG: Added category: $categoryName with ${subcategories.length} subcategories');
           }
         } else {
-          print('DEBUG: API response format unexpected');
+          appLog('DEBUG: API response format unexpected');
           errorMessage = 'Invalid response format from server';
         }
       } else {
-        print('DEBUG: API returned status ${response.statusCode}');
+        appLog('DEBUG: API returned status ${response.statusCode}');
         errorMessage = 'Failed to load categories (Status: ${response.statusCode})';
       }
     } catch (e) {
-      print('DEBUG: Error in fetchFilterCategories: $e');
+      appLog('DEBUG: Error in fetchFilterCategories: $e');
       errorMessage = 'Error loading categories: $e';
     } finally {
       isLoading = false;

@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:zero_signal/repository/chat_repository.dart';
 import 'package:zero_signal/service/storage/storage_service.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 
 import '../model/chat_model.dart';
 
@@ -35,11 +36,7 @@ class ChatController extends GetxController {
       if (Get.arguments is String) {
         activityId = Get.arguments as String;
       } else if (Get.arguments is Map) {
-        // Handle if passed as map, though ActivityCard uses String or Object?
-        // We will update ActivityCard to pass ID specifically or handle object here.
-        // If ActivityCard passes ActivityItem, we extract ID.
-        // Based on ActivityCard analysis, we should change it to pass just ID or we handle it here.
-        // Let's assume we update ActivityCard to pass ID.
+
       }
       fetchMessages();
       fetchMembers();
@@ -161,7 +158,7 @@ class ChatController extends GetxController {
         isRecording.value = true;
       }
     } catch (e) {
-      print('Failed to start recording: $e');
+      appLog('Failed to start recording: $e', source: 'ChatController', type: LogType.error);
     }
   }
 
@@ -178,7 +175,7 @@ class ChatController extends GetxController {
         _recordingPath = null;
       }
     } catch (e) {
-      print('Failed to stop recording: $e');
+      appLog('Failed to stop recording: $e', source: 'ChatController', type: LogType.error);
       isRecording.value = false;
     }
   }
@@ -196,7 +193,7 @@ class ChatController extends GetxController {
         _recordingPath = null;
       }
     } catch (e) {
-      print('Failed to cancel recording: $e');
+      appLog('Failed to cancel recording: $e', source: 'ChatController', type: LogType.error);
       isRecording.value = false;
     }
   }

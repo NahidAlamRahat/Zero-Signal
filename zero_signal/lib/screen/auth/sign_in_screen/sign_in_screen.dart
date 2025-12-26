@@ -12,7 +12,6 @@ import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../../routes/app_routes.dart';
-import '../../../widget/space_widget.dart';
 import 'controller/sign_in_controller.dart';
 
 class SignInScreen extends StatefulWidget {

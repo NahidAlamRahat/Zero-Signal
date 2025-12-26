@@ -210,15 +210,6 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
     ),
   );
 
-  Widget _sectionTitle(String title) => Text(
-    title,
-    style: const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      color: Colors.black87,
-    ),
-  );
-
 
   Widget _buildRouteTypeChip(String routeType) {
     final isSelected = selectedRouteType == routeType;

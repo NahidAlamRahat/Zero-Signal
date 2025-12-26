@@ -3,12 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_colors.dart';
-import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
-import 'package:zero_signal/widget/showCustomDialog.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import 'dart:typed_data';
@@ -504,7 +502,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           return Dialog(
             backgroundColor: Colors.transparent,
             insetPadding: EdgeInsets.zero,
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.8,
               child: Stack(
@@ -515,7 +513,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                     boundaryMargin: EdgeInsets.all(20),
                     minScale: 0.5,
                     maxScale: 4.0,
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: double.infinity,
                       child: Image.memory(
@@ -538,7 +536,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withValues(alpha:0.3),
                               blurRadius: 4,
                               offset: Offset(0, 2),
                             ),
@@ -555,7 +553,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
+                        color: Colors.black.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
@@ -584,7 +582,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             return Dialog(
               backgroundColor: Colors.transparent,
               insetPadding: EdgeInsets.zero,
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: Stack(
@@ -595,7 +593,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                       boundaryMargin: EdgeInsets.all(20),
                       minScale: 0.5,
                       maxScale: 4.0,
-                      child: Container(
+                      child: SizedBox(
                         width: double.infinity,
                         height: double.infinity,
                         child: Image.network(
@@ -626,7 +624,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Colors.black.withValues(alpha: 0.3),
                                 blurRadius: 4,
                                 offset: Offset(0, 2),
                               ),
@@ -643,7 +641,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
+                          color: Colors.black.withValues(alpha: 0.7),
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(

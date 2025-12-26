@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constant/app_colors.dart';
 import '../../../gen/assets.gen.dart';
-import '../../favorite_sites_screen/favorite_sites_screen.dart';
 import '../model/my_spots_response_model.dart';
 
 class SpotActions extends StatelessWidget {
@@ -11,11 +10,11 @@ class SpotActions extends StatelessWidget {
   final VoidCallback onDeleteTap;
 
   const SpotActions({
-    Key? key,
+    super.key,
     required this.spot,
     required this.onFavoriteTap,
     required this.onDeleteTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

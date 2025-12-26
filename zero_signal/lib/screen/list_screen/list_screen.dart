@@ -12,10 +12,10 @@ class ActivityListsScreen extends StatefulWidget {
   const ActivityListsScreen({super.key});
 
   @override
-  _ActivityListsScreenState createState() => _ActivityListsScreenState();
+  ActivityListsScreenState createState() => ActivityListsScreenState();
 }
 
-class _ActivityListsScreenState extends State<ActivityListsScreen> {
+class ActivityListsScreenState extends State<ActivityListsScreen> {
   int selectedTabIndex = 0;
 
   final List<String> tabs = [

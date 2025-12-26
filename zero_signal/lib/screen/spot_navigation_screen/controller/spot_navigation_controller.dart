@@ -7,7 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:math';
 import 'dart:io';
-import 'dart:typed_data';
+
+import 'package:zero_signal/utils/app_log/app_log.dart';
 
 class SpotNavigationController extends GetxController {
   // Mapbox map instance
@@ -84,7 +85,7 @@ class SpotNavigationController extends GetxController {
       
       // Get spot data from arguments
       final arguments = Get.arguments as Map<String, dynamic>?;
-      print('Arguments received: $arguments');
+      appLog('Arguments received: $arguments');
       
       if (arguments != null) {
         spotId.value = arguments['spotId'] ?? '';
@@ -92,116 +93,116 @@ class SpotNavigationController extends GetxController {
         spotLatitude.value = arguments['latitude']?.toDouble() ?? 0.0;
         spotLongitude.value = arguments['longitude']?.toDouble() ?? 0.0;
         
-        print('Spot data loaded - Title: ${spotTitle.value}, Lat: ${spotLatitude.value}, Lon: ${spotLongitude.value}');
+        appLog('Spot data loaded - Title: ${spotTitle.value}, Lat: ${spotLatitude.value}, Lon: ${spotLongitude.value}');
       }
       
       // Set default location immediately - don't get GPS on init
-      print('Setting default location for immediate screen load...');
+      appLog('Setting default location for immediate screen load...');
       _setDefaultLocation();
       
-      print('=== SpotNavigationController onInit END ===');
+      appLog('=== SpotNavigationController onInit END ===');
     } catch (e) {
-      print('Error in controller onInit: $e');
+      appLog('Error in controller onInit: $e');
     }
   }
 
   /// Get current device location
   Future<void> getCurrentLocation() async {
     try {
-      print('=== getCurrentLocation START ===');
+      appLog('=== getCurrentLocation START ===');
       
       // Check location services with timeout
-      print('Checking location services...');
+      appLog('Checking location services...');
       bool serviceEnabled;
       try {
         serviceEnabled = await Geolocator.isLocationServiceEnabled()
             .timeout(const Duration(seconds: 5));
-        print('Location service enabled: $serviceEnabled');
+        appLog('Location service enabled: $serviceEnabled');
       } catch (e) {
-        print('Location services check timed out: $e, assuming disabled');
+        appLog('Location services check timed out: $e, assuming disabled');
         serviceEnabled = false;
       }
       
       if (!serviceEnabled) {
-        print('Location services disabled, using default location');
+        appLog('Location services disabled, using default location');
         _setDefaultLocation();
         return;
       }
 
       // Check location permissions with timeout
-      print('Checking location permissions...');
+      appLog('Checking location permissions...');
       LocationPermission permission;
       try {
         permission = await Geolocator.checkPermission()
             .timeout(const Duration(seconds: 5));
-        print('Current permission: $permission');
+        appLog('Current permission: $permission');
       } catch (e) {
-        print('Permission check timed out: $e, assuming denied');
+        appLog('Permission check timed out: $e, assuming denied');
         _setDefaultLocation();
         return;
       }
       
       if (permission == LocationPermission.denied) {
-        print('Permission denied, requesting...');
+        appLog('Permission denied, requesting...');
         try {
           permission = await Geolocator.requestPermission()
               .timeout(const Duration(seconds: 5));
-          print('Requested permission: $permission');
+          appLog('Requested permission: $permission');
         } catch (e) {
-          print('Permission request timed out: $e, using default location');
+          appLog('Permission request timed out: $e, using default location');
           _setDefaultLocation();
           return;
         }
         
         if (permission == LocationPermission.denied) {
-          print('Permission still denied, using default location');
+          appLog('Permission still denied, using default location');
           _setDefaultLocation();
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        print('Permission denied forever, using default location');
+        appLog('Permission denied forever, using default location');
         _setDefaultLocation();
         return;
       }
 
       // Get current position with timeout
-      print('Getting current position...');
+      appLog('Getting current position...');
       try {
         Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
           timeLimit: const Duration(seconds: 10),
         ).timeout(const Duration(seconds: 10));
         
-        print('Position obtained: Lat: ${position.latitude}, Lon: ${position.longitude}');
+        appLog('Position obtained: Lat: ${position.latitude}, Lon: ${position.longitude}');
 
         currentLatitude.value = position.latitude;
         currentLongitude.value = position.longitude;
         
         // Calculate distance
-        print('Calculating distance...');
+        appLog('Calculating distance...');
         calculateDistance();
         
       } catch (e) {
-        print('Error getting position: $e, using default location');
+        appLog('Error getting position: $e, using default location');
         _setDefaultLocation();
       }
       
-      print('=== getCurrentLocation END ===');
+      appLog('=== getCurrentLocation END ===');
     } catch (e) {
-      print('Error in getCurrentLocation: $e, using default location');
+      appLog('Error in getCurrentLocation: $e, using default location');
       _setDefaultLocation();
     }
   }
 
   /// Set default location (Dhaka) as fallback
   void _setDefaultLocation() {
-    print('Setting default location (Dhaka)');
+    appLog('Setting default location (Dhaka)');
     currentLatitude.value = 23.8103; // Dhaka center
     currentLongitude.value = 90.4125; // Dhaka center
     calculateDistance();
-    print('Default location set - Lat: ${currentLatitude.value}, Lon: ${currentLongitude.value}');
+    appLog('Default location set - Lat: ${currentLatitude.value}, Lon: ${currentLongitude.value}');
   }
 
   /// Calculate distance between current location and spot
@@ -251,12 +252,12 @@ class SpotNavigationController extends GetxController {
       try {
         await mapboxMap.loadStyleURI('mapbox://styles/mapbox/streets-v12');
       } catch (e) {
-        print('Failed to load map style: $e');
+        appLog('Failed to load map style: $e');
         // Try fallback style
         try {
           await mapboxMap.loadStyleURI('mapbox://styles/mapbox/basic-v9');
         } catch (e2) {
-          print('Failed to load fallback style: $e2');
+          appLog('Failed to load fallback style: $e2');
         }
       }
 
@@ -264,13 +265,13 @@ class SpotNavigationController extends GetxController {
       try {
         pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
       } catch (e) {
-        print('Failed to create point annotation manager: $e');
+        appLog('Failed to create point annotation manager: $e');
       }
       
       try {
         polylineAnnotationManager = await mapboxMap.annotations.createPolylineAnnotationManager();
       } catch (e) {
-        print('Failed to create polyline annotation manager: $e');
+        appLog('Failed to create polyline annotation manager: $e');
       }
 
       // Add markers with delay to ensure map is ready
@@ -278,7 +279,7 @@ class SpotNavigationController extends GetxController {
         try {
           await addMarkers();
         } catch (e) {
-          print('Failed to add markers: $e');
+          appLog('Failed to add markers: $e');
         }
       });
 
@@ -291,10 +292,10 @@ class SpotNavigationController extends GetxController {
           mapbox.ScaleBarSettings(enabled: false),
         );
       } catch (e) {
-        print('Failed to update map settings: $e');
+        appLog('Failed to update map settings: $e');
       }
     } catch (e) {
-      print('Error in onMapCreated: $e');
+      appLog('Error in onMapCreated: $e');
     }
   }
 
@@ -338,7 +339,7 @@ class SpotNavigationController extends GetxController {
         );
       }
     } catch (e) {
-      // Handle error silently
+      appLog('Failed to add markers: $e');
     }
   }
 
@@ -354,14 +355,14 @@ class SpotNavigationController extends GetxController {
     isLoading.value = true;
 
     try {
-      print('=== calculateRoute START ===');
+      appLog('=== calculateRoute START ===');
       
       // Try to get real location only when user presses calculate
-      print('Getting current location for route calculation...');
+      appLog('Getting current location for route calculation...');
       await getCurrentLocation();
       
-      print('Current location: ${currentLatitude.value}, ${currentLongitude.value}');
-      print('Spot location: ${spotLatitude.value}, ${spotLongitude.value}');
+      appLog('Current location: ${currentLatitude.value}, ${currentLongitude.value}');
+      appLog('Spot location: ${spotLatitude.value}, ${spotLongitude.value}');
 
       // Use timeout to prevent hanging
       final routeCoordinates = await compute(_getRouteCoordinates, {
@@ -377,30 +378,30 @@ class SpotNavigationController extends GetxController {
         await drawRouteLineFromCoordinates(routeCoordinates);
         await centerMap();
         hasRoute.value = true;
-        print('Real route calculated and displayed');
+        appLog('Real route calculated and displayed');
       } else {
         // Fallback to straight line immediately
         await drawStraightLineFallback();
         await centerMap();
         hasRoute.value = true;
-        print('Fallback straight line displayed');
+        appLog('Fallback straight line displayed');
       }
     } catch (e) {
-      print('Error in calculateRoute: $e');
+      appLog('Error in calculateRoute: $e');
       // Always try fallback to ensure UI responds
       try {
         await drawStraightLineFallback();
         await centerMap();
         hasRoute.value = true;
-        print('Error fallback route displayed');
+        appLog('Error fallback route displayed');
       } catch (e2) {
-        print('Error in fallback route: $e2');
+        appLog('Error in fallback route: $e2');
         hasRoute.value = false;
       }
     } finally {
       // Ensure loading state is always reset
       isLoading.value = false;
-      print('=== calculateRoute END ===');
+      appLog('=== calculateRoute END ===');
     }
   }
 
@@ -439,7 +440,7 @@ class SpotNavigationController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error in _getRouteCoordinates: $e');
+      appLog('Error in _getRouteCoordinates: $e');
     }
     return null;
   }
@@ -461,7 +462,7 @@ class SpotNavigationController extends GetxController {
         ),
       );
     } catch (e) {
-      print('Error in drawRouteLineFromCoordinates: $e');
+      appLog('Error in drawRouteLineFromCoordinates: $e');
     }
   }
 
@@ -486,7 +487,7 @@ class SpotNavigationController extends GetxController {
         ),
       );
     } catch (e) {
-      print('Error in drawStraightLineFallback: $e');
+      appLog('Error in drawStraightLineFallback: $e');
     }
   }
 
@@ -533,7 +534,7 @@ class SpotNavigationController extends GetxController {
         );
       }
     } catch (e) {
-      // Handle error silently
+      appLog('Error in drawRouteLine: $e');
     }
   }
 
@@ -618,7 +619,7 @@ class SpotNavigationController extends GetxController {
           try {
             await polylineAnnotationManager?.deleteAll();
           } catch (e) {
-            print('Error deleting polyline: $e');
+            appLog('Error deleting polyline: $e');
           }
           
           if (currentCoordinates.isNotEmpty) {
@@ -631,7 +632,7 @@ class SpotNavigationController extends GetxController {
                 ),
               );
             } catch (e) {
-              print('Error creating polyline: $e');
+              appLog('Error creating polyline: $e');
               break; // Exit animation if polyline creation fails
             }
           }
@@ -643,7 +644,7 @@ class SpotNavigationController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error in route animation: $e');
+      appLog('Error in route animation: $e');
     } finally {
       isAnimating.value = false;
     }
@@ -677,13 +678,13 @@ class SpotNavigationController extends GetxController {
         await savedFile.writeAsBytes(imageFile);
         
         // Show success message
-        print('Route screenshot saved: ${savedFile.path}');
+        appLog('Route screenshot saved: ${savedFile.path}');
         
         return imageFile;
       }
     } catch (e) {
       // Handle error silently
-      print('Failed to capture screenshot: $e');
+      appLog('Failed to capture screenshot: $e');
     }
     return null;
   }
