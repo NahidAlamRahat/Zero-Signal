@@ -56,6 +56,5 @@ class AppRoutes {
   static const editActivityScreen = "/editActivityScreen";
   static const faqScreen = "/faqScreen";
   static const spotNavigationScreen = "/spotNavigationScreen";
-
-
+  static const routeDetailsScreen = "/routeDetailsScreen";
 }

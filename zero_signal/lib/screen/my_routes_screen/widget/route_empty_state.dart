@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:zero_signal/routes/app_routes.dart';
 
 import '../../../constant/app_colors.dart';
 import '../../../widget/text_widget/text_widgets.dart';
@@ -39,7 +42,7 @@ class RouteEmptyState extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             ElevatedButton(
-              onPressed: onAddRoute,
+              onPressed: () => Get.toNamed(AppRoutes.shareRouteScreen),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2E4F3E),
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),

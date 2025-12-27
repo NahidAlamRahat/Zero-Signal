@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../repository/route_repository/route_repository.dart';
+import '../../../routes/app_routes.dart';
 import '../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/route_model.dart';
 
@@ -71,8 +72,7 @@ class MyRoutesController extends GetxController {
 
   void onRouteTap(RouteData route) {
     // Navigate to route details
-    // TODO: Implement details navigation
-    print("Route tapped: ${route.title}");
+    Get.toNamed(AppRoutes.routeDetailsScreen, arguments: route);
   }
 
   Future<void> toggleFavorite(RouteData route) async {
