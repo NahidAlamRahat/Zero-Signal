@@ -9,8 +9,9 @@ import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+import 'package:zero_signal/widgets/image_gallery_dialog.dart';
+import 'package:zero_signal/screen/route_navigation_screen/route_navigation_screen.dart';
 import 'dart:typed_data';
-
 import '../sport_details/widget/user_dialogs.dart';
 import 'controller/save_route_details_screen_controller.dart';
 
@@ -23,6 +24,17 @@ class SaveRouteDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Debug: Print route data to console
+    print('=== ROUTE DETAILS SCREEN DEBUG ===');
+    print('Route ID: $routeId');
+    print('Route Data: $routeData');
+    if (routeData != null) {
+      print('Route Name: ${routeData!['name']}');
+      print('Route Coordinates: ${routeData!['coordinates']}');
+      print('Coordinates Length: ${routeData!['coordinates']?.length ?? 0}');
+    }
+    print('================================');
+
     final controller = Get.put(RouteDetailsController());
     
     // Set route data if provided, or fetch by ID
@@ -294,7 +306,40 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             buttonHeight: 33,
             buttonWidth: 120,
             maxLines: 1,
-            onPressed: () => Get.toNamed(AppRoutes.fullMapScreen),
+            onPressed: () {
+  // Use the route data that was passed to this screen
+  final routeCoordinates = <Map<String, dynamic>>[];
+  
+  if (routeData != null) {
+    // Add initial coordinate
+    routeCoordinates.add({
+      'latitude': routeData!['inital_lat'] ?? 0.0,
+      'longitude': routeData!['inital_lng'] ?? 0.0,
+    });
+    
+    // Add final coordinate
+    routeCoordinates.add({
+      'latitude': routeData!['final_lat'] ?? 0.0,
+      'longitude': routeData!['final_lng'] ?? 0.0,
+    });
+  }
+  
+  final routeName = routeData?['title'] ?? 'Route Navigation';
+  
+  print('=== NAVIGATION DEBUG ===');
+  print('Route Name: $routeName');
+  print('Route Coordinates: $routeCoordinates');
+  print('Coordinates Count: ${routeCoordinates.length}');
+  print('Initial: ${routeData?['inital_lat']}, ${routeData?['inital_lng']}');
+  print('Final: ${routeData?['final_lat']}, ${routeData?['final_lng']}');
+  print('====================');
+  
+  Get.to(() => RouteNavigationScreen(
+    routeId: routeId ?? '',
+    routeCoordinates: routeCoordinates,
+    routeName: routeName,
+  ));
+},
           ),
         ),
         SizedBox(width: 12),
@@ -403,8 +448,16 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   // Route Images Section
   Widget _buildRouteImagesSection(
       BuildContext context, RouteDetailsController controller) {
-    // Use map screenshot if available, otherwise use API images
-    final hasMapScreenshot = mapScreenshot != null;
+    // Combine map screenshot and API images
+    final allImages = <String?>[];
+    if (mapScreenshot != null) {
+      allImages.add(null); // Placeholder for map screenshot
+    }
+    allImages.addAll(controller.images);
+    
+    if (allImages.isEmpty) {
+      return const SizedBox.shrink(); // Don't show section if no images
+    }
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,246 +474,80 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         SizedBox(height: 8.h),
         SizedBox(
           height: 84.h,
-          child: hasMapScreenshot
-              ? ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  itemCount: 1, // Only show map screenshot
-                  separatorBuilder: (context, index) => SizedBox(width: 8.w),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        _showImageDialog(context, controller, index);
-                      },
-                      child: Container(
-                        width: 84.w,
-                        height: 84.h,
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4.r),
-                          child: Image.memory(
-                            mapScreenshot!,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : Obx(() => ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  itemCount: controller.images.length,
-                  separatorBuilder: (context, index) => SizedBox(width: 8.w),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        _showImageDialog(context, controller, index);
-                      },
-                      child: Container(
-                        width: 84.w,
-                        height: 84.h,
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4.r),
-                          child: Image.network(
-                            controller.images[index],
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: Icon(Icons.image_not_supported, size: 20),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            itemCount: allImages.length,
+            separatorBuilder: (context, index) => SizedBox(width: 8.w),
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  _showImageDialog(context, controller, index);
+                },
+                child: Container(
+                  width: 84.w,
+                  height: 84.h,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4.r),
+                    child: _buildImageItem(index),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
   }
 
-  void _showImageDialog(
-      BuildContext context, RouteDetailsController controller, int index) {
-    // Check if this is a map screenshot
+  Widget _buildImageItem(int index) {
+    // Check if this is a map screenshot (first item if screenshot exists)
     if (mapScreenshot != null && index == 0) {
-      // Show map screenshot in dialog with zoom
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.zero,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: Stack(
-                children: [
-                  // Interactive image with zoom
-                  InteractiveViewer(
-                    panEnabled: true,
-                    boundaryMargin: EdgeInsets.all(20),
-                    minScale: 0.5,
-                    maxScale: 4.0,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: Image.memory(
-                        mapScreenshot!,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  // Close button
-                  Positioned(
-                    top: 40.h,
-                    right: 20.w,
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                        width: 40.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha:0.3),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(Icons.close, color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  // Zoom instructions
-                  Positioned(
-                    bottom: 20.h,
-                    left: 20.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.7),
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Text(
-                        'Pinch to zoom',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      return Image.memory(
+        mapScreenshot!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey[300],
+            child: Icon(Icons.map, size: 20),
           );
         },
       );
-    } else {
-      // Handle API images
-      final adjustedIndex = mapScreenshot != null ? index - 1 : index;
-      if (adjustedIndex >= 0 && adjustedIndex < controller.images.length) {
-        controller.selectImage(controller.images[adjustedIndex]);
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Dialog(
-              backgroundColor: Colors.transparent,
-              insetPadding: EdgeInsets.zero,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.8,
-                child: Stack(
-                  children: [
-                    // Interactive image with zoom
-                    InteractiveViewer(
-                      panEnabled: true,
-                      boundaryMargin: EdgeInsets.all(20),
-                      minScale: 0.5,
-                      maxScale: 4.0,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Image.network(
-                          controller.selectedImage.value,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Icon(Icons.image_not_supported, size: 50),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    // Close button
-                    Positioned(
-                      top: 40.h,
-                      right: 20.w,
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 40.w,
-                          height: 40.h,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Icon(Icons.close, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    // Zoom instructions
-                    Positioned(
-                      bottom: 20.h,
-                      left: 20.w,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Text(
-                          'Pinch to zoom',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      }
     }
+    
+    // Adjust index for API images (accounting for screenshot)
+    final apiImageIndex = mapScreenshot != null ? index - 1 : index;
+    final controller = Get.find<RouteDetailsController>();
+    
+    return Image.network(
+      controller.images[apiImageIndex],
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: Colors.grey[300],
+          child: Icon(Icons.image_not_supported, size: 20),
+        );
+      },
+    );
+  }
+
+  void _showImageDialog(
+      BuildContext context, RouteDetailsController controller, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ImageGalleryDialog(
+          networkImages: controller.images,
+          mapScreenshot: mapScreenshot,
+          initialIndex: index,
+        );
+      },
+    );
   }
 
   // Comments Section
@@ -806,102 +693,6 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-// --- NEW EXTRACTED DIALOG WIDGET ---
-class ImageGalleryDialog extends StatelessWidget {
-  final RouteDetailsController controller;
-  const ImageGalleryDialog({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.all(24),
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColor.creamBackgroundColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Main Image Display
-            Obx(() => ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: controller.selectedImage.value.isNotEmpty
-                      ? Image.asset(
-                          controller.selectedImage.value,
-                          width: double.infinity,
-                          height: 200,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                            height: 200,
-                            color: Colors.grey[300],
-                            child: Icon(Icons.error,
-                                size: 64, color: Colors.grey[600]),
-                          ),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(Icons.image, size: 64, color: Colors.red),
-                        ),
-                )),
-            SizedBox(height: 16),
-            // Thumbnails List
-            SizedBox(
-              height: 70,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                itemCount: controller.images.length,
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemBuilder: (context, imgIndex) {
-                  final imgPath = controller.images[imgIndex];
-                  return Obx(() {
-                    final isSelected =
-                        controller.selectedImage.value == imgPath;
-                    return GestureDetector(
-                      onTap: () => controller.selectImage(imgPath),
-                      child: Container(
-                        width: 90,
-                        height: 110,
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: isSelected
-                                  ? Colors.amber
-                                  : Colors.transparent,
-                              width: 3),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.asset(
-                            imgPath,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-      )
     );
   }
 }
