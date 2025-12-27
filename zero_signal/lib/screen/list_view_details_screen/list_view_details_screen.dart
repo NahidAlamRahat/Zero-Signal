@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zero_signal/constant/app_image_path.dart';
+import 'package:get/get.dart';
+import 'package:zero_signal/constant/api_end_point.dart';
 import 'package:zero_signal/screen/list_view_details_screen/widget/location_map_widget.dart';
-
 import '../../constant/app_colors.dart';
 import '../../widget/text_widget/text_widgets.dart';
+import 'controller/list_view_details_controller.dart';
 
 class ListViewDetailsScreen extends StatefulWidget {
   const ListViewDetailsScreen({super.key});
@@ -14,7 +15,7 @@ class ListViewDetailsScreen extends StatefulWidget {
 }
 
 class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
-  bool isFavorite = false;
+  final controller = Get.put(ListViewDetailsController());
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Hero Image
+                    // Hero Image Slider
                     _buildHeroImage(),
 
                     // Details Section
@@ -40,8 +41,6 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
                 ),
               ),
             ),
-
-
           ],
         ),
       ),
@@ -63,32 +62,73 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
               color: Color(0xFF2C2C2C),
             ),
           ),
-
-
-
         ],
       ),
     );
   }
 
   Widget _buildHeroImage() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 219,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          image: AssetImage(AppImagePath.sunImage),
-          fit: BoxFit.cover,
-        ),
-      ),
+    final images = controller.activity.images.isNotEmpty
+        ? controller.activity.images
+        : [controller.activity.imagePath];
 
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          height: 219.h,
+          child: Stack(
+            children: [
+              PageView.builder(
+                itemCount: images.length,
+                onPageChanged: (index) => controller.updateImageIndex(index),
+                itemBuilder: (context, index) {
+                  final imageUrl = images[index];
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: (imageUrl.startsWith('http') ||
+                            imageUrl.startsWith('/'))
+                        ? Image.network(
+                            '${AppApiEndPoint.domain}$imageUrl',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          )
+                        : Image.asset(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Obx(() => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                images.length,
+                (index) => Container(
+                  width: 8.w,
+                  height: 8.h,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: controller.currentImageIndex.value == index
+                        ? AppColor.backgroundColor
+                        : Colors.grey.shade400,
+                  ),
+                ),
+              ),
+            )),
+      ],
     );
   }
 
   Widget _buildDetailsSection() {
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -109,14 +149,14 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 16.h,),
+        SizedBox(height: 16.h),
         TextWidget(
-          text: 'Sunset Point',
+          text: controller.activity.title,
           fontColor: AppColor.textColor,
           fontSize: 24,
           fontWeight: FontWeight.w500,
         ),
-        SizedBox(height: 4.h,),
+        SizedBox(height: 4.h),
         Row(
           children: [
             const Icon(
@@ -126,26 +166,31 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
             ),
             const SizedBox(width: 4),
             TextWidget(
-              text: 'Espot, Catalonia',
+              text: controller.activity.location,
               fontColor: AppColor.darkGay300,
               fontSize: 14,
               fontWeight: FontWeight.w400,
             ),
           ],
         ),
-        SizedBox(height: 4.h,),
+        SizedBox(height: 4.h),
         TextWidget(
-          text: 'Near Olot, Catalonia',
+          text: controller.activity.category,
           fontColor: AppColor.darkGay300,
           fontSize: 14,
           fontWeight: FontWeight.w400,
         ),
-        SizedBox(height: 16.h,),
+        SizedBox(height: 16.h),
       ],
     );
   }
 
   Widget _buildLocationMap() {
+    final activity = controller.activity;
+    if (activity.latitude == null || activity.longitude == null) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,17 +202,15 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
         ),
         SizedBox(height: 12.h),
         LocationMapWidget(
-          latitude: 42.3601,
-          longitude: -71.0589,
-          markerTitle: 'Sunset Point',
+          latitude: activity.latitude!,
+          longitude: activity.longitude!,
+          markerTitle: activity.title,
           height: 250,
         ),
         SizedBox(height: 20.h),
       ],
     );
   }
-
-
 
   Widget _buildDescriptionSection() {
     return Column(
@@ -179,10 +222,10 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
-        SizedBox(height: 16.h,),
+        SizedBox(height: 16.h),
         TextWidget(
           textAlignment: TextAlign.start,
-          text: 'Escape the heat at the Azure Oasis. This stunning, crystal-clear pool is a tranquil paradise, surrounded by lush greenery. It\'s the perfect spot to relax, refresh, and immerse yourself in serene beauty.',
+          text: controller.activity.description ?? 'No description available.',
           fontColor: AppColor.darkGay300,
           fontSize: 16,
           fontWeight: FontWeight.w400,
@@ -190,11 +233,4 @@ class _ListViewDetailsScreenState extends State<ListViewDetailsScreen> {
       ],
     );
   }
-
-
-
-
-
-
-
 }

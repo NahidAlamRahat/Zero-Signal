@@ -10,7 +10,7 @@ import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
 import '../../constant/app_colors.dart';
 import 'controller/share_route_controller.dart';
-import '../share_spot_screen/model/category_response_model.dart' as spot_model;
+import '../filters_screen/model/route_category_model.dart';
 
 class ShareRouteScreen extends StatelessWidget {
   const ShareRouteScreen({super.key});
@@ -68,7 +68,7 @@ class ShareRouteScreen extends StatelessWidget {
                   hintText: 'Enter a route title',
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Start Location
                 _sectionTitle('Start Location'),
                 SizedBox(height: 12.h),
@@ -77,7 +77,7 @@ class ShareRouteScreen extends StatelessWidget {
                   hintText: 'Enter start location',
                 ),
                 SizedBox(height: 24.h),
-                
+
                 // End Location
                 _sectionTitle('End Location'),
                 SizedBox(height: 12.h),
@@ -86,7 +86,7 @@ class ShareRouteScreen extends StatelessWidget {
                   hintText: 'Enter end location',
                 ),
                 SizedBox(height: 24.h),
-                
+
                 // Description
                 _sectionTitle('Description'),
                 SizedBox(height: 12.h),
@@ -104,14 +104,16 @@ class ShareRouteScreen extends StatelessWidget {
                 _sectionTitle('Route Type'),
                 SizedBox(height: 12.h),
                 _routeTypeDropdown(controller),
-                if (controller.isRouteTypeDropdownOpen) _routeTypeDropdownBody(controller),
+                if (controller.isRouteTypeDropdownOpen)
+                  _routeTypeDropdownBody(controller),
                 SizedBox(height: 24.h),
 
                 // Difficulty
                 _sectionTitle('Difficulty'),
                 SizedBox(height: 12.h),
                 _difficultyDropdown(controller),
-                if (controller.isDifficultyDropdownOpen) _difficultyDropdownBody(controller),
+                if (controller.isDifficultyDropdownOpen)
+                  _difficultyDropdownBody(controller),
                 SizedBox(height: 60.h),
               ],
             ),
@@ -337,90 +339,56 @@ class ShareRouteScreen extends StatelessWidget {
 
   Widget _dropdownBody(ShareRouteController controller) => Container(
         width: double.infinity,
-        constraints: const BoxConstraints(maxHeight: 400),
+        constraints: const BoxConstraints(maxHeight: 300),
         decoration: BoxDecoration(
           color: const Color.fromRGBO(245, 233, 223, 1),
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(12),
             bottomRight: Radius.circular(12),
           ),
-          border: Border(
-            left: BorderSide(color: Colors.grey.shade300),
-            right: BorderSide(color: Colors.grey.shade300),
-            bottom: BorderSide(color: Colors.grey.shade300),
-          ),
+          border: Border.all(color: const Color.fromRGBO(245, 233, 223, 1)),
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildAllCategories(controller),
-          ),
-        ),
+        child: controller.routeCategories.isEmpty
+            ? const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: TextWidget(text: 'No activities found'),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                itemCount: controller.routeCategories.length,
+                itemBuilder: (context, index) {
+                  final category = controller.routeCategories[index];
+                  return _dropdownTile(category, controller);
+                },
+              ),
       );
 
-  List<Widget> _buildAllCategories(ShareRouteController controller) {
-    final widgets = <Widget>[];
-    for (var category in controller.categories) {
-      widgets.add(
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12, top: 16),
-          child: Text(
-            '${category.name}:',
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-      );
-      for (int i = 0; i < category.subcategories.length; i++) {
-        widgets.add(_dropdownCheckboxTile(
-          category.subcategories[i],
-          category.id,
-          i,
-          controller,
-        ));
-        if (i < category.subcategories.length - 1) {
-          widgets.add(const SizedBox(height: 8));
-        }
-      }
-    }
-    return widgets;
-  }
-
-  Widget _dropdownCheckboxTile(
-    spot_model.SubcategoryData item,
-    String categoryId,
-    int index,
+  Widget _dropdownTile(
+    RouteCategoryModel item,
     ShareRouteController controller,
-  ) =>
-      GestureDetector(
-        onTap: () => controller.toggleSubcategorySelection(categoryId, index),
-        child: Row(
-          children: [
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: item.isSelected
-                  ? const Icon(Icons.check, size: 16, color: Color(0xFF2D5A3D))
-                  : null,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                item.name,
-                style: const TextStyle(fontSize: 15, color: Colors.black87),
-              ),
-            ),
-          ],
+  ) {
+    final isSelected = controller.selectedCategoryId == item.id;
+    return ListTile(
+      onTap: () => controller.selectRouteCategory(item),
+      leading: Container(
+        width: 18,
+        height: 18,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400, width: 1.5),
+          borderRadius: BorderRadius.circular(4),
+          color: isSelected ? const Color(0xFF2D5A3D) : Colors.transparent,
         ),
-      );
+        child: isSelected
+            ? const Icon(Icons.check, size: 14, color: Colors.white)
+            : null,
+      ),
+      title: Text(
+        item.name,
+        style: const TextStyle(fontSize: 15, color: Colors.black87),
+      ),
+    );
+  }
 
   Widget _routeTypeDropdown(ShareRouteController controller) => GestureDetector(
         onTap: () => controller.toggleRouteTypeDropdown(),
@@ -442,8 +410,8 @@ class ShareRouteScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  controller.selectedRouteType == 'roundtrip' 
-                      ? 'Round Trip' 
+                  controller.selectedRouteType == 'roundtrip'
+                      ? 'Round Trip'
                       : 'Circle Trip',
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                   overflow: TextOverflow.ellipsis,
@@ -462,46 +430,47 @@ class ShareRouteScreen extends StatelessWidget {
 
   Widget _routeTypeDropdownBody(ShareRouteController controller) {
     return Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(245, 233, 223, 1),
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(12),
-            bottomRight: Radius.circular(12),
-          ),
-          border: Border(
-            left: BorderSide(color: Colors.grey.shade300),
-            right: BorderSide(color: Colors.grey.shade300),
-            bottom: BorderSide(color: Colors.grey.shade300),
-          ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color.fromRGBO(245, 233, 223, 1),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
         ),
-        child: Column(
-          children: controller.routeTypes.map((routeType) {
-            return ListTile(
-              dense: true,
-              title: Text(
-                routeType == 'roundtrip' ? 'Round Trip' : 'Single Trip',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: controller.selectedRouteType == routeType 
-                      ? const Color(0xFF2D5A3D)
-                      : Colors.black87,
-                  fontWeight: controller.selectedRouteType == routeType 
-                      ? FontWeight.w500
-                      : FontWeight.normal,
-                ),
+        border: Border(
+          left: BorderSide(color: Colors.grey.shade300),
+          right: BorderSide(color: Colors.grey.shade300),
+          bottom: BorderSide(color: Colors.grey.shade300),
+        ),
+      ),
+      child: Column(
+        children: controller.routeTypes.map((routeType) {
+          return ListTile(
+            dense: true,
+            title: Text(
+              routeType == 'roundtrip' ? 'Round Trip' : 'Single Trip',
+              style: TextStyle(
+                fontSize: 15,
+                color: controller.selectedRouteType == routeType
+                    ? const Color(0xFF2D5A3D)
+                    : Colors.black87,
+                fontWeight: controller.selectedRouteType == routeType
+                    ? FontWeight.w500
+                    : FontWeight.normal,
               ),
-              trailing: controller.selectedRouteType == routeType
-                  ? const Icon(Icons.check, color: Color(0xFF2D5A3D), size: 20)
-                  : null,
-              onTap: () => controller.selectRouteType(routeType),
-            );
-          }).toList(),
-        ),
-      );
+            ),
+            trailing: controller.selectedRouteType == routeType
+                ? const Icon(Icons.check, color: Color(0xFF2D5A3D), size: 20)
+                : null,
+            onTap: () => controller.selectRouteType(routeType),
+          );
+        }).toList(),
+      ),
+    );
   }
 
-  Widget _difficultyDropdown(ShareRouteController controller) => GestureDetector(
+  Widget _difficultyDropdown(ShareRouteController controller) =>
+      GestureDetector(
         onTap: () => controller.toggleDifficultyDropdown(),
         child: Container(
           width: double.infinity,
@@ -519,9 +488,9 @@ class ShareRouteScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  controller.selectedDifficulty == 'easy' 
-                      ? 'Easy' 
-                      : controller.selectedDifficulty == 'medium' 
+                  controller.selectedDifficulty == 'easy'
+                      ? 'Easy'
+                      : controller.selectedDifficulty == 'medium'
                           ? 'Medium'
                           : 'Hard',
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
@@ -541,42 +510,46 @@ class ShareRouteScreen extends StatelessWidget {
 
   Widget _difficultyDropdownBody(ShareRouteController controller) {
     return Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(245, 233, 223, 1),
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(12),
-            bottomRight: Radius.circular(12),
-          ),
-          border: Border(
-            left: BorderSide(color: Colors.grey.shade300),
-            right: BorderSide(color: Colors.grey.shade300),
-            bottom: BorderSide(color: Colors.grey.shade300),
-          ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color.fromRGBO(245, 233, 223, 1),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
         ),
-        child: Column(
-          children: controller.difficultyLevels.map((difficulty) {
-            return ListTile(
-              dense: true,
-              title: Text(
-                difficulty == 'easy' ? 'Easy' : difficulty == 'medium' ? 'Medium' : 'Hard',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: controller.selectedDifficulty == difficulty 
-                      ? const Color(0xFF2D5A3D)
-                      : Colors.black87,
-                  fontWeight: controller.selectedDifficulty == difficulty 
-                      ? FontWeight.w500
-                      : FontWeight.normal,
-                ),
+        border: Border(
+          left: BorderSide(color: Colors.grey.shade300),
+          right: BorderSide(color: Colors.grey.shade300),
+          bottom: BorderSide(color: Colors.grey.shade300),
+        ),
+      ),
+      child: Column(
+        children: controller.difficultyLevels.map((difficulty) {
+          return ListTile(
+            dense: true,
+            title: Text(
+              difficulty == 'easy'
+                  ? 'Easy'
+                  : difficulty == 'medium'
+                      ? 'Medium'
+                      : 'Hard',
+              style: TextStyle(
+                fontSize: 15,
+                color: controller.selectedDifficulty == difficulty
+                    ? const Color(0xFF2D5A3D)
+                    : Colors.black87,
+                fontWeight: controller.selectedDifficulty == difficulty
+                    ? FontWeight.w500
+                    : FontWeight.normal,
               ),
-              trailing: controller.selectedDifficulty == difficulty
-                  ? const Icon(Icons.check, color: Color(0xFF2D5A3D), size: 20)
-                  : null,
-              onTap: () => controller.selectDifficulty(difficulty),
-            );
-          }).toList(),
-        ),
-      );
+            ),
+            trailing: controller.selectedDifficulty == difficulty
+                ? const Icon(Icons.check, color: Color(0xFF2D5A3D), size: 20)
+                : null,
+            onTap: () => controller.selectDifficulty(difficulty),
+          );
+        }).toList(),
+      ),
+    );
   }
 }

@@ -67,6 +67,16 @@ class AppApiEndPoint {
   String oneGetUserInfoEndPoint(String id) => "/user/$id";
   String oneGetSpotUserInfoEndPoint(String id) => "/spot/user/$id";
   String oneGetRouteUserInfoEndPoint(String id) => "/route/user/$id";
+  static final String routeCategoryTypeEndPoint = "/category/route-type";
+  static String routeGeocodeEndPoint(
+    String lat,
+    String lng,
+    String radius,
+    String type,
+    String difficulty,
+    String type_of_route,
+  ) =>
+      "/route/geocode?lat=$lat&lng=$lng&radius=$radius&type=$type&difficulty=$difficulty&type_of_route=$type_of_route";
 
   // comment
   static final String commentEndPoint = "/comment";

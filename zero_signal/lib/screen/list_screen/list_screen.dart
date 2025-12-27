@@ -217,8 +217,21 @@ class ActivityListsScreenState extends State<ActivityListsScreen> {
                                   activityData.images!.isNotEmpty
                               ? activityData.images![0]
                               : '',
+                          images: activityData.images ?? [],
                           description: activityData.description,
                           createdAt: activityData.createdAt,
+                          latitude: activityData.location?.coordinates !=
+                                      null &&
+                                  activityData.location!.coordinates!.length >=
+                                      2
+                              ? activityData.location!.coordinates![1]
+                              : null,
+                          longitude: activityData.location?.coordinates !=
+                                      null &&
+                                  activityData.location!.coordinates!.length >=
+                                      2
+                              ? activityData.location!.coordinates![0]
+                              : null,
                         );
                         return ActivityCard(
                           activity: activity,
@@ -241,8 +254,11 @@ class ActivityItem {
   final String location;
   final String category;
   final String imagePath;
+  final List<String> images;
   final String? description;
   final String? createdAt;
+  final double? latitude;
+  final double? longitude;
 
   ActivityItem({
     required this.id,
@@ -250,7 +266,10 @@ class ActivityItem {
     required this.location,
     required this.category,
     required this.imagePath,
+    this.images = const [],
     this.description,
     this.createdAt,
+    this.latitude,
+    this.longitude,
   });
 }

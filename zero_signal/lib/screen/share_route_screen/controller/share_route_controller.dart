@@ -10,16 +10,16 @@ import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:image_picker/image_picker.dart';
 
 import 'package:zero_signal/constant/api_end_point.dart';
-import '../../../repository/spot_repository.dart';
+import '../../../repository/route_repository/route_repository.dart';
+import '../../filters_screen/model/route_category_model.dart';
 import 'package:zero_signal/service/local_database/prefs_helper.dart';
 import 'package:zero_signal/service/storage/storage_service.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/route_request_model.dart';
-import '../../share_spot_screen/model/category_response_model.dart' as spot_model;
 
 class ShareRouteController extends GetxController {
-  final SpotRepository _repository = SpotRepository();
+  final RouteRepository _routeRepository = RouteRepository();
   final ImagePicker _imagePicker = ImagePicker();
 
   // Mapbox API Key
@@ -52,26 +52,15 @@ class ShareRouteController extends GetxController {
 
   Timer? _debounceTimer;
 
-  // Category state
-  List<spot_model.CategoryData> categories = [];
+  // Route Category state (Dynamic from /category/route-type)
+  List<RouteCategoryModel> routeCategories = [];
+  String? selectedCategoryId;
   bool isCategoriesLoading = false;
   bool isDropdownOpen = false;
-  String selectedTypeName = 'Choose types';
+  String selectedTypeName = 'Choose type';
 
-  // Selected subcategories (can select multiple)
-  List<spot_model.SubcategoryData> get allSubcategories {
-    List<spot_model.SubcategoryData> all = [];
-    for (var category in categories) {
-      all.addAll(category.subcategories);
-    }
-    return all;
-  }
-
-  List<String> get selectedSubcategoryIds {
-    return allSubcategories
-        .where((sub) => sub.isSelected)
-        .map((sub) => sub.id)
-        .toList();
+  List<String> get selectedCategoryIds {
+    return selectedCategoryId != null ? [selectedCategoryId!] : [];
   }
 
   // Route type state
@@ -83,7 +72,6 @@ class ShareRouteController extends GetxController {
   String selectedDifficulty = 'medium'; // Default to medium
   final List<String> difficultyLevels = ['easy', 'medium', 'hard'];
   bool isDifficultyDropdownOpen = false;
-
 
   List<String> selectedFacilities = [];
 
@@ -194,7 +182,8 @@ class ShareRouteController extends GetxController {
                 MapboxPlaceSuggestion.fromJson(feature as Map<String, dynamic>))
             .toList();
 
-        appLog('Found ${startLocationSuggestions.length} start location suggestions');
+        appLog(
+            'Found ${startLocationSuggestions.length} start location suggestions');
       } else {
         startLocationSuggestions.clear();
         appLog('Mapbox API error: ${response.statusCode}');
@@ -245,7 +234,8 @@ class ShareRouteController extends GetxController {
                 MapboxPlaceSuggestion.fromJson(feature as Map<String, dynamic>))
             .toList();
 
-        appLog('Found ${endLocationSuggestions.length} end location suggestions');
+        appLog(
+            'Found ${endLocationSuggestions.length} end location suggestions');
       } else {
         endLocationSuggestions.clear();
         appLog('Mapbox API error: ${response.statusCode}');
@@ -286,7 +276,8 @@ class ShareRouteController extends GetxController {
   }
 
   /// Reverse geocode: Get address from coordinates
-  Future<void> reverseGeocode(double lat, double lng, {bool isStart = true}) async {
+  Future<void> reverseGeocode(double lat, double lng,
+      {bool isStart = true}) async {
     try {
       final url =
           'https://api.mapbox.com/geocoding/v5/mapbox.places/$lng,$lat.json?access_token=$_mapboxAccessToken&limit=1';
@@ -371,7 +362,8 @@ class ShareRouteController extends GetxController {
       startLng = position.longitude;
 
       // Update address
-      await reverseGeocode(position.latitude, position.longitude, isStart: true);
+      await reverseGeocode(position.latitude, position.longitude,
+          isStart: true);
 
       update();
     } catch (e) {
@@ -415,7 +407,8 @@ class ShareRouteController extends GetxController {
       endLng = position.longitude;
 
       // Update address
-      await reverseGeocode(position.latitude, position.longitude, isStart: false);
+      await reverseGeocode(position.latitude, position.longitude,
+          isStart: false);
 
       update();
     } catch (e) {
@@ -426,22 +419,22 @@ class ShareRouteController extends GetxController {
 
   // ==================== CATEGORIES ====================
 
-  /// Fetch categories from API
+  /// Fetch route categories from API
   Future<void> fetchCategories() async {
     isCategoriesLoading = true;
     update();
 
     try {
-      final response = await _repository.fetchCategories();
+      final result = await _routeRepository.fetchRouteCategories();
 
-      if (response != null && response.success) {
-        categories = response.data;
-        appLog('Fetched ${categories.length} categories');
+      if (result != null && result.isNotEmpty) {
+        routeCategories = result;
+        appLog('Fetched ${routeCategories.length} route categories');
       } else {
-        appLog('Failed to fetch categories: ${_repository.errorMessage}');
+        appLog('Failed to fetch route categories or list is empty');
       }
     } catch (e) {
-      appLog('Error fetching categories: $e');
+      appLog('Error fetching route categories: $e');
     }
 
     isCategoriesLoading = false;
@@ -490,34 +483,16 @@ class ShareRouteController extends GetxController {
     update();
   }
 
-  /// Toggle subcategory selection
-  void toggleSubcategorySelection(String categoryId, int subcategoryIndex) {
-    for (var category in categories) {
-      if (category.id == categoryId) {
-        category.subcategories[subcategoryIndex].isSelected =
-            !category.subcategories[subcategoryIndex].isSelected;
-        break;
-      }
-    }
-
-    // Update selected type name based on selections
-    List<String> selectedNames = [];
-    for (var category in categories) {
-      for (var sub in category.subcategories) {
-        if (sub.isSelected) {
-          selectedNames.add(sub.name);
-        }
-      }
-    }
-
-    if (selectedNames.isEmpty) {
-      selectedTypeName = 'Choose types';
-    } else if (selectedNames.length == 1) {
-      selectedTypeName = selectedNames.first;
+  /// Select a route category (activity)
+  void selectRouteCategory(RouteCategoryModel category) {
+    if (selectedCategoryId == category.id) {
+      selectedCategoryId = null;
+      selectedTypeName = 'Choose type';
     } else {
-      selectedTypeName = '${selectedNames.length} types selected';
+      selectedCategoryId = category.id;
+      selectedTypeName = category.name;
     }
-
+    isDropdownOpen = false;
     update();
   }
 
@@ -537,8 +512,8 @@ class ShareRouteController extends GetxController {
     if (endAddress == null || endAddress!.isEmpty) {
       return 'Please set an end location';
     }
-    if (selectedSubcategoryIds.isEmpty) {
-      return 'Please select at least one route type';
+    if (selectedCategoryId == null) {
+      return 'Please select a route activity type';
     }
     if (selectedRouteType.isEmpty) {
       return 'Please select a route type';
@@ -559,7 +534,6 @@ class ShareRouteController extends GetxController {
     update();
 
     try {
-      final String typeId = selectedSubcategoryIds.first;
       String token = await PrefsHelper.getString("accessToken");
 
       if (token.isEmpty) {
@@ -581,7 +555,7 @@ class ShareRouteController extends GetxController {
       // Prepare FormData
       final formData = FormData.fromMap({
         'title': titleController.text.trim(),
-        'type': typeId,
+        'type': selectedCategoryId,
         'description': descriptionController.text.trim(),
         'inital_lat': startLat!,
         'inital_lng': startLng!,
@@ -610,7 +584,7 @@ class ShareRouteController extends GetxController {
         'url': requestUrl,
         'headers': {'Authorization': 'Bearer $token'},
         'title': titleController.text.trim(),
-        'type': typeId,
+        'type': selectedCategoryId,
         'description': descriptionController.text.trim(),
         'inital_lat': startLat!,
         'inital_lng': startLng!,

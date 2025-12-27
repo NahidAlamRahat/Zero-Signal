@@ -136,7 +136,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
   GetPage(
     name: AppRoutes.filtersScreen,
-    page: () => const FiltersScreen(),
+    page: () => FiltersScreen(),
     // binding: GeneralBindings(),
   ),
 
