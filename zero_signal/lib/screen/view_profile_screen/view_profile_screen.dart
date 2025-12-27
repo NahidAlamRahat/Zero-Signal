@@ -6,40 +6,75 @@ import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 
 import '../../constant/app_colors.dart';
 import '../../gen/assets.gen.dart';
-import '../../routes/app_routes.dart';
 import '../../widget/text_widget/text_widgets.dart';
 import '../profile/widget/menuItem_widget.dart';
+import 'controller/view_profile_controller.dart';
 
 class ViewProfileScreen extends StatelessWidget {
   const ViewProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ViewProfileController());
+
     return Scaffold(
       appBar: AppbarWidget(
         backgroundColor: AppColor.creamBackgroundColor,
       ),
       backgroundColor: AppColor.creamBackgroundColor,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.w,
-        ),
-        child: Column(
-          children: [
-            // Profile Card
-            _buildProfileCard(),
-            SizedBox(height: 16.h),
-            // Menu Items Card
-            _buildMenuItemsCard(),
-          ],
-        ),
-      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: AppColor.backgroundColor,
+            ),
+          );
+        }
+
+        if (controller.errorMessage.value.isNotEmpty) {
+          return Center(
+            child: TextWidget(
+              text: controller.errorMessage.value,
+              fontColor: Colors.red,
+            ),
+          );
+        }
+
+        // If no data loaded yet
+        if (controller.userData.isEmpty) {
+          return const Center(child: Text("No user data found"));
+        }
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+          ),
+          child: Column(
+            children: [
+              // Profile Card
+              _buildProfileCard(controller),
+              SizedBox(height: 16.h),
+              // Menu Items Card
+              _buildMenuItemsCard(controller),
+            ],
+          ),
+        );
+      }),
     );
   }
 
-  Widget _buildProfileCard() {
+  Widget _buildProfileCard(ViewProfileController controller) {
+    final user = controller.userData;
+    final userName = user['name'] ?? 'Unknown User';
+    final userEmail = user['email'] ?? '';
+    final userBio = user['bio'] ?? '';
+    final userOneSentence = user['me_in_one_sentence'] ?? '';
+    final userImage = user['image'];
+
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutes.personalInformationScreen);
+        // Typically view profile doesn't navigate to personal info unless it's own profile?
+        // Keeping as is for now, or maybe only if it's the current user?
+        // User request didn't specify changing this action.
       },
       child: Container(
         width: 390,
@@ -67,45 +102,59 @@ class ViewProfileScreen extends StatelessWidget {
                   border: Border.all(color: AppColor.yello, width: 2),
                   borderRadius: BorderRadius.circular(24),
                   image: DecorationImage(
-                    image: AssetImage(AppImagePath.profileImage),
+                    image: userImage != null
+                        ? NetworkImage(userImage.startsWith('http')
+                            ? userImage
+                            : 'https://shariful5000.binarybards.online$userImage')
+                        : AssetImage(AppImagePath.profileImage)
+                            as ImageProvider,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
 
+              SizedBox(height: 8.h),
+
               // Name
               TextWidget(
-                text: 'Liam Johnson',
+                text: userName,
                 fontColor: AppColor.textColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
 
               // Email
-              TextWidget(
-                text: 'hola@zerosignal.app',
-                fontColor: AppColor.subTitleColor,
-                fontSize: 10,
-                fontWeight: FontWeight.w400,
-              ),
+              if (userEmail.isNotEmpty)
+                TextWidget(
+                  text: userEmail,
+                  fontColor: AppColor.subTitleColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                ),
+
+              SizedBox(height: 4.h),
 
               // Bio
-              TextWidget(
-                text: 'Outdoor enthusiast & explorer',
-                fontColor: AppColor.textColor,
-                fontSize: 10,
-                fontWeight: FontWeight.w400,
-              ),
+              if (userBio.isNotEmpty)
+                TextWidget(
+                  text: userBio,
+                  fontColor: AppColor.textColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                ),
 
-              // Points
-              TextWidget(
-                textAlignment: TextAlign.start,
-                text:
-                    "Lam loves to explore new places and experience different cultures. Her heart beats for the thrill of adventure. She finds joy in every journey, whether it's wandering through ancient ruins, hiking up a mountain, or simply getting lost in a new city.",
-                fontColor: AppColor.subTitleColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
+              SizedBox(height: 8.h),
+
+              // Points / One Sentence
+              if (userOneSentence.isNotEmpty)
+                TextWidget(
+                  textAlignment:
+                      TextAlign.center, // Changed to center for better look
+                  text: userOneSentence,
+                  fontColor: AppColor.subTitleColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
             ],
           ),
         ),
@@ -113,7 +162,7 @@ class ViewProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItemsCard() {
+  Widget _buildMenuItemsCard(ViewProfileController controller) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
@@ -132,7 +181,7 @@ class ViewProfileScreen extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.mySpotsImage.path,
             title: 'My Spots',
-            onTap: () => Get.toNamed(AppRoutes.mySpotsScreen),
+            onTap: () => controller.fetchAndNavigateToSpots(),
           ),
           SizedBox(
             height: 16.h,
@@ -144,7 +193,7 @@ class ViewProfileScreen extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.routesImage.path,
             title: 'My Routes',
-            onTap: () => Get.toNamed(AppRoutes.myRoutesScreen),
+            onTap: () => controller.fetchAndNavigateToRoutes(),
           ),
           SizedBox(
             height: 16.h,

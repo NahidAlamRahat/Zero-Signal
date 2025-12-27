@@ -18,7 +18,12 @@ class StatsSection extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              showUserDialog(context);
+              showUserDialog(
+                context,
+                userId: '', // Placeholder
+                userName: 'naturanauta',
+                userBio: '',
+              );
             },
             child: Row(
               children: const [
@@ -60,7 +65,7 @@ class ActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<SportDetailsController>();
-    
+
     return Row(
       children: [
         Expanded(

@@ -23,8 +23,16 @@ class MySpotsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (Get.arguments != null && Get.arguments is Map) {
-      isFavoriteMode = Get.arguments['type'] == 'favorite';
+    if (Get.arguments != null) {
+      if (Get.arguments is List) {
+        final list = Get.arguments as List;
+        spots = list.map((e) => SpotData.fromJson(e)).toList();
+        isLoading = false;
+        appLog('Loaded ${spots.length} spots from arguments');
+        return;
+      } else if (Get.arguments is Map) {
+        isFavoriteMode = Get.arguments['type'] == 'favorite';
+      }
     }
     fetchMySpots();
   }

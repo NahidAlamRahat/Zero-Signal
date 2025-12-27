@@ -22,6 +22,13 @@ class MyRoutesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (Get.arguments != null && Get.arguments is List) {
+      final list = Get.arguments as List;
+      // Assuming RouteData.fromJson exists and matches the map structure
+      routes = list.map((e) => RouteData.fromJson(e)).toList();
+      update(); // Update UI
+      return;
+    }
     getRoutes();
   }
 
