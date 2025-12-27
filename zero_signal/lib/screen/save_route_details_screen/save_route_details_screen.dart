@@ -37,9 +37,11 @@ class SaveRouteDetailsScreen extends StatelessWidget {
 
     final controller = Get.put(RouteDetailsController());
     
-    // Set route data if provided, or fetch by ID
+    // Set route data if provided, or fetch by ID - defer to avoid setState during build
     if (routeData != null) {
-      controller.setRouteData(routeData!);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.setRouteData(routeData!);
+      });
     } else if (routeId != null) {
       // Fetch route details by ID
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -375,44 +377,64 @@ class SaveRouteDetailsScreen extends StatelessWidget {
 
   // User Section
   Widget _buildUserSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: () => showUserDialog(context),
-          child: Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 12.h),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.brown,
-                  child: Icon(Icons.person, size: 16, color: Colors.white),
+    final controller = Get.find<RouteDetailsController>();
+    
+    return Obx(() {
+      // Get user data from route data
+      final routeData = controller.routeData;
+      final userName = routeData['user']?['name'] ?? routeData['createdBy']?['name'] ?? routeData['user']?['username'] ?? routeData['createdBy']?['username'] ?? 'Unknown User';
+      final userRating = routeData['user']?['rating']?.toString() ?? routeData['rating']?.toString() ?? '4.8';
+      final reviewCount = routeData['reviewCount']?.toString() ?? '57';
+      final luggersCount = routeData['luggersCount']?.toString() ?? '17';
+      final planesCount = routeData['planesCount']?.toString() ?? '6';
+      final userAvatar = routeData['user']?['image'] ?? routeData['createdBy']?['image'] ?? routeData['user']?['avatar'] ?? routeData['createdBy']?['avatar'];
+      
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () => showUserDialog(context),
+            child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 12.h),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.brown,
+                    backgroundImage: userAvatar != null 
+                        ? NetworkImage(userAvatar.startsWith('http') 
+                            ? userAvatar 
+                            : 'https://shariful5000.binarybards.online$userAvatar')
+                        : null,
+                    child: userAvatar == null 
+                        ? Icon(Icons.person, size: 16, color: Colors.white)
+                        : null,
+                  ),
                 ),
-              ),
-              SizedBox(width: 8),
+                SizedBox(width: 8),
+                TextWidget(
+                  text: '@$userName $userRating',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  fontColor: AppColor.textColor,
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              SizedBox(width: 30),
               TextWidget(
-                text: '@naturanauta 4.8',
+                text: '  $userRating ($reviewCount)  ($luggersCount luggers / $planesCount planes)',
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
-                fontColor: AppColor.textColor,
+                fontColor: AppColor.subTitleColor,
               ),
             ],
           ),
-        ),
-        Row(
-          children: [
-            SizedBox(width: 30),
-            TextWidget(
-              text: '  4,8 (57)  (17 luggers / 6 planes)',
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
-              fontColor: AppColor.subTitleColor,
-            ),
-          ],
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
 
