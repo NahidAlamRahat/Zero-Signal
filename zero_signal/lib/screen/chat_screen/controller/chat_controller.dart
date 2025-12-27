@@ -171,12 +171,44 @@ class ChatController extends GetxController {
 
   // Placeholder for future media sending
   Future<void> sendMediaMessage(String type, File file) async {
+    ChatMessage? optimisticMessage;
+
+    if (type == 'audio') {
+      optimisticMessage = ChatMessage(
+        id: 'temp_audio_${DateTime.now().millisecondsSinceEpoch}',
+        activity: activityId,
+        sender: Participant(
+          id: LocalStorage.userId,
+          username: LocalStorage.myName,
+          image: LocalStorage.myImage,
+        ),
+        type: 'audio',
+        audio: file.path, // Store local path for playback
+        isSending: true,
+        createdAt: DateTime.now().toIso8601String(),
+      );
+
+      messages.insert(0, optimisticMessage);
+      messages.refresh();
+    }
+
     final success = await _repository.sendMessage(
       activityId: activityId,
       type: type,
       text: '',
       file: file,
     );
+
+    if (optimisticMessage != null) {
+      // Remove the optimistic message.
+      // The real message will arrive via socket and be inserted.
+      messages.removeWhere((m) => m.id == optimisticMessage!.id);
+      messages.refresh();
+    }
+
+    if (!success && type == 'audio') {
+      appLog('Failed to send audio message');
+    }
   }
 
   // Voice recording methods

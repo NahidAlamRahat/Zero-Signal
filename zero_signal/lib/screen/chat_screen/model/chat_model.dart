@@ -80,6 +80,7 @@ class ChatMessage {
   final String? audio;
   final String? createdAt;
   final bool? isCurrentUser; // Logic to set this will be in controller/repo
+  final bool isSending;
 
   ChatMessage({
     this.id,
@@ -91,6 +92,7 @@ class ChatMessage {
     this.audio,
     this.createdAt,
     this.isCurrentUser,
+    this.isSending = false,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {

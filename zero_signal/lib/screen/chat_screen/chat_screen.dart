@@ -299,7 +299,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                       child: message.type == 'audio'
-                          ? _buildAudioPlayer(message)
+                          ? Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: message.isSending ? 0.5 : 1.0,
+                                  child: _buildAudioPlayer(message),
+                                ),
+                                if (message.isSending)
+                                  const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          iconColor),
+                                    ),
+                                  ),
+                              ],
+                            )
                           : Text(
                               text,
                               style: const TextStyle(

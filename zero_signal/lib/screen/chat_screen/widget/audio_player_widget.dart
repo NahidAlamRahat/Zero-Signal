@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/api_end_point.dart';
@@ -65,8 +66,23 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     if (_isPlaying) {
       await _audioPlayer.pause();
     } else {
-      final fullUrl = '${AppApiEndPoint.domain}${widget.audioUrl}';
-      await _audioPlayer.play(UrlSource(fullUrl));
+      Source source;
+      if (widget.audioUrl.startsWith('http') ||
+          widget.audioUrl.startsWith('https')) {
+        source = UrlSource(widget.audioUrl);
+      } else if (widget.audioUrl.startsWith('/')) {
+        // Assume absolute path for local files or relative API paths
+        if (File(widget.audioUrl).existsSync()) {
+          source = DeviceFileSource(widget.audioUrl);
+        } else {
+          final fullUrl = '${AppApiEndPoint.domain}${widget.audioUrl}';
+          source = UrlSource(fullUrl);
+        }
+      } else {
+        final fullUrl = '${AppApiEndPoint.domain}${widget.audioUrl}';
+        source = UrlSource(fullUrl);
+      }
+      await _audioPlayer.play(source);
     }
   }
 
