@@ -11,6 +11,7 @@ import 'package:dio/dio.dart';
 import '../../../repository/spot_repository.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_log/app_log.dart';
+import '../../../constants/mapbox_endpoints.dart';
 
 class PointAnnotationClickListener implements mapbox.OnPointAnnotationClickListener {
   final HomeScreenController controller;
@@ -502,8 +503,7 @@ class HomeScreenController extends GetxController {
     update();
 
     try {
-      final String url =
-          "https://api.mapbox.com/geocoding/v5/mapbox.places/$query.json?access_token=$mapboxAccessToken&autocomplete=true&limit=5";
+      final String url = MapboxEndpoints.autocompleteGeocoding(query, mapboxAccessToken);
 
       final dio = Dio();
       final response = await dio.get(url);
@@ -528,8 +528,7 @@ class HomeScreenController extends GetxController {
     update();
 
     try {
-      final String url =
-          "https://api.mapbox.com/geocoding/v5/mapbox.places/$query.json?access_token=$mapboxAccessToken&limit=1";
+      final String url = MapboxEndpoints.forwardGeocoding(query, mapboxAccessToken);
 
       final dio = Dio();
       final response = await dio.get(url);
