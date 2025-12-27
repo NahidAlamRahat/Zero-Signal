@@ -724,6 +724,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                                 if (routeId != null) {
                                   Get.to(() => SaveRouteDetailsScreen(
                                     routeId: routeId,
+                                    routeData: controller.routesList[index],
                                     mapScreenshot: screenshot,
                                   ));
                                 }
