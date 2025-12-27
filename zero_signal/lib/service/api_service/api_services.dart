@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get_connect/http/src/response/response.dart' hide Response;
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:zero_signal/service/api_service/service_model/service_model.dart';

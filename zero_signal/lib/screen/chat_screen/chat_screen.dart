@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
-
-import '../../constant/app_icon_path.dart';
 import 'controller/chat_controller.dart';
 import 'model/chat_model.dart';
 import 'widget/audio_player_widget.dart';
@@ -27,7 +25,6 @@ class _ChatScreenState extends State<ChatScreen> {
   static const Color primaryTextColor = Color(0xFF333333);
   static const Color secondaryTextColor = Color(0xFF555555);
   static const Color currentUserBubbleColor = Color(0xFFF3EADE);
-  static const Color otherUserBubbleColor = Color(0xFFFFFFFF);
   static const Color buttonBackgroundColor = Color(0xFFE4E7E4);
   static const Color iconColor = Color(0xFF044A42);
   static const Color borderColor = Color(0xFFD4CBB0);
@@ -271,7 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         boxShadow: [
                           if (!isMe)
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
+                              color: Colors.grey.withValues(alpha: 0.1),
                               spreadRadius: 1,
                               blurRadius: 3,
                               offset: const Offset(0, 2),
@@ -392,7 +389,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: const EdgeInsets.all(8.0),
                     decoration: controller.isRecording.value
                         ? BoxDecoration(
-                            color: Colors.red.withOpacity(0.2),
+                            color: Colors.red.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           )
                         : null,
@@ -443,11 +440,10 @@ class _ChatScreenState extends State<ChatScreen> {
   // --- PARTICIPANTS DIALOG ---
 
   void _showParticipantsDialog(BuildContext context) {
-    // Get screen size for responsiveness
+
     final screenSize = MediaQuery.of(context).size;
 
-    // Use a smaller width on tablets/large screens,
-    // and a percentage of the screen width on smaller phones.
+
     final double dialogWidth =
         screenSize.width > 600 ? 500 : screenSize.width * 0.9;
 
@@ -464,7 +460,6 @@ class _ChatScreenState extends State<ChatScreen> {
               maxWidth: dialogWidth,
               maxHeight: screenSize.height * 0.7,
             ),
-            // Pass the controller to the dialog content
             child: _ParticipantsDialogContent(controller: controller),
           ),
         );
@@ -477,7 +472,7 @@ class _ChatScreenState extends State<ChatScreen> {
 class _ParticipantsDialogContent extends StatelessWidget {
   // Receive the controller
   final ChatController controller;
-  const _ParticipantsDialogContent({super.key, required this.controller});
+  const _ParticipantsDialogContent({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -570,13 +565,6 @@ class _ParticipantsDialogContent extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 2),
-                          // Text(
-                          //   '${participant.age} years old',
-                          //   style: const TextStyle(
-                          //     fontSize: 14,
-                          //     color: _ChatScreenState.secondaryTextColor,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ],

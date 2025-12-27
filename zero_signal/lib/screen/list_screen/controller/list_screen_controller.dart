@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:zero_signal/repository/activity_repository.dart';
 import 'package:zero_signal/screen/list_screen/model/activity_list_model.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 
 class ListScreenController extends GetxController {
   final ActivityRepository _repository = ActivityRepository();
@@ -149,7 +150,7 @@ class ListScreenController extends GetxController {
             if (!isLoadMore) activities.clear();
           }
         } catch (e) {
-          print("Error fetching location or feed: $e");
+          appLog("Error fetching location or feed: $e");
           if (!isLoadMore) activities.clear();
         }
       } else {
@@ -197,7 +198,7 @@ class ListScreenController extends GetxController {
         }
       }
     } catch (e) {
-      print("Error fetching activities: $e");
+      appLog("Error fetching activities: $e");
       if (!isLoadMore) activities.clear();
     } finally {
       isLoading.value = false;
@@ -213,8 +214,9 @@ class ListScreenController extends GetxController {
     if (ctx == null || headerCtx == null) return;
     final box = ctx.findRenderObject() as RenderBox?;
     final headerBox = headerCtx.findRenderObject() as RenderBox?;
-    if (box == null || headerBox == null || !box.hasSize || !headerBox.hasSize)
+    if (box == null || headerBox == null || !box.hasSize || !headerBox.hasSize) {
       return;
+    }
 
     final Offset tabGlobal = box.localToGlobal(Offset.zero);
     final Offset headerGlobal = headerBox.localToGlobal(Offset.zero);

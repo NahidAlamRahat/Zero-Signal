@@ -8,10 +8,10 @@ import '../../constant/app_colors.dart';
 import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
 import '../../widget/text_widget/text_widgets.dart';
-import '../profile/controller/profile_controller.dart';
 import '../profile/widget/menuItem_widget.dart';
 
 class ViewProfileScreen extends StatelessWidget {
+  const ViewProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
