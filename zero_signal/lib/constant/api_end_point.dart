@@ -52,7 +52,7 @@ class AppApiEndPoint {
   String memberListEndPoint(String activityId) =>
       "/activity/member-list/$activityId";
   static final String sendMessageEndPoint = "/message";
-  String activityByTypeEndPoint(String type) => "/activity?type=$type";
+  //String activityByTypeEndPoint(String type) => "/activity?type=$type";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
 
   /// ========================= Atik Hridoy =====================
