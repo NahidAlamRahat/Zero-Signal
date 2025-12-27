@@ -37,9 +37,11 @@ class SaveRouteDetailsScreen extends StatelessWidget {
 
     final controller = Get.put(RouteDetailsController());
     
-    // Set route data if provided, or fetch by ID
+    // Set route data if provided, or fetch by ID - defer to avoid setState during build
     if (routeData != null) {
-      controller.setRouteData(routeData!);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.setRouteData(routeData!);
+      });
     } else if (routeId != null) {
       // Fetch route details by ID
       WidgetsBinding.instance.addPostFrameCallback((_) {
