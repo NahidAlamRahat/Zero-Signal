@@ -1,14 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
-import 'dart:async';
-import 'dart:math';
 import 'package:geolocator/geolocator.dart';
-
-import '../../../constant/app_colors.dart';
-import 'widgets/route_stats_dialog.dart';
-import 'services/route_service.dart';
+import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/screen/route_navigation_screen/widgets/navigation_controls_widget.dart';
+import 'package:zero_signal/screen/route_navigation_screen/widgets/route_map_widget.dart';
+import 'package:zero_signal/screen/route_navigation_screen/widgets/route_stats_dialog.dart';
+import 'package:zero_signal/screen/route_navigation_screen/services/route_service.dart';
+import 'dart:math';
 
 class RouteNavigationScreen extends StatefulWidget {
   final String routeId;
@@ -46,12 +47,13 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   double targetLat = 0.0;
   double targetLng = 0.0;
   double progress = 0.0; // Progress between current waypoint and next (0.0 to 1.0)
-  mapbox.CircleAnnotationManager? currentPositionManager;
-  mapbox.CircleAnnotation? currentPositionMarker;
+  mapbox.PointAnnotationManager? currentPositionManager;
+  mapbox.PointAnnotation? currentPositionMarker;
   
   // Blinking animation variables
   Timer? blinkTimer;
   bool isMarkerVisible = true;
+  double pulseScale = 1.0; // For pulsing effect
   
   // Generated route waypoints
   List<Map<String, dynamic>> routeWaypoints = [];
@@ -249,7 +251,7 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
       ));
 
       // Add current position marker
-      await _addCurrentPositionMarker();
+      // await _addCurrentPositionMarker(); // Only add when navigation starts
       
       print('Realistic route completed!');
     }
@@ -315,7 +317,7 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     ));
 
     // Add current position marker
-    await _addCurrentPositionMarker();
+    // await _addCurrentPositionMarker(); // Only add when navigation starts
     
     print('Real road route completed!');
   }
@@ -380,14 +382,14 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     ));
 
     // Add current position marker (blue dot for navigation)
-    await _addCurrentPositionMarker();
+    // await _addCurrentPositionMarker(); // Only add when navigation starts
     
     print('Straight line route completed!');
   }
 
   Future<void> _addCurrentPositionMarker() async {
-    // Use the existing circle manager
-    currentPositionManager = circleManager;
+    // Create a separate point manager for the current position marker
+    currentPositionManager = await mapboxMap!.annotations.createPointAnnotationManager();
     
     // Start at the FIRST coordinate (starting point) instead of current GPS
     final coordinates = routeWaypoints.isNotEmpty ? routeWaypoints : widget.routeCoordinates;
@@ -397,33 +399,52 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
       currentLng = startCoord['longitude'];
     }
     
-    // Create a circle marker (guaranteed to be visible)
-    currentPositionMarker = await currentPositionManager!.create(
-      mapbox.CircleAnnotationOptions(
-        geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
-        circleRadius: 20.0, // Large circle
-        circleColor: Colors.red.value,
-        circleStrokeWidth: 3.0,
-        circleStrokeColor: Colors.white.value,
-      ),
-    );
-    
-    // Start blinking animation
+    // Try to use a walking icon - fallback to default if not available
+    try {
+      currentPositionMarker = await currentPositionManager!.create(
+        mapbox.PointAnnotationOptions(
+          geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
+          iconImage: "walking-15", // Try Mapbox walking icon
+          iconSize: 2.0,
+          iconColor: Colors.red.value,
+        ),
+      );
+    } catch (e) {
+      print('Walking icon not available, trying navigation icon: $e');
+      try {
+        currentPositionMarker = await currentPositionManager!.create(
+          mapbox.PointAnnotationOptions(
+            geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
+            iconImage: "road-sign", // Try road sign icon
+            iconSize: 2.0,
+            iconColor: Colors.red.value,
+          ),
+        );
+      } catch (e2) {
+        print('Navigation icon not available, using default marker: $e2');
+        currentPositionMarker = await currentPositionManager!.create(
+          mapbox.PointAnnotationOptions(
+            geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
+            iconSize: 2.0,
+            iconColor: Colors.red.value,
+          ),
+        );
+      }
+    }
+        // Start blinking animation
     _startBlinkingAnimation();
     
-    print('Circle marker added at starting point: $currentLat, $currentLng');
+    print('Car marker added at starting point: $currentLat, $currentLng');
   }
 
   void _startBlinkingAnimation() {
     blinkTimer?.cancel();
-    blinkTimer = Timer.periodic(Duration(milliseconds: 800), (timer) {
-      if (currentPositionManager != null && mounted) {
+    blinkTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if (mounted && isNavigating) {
         setState(() {
-          isMarkerVisible = !isMarkerVisible;
+          // Create pulsing wave effect
+          pulseScale = 1.0 + (sin(DateTime.now().millisecondsSinceEpoch / 200.0) * 0.3);
         });
-        
-        // Update marker visibility
-        _updateMarkerVisibility();
       }
     });
   }
@@ -443,22 +464,20 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
       // Create new marker with updated visibility
       if (isMarkerVisible) {
         currentPositionMarker = await currentPositionManager!.create(
-          mapbox.CircleAnnotationOptions(
+          mapbox.PointAnnotationOptions(
             geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
-            circleRadius: 20.0,
-            circleColor: Colors.red.value,
-            circleStrokeWidth: 3.0,
-            circleStrokeColor: Colors.white.value,
+            iconImage: "walking-15",
+            iconSize: 2.0,
+            iconColor: Colors.red.value,
           ),
         );
       } else {
         currentPositionMarker = await currentPositionManager!.create(
-          mapbox.CircleAnnotationOptions(
+          mapbox.PointAnnotationOptions(
             geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
-            circleRadius: 15.0, // Smaller when "invisible"
-            circleColor: Colors.pink.value,
-            circleStrokeWidth: 2.0,
-            circleStrokeColor: Colors.white.value,
+            iconImage: "walking-15",
+            iconSize: 1.5, // Smaller when "invisible"
+            iconColor: Colors.pink.value,
           ),
         );
       }
@@ -508,6 +527,9 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     setState(() {
       isNavigating = true;
     });
+
+    // Add current position marker when navigation starts
+    _addCurrentPositionMarker();
 
     // Start blinking when navigation starts
     _startBlinkingAnimation();
@@ -719,17 +741,43 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
-                child: mapbox.MapWidget(
-                  onMapCreated: (map) {
-                    mapboxMap = map;
-                    _initializeRoute();
-                  },
-                  cameraOptions: mapbox.CameraOptions(
+                child: Stack(
+                  children: [
+                    mapbox.MapWidget(
+                      onMapCreated: (map) {
+                        mapboxMap = map;
+                        _initializeRoute();
+                      },
+                      cameraOptions: mapbox.CameraOptions(
                     center: initialCenter ?? mapbox.Point(
                       coordinates: mapbox.Position.fromJson([90.393425, 23.754253]),
                     ),
                     zoom: 13.0,
                   ),
+                ),
+                    
+                    // Custom car icon overlay
+                    if (currentLat > 0 && currentLng > 0)
+                      Positioned(
+                        top: MediaQuery.of(context).size.height * 0.3, // Adjust position as needed
+                        left: MediaQuery.of(context).size.width * 0.5 - 20, // Center horizontally
+                        child: Transform.scale(
+                          scaleX: -1.0, // Horizontal flip for mirror side
+                          child: Icon(
+                            Icons.pedal_bike, // Bicycle icon
+                            size: 40.0,
+                            color: const Color.fromARGB(255, 97, 86, 85),
+                            shadows: [
+                              Shadow(
+                                color: Colors.white.withOpacity(0.8),
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
