@@ -159,10 +159,33 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildMessageList() {
     // We wrap the ListView in an Obx to make it reactive
     return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(iconColor)),
+        );
+      }
+
       // Sort messages by timestamp, descending (newest first)
       // This is safer than relying on list order.
-      final sortedMessages = controller.messages.toList();
-      // ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // createdAt is String, need logic if sorting needed. API usually returns sorted.
+      final sortedMessages = controller.messages.toList()
+        ..sort((a, b) {
+          if (a.createdAt == null || b.createdAt == null) return 0;
+          return DateTime.parse(b.createdAt!)
+              .compareTo(DateTime.parse(a.createdAt!));
+        });
+
+      if (sortedMessages.isEmpty) {
+        return const Center(
+          child: Text(
+            'No messages yet...',
+            style: TextStyle(
+              color: secondaryTextColor,
+              fontSize: 16,
+            ),
+          ),
+        );
+      }
 
       return ListView.builder(
         controller: _scrollController,
@@ -410,11 +433,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 controller.sendMessage(_messageController.text);
                 _messageController.clear();
                 // Scroll to the bottom to show the new message
-                _scrollController.animateTo(
-                  0.0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
+                if (_scrollController.hasClients) {
+                  _scrollController.animateTo(
+                    0.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                }
               }
             }),
           ],
@@ -440,9 +465,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // --- PARTICIPANTS DIALOG ---
 
   void _showParticipantsDialog(BuildContext context) {
-
     final screenSize = MediaQuery.of(context).size;
-
 
     final double dialogWidth =
         screenSize.width > 600 ? 500 : screenSize.width * 0.9;

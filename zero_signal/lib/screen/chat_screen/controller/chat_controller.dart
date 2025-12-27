@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:zero_signal/repository/chat_repository.dart';
+import 'package:zero_signal/service/sockets/app_socket_all_operation.dart';
 import 'package:zero_signal/service/storage/storage_service.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
+import 'package:zero_signal/utils/app_log/error_log.dart';
 
 import '../model/chat_model.dart';
 
@@ -14,6 +16,7 @@ class ChatController extends GetxController {
   // These lists will hold our data and notify widgets when they change.
   final RxList<Participant> participants = <Participant>[].obs;
   final RxList<ChatMessage> messages = <ChatMessage>[].obs;
+  AppSocketAllOperation appSocketAllOperation = AppSocketAllOperation.instance;
 
   final ChatRepository _repository = ChatRepository();
   String activityId = '';
@@ -32,12 +35,13 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    appLog('user id == >> ${LocalStorage.userId}');
+
     if (Get.arguments != null) {
       if (Get.arguments is String) {
         activityId = Get.arguments as String;
-      } else if (Get.arguments is Map) {
-
-      }
+        socketHandler();
+      } else if (Get.arguments is Map) {}
       fetchMessages();
       fetchMembers();
     }
@@ -47,6 +51,29 @@ class ChatController extends GetxController {
   void onClose() {
     _audioRecorder.dispose();
     super.onClose();
+  }
+
+  void chatMessageSocketHandler(dynamic message) {
+    try {
+      messages.insert(0, ChatMessage.fromJson(message));
+      messages.refresh();
+      appLog('rahat');
+    } catch (e) {
+      errorLog("chatMessageSocketHandler $e");
+    }
+  }
+
+  void socketHandler() {
+    appLog(
+        "==========================chat Socket  ============================");
+    appLog("activityId====> $activityId");
+    appSocketAllOperation.readEvent(
+      event: "getMessage::$activityId",
+      handler: (data) {
+        chatMessageSocketHandler(data);
+        appLog('👌👌👌👌new chat==>>> ${data}  ');
+      },
+    );
   }
 
   Future<void> fetchMessages({bool isLoadMore = false}) async {
@@ -101,18 +128,33 @@ class ChatController extends GetxController {
     }
   }
 
-  bool isCurrentUser(String? userId) {
-    if (userId == null) return false;
-    return userId == LocalStorage.userId;
+  bool isCurrentUser(String? senderId) {
+    if (senderId == null) return false;
+    appLog(
+        'isCurrentUser check: senderId=$senderId, LocalStorage.userId=${LocalStorage.userId}');
+    return senderId == LocalStorage.userId;
   }
 
   // --- METHODS TO MANIPULATE DATA ---
   Future<void> sendMessage(String text) async {
     if (text.trim().isEmpty) return;
 
-    // Optimistic update can be tricky with IDs, so for now we'll just wait for API
-    // Or we could append local message then refresh.
-    // Let's stick to API call first.
+    // Optimistic update: add message to list immediately
+    final optimisticMessage = ChatMessage(
+      id: 'temp_${DateTime.now().millisecondsSinceEpoch}',
+      activity: activityId,
+      sender: Participant(
+        id: LocalStorage.userId,
+        username: LocalStorage.myName,
+        image: LocalStorage.myImage,
+      ),
+      text: text,
+      type: 'text',
+      createdAt: DateTime.now().toIso8601String(),
+    );
+
+    messages.insert(0, optimisticMessage);
+    messages.refresh();
 
     final success = await _repository.sendMessage(
       activityId: activityId,
@@ -120,11 +162,10 @@ class ChatController extends GetxController {
       text: text,
     );
 
-    if (success) {
-      // Refresh messages to show the new one
-      // In a real socket app, we wouldn't need this manually usually.
-      // Message clearing handled in UI
-      fetchMessages();
+    if (!success) {
+      // Remove optimistic message if send failed
+      messages.removeWhere((m) => m.id == optimisticMessage.id);
+      messages.refresh();
     }
   }
 
@@ -136,10 +177,6 @@ class ChatController extends GetxController {
       text: '',
       file: file,
     );
-
-    if (success) {
-      fetchMessages();
-    }
   }
 
   // Voice recording methods
@@ -158,7 +195,8 @@ class ChatController extends GetxController {
         isRecording.value = true;
       }
     } catch (e) {
-      appLog('Failed to start recording: $e', source: 'ChatController', type: LogType.error);
+      appLog('Failed to start recording: $e',
+          source: 'ChatController', type: LogType.error);
     }
   }
 
@@ -175,7 +213,8 @@ class ChatController extends GetxController {
         _recordingPath = null;
       }
     } catch (e) {
-      appLog('Failed to stop recording: $e', source: 'ChatController', type: LogType.error);
+      appLog('Failed to stop recording: $e',
+          source: 'ChatController', type: LogType.error);
       isRecording.value = false;
     }
   }
@@ -193,7 +232,8 @@ class ChatController extends GetxController {
         _recordingPath = null;
       }
     } catch (e) {
-      appLog('Failed to cancel recording: $e', source: 'ChatController', type: LogType.error);
+      appLog('Failed to cancel recording: $e',
+          source: 'ChatController', type: LogType.error);
       isRecording.value = false;
     }
   }
