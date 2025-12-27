@@ -54,6 +54,7 @@ class AppApiEndPoint {
   static final String sendMessageEndPoint = "/message";
   //String activityByTypeEndPoint(String type) => "/activity?type=$type";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
+  static final String reportEndPoint = "/report";
 
   /// ========================= Atik Hridoy =====================
 

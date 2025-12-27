@@ -403,7 +403,13 @@ class _SocialScreenState extends State<SocialScreen> {
                                     Center(
                                       child: InkWell(
                                         onTap: () {
-                                          showReportBottomSheet(context);
+                                          if (item.sId != null) {
+                                            showReportBottomSheet(
+                                              context,
+                                              itemId: item.sId!,
+                                              type: "Activity",
+                                            );
+                                          }
                                         },
                                         child: TextWidget(
                                           text: 'Report Activity',
