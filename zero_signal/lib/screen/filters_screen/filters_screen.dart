@@ -124,7 +124,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   activeTrackColor: const Color(0xFF2E5233),
                   inactiveTrackColor: Colors.grey[300],
                   thumbColor: const Color(0xFF2E5233),
-                  overlayColor: const Color(0xFF2E5233).withOpacity(0.2),
+                  overlayColor: const Color(0xFF2E5233).withValues(alpha: 0.2),
                   thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
                   trackHeight: 4,
                 ),
@@ -196,7 +196,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           borderRadius: BorderRadius.circular(12.w),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),

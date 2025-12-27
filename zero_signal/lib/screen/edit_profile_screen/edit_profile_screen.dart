@@ -198,7 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonFormField<String>(
-            value: options.contains(controller.text) ? controller.text : null,
+            initialValue: options.contains(controller.text) ? controller.text : null,
             style: TextStyle(
               color: AppColor.textColor,
               fontSize: 14,

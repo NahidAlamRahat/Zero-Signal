@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/screen/sport_details/controller/sport_details_controller.dart';

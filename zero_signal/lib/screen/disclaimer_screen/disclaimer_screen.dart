@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../utils/app_size.dart';
 import '../../constant/app_colors.dart';
 import '../../widget/appbar_widget/appbar_widget.dart';
 import '../../widget/text_widget/text_widgets.dart';
@@ -57,8 +56,6 @@ class DisclaimerScreen extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: Html(
               data: controller.content,
-              // You'll need flutter_html package for this
-              // Or use Text widget if you want plain text
             ),
           );
         }),

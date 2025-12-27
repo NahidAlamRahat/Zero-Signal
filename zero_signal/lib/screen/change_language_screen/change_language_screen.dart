@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 
 class ChangeLanguageScreen extends StatefulWidget {
   const ChangeLanguageScreen({super.key});
@@ -152,7 +153,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
 
   void _onLanguageSelected(LanguageOption language) {
     // Handle language selection
-    print('Language selected: ${language.name} (${language.code})');
+    appLog('Language selected: ${language.name} (${language.code})', source: 'ChangeLanguageScreen');
 
     // You can add logic here to:
     // 1. Save the selected language to preferences

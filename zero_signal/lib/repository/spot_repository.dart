@@ -243,23 +243,20 @@ class SpotRepository {
         if (response.body is List) {
           data = response.body as List<dynamic>;
           appLog('✅ Response is a List with ${data.length} items');
-        } else if (response.body is Map) {
-          final bodyMap = response.body as Map<dynamic, dynamic>;
-          if (bodyMap.containsKey('data') && bodyMap['data'] != null) {
-            final dynamic dataField = bodyMap['data'];
-            if (dataField is List) {
-              data = dataField as List<dynamic>;
-              appLog(
-                  '✅ Response is a Map with data field containing ${data.length} items');
-            } else {
-              appLog('⚠️ Response data field is not a List');
-            }
+        } else
+        if (response.body.containsKey('data') && response.body['data'] != null) {
+          final dynamic dataField = response.body['data'];
+          if (dataField is List) {
+            data = dataField;
+            appLog(
+                '✅ Response is a Map with data field containing ${data.length} items');
           } else {
-            appLog('⚠️ Response Map has no data field');
+            appLog('⚠️ Response data field is not a List');
           }
         } else {
-          appLog('⚠️ Response body is neither List nor Map');
+          appLog('⚠️ Response Map has no data field');
         }
+      
 
         appLog('📊 Parsed data count: ${data.length}');
 
@@ -307,6 +304,7 @@ class SpotRepository {
       appLog('   Status: ${response.statusCode}');
 
       try {
+        // ignore: unnecessary_type_check
         if (response.body is Map || response.body is List) {
           JsonEncoder encoder = const JsonEncoder.withIndent('  ');
           String prettyPrint = encoder.convert(response.body);
@@ -325,7 +323,7 @@ class SpotRepository {
 
         // Check if data is nested in 'data' key
         dynamic spotJson = response.body;
-        if (response.body is Map && response.body.containsKey('data')) {
+        if (response.body.containsKey('data')) {
           spotJson = response.body['data'];
         }
 
@@ -372,6 +370,7 @@ class SpotRepository {
       appLog('📡 API Response - Fetch Comments:');
       appLog('   Status: ${response.statusCode}');
       try {
+        // ignore: unnecessary_type_check
         if (response.body is Map || response.body is List) {
           JsonEncoder encoder = const JsonEncoder.withIndent('  ');
           String prettyPrint = encoder.convert(response.body);
@@ -386,7 +385,7 @@ class SpotRepository {
       if (response.statusCode == 200) {
         List<dynamic> data = [];
 
-        if (response.body is Map && response.body['data'] is List) {
+        if (response.body['data'] is List) {
           data = response.body['data'];
         } else if (response.body is List) {
           data = response.body as List<dynamic>;
@@ -399,7 +398,7 @@ class SpotRepository {
         return comments;
       } else {
         _errorMessage = response.message;
-        appLog('❌ Fetch comments failed: ${_errorMessage}');
+        appLog('❌ Fetch comments failed: $_errorMessage');
         return null;
       }
     } catch (e) {

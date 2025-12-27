@@ -66,7 +66,7 @@ class LanguageSelectionWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
-                    ? Colors.black.withOpacity(0.1)
+                    ? Colors.black.withValues(alpha: 0.1)
                     : Colors.transparent,
               ),
             ),

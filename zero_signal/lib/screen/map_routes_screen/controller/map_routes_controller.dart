@@ -90,7 +90,9 @@ class MapRoutesController extends GetxController {
 
       // Get current location
       final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: AndroidSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
 
       deviceLat.value = position.latitude;
@@ -130,7 +132,7 @@ class MapRoutesController extends GetxController {
       // Convert km to meters for API
       currentRadiusInMeters.value = value * 1000;
       radiusController.text = value.toStringAsFixed(1);
-      appLog('Radius updated to ${currentRadiusInMeters.value} meters (${value} km). Fetching routes...', type: LogType.info, source: 'RADIUS');
+      appLog('Radius updated to ${currentRadiusInMeters.value} meters ($value km). Fetching routes...', type: LogType.info, source: 'RADIUS');
       currentOffset.value = 0; // Reset offset when radius changes
       fetchRoutes();
     });

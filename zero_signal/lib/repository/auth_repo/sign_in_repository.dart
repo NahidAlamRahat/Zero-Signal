@@ -46,18 +46,18 @@ class SignInApiController extends GetxController {
         await PrefsHelper.setString("accessToken", jwtToken);
         await PrefsHelper.setBool("isLogIn", true);
 
-        _successfullyMessage = response.message ?? "Login successful";
+        _successfullyMessage = response.message;
 
         appLog('Login successful, token saved to PrefsHelper & LocalStorage');
         update(); // Update UI for GetBuilder
         return 200;
       } else if (response.statusCode == 407) {
-        _errorMessage = response.message ?? "OTP verification required";
+        _errorMessage = response.message;
         appLog('OTP verification required');
         update(); // Update UI for GetBuilder
         return 407;
       } else {
-        _errorMessage = response.message ?? "Login failed";
+        _errorMessage = response.message;
         appLog(
             'Login failed - Status: ${response.statusCode}, Message: ${response.message}');
         update(); // Update UI for GetBuilder

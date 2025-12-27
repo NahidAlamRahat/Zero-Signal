@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
@@ -10,10 +9,10 @@ import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/widget/glass_effact.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
-import '../../../routes/app_routes.dart';
 import '../../../utils/app_log/app_log.dart';
 import 'controller/forgot_pass_verify_otp_screen_controller.dart';
 
+// ignore: must_be_immutable
 class ResetPassOtpVerifyScreen extends StatelessWidget {
   ResetPassOtpVerifyScreen({super.key});
 
@@ -200,7 +199,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                           msg:
                                               "Please enter the complete 4-digit code",
                                           backgroundColor:
-                                              Colors.red.withOpacity(0.8),
+                                              Colors.red.withValues(alpha: 0.8),
                                           textColor: Colors.white,
                                         );
                                       }

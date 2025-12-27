@@ -96,7 +96,7 @@ class BottomNav extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected 
-              ? AppColor.backgroundColor.withOpacity(0.9)
+              ? AppColor.backgroundColor.withValues(alpha: 0.9)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(30.r),
         ),

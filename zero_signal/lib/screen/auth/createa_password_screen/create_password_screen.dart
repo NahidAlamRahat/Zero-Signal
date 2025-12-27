@@ -10,7 +10,6 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
-import '../../../gen/assets.gen.dart';
 import '../../../widget/text_field_widget/text_field_widget.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
@@ -157,10 +156,4 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     );
   }
 
-  /// Background image widget
-  Widget _buildBackgroundImage() {
-    return Positioned.fill(
-      child: Image.asset(AppImagePath.signInBackgroundImage, fit: BoxFit.cover),
-    );
-  }
 }
