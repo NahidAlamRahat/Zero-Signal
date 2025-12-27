@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'dart:async';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
 import 'dart:math';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../constant/app_colors.dart';
+import 'widgets/route_stats_dialog.dart';
+import 'services/route_service.dart';
 
 class RouteNavigationScreen extends StatefulWidget {
   final String routeId;
@@ -46,8 +46,12 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   double targetLat = 0.0;
   double targetLng = 0.0;
   double progress = 0.0; // Progress between current waypoint and next (0.0 to 1.0)
-  mapbox.PointAnnotationManager? currentPositionManager;
-  mapbox.PointAnnotation? currentPositionMarker;
+  mapbox.CircleAnnotationManager? currentPositionManager;
+  mapbox.CircleAnnotation? currentPositionMarker;
+  
+  // Blinking animation variables
+  Timer? blinkTimer;
+  bool isMarkerVisible = true;
   
   // Generated route waypoints
   List<Map<String, dynamic>> routeWaypoints = [];
@@ -55,6 +59,7 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   // Map annotations
   mapbox.PointAnnotationManager? pointManager;
   mapbox.PolylineAnnotationManager? lineManager;
+  mapbox.CircleAnnotationManager? circleManager; // Add circle manager
   
   @override
   void initState() {
@@ -67,6 +72,7 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   void dispose() {
     navigationTimer?.cancel();
     positionStreamSubscription?.cancel();
+    blinkTimer?.cancel();
     super.dispose();
   }
 
@@ -142,7 +148,7 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     
     for (int i = 0; i < coordinates.length; i++) {
       final coord = coordinates[i];
-      final distance = _calculateDistance(
+      final distance = RouteService.calculateDistance(
         currentLat, currentLng,
         coord['latitude'], coord['longitude'],
       );
@@ -198,11 +204,11 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     final endCoord = widget.routeCoordinates.last;
     
     // Try to get real road route first
-    final success = await _fetchRealRoadRoute();
+    await _fetchRealRoadRoute();
     
-    if (!success) {
+    if (routeWaypoints.isEmpty) {
       // Fallback to curved path simulation
-      routeWaypoints = _generateIntermediateWaypoints(
+      routeWaypoints = RouteService.generateIntermediateWaypoints(
         startCoord['latitude'], startCoord['longitude'],
         endCoord['latitude'], endCoord['longitude']
       );
@@ -225,6 +231,9 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
       // Add start and end markers
       pointManager = await mapboxMap!.annotations.createPointAnnotationManager();
       
+      // Create circle manager for current position marker
+      circleManager = await mapboxMap!.annotations.createCircleAnnotationManager();
+      
       // Start marker
       await pointManager!.create(mapbox.PointAnnotationOptions(
         geometry: mapbox.Point(coordinates: mapbox.Position(startCoord['longitude'], startCoord['latitude'])),
@@ -246,111 +255,86 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     }
   }
 
-  Future<bool> _fetchRealRoadRoute() async {
-    if (widget.routeCoordinates.length < 2) return false;
-
-    print('=== FETCHING REAL ROAD ROUTE ===');
-
-    try {
-      final startCoord = widget.routeCoordinates.first;
-      final endCoord = widget.routeCoordinates.last;
-      
-      // Use OpenStreetMap's OSRM routing service (free and reliable)
-      final url = Uri.parse(
-        'https://router.project-osrm.org/route/v1/driving/'
-        '${startCoord['longitude']},${startCoord['latitude']};'
-        '${endCoord['longitude']},${endCoord['latitude']}'
-        '?overview=full&geometries=geojson'
-      );
-
-      print('Request URL: $url');
-
-      final response = await http.get(url);
-      print('Response status: ${response.statusCode}');
-      
-      if (response.statusCode == 200) {
-        final data = convert.json.decode(response.body);
-        print('OSRM Response received');
-        
-        if (data['routes'] != null && data['routes'].isNotEmpty) {
-          final route = data['routes'][0];
-          final geometry = route['geometry'];
-          final coordinates = geometry['coordinates'] as List;
-          
-          // Convert API coordinates to our format
-          routeWaypoints = coordinates.map((coord) => {
-            'latitude': coord[1],
-            'longitude': coord[0],
-          }).toList();
-
-          print('Got ${routeWaypoints.length} road waypoints from OSRM');
-
-          final lineOptions = mapbox.PolylineAnnotationOptions(
-            geometry: mapbox.LineString(
-              coordinates: routeWaypoints.map((coord) => 
-                mapbox.Position(coord['longitude'], coord['latitude'])
-              ).toList(),
-            ),
-            lineColor: const Color(0xFF3A5A4D).value,
-            lineWidth: 5.0,
-          );
-
-          lineManager = await mapboxMap!.annotations.createPolylineAnnotationManager();
-          await lineManager!.create(lineOptions);
-
-          // Add start and end markers
-          pointManager = await mapboxMap!.annotations.createPointAnnotationManager();
-          
-          // Start marker
-          await pointManager!.create(mapbox.PointAnnotationOptions(
-            geometry: mapbox.Point(coordinates: mapbox.Position(startCoord['longitude'], startCoord['latitude'])),
-            iconImage: "start-marker",
-            iconSize: 1.5,
-          ));
-
-          // End marker
-          await pointManager!.create(mapbox.PointAnnotationOptions(
-            geometry: mapbox.Point(coordinates: mapbox.Position(endCoord['longitude'], endCoord['latitude'])),
-            iconImage: "end-marker", 
-            iconSize: 1.5,
-          ));
-
-          // Add current position marker
-          await _addCurrentPositionMarker();
-          
-          print('Real road route completed!');
-          return true;
-        }
-      }
-    } catch (e) {
-      print('Error fetching real road route: $e');
-    }
+  Future<void> _fetchRealRoadRoute() async {
+    await RouteService.fetchRealRoadRoute(
+      widget.routeCoordinates,
+      (waypoints) {
+        setState(() {
+          routeWaypoints = waypoints;
+        });
+        _drawRealRoadRoute();
+      },
+    );
     
-    return false;
+    if (routeWaypoints.isEmpty) {
+      print('=== FALLING BACK TO STRAIGHT LINE ROUTE ===');
+      await _drawStraightLineRoute();
+    }
   }
 
-  List<Map<String, dynamic>> _generateIntermediateWaypoints(
-    double startLat, double startLng, double endLat, double endLng
-  ) {
-    final waypoints = <Map<String, dynamic>>[];
-    final numWaypoints = 8; // Number of intermediate points
+  Future<void> _drawRealRoadRoute() async {
+    if (routeWaypoints.isEmpty) return;
     
-    for (int i = 0; i <= numWaypoints; i++) {
-      final t = i / numWaypoints;
-      
-      // Add some curve to make it more realistic than straight line
-      final curve = sin(t * pi) * 0.002; // Small curve effect
-      
-      final lat = startLat + (endLat - startLat) * t + curve;
-      final lng = startLng + (endLng - startLng) * t;
-      
-      waypoints.add({
-        'latitude': lat,
-        'longitude': lng,
-      });
+    print('=== DRAWING REAL ROAD ROUTE ===');
+    print('Waypoints count: ${routeWaypoints.length}');
+
+    final lineOptions = mapbox.PolylineAnnotationOptions(
+      geometry: mapbox.LineString(
+        coordinates: routeWaypoints.map((coord) => 
+          mapbox.Position(coord['longitude'], coord['latitude'])
+        ).toList(),
+      ),
+      lineColor: const Color(0xFF3A5A4D).value,
+      lineWidth: 5.0,
+    );
+
+    lineManager = await mapboxMap!.annotations.createPolylineAnnotationManager();
+    await lineManager!.create(lineOptions);
+
+    // Add start and end markers
+    pointManager = await mapboxMap!.annotations.createPointAnnotationManager();
+    
+    // Create circle manager for current position marker
+    circleManager = await mapboxMap!.annotations.createCircleAnnotationManager();
+    
+    final startCoord = widget.routeCoordinates.first;
+    final endCoord = widget.routeCoordinates.last;
+    
+    // Start marker
+    await pointManager!.create(mapbox.PointAnnotationOptions(
+      geometry: mapbox.Point(coordinates: mapbox.Position(startCoord['longitude'], startCoord['latitude'])),
+      iconImage: "start-marker",
+      iconSize: 1.5,
+    ));
+
+    // End marker
+    await pointManager!.create(mapbox.PointAnnotationOptions(
+      geometry: mapbox.Point(coordinates: mapbox.Position(endCoord['longitude'], endCoord['latitude'])),
+      iconImage: "end-marker", 
+      iconSize: 1.5,
+    ));
+
+    // Add current position marker
+    await _addCurrentPositionMarker();
+    
+    print('Real road route completed!');
+  }
+
+  void _calculateRouteStats() {
+    final coordinates = routeWaypoints.isNotEmpty ? routeWaypoints : widget.routeCoordinates;
+    if (coordinates.length < 2) return;
+    
+    totalDistance = 0.0;
+    for (int i = 0; i < coordinates.length - 1; i++) {
+      final coord1 = coordinates[i];
+      final coord2 = coordinates[i + 1];
+      totalDistance += RouteService.calculateDistance(
+        coord1['latitude'], coord1['longitude'],
+        coord2['latitude'], coord2['longitude'],
+      );
     }
     
-    return waypoints;
+    remainingTime = (totalDistance / currentSpeed * 60).round();
   }
 
   Future<void> _drawStraightLineRoute() async {
@@ -402,22 +386,91 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   }
 
   Future<void> _addCurrentPositionMarker() async {
-    currentPositionManager = await mapboxMap!.annotations.createPointAnnotationManager();
+    // Use the existing circle manager
+    currentPositionManager = circleManager;
     
-    // Start at first coordinate
-    currentLat = widget.routeCoordinates.first['latitude'];
-    currentLng = widget.routeCoordinates.first['longitude'];
+    // Start at the FIRST coordinate (starting point) instead of current GPS
+    final coordinates = routeWaypoints.isNotEmpty ? routeWaypoints : widget.routeCoordinates;
+    if (coordinates.isNotEmpty) {
+      final startCoord = coordinates.first;
+      currentLat = startCoord['latitude'];
+      currentLng = startCoord['longitude'];
+    }
     
+    // Create a circle marker (guaranteed to be visible)
     currentPositionMarker = await currentPositionManager!.create(
-      mapbox.PointAnnotationOptions(
+      mapbox.CircleAnnotationOptions(
         geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
-        iconImage: "default-marker",
-        iconSize: 1.2,
-        iconColor: Colors.blue.value,
+        circleRadius: 20.0, // Large circle
+        circleColor: Colors.red.value,
+        circleStrokeWidth: 3.0,
+        circleStrokeColor: Colors.white.value,
       ),
     );
     
-    print('Current position marker added at: $currentLat, $currentLng');
+    // Start blinking animation
+    _startBlinkingAnimation();
+    
+    print('Circle marker added at starting point: $currentLat, $currentLng');
+  }
+
+  void _startBlinkingAnimation() {
+    blinkTimer?.cancel();
+    blinkTimer = Timer.periodic(Duration(milliseconds: 800), (timer) {
+      if (currentPositionManager != null && mounted) {
+        setState(() {
+          isMarkerVisible = !isMarkerVisible;
+        });
+        
+        // Update marker visibility
+        _updateMarkerVisibility();
+      }
+    });
+  }
+
+  void _updateMarkerVisibility() async {
+    if (currentPositionManager != null) {
+      // Only try to delete if marker exists
+      if (currentPositionMarker != null) {
+        try {
+          await currentPositionManager!.delete(currentPositionMarker!);
+        } catch (e) {
+          print('Marker already deleted or not added: $e');
+        }
+        currentPositionMarker = null;
+      }
+      
+      // Create new marker with updated visibility
+      if (isMarkerVisible) {
+        currentPositionMarker = await currentPositionManager!.create(
+          mapbox.CircleAnnotationOptions(
+            geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
+            circleRadius: 20.0,
+            circleColor: Colors.red.value,
+            circleStrokeWidth: 3.0,
+            circleStrokeColor: Colors.white.value,
+          ),
+        );
+      } else {
+        currentPositionMarker = await currentPositionManager!.create(
+          mapbox.CircleAnnotationOptions(
+            geometry: mapbox.Point(coordinates: mapbox.Position(currentLng, currentLat)),
+            circleRadius: 15.0, // Smaller when "invisible"
+            circleColor: Colors.pink.value,
+            circleStrokeWidth: 2.0,
+            circleStrokeColor: Colors.white.value,
+          ),
+        );
+      }
+    }
+  }
+
+  void _stopBlinkingAnimation() {
+    blinkTimer?.cancel();
+    setState(() {
+      isMarkerVisible = true;
+    });
+    _updateMarkerVisibility();
   }
 
   void _centerMapOnRoute() {
@@ -445,23 +498,6 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     );
   }
 
-  void _calculateRouteStats() {
-    final coordinates = routeWaypoints.isNotEmpty ? routeWaypoints : widget.routeCoordinates;
-    if (coordinates.length < 2) return;
-    
-    totalDistance = 0.0;
-    for (int i = 0; i < coordinates.length - 1; i++) {
-      final coord1 = coordinates[i];
-      final coord2 = coordinates[i + 1];
-      totalDistance += _calculateDistance(
-        coord1['latitude'], coord1['longitude'],
-        coord2['latitude'], coord2['longitude'],
-      );
-    }
-    
-    remainingTime = (totalDistance / currentSpeed * 60).round();
-  }
-
   void _startNavigation() {
     final coordinates = routeWaypoints.isNotEmpty ? routeWaypoints : widget.routeCoordinates;
     if (currentCoordinateIndex >= coordinates.length - 1) {
@@ -472,6 +508,9 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     setState(() {
       isNavigating = true;
     });
+
+    // Start blinking when navigation starts
+    _startBlinkingAnimation();
 
     // Set target coordinates for smooth movement
     if (currentCoordinateIndex < coordinates.length - 1) {
@@ -505,6 +544,9 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
       // Update current position marker
       _updateCurrentPositionMarker(newLat, newLng);
       
+      // Follow the marker with camera during navigation
+      _followMarker(newLat, newLng);
+      
       // Update distance
       if (progress >= 1.0) {
         currentCoordinateIndex++;
@@ -524,12 +566,26 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
     }
   }
 
+  void _followMarker(double lat, double lng) {
+    if (mapboxMap != null && isNavigating) {
+      // Smoothly follow the marker with camera
+      mapboxMap?.flyTo(
+        mapbox.CameraOptions(
+          center: mapbox.Point(coordinates: mapbox.Position(lng, lat)),
+          zoom: 15.0, // Closer zoom for better navigation view
+          pitch: 0.0,
+        ),
+        mapbox.MapAnimationOptions(duration: 500), // Smooth transition
+      );
+    }
+  }
+
   void _updateDistanceStats() {
     final coordinates = routeWaypoints.isNotEmpty ? routeWaypoints : widget.routeCoordinates;
     if (currentCoordinateIndex > 0) {
       final prevCoord = coordinates[currentCoordinateIndex - 1];
       final currentCoord = coordinates[currentCoordinateIndex];
-      coveredDistance += _calculateDistance(
+      coveredDistance += RouteService.calculateDistance(
         prevCoord['latitude'], prevCoord['longitude'],
         currentCoord['latitude'], currentCoord['longitude'],
       );
@@ -540,38 +596,17 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   }
 
   Future<void> _updateCurrentPositionMarker(double lat, double lng) async {
-    if (currentPositionMarker != null && currentPositionManager != null) {
-      // Remove old marker and create new one at updated position
-      await currentPositionManager!.delete(currentPositionMarker!);
-      currentPositionMarker = await currentPositionManager!.create(
-        mapbox.PointAnnotationOptions(
-          geometry: mapbox.Point(coordinates: mapbox.Position(lng, lat)),
-          iconImage: "default-marker",
-          iconSize: 1.2,
-          iconColor: Colors.blue.value,
-        ),
-      );
-    }
-  }
-
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    const double earthRadius = 6371; // km
-    final double dLat = _toRadians(lat2 - lat1);
-    final double dLon = _toRadians(lon2 - lon1);
-    final double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(_toRadians(lat1)) * cos(_toRadians(lat2)) *
-        sin(dLon / 2) * sin(dLon / 2);
-    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    return earthRadius * c;
-  }
-
-  double _toRadians(double degrees) {
-    return degrees * (pi / 180);
+    currentLat = lat;
+    currentLng = lng;
+    
+    // Update circle marker position (will maintain blinking state)
+    _updateMarkerVisibility();
   }
 
   void _toggleNavigation() {
     if (isNavigating) {
       _pauseNavigation();
+      _stopBlinkingAnimation();
     } else {
       _startNavigation();
     }
@@ -604,20 +639,38 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
   }
 
   void _showCompletionDialog() {
+    _showRouteStatsDialog();
+  }
+
+  void _showRouteStatsDialog() {
+    // Calculate pace (minutes per km)
+    final pace = currentSpeed > 0 ? (60 / currentSpeed).toStringAsFixed(1) : '0.0';
+    
+    // Generate sample elevation data
+    final elevationData = List.generate(20, (index) {
+      final baseElevation = 350.0;
+      final variation = sin(index * 0.5) * 50 + cos(index * 0.3) * 30;
+      return baseElevation + variation;
+    });
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Route Completed!'),
-        content: Text('You have successfully completed the route navigation.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Get.back();
-            },
-            child: Text('Done'),
-          ),
-        ],
+      builder: (context) => RouteStatsDialog(
+        movementTime: '${(coveredDistance / currentSpeed * 60).toStringAsFixed(0)}:${((coveredDistance / currentSpeed * 60 % 1) * 60).toStringAsFixed(0).padLeft(2, '0')}',
+        distance: totalDistance.toStringAsFixed(1),
+        totalTime: '$remainingTime',
+        pace: pace,
+        remaining: '${(totalDistance - coveredDistance).toStringAsFixed(1)}',
+        speed: currentSpeed.toStringAsFixed(1),
+        elevationData: elevationData,
+        onResume: () {
+          Get.back();
+          _startNavigation();
+        },
+        onFinish: () {
+          Get.back();
+          _completeNavigation();
+        },
       ),
     );
   }
@@ -811,7 +864,30 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen> {
                         ),
                       ),
                       
-                      SizedBox(width: 12.w),
+                      SizedBox(width: 8.w),
+                      
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: _showRouteStatsDialog,
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.blue),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                          ),
+                          child: Text(
+                            'Stats',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                      
+                      SizedBox(width: 8.w),
                       
                       Expanded(
                         flex: 2,
