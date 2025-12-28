@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/repository/route_repository/route_repository.dart';
 import 'package:zero_signal/screen/filters_screen/model/route_category_model.dart';
@@ -113,6 +114,7 @@ class FiltersController extends GetxController {
         final List<dynamic> data = responseBody['data'] ?? [];
 
         if (success) {
+          Navigator.pop(Get.context!);
           mapController.routesList.value =
               List<Map<String, dynamic>>.from(data);
           mapController.update(); // Rebuild GetBuilder widgets

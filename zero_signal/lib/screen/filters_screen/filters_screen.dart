@@ -116,7 +116,7 @@ class FiltersScreen extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                   Obx(() => Text(
-                        '0km to +${controller.distanceValue.value.toInt()}km',
+                        '${controller.distanceValue.value.toInt()}km to +250km',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],

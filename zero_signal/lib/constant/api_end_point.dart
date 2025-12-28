@@ -91,8 +91,8 @@ String _getDomain() {
   // String liveServer = "http://195.35.9.21:3001";
   // String localServer = "http://10.0.70.30:3002";
   //////////10.0.70.30:3002////////////////////////
-  String liveServer = "https://shariful5000.binarybards.online";
-  String localServer = "https://shariful5000.binarybards.online";
+  String liveServer = "http://72.167.224.54:5012";
+  String localServer = "http://72.167.224.54:5012";
   try {
     if (kDebugMode) {
       return localServer;
