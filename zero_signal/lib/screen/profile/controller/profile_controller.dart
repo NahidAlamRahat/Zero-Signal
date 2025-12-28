@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/repository/route_repository/route_repository.dart';
+import 'package:zero_signal/widget/app_snack_bar/app_snack_bar.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
 
 import '../../../routes/app_routes.dart';
@@ -18,6 +21,9 @@ class ProfileController extends GetxController {
   final userAddress = '297 Westheimer Rd. Santa Ana'.obs;
   final bio = ''.obs;
   final isLoading = false.obs;
+
+  final TextEditingController passwordController = TextEditingController();
+  final RouteRepository _routeRepository = RouteRepository();
 
   @override
   void onInit() {
@@ -49,5 +55,31 @@ class ProfileController extends GetxController {
 
   void navigateToRoute(String routeName, {dynamic arguments}) {
     Get.toNamed(routeName, arguments: arguments);
+  }
+
+  Future<void> deleteAccount(BuildContext context) async {
+    if (passwordController.text.isEmpty) {
+      AppSnackBar.error("Please enter your password");
+      return;
+    }
+
+    isLoading.value = true;
+    bool success =
+        await _routeRepository.deleteAccount(passwordController.text);
+    isLoading.value = false;
+
+    if (success) {
+      AppSnackBar.success("Account deleted successfully");
+      logout();
+    } else {
+      AppSnackBar.error(
+          "Failed to delete account. Please check your password.");
+    }
+  }
+
+  @override
+  void onClose() {
+    passwordController.dispose();
+    super.onClose();
   }
 }

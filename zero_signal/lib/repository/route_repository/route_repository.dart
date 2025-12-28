@@ -187,4 +187,25 @@ class RouteRepository extends CommonRepository {
     }
     return null;
   }
+
+  Future<bool> deleteAccount(String password) async {
+    try {
+      final response = await ApiService.deleteApi(
+        url: AppApiEndPoint.deleteAccountEndPoint,
+        body: {"password": password},
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        appLog("Delete account failed: ${response.message}",
+            source: 'RouteRepository');
+        return false;
+      }
+    } catch (e) {
+      appLog("Delete account error: $e",
+          source: 'RouteRepository', type: LogType.error);
+      return false;
+    }
+  }
 }

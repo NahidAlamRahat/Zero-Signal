@@ -68,6 +68,7 @@ class AppApiEndPoint {
   String oneGetSpotUserInfoEndPoint(String id) => "/spot/user/$id";
   String oneGetRouteUserInfoEndPoint(String id) => "/route/user/$id";
   static final String routeCategoryTypeEndPoint = "/category/route-type";
+  static final String deleteAccountEndPoint = "/user/delete-account";
   static String routeGeocodeEndPoint(
     String lat,
     String lng,
