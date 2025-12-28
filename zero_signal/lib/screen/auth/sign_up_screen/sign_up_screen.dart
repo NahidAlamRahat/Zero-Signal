@@ -10,6 +10,7 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
 import '../../../gen/assets.gen.dart';
+import '../../../utils/date_input_formatter.dart';
 import '../../../widget/text_widget/text_widgets.dart';
 import 'controller/controller.dart';
 
@@ -177,6 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 borderRadius: 8,
                                 borderWidth: 1.0,
                                 keyboardType: TextInputType.datetime,
+                                inputFormatters: [DateInputFormatter()],
                               ),
                               SizedBox(height: 16.h),
 
@@ -229,7 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       checkColor: Colors.white,
                                       side: BorderSide(color: Colors.white54),
                                       materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                     ),
                                   ),
                                   SizedBox(width: 8.w),
@@ -243,14 +245,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         ),
                                         children: [
                                           TextSpan(
-                                              text: "${AppStrings
-                                                  .byCreatingAccountIAccept} "),
+                                              text:
+                                                  "${AppStrings.byCreatingAccountIAccept} "),
                                           TextSpan(
                                             text: AppStrings.termsAndConditions,
                                             style: TextStyle(
                                               color: AppColor.green,
                                               decoration:
-                                              TextDecoration.underline,
+                                                  TextDecoration.underline,
                                             ),
                                           ),
                                           TextSpan(
@@ -260,7 +262,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             style: TextStyle(
                                               color: AppColor.green,
                                               decoration:
-                                              TextDecoration.underline,
+                                                  TextDecoration.underline,
                                             ),
                                           ),
                                         ],
@@ -275,14 +277,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: Visibility(
-                                  visible:
-                                  controller.isLoading == false,
+                                  visible: controller.isLoading == false,
                                   replacement: const Center(
                                     child: CircularProgressIndicator(),
                                   ),
                                   child: ButtonWidget(
-                                    backgroundColor:
-                                    AppColor.backgroundColor,
+                                    backgroundColor: AppColor.backgroundColor,
                                     label: AppStrings.register,
                                     buttonHeight: 46,
                                     textColor: AppColor.white500,
@@ -305,7 +305,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ),
                                   Padding(
                                     padding:
-                                    EdgeInsets.symmetric(horizontal: 16.w),
+                                        EdgeInsets.symmetric(horizontal: 16.w),
                                     child: TextWidget(
                                       text: AppStrings.orText,
                                       fontColor: AppColor.white500,
@@ -333,8 +333,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     padding: EdgeInsets.all(12),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius:
-                                      BorderRadius.circular(8.r),
+                                      borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     child: Image.asset(
                                       AppIconPath.googleIcon,

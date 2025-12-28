@@ -102,8 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       widget.signInController.emailController,
                                   fontWeight: FontWeight.w400,
                                   fieldHeight: 44,
-                                  textColor:
-                                      const Color.fromARGB(255, 12, 11, 11),
+                                  textColor: AppColor.white500,
                                   hintText: AppStrings.enterYourEmail,
                                   fontSize: 14,
                                   hintColor: AppColor.white500,
