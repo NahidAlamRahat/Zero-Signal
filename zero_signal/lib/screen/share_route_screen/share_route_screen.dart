@@ -8,6 +8,7 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../constant/app_colors.dart';
 import 'controller/share_route_controller.dart';
 import '../filters_screen/model/route_category_model.dart';
@@ -65,7 +66,7 @@ class ShareRouteScreen extends StatelessWidget {
                   borderRadius: 12,
                   focusedBorderColor: AppColor.overLayBoxColor,
                   backgroundColor: AppColor.overLayBoxColor,
-                  hintText: 'Enter a route title',
+                  hintText: AppStrings.enterRouteTitle,
                 ),
                 const SizedBox(height: 24),
 
@@ -74,7 +75,7 @@ class ShareRouteScreen extends StatelessWidget {
                 SizedBox(height: 12.h),
                 LocationSearchWidget(
                   isStartLocation: true,
-                  hintText: 'Enter start location',
+                  hintText: AppStrings.enterStartLocation,
                 ),
                 SizedBox(height: 24.h),
 
@@ -83,7 +84,7 @@ class ShareRouteScreen extends StatelessWidget {
                 SizedBox(height: 12.h),
                 LocationSearchWidget(
                   isStartLocation: false,
-                  hintText: 'Enter end location',
+                  hintText: AppStrings.enterEndLocation,
                 ),
                 SizedBox(height: 24.h),
 
@@ -283,7 +284,7 @@ class ShareRouteScreen extends StatelessWidget {
           maxLines: null,
           expands: true,
           decoration: InputDecoration(
-            hintText: 'Enter a description...',
+            hintText: AppStrings.enterDescriptionHint,
             hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(16),

@@ -7,6 +7,7 @@ import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import 'package:zero_signal/constant/app_strings.dart';
 import '../profile/controller/profile_controller.dart';
 
 class PersonalInformationScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class PersonalInformationScreen extends StatelessWidget {
         textWidget: Align(
           alignment: Alignment.center,
           child: TextWidget(
-            text: 'Personal Information',
+            text: AppStrings.personalInformationHeader,
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
@@ -142,7 +143,7 @@ class PersonalInformationScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: TextWidget(
-                text: 'Edit Profile',
+                text: AppStrings.editProfile,
                 fontSize: 9,
                 fontWeight: FontWeight.w400,
                 fontColor: AppColor.backgroundColor,
@@ -182,11 +183,16 @@ class PersonalInformationScreen extends StatelessWidget {
     return Obx(() => Column(
           spacing: 16,
           children: [
-            _buildInfoField('Full Name', profileController.userName.value),
-            _buildInfoField('Email', profileController.userEmail.value),
-            _buildInfoField('Gender', profileController.userGender.value),
-            _buildInfoField('Date of birth', profileController.userDob.value),
-            _buildInfoField('Address', profileController.userAddress.value),
+            _buildInfoField(
+                AppStrings.fullName, profileController.userName.value),
+            _buildInfoField(
+                AppStrings.email, profileController.userEmail.value),
+            _buildInfoField(
+                AppStrings.gender, profileController.userGender.value),
+            _buildInfoField(
+                AppStrings.dateOfBirth, profileController.userDob.value),
+            _buildInfoField(
+                AppStrings.address, profileController.userAddress.value),
           ],
         ));
   }

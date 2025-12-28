@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/screen/sport_details/controller/sport_details_controller.dart';
 import 'package:zero_signal/screen/sport_details/widget/auto_carousel_header.dart';
 import 'package:zero_signal/screen/sport_details/widget/comment_widgets.dart';
@@ -18,7 +19,7 @@ class SpotDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppbarWidget(
-        text: 'Spot Details',
+        text: AppStrings.spotDetails,
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
         action: Padding(
@@ -54,9 +55,9 @@ class SpotDetailsScreen extends StatelessWidget {
                         SizedBox(width: 4),
                         Expanded(
                           child: TextWidget(
-                            text: controller.spotAddress.value.isNotEmpty 
-                                ? controller.spotAddress.value 
-                                : 'Location not specified',
+                            text: controller.spotAddress.value.isNotEmpty
+                                ? controller.spotAddress.value
+                                : AppStrings.locationNotSpecified,
                             fontColor: AppColor.darkGay300,
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -83,7 +84,7 @@ class SpotDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextWidget(
-                      text: '5 user will visit this place on Sunday',
+                      text: AppStrings.visitorInfoPrefix,
                       fontColor: AppColor.textColor,
                       fontSize: 14,
                     ),
@@ -112,7 +113,7 @@ class SpotDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextWidget(
-            text: 'Description',
+            text: AppStrings.descriptionHeader,
             fontColor: AppColor.textColor,
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -120,9 +121,9 @@ class SpotDetailsScreen extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           TextWidget(
-            text: controller.spotDescription.value.isNotEmpty 
-                ? controller.spotDescription.value 
-                : 'No description available for this spot.',
+            text: controller.spotDescription.value.isNotEmpty
+                ? controller.spotDescription.value
+                : AppStrings.noDescriptionAvailable,
             fontColor: AppColor.darkGay300,
             fontSize: 14,
             fontWeight: FontWeight.w400,

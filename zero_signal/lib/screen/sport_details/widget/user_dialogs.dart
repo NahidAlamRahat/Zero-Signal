@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -28,7 +29,7 @@ void showUserDialog(
       backgroundColor: AppColor.creamBackgroundColor,
       title: '@$userName',
       titleStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-      description: userBio.isNotEmpty ? userBio : "No bio available",
+      description: userBio.isNotEmpty ? userBio : AppStrings.noBioAvailable,
       descriptionStyle:
           const TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
       image: userImage != null
@@ -47,8 +48,8 @@ void showUserDialog(
             final success = await userRepository.likeUser(userId: userId);
             if (success) {
               Get.snackbar(
-                "Success",
-                "You liked this user!",
+                AppStrings.success,
+                AppStrings.likedUserMessage,
                 backgroundColor: AppColor.backgroundColor,
                 colorText: Colors.white,
                 snackPosition: SnackPosition.BOTTOM,
@@ -56,8 +57,8 @@ void showUserDialog(
               Navigator.pop(context); // Optional: close dialog upon action
             } else {
               Get.snackbar(
-                "Error",
-                "Failed to like user.",
+                AppStrings.error,
+                AppStrings.failedToLikeUser,
                 backgroundColor: Colors.redAccent,
                 colorText: Colors.white,
                 snackPosition: SnackPosition.BOTTOM,
@@ -94,11 +95,12 @@ void showUserDialog(
                 Get.back(); // Close dialog
                 Get.toNamed(AppRoutes.viewProfileScreen, arguments: userInfo);
               } else {
-                Get.snackbar("Error", "Could not retrieve user details.");
+                Get.snackbar(
+                    AppStrings.error, AppStrings.couldNotRetrieveUserDetails);
               }
             },
             backgroundColor: AppColor.backgroundColor,
-            label: 'View Profile',
+            label: AppStrings.viewProfile,
             fontSize: 14,
             fontWeight: FontWeight.w500,
             buttonHeight: 40,
@@ -113,7 +115,7 @@ void showUserDialog(
             },
             backgroundColor: Colors.transparent,
             textColor: Colors.red,
-            label: 'Report user',
+            label: AppStrings.reportUserLabel,
             fontSize: 14,
             fontWeight: FontWeight.w500,
             buttonHeight: 40,
@@ -135,14 +137,13 @@ void showReportDialog(BuildContext context, {required String userId}) {
       topPadding: 50,
       showIcon: false,
       backgroundColor: AppColor.creamBackgroundColor,
-      title: 'Report User',
+      title: AppStrings.reportUser,
       bottomPadding: 30,
       titleStyle: TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 16.sp,
       ),
-      description:
-          'Your report is anonymous. Please provide details about the issue to help our moderation team.',
+      description: AppStrings.reportInstruction,
       descriptionStyle: TextStyle(
         fontSize: 14.sp,
         fontWeight: FontWeight.w400,
@@ -157,7 +158,7 @@ void showReportDialog(BuildContext context, {required String userId}) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const TextWidget(
-                text: 'Reason for reporting',
+                text: AppStrings.reasonForReporting,
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
               ),
@@ -166,7 +167,7 @@ void showReportDialog(BuildContext context, {required String userId}) {
               ),
               TextFieldWidget(
                 controller: reasonController,
-                hintText: "e.g., inappropriate content, spam, harassment.....",
+                hintText: AppStrings.reportPlaceholder,
                 textColor: AppColor.subTitleColor,
                 backgroundColor: AppColor.lightGrayishOrange,
                 borderColor: AppColor.creamBackgroundColor,
@@ -184,7 +185,8 @@ void showReportDialog(BuildContext context, {required String userId}) {
                       buttonWidth: double.infinity,
                       onPressed: () async {
                         if (reasonController.text.trim().isEmpty) {
-                          Get.snackbar("Error", "Please enter a reason.");
+                          Get.snackbar(
+                              AppStrings.error, AppStrings.pleaseEnterReason);
                           return;
                         }
 
@@ -199,15 +201,15 @@ void showReportDialog(BuildContext context, {required String userId}) {
                         if (success) {
                           Get.back(); // Close dialog
                           Get.snackbar(
-                            "Success",
-                            "Report submitted successfully",
+                            AppStrings.success,
+                            AppStrings.reportSubmittedSuccessfully,
                             backgroundColor: Colors.green,
                             colorText: Colors.white,
                           );
                         } else {
                           Get.snackbar(
-                            "Error",
-                            "Failed to submit report.",
+                            AppStrings.error,
+                            AppStrings.failedToSubmitReport,
                             backgroundColor: Colors.redAccent,
                             colorText: Colors.white,
                           );
@@ -215,7 +217,7 @@ void showReportDialog(BuildContext context, {required String userId}) {
                       },
                       backgroundColor: AppColor.backgroundColor,
                       textColor: Colors.white,
-                      label: 'Send to Administration',
+                      label: AppStrings.sendToAdministration,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     )),

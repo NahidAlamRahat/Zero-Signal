@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/repository/support_repository.dart';
 import 'package:zero_signal/service/api_service/service_model/service_model.dart';
 import 'package:zero_signal/widget/app_snack_bar/app_snack_bar.dart';
@@ -42,21 +43,22 @@ class ContactSupportController extends GetxController {
       }
     } else if (status.isPermanentlyDenied) {
       Get.dialog(AlertDialog(
-        title: const Text("Permission Required"),
-        content: const Text(
-            "Gallery access is required to pick images. Please enable it in settings."),
+        title: const Text(AppStrings.permissionRequired),
+        content: const Text(AppStrings.galleryAccessRequired),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Get.back(),
+              child: const Text(AppStrings.cancel)),
           TextButton(
               onPressed: () {
                 Get.back();
                 openAppSettings();
               },
-              child: const Text("Settings")),
+              child: const Text(AppStrings.settings)),
         ],
       ));
     } else {
-      AppSnackBar.error("Permission denied to access gallery");
+      AppSnackBar.error(AppStrings.permissionDeniedGallery);
     }
   }
 
@@ -66,7 +68,7 @@ class ContactSupportController extends GetxController {
 
   Future<void> submitSupport() async {
     if (messageController.text.trim().isEmpty) {
-      AppSnackBar.error("Please enter a message");
+      AppSnackBar.error(AppStrings.pleaseEnterMessage);
       return;
     }
 

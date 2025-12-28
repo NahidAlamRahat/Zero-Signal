@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../../constant/app_colors.dart';
 import '../controller/profile_controller.dart';
 
@@ -42,7 +43,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const TextWidget(
-                  text: 'Want to Delete Account !',
+                  text: AppStrings.wantToDeleteAccount,
                   textAlignment: TextAlign.center,
                   // style: TextStyle(
                   //   color: Color(0xFF2C2C2C),
@@ -57,7 +58,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const TextWidget(
-                  text: 'Please confirm your password to remove your account.',
+                  text: AppStrings.confirmPasswordToDelete,
                   textAlignment: TextAlign.center,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -71,7 +72,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const TextWidget(
-                      text: 'Enter Password',
+                      text: AppStrings.enterPasswordLabel,
                       textAlignment: TextAlign.start,
                     ),
                     const SpaceWidget(
@@ -81,7 +82,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                       controller: controller.passwordController,
                       borderRadius: 8,
                       borderColor: AppColor.creamBackgroundColor,
-                      hintText: 'Enter Password',
+                      hintText: AppStrings.enterPasswordLabel,
                       hintColor: AppColor.subTitleColor,
                       backgroundColor: AppColor.creamBackgroundColor,
                       suffixIcon: true,
@@ -97,7 +98,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildButton(
-                    label: 'Cancel',
+                    label: AppStrings.cancel,
                     bgColor: Colors.transparent,
                     textColor: const Color(0xFF2E4F3E),
                     borderColor: const Color(0xFF2E4F3E),
@@ -108,8 +109,9 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                 Expanded(
                   child: Obx(
                     () => _buildButton(
-                      label:
-                          controller.isLoading.value ? 'Deleting...' : 'Delete',
+                      label: controller.isLoading.value
+                          ? AppStrings.deleting
+                          : AppStrings.delete,
                       bgColor: AppColor.creamBackgroundColor,
                       textColor: Colors.black,
                       onTap: controller.isLoading.value

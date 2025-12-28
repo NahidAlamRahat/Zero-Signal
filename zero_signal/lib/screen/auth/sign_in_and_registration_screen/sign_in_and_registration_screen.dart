@@ -85,7 +85,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                         child: ButtonWidget(
                           buttonWidth: screenWidth * 0.9,
                           backgroundColor: Colors.transparent,
-                          label: 'Sign In',
+                          label: AppStrings.signIn,
                           buttonHeight: screenHeight * 0.05,
                           borderColor: Colors.white,
                           textColor: Colors.white,
@@ -107,7 +107,7 @@ class SignInAndRegistrationScreen extends StatelessWidget {
                             Get.toNamed(AppRoutes.signUpScreen);
                           },
                           backgroundColor: AppColor.backgroundColor,
-                          label: 'Registration',
+                          label: AppStrings.registration,
                           buttonHeight: screenHeight * 0.05,
                         ),
                       ),

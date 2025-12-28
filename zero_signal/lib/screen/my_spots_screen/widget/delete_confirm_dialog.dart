@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 
 import '../model/my_spots_response_model.dart';
 
@@ -20,7 +21,7 @@ class DeleteConfirmDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: const Text(AppStrings.cancel),
         ),
         TextButton(
           onPressed: () {

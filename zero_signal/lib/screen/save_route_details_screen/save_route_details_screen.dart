@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -95,7 +96,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                       controller.fetchRouteDetails(routeId!);
                     }
                   },
-                  child: const Text('Retry'),
+                  child: Text(AppStrings.retry),
                 ),
               ],
             ),

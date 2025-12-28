@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -107,7 +108,7 @@ class _SocialScreenState extends State<SocialScreen> {
                   if (controller.activityFeed.isEmpty) {
                     return Center(
                       child: CustomText(
-                        text: "No activities found",
+                        text: AppStrings.noActivitiesFound,
                         color: AppColor.white500,
                       ),
                     );
@@ -219,7 +220,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                               SizedBox(height: 5.h),
                                               CustomText(
                                                 text:
-                                                    "${item.currentParticipants} people attending",
+                                                    "${item.currentParticipants} ${AppStrings.peopleAttending}",
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColor.white500,
@@ -239,7 +240,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                               SizedBox(height: 5.h),
                                               CustomText(
                                                 text:
-                                                    "${item.maxParticipants} attendants max.",
+                                                    "${item.maxParticipants} ${AppStrings.attendantsMax}",
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColor.white500,
@@ -256,7 +257,8 @@ class _SocialScreenState extends State<SocialScreen> {
                                                   height: 20),
                                               SizedBox(height: 5.h),
                                               CustomText(
-                                                text: "${item.saved} Saved",
+                                                text:
+                                                    "${item.saved} ${AppStrings.savedHeader}",
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColor.white500,
@@ -268,7 +270,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                     ),
                                     SizedBox(height: 20.h),
                                     CustomText(
-                                      text: "Attendants",
+                                      text: AppStrings.attendantsHeader,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w500,
                                       color: AppColor.white500,
@@ -278,7 +280,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                             item.participants!.isEmpty)
                                         ? Center(
                                             child: CustomText(
-                                              text: "No Attendants",
+                                              text: AppStrings.noAttendants,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
                                               color: AppColor.white500,
@@ -339,7 +341,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                             fontWeight: FontWeight.w500,
                                             backgroundColor: Color(0xFFfc6057),
                                             leftIcon: Icons.close,
-                                            text: "Not today",
+                                            text: AppStrings.notToday,
                                             fontSize: 16,
                                             onPressed: () {
                                               controller.removeItem(index);
@@ -353,7 +355,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                             fontWeight: FontWeight.w500,
                                             backgroundColor: Color(0xFF2e4f3e),
                                             leftIcon: Icons.done,
-                                            text: "I'm in!",
+                                            text: AppStrings.imIn,
                                             onPressed: () {
                                               if (item.sId != null) {
                                                 controller
@@ -389,8 +391,8 @@ class _SocialScreenState extends State<SocialScreen> {
                                         ),
                                         CustomText(
                                           text: (item.isSaved == true)
-                                              ? "Saved"
-                                              : "Save",
+                                              ? AppStrings.savedHeader
+                                              : AppStrings.saveHeader,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: AppColor.white500,
@@ -412,7 +414,7 @@ class _SocialScreenState extends State<SocialScreen> {
                                           }
                                         },
                                         child: TextWidget(
-                                          text: 'Report Activity',
+                                          text: AppStrings.reportActivity,
                                           fontColor: AppColor.white500,
                                           textAlignment: TextAlign.center,
                                           fontSize: 16,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'controller/chat_controller.dart';
 import 'model/chat_model.dart';
@@ -100,7 +101,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Hiking Adventure',
+                    AppStrings.hikingAdventure,
                     style: TextStyle(
                       color: primaryTextColor,
                       fontSize: 20, // Kept your font size
@@ -124,7 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       // Use an Obx wrapper to listen for changes to the participants list
                       child: Obx(
                         () => Text(
-                          '${controller.participants.length} participants',
+                          '${controller.participants.length}${AppStrings.participantsSuffix}',
                           style: TextStyle(
                             color: secondaryTextColor,
                             fontSize: 16, // Kept your font size
@@ -176,10 +177,10 @@ class _ChatScreenState extends State<ChatScreen> {
         });
 
       if (sortedMessages.isEmpty) {
-        return const Center(
+        return Center(
           child: Text(
-            'No messages yet...',
-            style: TextStyle(
+            AppStrings.noMessagesYet,
+            style: const TextStyle(
               color: secondaryTextColor,
               fontSize: 16,
             ),
@@ -319,7 +320,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               ],
                             )
                           : Text(
-                              text,
+                              text.isEmpty ? AppStrings.emptyMessage : text,
                               style: const TextStyle(
                                 color: primaryTextColor,
                                 fontSize: 15,
@@ -362,7 +363,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final audioUrl = message.audio;
     if (audioUrl == null || audioUrl.isEmpty) {
       return const Text(
-        'Audio message',
+        AppStrings.audioMessage,
         style: TextStyle(
           color: primaryTextColor,
           fontSize: 15,
@@ -402,7 +403,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: TextField(
                   controller: _messageController,
                   decoration: const InputDecoration(
-                    hintText: 'Compose your message...',
+                    hintText: AppStrings.composeMessageHint,
                     hintStyle: TextStyle(color: secondaryTextColor),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
@@ -527,9 +528,9 @@ class _ParticipantsDialogContent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Participants',
-                style: TextStyle(
+              Text(
+                AppStrings.participantsHeader,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   color: _ChatScreenState.primaryTextColor,

@@ -77,7 +77,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: "Enter ",
+                                        text: AppStrings.enterText,
                                         style:
                                             TextStyle(color: AppColor.white500),
                                       ),
@@ -88,7 +88,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                                 255, 203, 32, 1)),
                                       ),
                                       TextSpan(
-                                        text: " digits code",
+                                        text: AppStrings.digitsCode,
                                         style:
                                             TextStyle(color: AppColor.white500),
                                       ),
@@ -102,8 +102,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
 
                                 // Subtitle
                                 TextWidget(
-                                  text:
-                                      "Enter the four-digit code that was emailed to you.",
+                                  text: AppStrings.enterCodeEmailMessage,
                                   fontColor: AppColor.white500,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
@@ -131,7 +130,7 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                             ),
                                             children: [
                                               TextSpan(
-                                                text: "Resend code in ",
+                                                text: AppStrings.resendCodeIn,
                                                 style: TextStyle(
                                                     color: AppColor.white500),
                                               ),
@@ -156,7 +155,8 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             TextWidget(
-                                              text: "Didn't receive code? ",
+                                              text:
+                                                  AppStrings.didNotReceiveCode,
                                               fontColor: AppColor.white500,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
@@ -203,8 +203,8 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
                                           // Show error message
                                           // Show error message
                                           Fluttertoast.showToast(
-                                            msg:
-                                                "Please enter the complete 4-digit code",
+                                            msg: AppStrings
+                                                .completeFourDigitCodeError,
                                             backgroundColor: Colors.red
                                                 .withValues(alpha: 0.8),
                                             textColor: Colors.white,

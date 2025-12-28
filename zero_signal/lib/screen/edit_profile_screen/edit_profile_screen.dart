@@ -10,6 +10,7 @@ import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 
 import '../../constant/app_colors.dart';
 import '../../gen/assets.gen.dart';
+import '../../constant/app_strings.dart';
 import '../../widget/text_widget/text_widgets.dart';
 import '../profile/controller/profile_controller.dart';
 import '../sport_details/widget/date_picker_sheet.dart';
@@ -32,7 +33,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         return Scaffold(
           appBar: AppbarWidget(
             backgroundColor: AppColor.creamBackgroundColor,
-            text: 'Edit Profile ',
+            text: AppStrings.editProfile,
             centerTitle: true,
           ),
           backgroundColor: AppColor.bGColor,
@@ -121,19 +122,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       spacing: 16,
       children: [
-        _buildTextField('Full Name', controller.nameController),
-        _buildTextField('Me in one sentence', controller.oneLineBioController),
+        _buildTextField(AppStrings.fullName, controller.nameController),
         _buildTextField(
-          'Description',
+            AppStrings.meInOneSentence, controller.oneLineBioController),
+        _buildTextField(
+          AppStrings.descriptionHeader,
           controller.descriptionController,
           maxLines: 4,
           height: 100,
         ),
-        _buildTextField('Email', controller.emailController, readOnly: true),
-        _buildDropdownField(
-            'Gender', controller.genderController, ['Male', 'Female', 'Other']),
-        _buildDateField('Date of birth', controller.dobController),
-        _buildTextField('Address', controller.addressController),
+        _buildTextField(AppStrings.email, controller.emailController,
+            readOnly: true),
+        _buildDropdownField(AppStrings.gender, controller.genderController,
+            [AppStrings.male, AppStrings.female, AppStrings.other]),
+        _buildDateField(AppStrings.dateOfBirth, controller.dobController),
+        _buildTextField(AppStrings.address, controller.addressController),
       ],
     );
   }
@@ -198,7 +201,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonFormField<String>(
-            initialValue: options.contains(controller.text) ? controller.text : null,
+            initialValue:
+                options.contains(controller.text) ? controller.text : null,
             style: TextStyle(
               color: AppColor.textColor,
               fontSize: 14,
@@ -255,7 +259,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 height: 18.h,
                 width: 18.w,
               )),
-          hintText: 'yyyy-mm-dd',
+          hintText: AppStrings.yyyyMmDdHint,
           borderColor: Colors.transparent,
           backgroundColor: AppColor.lightGrayishOrange,
           borderRadius: 8,
@@ -290,9 +294,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       strokeWidth: 2,
                     ),
                   )
-                : const Text(
-                    'Save & Continue',
-                    style: TextStyle(
+                : Text(
+                    AppStrings.saveAndContinue,
+                    style: const TextStyle(
                       color: Color(0xFFF1F1F1),
                       fontSize: 16,
                       fontFamily: 'Poppins',

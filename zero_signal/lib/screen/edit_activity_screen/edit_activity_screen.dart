@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 
 import 'controller/edit_activity_controller.dart';
 
@@ -64,7 +65,7 @@ class EditActivityScreen extends StatelessWidget {
                     SizedBox(height: 8.h),
                     TextFieldWidget(
                       controller: controller.participantsController,
-                      hintText: ' Enter number of participants',
+                      hintText: AppStrings.enterNumberOfParticipants,
                       hintColor: AppColor.subTitleColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,

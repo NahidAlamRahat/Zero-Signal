@@ -148,7 +148,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                   buttonWidth: double.infinity,
                                   backgroundColor: AppColor.backgroundColor,
                                   label: controller.isLoading.value
-                                      ? 'Loading...'
+                                      ? AppStrings.loading
                                       : AppStrings.save,
                                 )),
                           ],

@@ -8,6 +8,7 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/screen/home_screen/conntroller/home_screen_controller.dart';
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../routes/app_routes.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
@@ -23,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late HomeScreenController controller;
-  
+
   // Radius dropdown state
   bool isRadiusDropdownOpen = false;
 
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GetBuilder<HomeScreenController>(builder: (controller) {
                 return TextFieldWidget(
                   controller: controller.searchController,
-                  hintText: 'Search in ZeroSignal',
+                  hintText: AppStrings.searchInZeroSignal,
                   fieldHeight: 40,
                   borderColor: Colors.transparent,
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
@@ -68,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 _showOfflineMapDownloadDialog();
               },
-              child: Image.asset(AppIconPath.downloadIcon, width: 40.w, height: 40.w),
+              child: Image.asset(AppIconPath.downloadIcon,
+                  width: 40.w, height: 40.w),
             ),
             SizedBox(width: 10.w),
 
@@ -81,7 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: controller.useOfflineMap ? Colors.green : Colors.grey.shade300,
+                    color: controller.useOfflineMap
+                        ? Colors.green
+                        : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Icon(
@@ -203,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(width: 8.w),
                         Text(
-                          'Loading spots...',
+                          AppStrings.loadingSpots,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.sp,
@@ -229,7 +233,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -244,10 +249,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.radar, size: 16, color: AppColor.backgroundColor),
+                            const Icon(Icons.radar,
+                                size: 16, color: AppColor.backgroundColor),
                             const SizedBox(width: 6),
                             Text(
-                              '${controller.currentRadiusInMeters.toStringAsFixed(1)} km',
+                              '${controller.currentRadiusInMeters.toStringAsFixed(1)} ${AppStrings.km}',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -256,7 +262,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(width: 6),
                             Icon(
-                              isRadiusDropdownOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                              isRadiusDropdownOpen
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
                               color: Colors.grey.shade600,
                               size: 16,
                             ),
@@ -264,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    
+
                     // Expandable radius slider
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
@@ -290,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Search Radius',
+                                    AppStrings.searchRadius,
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -300,11 +308,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const SizedBox(height: 12),
                                   SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
-                                      activeTrackColor: AppColor.backgroundColor,
+                                      activeTrackColor:
+                                          AppColor.backgroundColor,
                                       inactiveTrackColor: Colors.grey.shade300,
                                       thumbColor: AppColor.backgroundColor,
-                                      overlayColor: AppColor.backgroundColor.withValues(alpha: 0.2),
-                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                      overlayColor: AppColor.backgroundColor
+                                          .withValues(alpha: 0.2),
+                                      thumbShape: const RoundSliderThumbShape(
+                                          enabledThumbRadius: 6),
                                       trackHeight: 3,
                                     ),
                                     child: Slider(
@@ -313,24 +324,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                       max: 30.0,
                                       divisions: 59,
                                       onChanged: (value) {
-                                        controller.updateRadius(value.toStringAsFixed(1));
+                                        controller.updateRadius(
+                                            value.toStringAsFixed(1));
                                         setState(() {});
                                       },
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '0.5 km',
+                                        AppStrings.zeroFiveKm,
                                         style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.grey.shade600,
                                         ),
                                       ),
                                       Text(
-                                        '30 km',
+                                        AppStrings.thirtyKm,
                                         style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.grey.shade600,
@@ -452,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(width: 12.w),
             Text(
-              'Offline Map Download',
+              AppStrings.offlineMapDownload,
               style: TextStyle(
                 color: AppColor.blackColor,
                 fontWeight: FontWeight.bold,
@@ -466,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Download map data for offline use?',
+              AppStrings.downloadMapDataOffline,
               style: TextStyle(
                 fontSize: 14.sp,
                 color: AppColor.blackColor,
@@ -475,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 12.h),
             Text(
-              'This will allow you to use maps without internet connection. Perfect for areas with poor connectivity!',
+              AppStrings.offlineMapInstruction,
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.grey.shade600,
@@ -492,11 +505,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: Colors.blue.shade600, size: 16.w),
+                  Icon(Icons.info_outline,
+                      color: Colors.blue.shade600, size: 16.w),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
-                      'Maps will be stored in your device storage',
+                      AppStrings.mapsStoredInDevice,
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: Colors.blue.shade700,
@@ -512,7 +526,7 @@ class _HomeScreenState extends State<HomeScreen> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              'Cancel',
+              AppStrings.cancel,
               style: TextStyle(
                 color: Colors.grey.shade600,
                 fontSize: 14.sp,
@@ -532,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             child: Text(
-              'Download',
+              AppStrings.download,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -548,7 +562,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Get application documents directory
     Directory? appDocDir;
     String storagePath = '';
-    
+
     try {
       appDocDir = await getApplicationDocumentsDirectory();
       storagePath = appDocDir.path;
@@ -576,12 +590,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(50.r),
               ),
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColor.backgroundColor),
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColor.backgroundColor),
               ),
             ),
             SizedBox(height: 16.h),
             Text(
-              'Downloading offline map...',
+              AppStrings.downloadingOfflineMap,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -590,7 +605,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Storage: $storagePath',
+              '${AppStrings.storagePrefix}$storagePath',
               style: TextStyle(
                 fontSize: 11.sp,
                 color: Colors.grey.shade600,
@@ -598,7 +613,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 8.h),
             Text(
-              'This may take a few minutes',
+              AppStrings.downloadInstruction,
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.grey.shade500,
@@ -611,23 +626,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Simulate download process
     await Future.delayed(Duration(seconds: 3));
-    
+
     // Create offline map directory
     if (appDocDir != null) {
       final offlineMapDir = Directory('${appDocDir.path}/offline_maps');
       if (!await offlineMapDir.exists()) {
         await offlineMapDir.create(recursive: true);
       }
-      
+
       // Create a sample offline map file (in real implementation, this would be actual map tiles)
       final mapFile = File('${offlineMapDir.path}/dhaka_region.map');
       await mapFile.writeAsString('offline_map_data_for_dhaka_region');
     }
-    
+
     // Close progress dialog and show success message
     if (mounted) {
       Navigator.of(context).pop(); // Close progress dialog
-      
+
       // Show success message with storage location
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -641,7 +656,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(Icons.check_circle, color: Colors.white, size: 16),
                   SizedBox(width: 8),
                   Text(
-                    'Offline map downloaded successfully!',
+                    AppStrings.offlineMapSuccess,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -651,7 +666,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 4),
               Text(
-                'Stored at: $storagePath/offline_maps',
+                '${AppStrings.storedAt}: $storagePath/offline_maps',
                 style: TextStyle(
                   fontSize: 11.sp,
                   color: Colors.white70,

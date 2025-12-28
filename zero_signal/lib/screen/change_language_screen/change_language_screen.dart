@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
 
 class ChangeLanguageScreen extends StatefulWidget {
@@ -69,7 +70,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
           ),
           const Expanded(
             child: Text(
-              'Change Language',
+              AppStrings.changeLanguageHeader,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF2C2C2C),
@@ -93,7 +94,8 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            selectedLanguage = language.name;
+            selectedLanguage =
+                language.name; // Keep this to update selection UI
           });
           _onLanguageSelected(language);
         },
@@ -153,7 +155,8 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
 
   void _onLanguageSelected(LanguageOption language) {
     // Handle language selection
-    appLog('Language selected: ${language.name} (${language.code})', source: 'ChangeLanguageScreen');
+    appLog('Language selected: ${language.name} (${language.code})',
+        source: 'ChangeLanguageScreen'); // Removed the extra 'text' parameter
 
     // You can add logic here to:
     // 1. Save the selected language to preferences
@@ -164,14 +167,14 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
     // Example: Show confirmation and navigate back
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Language changed to ${language.name}'),
+        content: Text('${AppStrings.languageChangedPrefix}${language.name}'),
         backgroundColor: const Color(0xFF2E4F3E),
         duration: const Duration(seconds: 2),
       ),
     );
 
     // Navigate back after a short delay
-   /* Future.delayed(const Duration(seconds: 1), () {
+    /* Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         Navigator.pop(context, language);
       }
