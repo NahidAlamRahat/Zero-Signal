@@ -56,7 +56,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 suffixIconColor: AppColor.blackColor,
               ),
               SpaceWidget(spaceHeight: 16),
-              const TextWidget(
+              TextWidget(
                 text: AppStrings.newPassword,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
@@ -74,7 +74,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 suffixIconColor: AppColor.blackColor,
               ),
               SpaceWidget(spaceHeight: 16),
-              const TextWidget(
+              TextWidget(
                 text: AppStrings.confirmPassword,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,

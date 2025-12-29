@@ -362,7 +362,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildAudioPlayer(ChatMessage message) {
     final audioUrl = message.audio;
     if (audioUrl == null || audioUrl.isEmpty) {
-      return const Text(
+      return Text(
         AppStrings.audioMessage,
         style: TextStyle(
           color: primaryTextColor,
@@ -402,7 +402,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 child: TextField(
                   controller: _messageController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: AppStrings.composeMessageHint,
                     hintStyle: TextStyle(color: secondaryTextColor),
                     border: InputBorder.none,

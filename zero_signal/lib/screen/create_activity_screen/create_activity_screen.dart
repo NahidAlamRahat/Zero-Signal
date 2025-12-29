@@ -33,7 +33,7 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           AppStrings.createActivity,
           style: TextStyle(
             color: Colors.black,

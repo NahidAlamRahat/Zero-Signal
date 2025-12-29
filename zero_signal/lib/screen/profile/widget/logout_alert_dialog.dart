@@ -36,7 +36,7 @@ class LogoutAlertDialog extends StatelessWidget {
             const SizedBox(height: 20),
             Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Text(
                   AppStrings.logout,
                   textAlign: TextAlign.center,

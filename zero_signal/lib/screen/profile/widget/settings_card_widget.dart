@@ -39,7 +39,7 @@ class SettingsCardWidget extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 12.w),
-            child: const TextWidget(
+            child: TextWidget(
               text: AppStrings.settings,
               fontSize: 12,
               fontWeight: FontWeight.w400,

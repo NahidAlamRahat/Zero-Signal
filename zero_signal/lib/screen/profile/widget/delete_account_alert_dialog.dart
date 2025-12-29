@@ -42,7 +42,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const TextWidget(
+                TextWidget(
                   text: AppStrings.wantToDeleteAccount,
                   textAlignment: TextAlign.center,
                   // style: TextStyle(
@@ -57,7 +57,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                   fontColor: AppColor.textColor,
                 ),
                 const SizedBox(height: 8),
-                const TextWidget(
+                TextWidget(
                   text: AppStrings.confirmPasswordToDelete,
                   textAlignment: TextAlign.center,
                   fontSize: 16,
@@ -71,7 +71,7 @@ class DeleteAccountAlertDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TextWidget(
+                    TextWidget(
                       text: AppStrings.enterPasswordLabel,
                       textAlignment: TextAlign.start,
                     ),

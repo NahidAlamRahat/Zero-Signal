@@ -9,4 +9,6 @@ class LocalStorageKeys {
   static const String myName = "myName";
   static const String myEmail = "myEmail";
   static const String myRole = "myRole";
+  static const String languageCode = "languageCode";
+  static const String countryCode = "countryCode";
 }

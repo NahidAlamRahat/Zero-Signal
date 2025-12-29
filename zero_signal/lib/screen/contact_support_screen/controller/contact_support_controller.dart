@@ -43,18 +43,17 @@ class ContactSupportController extends GetxController {
       }
     } else if (status.isPermanentlyDenied) {
       Get.dialog(AlertDialog(
-        title: const Text(AppStrings.permissionRequired),
-        content: const Text(AppStrings.galleryAccessRequired),
+        title: Text(AppStrings.permissionRequired),
+        content: Text(AppStrings.galleryAccessRequired),
         actions: [
           TextButton(
-              onPressed: () => Get.back(),
-              child: const Text(AppStrings.cancel)),
+              onPressed: () => Get.back(), child: Text(AppStrings.cancel)),
           TextButton(
               onPressed: () {
                 Get.back();
                 openAppSettings();
               },
-              child: const Text(AppStrings.settings)),
+              child: Text(AppStrings.settings)),
         ],
       ));
     } else {

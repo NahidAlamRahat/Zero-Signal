@@ -157,7 +157,7 @@ void showReportDialog(BuildContext context, {required String userId}) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TextWidget(
+              TextWidget(
                 text: AppStrings.reasonForReporting,
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
