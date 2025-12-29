@@ -6,9 +6,12 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_strings.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 import 'package:zero_signal/widget/glass_effact.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
+
+import 'package:zero_signal/widget/glass_date_picker.dart';
 
 import '../../../gen/assets.gen.dart';
 import '../../../utils/date_input_formatter.dart';
@@ -167,11 +170,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   TextFieldWidget(
                                     validator: controller.validateDateOfBirth,
                                     controller: controller.birthDateController,
-                                    customSuffixIcon: Image.asset(
-                                      Assets.icons.calender.path,
-                                      color: AppColor.white500,
-                                      height: 16.h,
-                                      width: 16.w,
+                                    customSuffixIcon: InkWell(
+                                      onTap: () async {
+                                        DateTime? pickedDate = await Get.dialog(
+                                          GlassDatePicker(
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(1900),
+                                            lastDate: DateTime.now(),
+                                          ),
+                                          barrierColor:
+                                              Colors.black.withOpacity(0.3),
+                                        );
+
+                                        if (pickedDate != null) {
+                                          String formattedDate =
+                                              "${pickedDate.day.toString().padLeft(2, '0')}/${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year}";
+                                          controller.birthDateController.text =
+                                              formattedDate;
+                                        }
+                                      },
+                                      child: Image.asset(
+                                        Assets.icons.calender.path,
+                                        color: AppColor.white500,
+                                        height: 16.h,
+                                        width: 16.w,
+                                      ),
                                     ),
                                     fieldHeight: 39,
                                     textColor: AppColor.white500,
