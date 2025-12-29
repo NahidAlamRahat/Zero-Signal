@@ -243,8 +243,8 @@ class SpotRepository {
         if (response.body is List) {
           data = response.body as List<dynamic>;
           appLog('✅ Response is a List with ${data.length} items');
-        } else
-        if (response.body.containsKey('data') && response.body['data'] != null) {
+        } else if (response.body.containsKey('data') &&
+            response.body['data'] != null) {
           final dynamic dataField = response.body['data'];
           if (dataField is List) {
             data = dataField;
@@ -256,7 +256,6 @@ class SpotRepository {
         } else {
           appLog('⚠️ Response Map has no data field');
         }
-      
 
         appLog('📊 Parsed data count: ${data.length}');
 
@@ -461,6 +460,67 @@ class SpotRepository {
       appLog('❌ Create comment API Error: $e');
       AppSnackBar.error(_errorMessage);
       return false;
+    }
+  }
+
+  /// Assist at a spot on a specific date
+  /// Endpoint: POST /spot/assist/:id
+  Future<int?> assistSpot({
+    required String spotId,
+    required String date,
+  }) async {
+    _inProgress = true;
+    _errorMessage = '';
+
+    try {
+      final url = AppApiEndPoint.instance.spotAssistEndPoint(spotId);
+      final Map<String, dynamic> body = {
+        'date': date,
+      };
+
+      appLog('📡 API Request - Assist Spot:');
+      appLog('   Endpoint: $url');
+      appLog('   Body: $body');
+
+      final response = await ApiService.postApi(url, body);
+
+      _inProgress = false;
+
+      appLog('📡 API Response - Assist Spot:');
+      appLog('   Status: ${response.statusCode}');
+      appLog('   Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Assistance marked successfully";
+
+        int visitedPeople = 0;
+        if (response.body != null &&
+            response.body['data'] != null &&
+            response.body['data']['visitedPeople'] != null) {
+          visitedPeople =
+              int.tryParse(response.body['data']['visitedPeople'].toString()) ??
+                  0;
+        }
+
+        appLog(
+            '✅ Assistance marked successfully. Visited people: $visitedPeople');
+        return visitedPeople;
+      } else {
+        _errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to mark assistance";
+        appLog('❌ Assist spot failed: $_errorMessage');
+        AppSnackBar.error(_errorMessage);
+        return null;
+      }
+    } catch (e) {
+      _inProgress = false;
+      _errorMessage = "Network error occurred";
+      appLog('❌ Assist spot API Error: $e');
+      AppSnackBar.error(_errorMessage);
+      return null;
     }
   }
 }

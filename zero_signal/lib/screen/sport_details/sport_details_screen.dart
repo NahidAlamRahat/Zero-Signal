@@ -55,6 +55,7 @@ class SpotDetailsScreen extends StatelessWidget {
                         SizedBox(width: 4),
                         Expanded(
                           child: TextWidget(
+                            textAlignment: TextAlign.left,
                             text: controller.spotAddress.value.isNotEmpty
                                 ? controller.spotAddress.value
                                 : AppStrings.locationNotSpecified,
@@ -83,10 +84,13 @@ class SpotDetailsScreen extends StatelessWidget {
                       color: AppColor.lightGrayishOrange,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: TextWidget(
-                      text: AppStrings.visitorInfoPrefix,
-                      fontColor: AppColor.textColor,
-                      fontSize: 14,
+                    child: Obx(
+                      () => TextWidget(
+                        text:
+                            "${controller.visitedPeople.value} ${AppStrings.visitorInfoPrefix}",
+                        fontColor: AppColor.textColor,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
 

@@ -100,7 +100,7 @@ class Languages extends Translations {
     'storedAt': "Stored at",
     'spotDetails': "Spot Details",
     'locationNotSpecified': "Location not specified",
-    'visitorInfoPrefix': "5 user will visit this place on Sunday",
+    'visitorInfoPrefix': "user will visit this place on Sunday",
     'descriptionHeader': "Description",
     'noDescriptionAvailable': "No description available for this spot.",
     'commentsHeader': "Comments",

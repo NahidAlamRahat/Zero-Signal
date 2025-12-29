@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_strings.dart';
@@ -44,16 +45,6 @@ class StatsSection extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        Icon(
-          Icons.star,
-          color: AppColor.yello,
-          size: 18,
-        ),
-        TextWidget(
-          text: '(17 lugares / 6 plane)',
-          fontWeight: FontWeight.w400,
-          fontSize: 16,
         ),
       ],
     );
@@ -116,8 +107,13 @@ class ActionButtons extends StatelessWidget {
             fontWeight: FontWeight.w400,
             maxLines: 1,
             textColor: AppColor.textColor,
-            onPressed: () {
-              showDatePickerSheet(context);
+            onPressed: () async {
+              final DateTime? selectedDate = await showDatePickerSheet(context);
+              if (selectedDate != null) {
+                final String formattedDate =
+                    DateFormat('yyyy-MM-dd').format(selectedDate);
+                controller.assistSpot(formattedDate);
+              }
             },
           ),
         ),

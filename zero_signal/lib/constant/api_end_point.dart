@@ -55,6 +55,7 @@ class AppApiEndPoint {
   //String activityByTypeEndPoint(String type) => "/activity?type=$type";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
   static final String reportEndPoint = "/report";
+  String spotAssistEndPoint(String id) => "/spot/assist/$id";
 
   /// ========================= Atik Hridoy =====================
 
@@ -93,7 +94,7 @@ String _getDomain() {
   // String localServer = "http://10.0.70.30:3002";
   //////////10.0.70.30:3002////////////////////////
   String liveServer = "http://72.167.224.54:5012";
-  String localServer = "shariful5000.binarybards.online";
+  String localServer = "https://shariful5000.binarybards.online";
   try {
     if (kDebugMode) {
       return localServer;
