@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zero_signal/utils/extension.dart';
 
 class SpotInfo extends StatelessWidget {
   final String name;
@@ -27,8 +28,9 @@ class SpotInfo extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
+
           Text(
-            'Uploaded on $uploadDate',
+            'Uploaded on ${DateTime.tryParse(uploadDate)?.date}',
             style: TextStyle(
               color: const Color(0xFF565656),
               fontSize: 14.sp,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 import '../../../widget/space_widget.dart';
 import '../controller/profile_controller.dart';
 import 'package:zero_signal/constant/app_strings.dart';
@@ -55,8 +56,8 @@ class MenuItemsCardWidget extends StatelessWidget {
           MenuItemWidget(
             icon: Assets.icons.favoriteRoutesImage.path,
             title: AppStrings.favoriteRoutes,
-            onTap: () =>
-                controller.navigateToRoute(AppRoutes.favoriteRoutesScreen),
+            onTap: () => controller.navigateToRoute(AppRoutes.myRoutesScreen,
+                arguments: {'type': 'favorite'}),
           ),
         ],
       ),

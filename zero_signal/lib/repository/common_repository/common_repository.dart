@@ -237,9 +237,6 @@ class CommonRepository extends GetxController {
     try {
       Map<String, dynamic> queryParams = {};
 
-      // Add type parameter
-      // queryParams['type'] = 'Spot';
-
       if (page != null) {
         queryParams['page'] = page.toString();
       }
@@ -281,6 +278,66 @@ class CommonRepository extends GetxController {
       inProgress = false;
       errorMessage = "Network error occurred";
       appLog('Fetch favorite spots API Error: $e');
+      update();
+      return null;
+    }
+  }
+
+  /// Fetch favorite routes
+  /// Endpoint: /favorite?type=Route
+  Future<MySpotsResponseModel?> fetchFavoriteRoutes({
+    int? page,
+    int? limit,
+  }) async {
+    inProgress = true;
+    errorMessage = '';
+    successMessage = '';
+    update();
+
+    try {
+      Map<String, dynamic> queryParams = {};
+
+      if (page != null) {
+        queryParams['page'] = page.toString();
+      }
+
+      if (limit != null) {
+        queryParams['limit'] = limit.toString();
+      }
+
+      final response = await ApiService.getApi(
+        AppApiEndPoint.instance.getFavoriteEndPoint("Route"),
+        queryParams: queryParams.isNotEmpty ? queryParams : null,
+      );
+
+      inProgress = false;
+
+      if (response.statusCode == 200) {
+        successMessage = response.message.isNotEmpty
+            ? response.message
+            : "Favorite routes retrieved successfully";
+
+        final MySpotsResponseModel spotsResponse =
+            MySpotsResponseModel.fromJson(
+                Map<String, dynamic>.from(response.body));
+
+        appLog(
+            'Favorite Routes fetched successfully: ${spotsResponse.data.length} items');
+        update();
+        return spotsResponse;
+      } else {
+        errorMessage = response.message.isNotEmpty
+            ? response.message
+            : "Failed to fetch favorite routes";
+        appLog(
+            'Fetch favorite routes failed - Status: ${response.statusCode}, Message: ${response.message}');
+        update();
+        return null;
+      }
+    } catch (e) {
+      inProgress = false;
+      errorMessage = "Network error occurred";
+      appLog('Fetch favorite routes API Error: $e');
       update();
       return null;
     }

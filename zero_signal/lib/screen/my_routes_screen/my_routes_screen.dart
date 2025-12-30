@@ -18,7 +18,7 @@ class MyRoutesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        text: 'My Routes',
+        text: controller.isFavoriteMode ? 'Favorite Routes' : 'My Routes',
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
       ),
