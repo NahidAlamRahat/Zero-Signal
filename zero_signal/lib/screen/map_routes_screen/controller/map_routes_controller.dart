@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:geolocator/geolocator.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import '../../../constant/api_end_point.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../../service/api_service/api_services.dart';
@@ -13,6 +14,10 @@ class MapRoutesController extends GetxController {
   var isLoading = false.obs;
   var lastApiRequest = ''.obs;
   var lastApiResponse = ''.obs;
+
+  var isTracking = false.obs;
+  var trackedPositions = <mapbox.Position>[].obs;
+  StreamSubscription<Position>? _positionStream;
   
   // Auto-select first route
   var autoSelectedRouteIndex = 0.obs;
@@ -106,6 +111,80 @@ class MapRoutesController extends GetxController {
       appLog('Error getting current location: $e', type: LogType.error, source: 'LOCATION');
       fetchRoutes(); // Fetch with default location on error
     }
+  }
+
+  Future<bool> _ensureLocationPermission() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      appLog('Location services are disabled',
+          type: LogType.warning, source: 'TRACKING');
+      return false;
+    }
+
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      appLog('Location permission not granted: $permission',
+          type: LogType.warning, source: 'TRACKING');
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> startTracking() async {
+    if (isTracking.value) return;
+
+    final canTrack = await _ensureLocationPermission();
+    if (!canTrack) return;
+
+    isTracking.value = true;
+    trackedPositions.clear();
+
+    final Position pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    deviceLat.value = pos.latitude;
+    deviceLng.value = pos.longitude;
+
+    trackedPositions.add(mapbox.Position(pos.longitude, pos.latitude));
+
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 5,
+    );
+
+    _positionStream?.cancel();
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: locationSettings,
+    ).listen(
+      (Position pos) {
+        deviceLat.value = pos.latitude;
+        deviceLng.value = pos.longitude;
+        trackedPositions.add(mapbox.Position(pos.longitude, pos.latitude));
+      },
+      onError: (e) {
+        appLog('Position stream error: $e',
+            type: LogType.error, source: 'TRACKING');
+      },
+    );
+
+    appLog('Tracking started', type: LogType.info, source: 'TRACKING');
+  }
+
+  Future<void> stopTracking() async {
+    if (!isTracking.value) return;
+    isTracking.value = false;
+
+    await _positionStream?.cancel();
+    _positionStream = null;
+
+    appLog('Tracking stopped. Points: ${trackedPositions.length}',
+        type: LogType.info, source: 'TRACKING');
   }
 
   /// Update search radius and fetch routes
@@ -216,6 +295,7 @@ class MapRoutesController extends GetxController {
 
   @override
   void onClose() {
+    _positionStream?.cancel();
     radiusController.dispose();
     _radiusDebounceTimer?.cancel();
     super.onClose();

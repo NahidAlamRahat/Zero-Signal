@@ -5,26 +5,30 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zero_signal/my_app.dart';
+import 'package:zero_signal/debug/tracking_debug_utils.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Generate random destination about 7km away', () {
+    const startLat = 23.8103;
+    const startLng = 90.4125;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final dest = TrackingDebugUtils.generateRandomDestinationAround(
+      startLat,
+      startLng,
+      distanceMeters: 7000,
+      seed: 123,
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final distance = TrackingDebugUtils.distanceMeters(
+      startLat,
+      startLng,
+      dest.lat.toDouble(),
+      dest.lng.toDouble(),
+    );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(distance, greaterThan(6500));
+    expect(distance, lessThan(7500));
   });
 }

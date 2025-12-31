@@ -82,6 +82,37 @@ class ShareRouteController extends GetxController {
   void onInit() {
     super.onInit();
     fetchCategories();
+    _prefillFromArgs();
+  }
+
+  Future<void> _prefillFromArgs() async {
+    try {
+      final args = Get.arguments;
+      if (args is! Map) return;
+
+      final startLatArg = args['startLat'];
+      final startLngArg = args['startLng'];
+      final endLatArg = args['endLat'];
+      final endLngArg = args['endLng'];
+
+      final double? sLat = (startLatArg as num?)?.toDouble();
+      final double? sLng = (startLngArg as num?)?.toDouble();
+      final double? eLat = (endLatArg as num?)?.toDouble();
+      final double? eLng = (endLngArg as num?)?.toDouble();
+
+      if (sLat == null || sLng == null || eLat == null || eLng == null) return;
+
+      startLat = sLat;
+      startLng = sLng;
+      endLat = eLat;
+      endLng = eLng;
+
+      await reverseGeocode(sLat, sLng, isStart: true);
+      await reverseGeocode(eLat, eLng, isStart: false);
+      update();
+    } catch (e) {
+      appLog('Prefill args error: $e');
+    }
   }
 
   @override

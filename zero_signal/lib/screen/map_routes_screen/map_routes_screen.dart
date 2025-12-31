@@ -8,6 +8,7 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
+import 'package:zero_signal/debug/tracking_debug_utils.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
@@ -37,6 +38,9 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
   int currentRouteIndex = 0;
   late MapRoutesController controller;
 
+  bool _isMapReady = false;
+  
+
   // GlobalKey for map screenshot
   final GlobalKey _mapWidgetKey = GlobalKey();
 
@@ -45,6 +49,9 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
   mapbox.PointAnnotationManager? pointAnnotationManager;
   mapbox.CircleAnnotationManager? circleAnnotationManager;
   mapbox.PolylineAnnotationManager? polylineAnnotationManager;
+  mapbox.CircleAnnotationManager? userLocationCircleAnnotationManager;
+  mapbox.PolylineAnnotationManager? trackingPolylineAnnotationManager;
+  
 
   // Radius dropdown state
   bool isRadiusDropdownOpen = false;
@@ -72,6 +79,18 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
           }
           _onRouteSelected(routes[0]);
         });
+      }
+    });
+
+    ever(controller.trackedPositions, (_) {
+      if (!_isMapReady) return;
+      _updateLiveTrackingPolyline();
+    });
+
+    ever(controller.isTracking, (isTracking) {
+      if (!_isMapReady) return;
+      if (isTracking != true) {
+        _clearLiveTrackingPolyline();
       }
     });
   }
@@ -102,25 +121,138 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
           _onRouteSelected(controller.routesList[0]);
         });
       }
+
+      _isMapReady = true;
     } catch (e) {
       appLog('Error initializing map: $e', type: LogType.error, source: 'MAP');
+    }
+  }
+
+  Future<void> _updateLiveTrackingPolyline() async {
+    try {
+      if (!_isMapReady) return;
+
+      final positions = controller.trackedPositions.toList(growable: false);
+
+      trackingPolylineAnnotationManager ??=
+          await mapboxMap.annotations.createPolylineAnnotationManager();
+
+      await trackingPolylineAnnotationManager!.deleteAll();
+
+      if (positions.length < 2) return;
+
+      await trackingPolylineAnnotationManager!.create(
+        mapbox.PolylineAnnotationOptions(
+          geometry: mapbox.LineString(coordinates: positions),
+          lineColor: 0xFF10B981,
+          lineWidth: 4.0,
+          lineOpacity: 0.9,
+        ),
+      );
+
+      final last = positions.last;
+      await mapboxMap.flyTo(
+        mapbox.CameraOptions(
+          center: mapbox.Point(coordinates: last),
+        ),
+        mapbox.MapAnimationOptions(duration: 300),
+      );
+    } catch (e) {
+      appLog('Error updating live tracking polyline: $e',
+          type: LogType.error, source: 'TRACKING');
+    }
+  }
+
+  Future<void> _clearLiveTrackingPolyline() async {
+    try {
+      if (trackingPolylineAnnotationManager != null) {
+        await trackingPolylineAnnotationManager!.deleteAll();
+      }
+    } catch (e) {
+      appLog('Error clearing tracking polyline: $e',
+          type: LogType.error, source: 'TRACKING');
+    }
+  }
+
+  Future<void> _debugDrawRandom7kmRealRoadRoute() async {
+    try {
+      if (!_isMapReady) return;
+      if (!kDebugMode) return;
+
+      final startLat = controller.deviceLat.value;
+      final startLng = controller.deviceLng.value;
+
+      final dest = TrackingDebugUtils.generateRandomDestinationAround(
+        startLat,
+        startLng,
+        distanceMeters: 7000,
+        seed: DateTime.now().millisecondsSinceEpoch,
+      );
+
+      appLog('DEBUG demo route: start=($startLat,$startLng) dest=(${dest.lat},${dest.lng})',
+          type: LogType.info, source: 'TRACKING');
+
+      // Ensure managers exist
+      pointAnnotationManager ??=
+          await mapboxMap.annotations.createPointAnnotationManager();
+
+      await _clearRouteFromMap();
+      await _addRouteMarkers(
+        startLat,
+        startLng,
+        dest.lat.toDouble(),
+        dest.lng.toDouble(),
+      );
+      await _centerMapOnRoute(
+        startLat,
+        startLng,
+        dest.lat.toDouble(),
+        dest.lng.toDouble(),
+      );
+    } catch (e) {
+      appLog('Error in debug demo route: $e',
+          type: LogType.error, source: 'TRACKING');
     }
   }
 
   /// Center map on current location (Dhaka coordinates for demo)
   Future<void> _centerMapOnCurrentLocation() async {
     try {
+      final lat = controller.deviceLat.value;
+      final lng = controller.deviceLng.value;
+
       final camera = mapbox.CameraOptions(
         center: mapbox.Point(
+          coordinates: mapbox.Position(lng, lat),
           coordinates:
               mapbox.Position.fromJson([90.4125, 23.8103]), // Dhaka coordinates
         ),
-        zoom: 14.0,
+        zoom: 15.5,
       );
-      final animationOptions = mapbox.MapAnimationOptions(
-        duration: 1000, // Duration in milliseconds
+      await mapboxMap.flyTo(
+        camera,
+        mapbox.MapAnimationOptions(duration: 800),
       );
-      await mapboxMap.flyTo(camera, animationOptions);
+
+      userLocationCircleAnnotationManager ??=
+          await mapboxMap.annotations.createCircleAnnotationManager();
+
+      await userLocationCircleAnnotationManager!.deleteAll();
+
+      await userLocationCircleAnnotationManager!.create(
+        mapbox.CircleAnnotationOptions(
+          geometry: mapbox.Point(
+            coordinates: mapbox.Position(lng, lat),
+          ),
+          circleColor: const Color(0xFF2563EB).toARGB32(),
+          circleRadius: 7,
+          circleStrokeColor: Colors.white.toARGB32(),
+          circleStrokeWidth: 2,
+        ),
+      );
+
+      appLog('Current location shown on map: $lat, $lng',
+          type: LogType.info, source: 'MAP');
     } catch (e) {
       appLog('Error centering map: $e', type: LogType.error, source: 'MAP');
     }
@@ -591,17 +723,64 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                       child: Image.asset(AppIconPath.mapIcon),
                     ),
                     const SizedBox(height: 10),
-                    FloatingActionButton(
-                      mini: true,
-                      heroTag: "map_btn2",
-                      backgroundColor: Colors.transparent,
-                      onPressed: () {
-                        Get.toNamed(AppRoutes.shareRouteScreen);
-                      },
-                      child: Image.asset(
-                        Assets.icons.addGreenbutton.path,
-                        width: 40.w,
-                        height: 40.w,
+                    GestureDetector(
+                      key: const Key('map_btn2_longpress_area'),
+                      onLongPress: kDebugMode ? _debugDrawRandom7kmRealRoadRoute : null,
+                      child: Obx(
+                        () => FloatingActionButton(
+                          key: const Key('map_btn2_fab'),
+                          mini: true,
+                          heroTag: "map_btn2",
+                          backgroundColor: Colors.transparent,
+                          onPressed: () async {
+                            if (controller.isTracking.value) {
+                              final tracked = controller.trackedPositions
+                                  .toList(growable: false);
+                              await controller.stopTracking();
+
+                              if (tracked.isNotEmpty) {
+                                final start = tracked.first;
+                                final end = tracked.length >= 2
+                                    ? tracked.last
+                                    : tracked.first;
+                                Get.toNamed(
+                                  AppRoutes.shareRouteScreen,
+                                  arguments: {
+                                    'startLat': start.lat.toDouble(),
+                                    'startLng': start.lng.toDouble(),
+                                    'endLat': end.lat.toDouble(),
+                                    'endLng': end.lng.toDouble(),
+                                  },
+                                );
+                              } else {
+                                Get.toNamed(AppRoutes.shareRouteScreen);
+                              }
+                            } else {
+                              await controller.startTracking();
+                              if (controller.isTracking.value) {
+                                await _centerMapOnCurrentLocation();
+                              }
+                            }
+                          },
+                          child: controller.isTracking.value
+                              ? Container(
+                                  width: 40.w,
+                                  height: 40.w,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red,
+                                  ),
+                                  child: const Icon(
+                                    Icons.stop,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Image.asset(
+                                  Assets.icons.addGreenbutton.path,
+                                  width: 40.w,
+                                  height: 40.w,
+                                ),
+                        ),
                       ),
                     ),
                   ],
@@ -630,7 +809,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
+                              color: Colors.black.withOpacity(0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -688,7 +867,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.1),
+                                    color: Colors.black.withOpacity(0.1),
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
                                   ),
@@ -715,6 +894,8 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                                                       horizontal: 6,
                                                       vertical: 2),
                                               decoration: BoxDecoration(
+                                                color: AppColor.backgroundColor.withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(10),
                                                 color: AppColor.backgroundColor
                                                     .withValues(alpha: 0.1),
                                                 borderRadius:
@@ -735,6 +916,26 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                                   ),
                                   const SizedBox(height: 12),
                                   Obx(() => SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      activeTrackColor: controller.isLoading.value 
+                                          ? Colors.grey.shade400 
+                                          : AppColor.backgroundColor,
+                                      inactiveTrackColor: Colors.grey.shade300,
+                                      thumbColor: controller.isLoading.value 
+                                          ? Colors.grey.shade400 
+                                          : AppColor.backgroundColor,
+                                      overlayColor: AppColor.backgroundColor.withOpacity(0.2),
+                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                      trackHeight: 3,
+                                    ),
+                                    child: Slider(
+                                      value: controller.currentRadiusInMeters.value / 1000, // Convert to km for display
+                                      min: 0.5,
+                                      max: 30.0,
+                                      divisions: 59, // 0.5 km steps (30 - 0.5 = 29.5, *2 = 59)
+                                      onChanged: controller.isLoading.value ? null : controller.updateRadiusFromSlider,
+                                    ),
+                                  )),
                                         data: SliderTheme.of(context).copyWith(
                                           activeTrackColor:
                                               controller.isLoading.value

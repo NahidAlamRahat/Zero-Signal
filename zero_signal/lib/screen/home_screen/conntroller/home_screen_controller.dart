@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import 'package:dio/dio.dart';
 import '../../../repository/spot_repository.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_log/app_log.dart';
 import '../../../constants/mapbox_endpoints.dart';
+import '../../../service/offline_map_service.dart';
 
-class PointAnnotationClickListener implements mapbox.OnPointAnnotationClickListener {
+class PointAnnotationClickListener
+    implements mapbox.OnPointAnnotationClickListener {
   final HomeScreenController controller;
-  
+
   PointAnnotationClickListener(this.controller);
-  
+
   @override
   void onPointAnnotationClick(mapbox.PointAnnotation annotation) {
     controller.onPointAnnotationTap(annotation);
@@ -42,9 +42,12 @@ class HomeScreenController extends GetxController {
   bool isSearching = false;
 
   // Offline map properties
+  final OfflineMapService _offlineMapService = OfflineMapService();
   bool isOfflineMapAvailable = false;
   bool useOfflineMap = false;
-  String offlineMapPath = '';
+  double downloadProgress = 0.0;
+  bool isDownloading = false;
+  final String offlineRegionId = "dhaka_region";
 
   // Spot related properties
   final SpotRepository _spotRepository = SpotRepository();
@@ -80,7 +83,8 @@ class HomeScreenController extends GetxController {
       final double? km = double.tryParse(kmValue);
       if (km != null && km > 0) {
         currentRadiusInMeters = km; // User requested KM
-        appLog('DEBUG: Radius updated to $currentRadiusInMeters (KM/Units). Fetching spots...');
+        appLog(
+            'DEBUG: Radius updated to $currentRadiusInMeters (KM/Units). Fetching spots...');
         fetchNearbySpots();
       } else {
         appLog('DEBUG: Invalid radius input');
@@ -163,16 +167,12 @@ class HomeScreenController extends GetxController {
   /// Load marker icon from assets and register it in map style
   Future<void> _loadMarkerIcon() async {
     try {
-
       // Load the marker image from assets
       final ByteData data = await rootBundle.load('assets/icons/location.png');
       final uint8List = data.buffer.asUint8List();
-      
-      
 
       // Decode the image to get its actual dimensions
       final image = await decodeImageFromList(uint8List);
-      
 
       // Create MbxImage with actual image dimensions
       final mbxImage = mapbox.MbxImage(
@@ -196,11 +196,8 @@ class HomeScreenController extends GetxController {
     }
   }
 
-
-
   Future<void> onMapCreated(mapbox.MapboxMap controller) async {
     mapboxMap = controller;
-
 
     await getUserLocation();
 
@@ -503,7 +500,8 @@ class HomeScreenController extends GetxController {
     update();
 
     try {
-      final String url = MapboxEndpoints.autocompleteGeocoding(query, mapboxAccessToken);
+      final String url =
+          MapboxEndpoints.autocompleteGeocoding(query, mapboxAccessToken);
 
       final dio = Dio();
       final response = await dio.get(url);
@@ -528,7 +526,8 @@ class HomeScreenController extends GetxController {
     update();
 
     try {
-      final String url = MapboxEndpoints.forwardGeocoding(query, mapboxAccessToken);
+      final String url =
+          MapboxEndpoints.forwardGeocoding(query, mapboxAccessToken);
 
       final dio = Dio();
       final response = await dio.get(url);
@@ -565,53 +564,102 @@ class HomeScreenController extends GetxController {
   // Offline map methods
   Future<void> checkOfflineMapAvailability() async {
     try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final offlineMapDir = Directory('${appDocDir.path}/offline_maps');
-      final mapFile = File('${offlineMapDir.path}/dhaka_region.map');
-      
-      isOfflineMapAvailable = await mapFile.exists();
-      offlineMapPath = offlineMapDir.path;
-      
+      isOfflineMapAvailable =
+          await _offlineMapService.hasRegion(regionId: offlineRegionId);
+      update();
+
       if (isOfflineMapAvailable) {
-        appLog('Offline map available at: $offlineMapPath', type: LogType.info, source: 'OFFLINE_MAP');
+        appLog('Offline map available: $offlineRegionId',
+            type: LogType.info, source: 'OFFLINE_MAP');
       }
     } catch (e) {
-      appLog('Error checking offline map: $e', type: LogType.error, source: 'OFFLINE_MAP');
+      appLog('Error checking offline map: $e',
+          type: LogType.error, source: 'OFFLINE_MAP');
       isOfflineMapAvailable = false;
+      update();
+    }
+  }
+
+  Future<void> downloadOfflineMap() async {
+    if (currentPosition == null) {
+      Fluttertoast.showToast(msg: "Location not available");
+      return;
+    }
+
+    isDownloading = true;
+    downloadProgress = 0.0;
+    update();
+
+    try {
+      // Define Dhaka region bounds (rough estimate)
+      final bounds = mapbox.CoordinateBounds(
+        southwest: mapbox.Point(coordinates: mapbox.Position(90.33, 23.67)),
+        northeast: mapbox.Point(coordinates: mapbox.Position(90.50, 23.90)),
+        infiniteBounds: false,
+      );
+
+      await _offlineMapService.downloadRegion(
+        bounds: bounds,
+        minZoom: 10,
+        maxZoom: 16,
+        styleUri: defaultStyleUri,
+        regionId: offlineRegionId,
+        onProgress: (progress) {
+          downloadProgress = progress;
+          update();
+        },
+      );
+
+      // Note: downloadRegion currently starts the download and logs,
+      // in a real scenario we'd await completion if it returned a future that completes when done.
+      // But based on the service code, it uses loadTileRegion which is async.
+
+      // We will check periodically if it's finished or just let the progress listener handle it.
+      // For now, let's assume it's started successfully.
+      Fluttertoast.showToast(msg: "Download started...");
+    } catch (e) {
+      appLog('Error starting download: $e',
+          type: LogType.error, source: 'OFFLINE_MAP');
+      isDownloading = false;
+      update();
     }
   }
 
   Future<void> toggleOfflineMode() async {
     if (!isOfflineMapAvailable) {
-      Fluttertoast.showToast(msg: "No offline map available. Please download first.");
+      Fluttertoast.showToast(
+          msg: "No offline map available. Please download first.");
       return;
     }
-    
+
     useOfflineMap = !useOfflineMap;
-    
+
     if (useOfflineMap) {
-      // Switch to offline mode - use a local style or cached tiles
       try {
-        // For now, we'll use a basic style that might have cached tiles
-        await mapboxMap.loadStyleURI('mapbox://styles/mapbox/basic-v9');
+        // Use a style that has been downloaded
+        await mapboxMap.loadStyleURI(defaultStyleUri);
         Fluttertoast.showToast(msg: "Offline mode enabled");
-        appLog('Switched to offline mode', type: LogType.info, source: 'OFFLINE_MAP');
+        appLog('Switched to offline mode',
+            type: LogType.info, source: 'OFFLINE_MAP');
       } catch (e) {
-        appLog('Error switching to offline mode: $e', type: LogType.error, source: 'OFFLINE_MAP');
+        appLog('Error switching to offline mode: $e',
+            type: LogType.error, source: 'OFFLINE_MAP');
         useOfflineMap = false;
         Fluttertoast.showToast(msg: "Failed to enable offline mode");
       }
     } else {
-      // Switch back to online mode
       try {
         await mapboxMap.loadStyleURI(defaultStyleUri);
         Fluttertoast.showToast(msg: "Online mode enabled");
-        appLog('Switched to online mode', type: LogType.info, source: 'OFFLINE_MAP');
+        appLog('Switched to online mode',
+            type: LogType.info, source: 'OFFLINE_MAP');
       } catch (e) {
-        appLog('Error switching to online mode: $e', type: LogType.error, source: 'OFFLINE_MAP');
+        appLog('Error switching to online mode: $e',
+            type: LogType.error, source: 'OFFLINE_MAP');
         Fluttertoast.showToast(msg: "Failed to enable online mode");
       }
     }
+    update();
   }
 
   @override
@@ -624,10 +672,10 @@ class HomeScreenController extends GetxController {
     markerPoint = mapbox.Point(
         coordinates:
             mapbox.Position.fromJson([23.78105597835364, 90.40762703426819]));
-    
+
     // Check for offline map on initialization
     checkOfflineMapAvailability();
-    
+
     super.onInit();
   }
 }

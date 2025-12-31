@@ -13,21 +13,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(430, 932), // Your design size
+        designSize: const Size(430, 932),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Zero Signal',
-            translations: Languages(),
-            locale: const Locale('en', 'US'),
-            fallbackLocale: const Locale('en', 'US'),
             initialRoute: AppRoutes.splashScreen,
             getPages: appRootRoutesFile,
             enableLog: true,
             initialBinding: AppBindings(),
           );
         });
+
+    // designSize: const Size(430, 932), // Your design size
+    // minTextAdapt: true,
+    // splitScreenMode: true,
+    // builder: (context, child) {
+    //   return GetMaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     title: 'Zero Signal',
+    //     translations: Languages(),
+    //     locale: const Locale('en', 'US'),
+    //     fallbackLocale: const Locale('en', 'US'),
+    //     initialRoute: AppRoutes.splashScreen,
+    //     getPages: appRootRoutesFile,
+    //     enableLog: true,
+    //     initialBinding: AppBindings(),
+    //   );
+    // });
   }
 }
