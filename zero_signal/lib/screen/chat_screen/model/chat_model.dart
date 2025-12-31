@@ -99,8 +99,11 @@ class ChatMessage {
     return ChatMessage(
       id: json['_id'],
       activity: json['activity'],
-      sender:
-          json['sender'] != null ? Participant.fromJson(json['sender']) : null,
+      sender: json['sender'] != null
+          ? json['sender'] is String
+              ? Participant(id: json['sender'])
+              : Participant.fromJson(json['sender'])
+          : null,
       text: json['text'],
       images: json['images'] != null ? List<String>.from(json['images']) : [],
       type: json['type'],

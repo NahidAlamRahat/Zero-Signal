@@ -121,7 +121,7 @@ class MyRoutesController extends GetxController {
 
     final result = await _routeRepository.toggleFavorite(
       id: route.sId!,
-      type: "Route",
+      type: "Routes",
     );
 
     if (result) {

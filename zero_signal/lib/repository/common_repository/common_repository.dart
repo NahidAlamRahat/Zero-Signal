@@ -306,7 +306,7 @@ class CommonRepository extends GetxController {
       }
 
       final response = await ApiService.getApi(
-        AppApiEndPoint.instance.getFavoriteEndPoint("Route"),
+        AppApiEndPoint.instance.getFavoriteEndPoint("Routes"),
         queryParams: queryParams.isNotEmpty ? queryParams : null,
       );
 

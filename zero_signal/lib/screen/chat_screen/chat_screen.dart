@@ -71,6 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
       preferredSize: const Size.fromHeight(100), // Kept your preferred height
       child: AppBar(
         backgroundColor: backgroundColor,
+        scrolledUnderElevation: 0,
         // --- FIX ---
         // Set elevation > 0 for the shadowColor to appear as a border
         elevation: 0,
@@ -189,9 +190,10 @@ class _ChatScreenState extends State<ChatScreen> {
       }
 
       return ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         reverse: true, // Start from the bottom
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
         itemCount: sortedMessages.length,
         itemBuilder: (context, index) {
           final message = sortedMessages[index];
@@ -319,12 +321,32 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                               ],
                             )
-                          : Text(
-                              text.isEmpty ? AppStrings.emptyMessage : text,
-                              style: const TextStyle(
-                                color: primaryTextColor,
-                                fontSize: 15,
-                              ),
+                          : Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: message.isSending ? 0.5 : 1.0,
+                                  child: Text(
+                                    text.isEmpty
+                                        ? AppStrings.emptyMessage
+                                        : text,
+                                    style: const TextStyle(
+                                      color: primaryTextColor,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                                if (message.isSending)
+                                  const SizedBox(
+                                    width: 15,
+                                    height: 15,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1.5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          iconColor),
+                                    ),
+                                  ),
+                              ],
                             ),
                     ),
                   ],
@@ -371,7 +393,13 @@ class _ChatScreenState extends State<ChatScreen> {
       );
     }
 
-    return AudioPlayerWidget(audioUrl: audioUrl);
+    return SizedBox(
+      width: 180, // Adjust width to be more compact
+      child: AudioPlayerWidget(
+        key: ValueKey(message.id ?? audioUrl),
+        audioUrl: audioUrl,
+      ),
+    );
   }
 
   // Builds the bottom text input field

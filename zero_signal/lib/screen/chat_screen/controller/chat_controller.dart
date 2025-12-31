@@ -55,7 +55,31 @@ class ChatController extends GetxController {
 
   void chatMessageSocketHandler(dynamic message) {
     try {
-      messages.insert(0, ChatMessage.fromJson(message));
+      ChatMessage chatMessage = ChatMessage.fromJson(message);
+
+      // If sender only has ID, try to find full details in participants list
+      if (chatMessage.sender != null &&
+          (chatMessage.sender!.username == null ||
+              chatMessage.sender!.image == null)) {
+        final fullParticipant = participants.firstWhereOrNull(
+          (p) => p.id == chatMessage.sender!.id,
+        );
+        if (fullParticipant != null) {
+          // Replace with full participant info
+          chatMessage = ChatMessage(
+            id: chatMessage.id,
+            activity: chatMessage.activity,
+            sender: fullParticipant,
+            text: chatMessage.text,
+            images: chatMessage.images,
+            type: chatMessage.type,
+            audio: chatMessage.audio,
+            createdAt: chatMessage.createdAt,
+          );
+        }
+      }
+
+      messages.insert(0, chatMessage);
       messages.refresh();
       appLog('rahat');
     } catch (e) {
@@ -71,7 +95,7 @@ class ChatController extends GetxController {
       event: "getMessage::$activityId",
       handler: (data) {
         chatMessageSocketHandler(data);
-        appLog('👌👌👌👌new chat==>>> ${data}  ');
+        appLog('👌👌👌👌new chat==>>> $data  ');
       },
     );
   }
@@ -93,17 +117,18 @@ class ChatController extends GetxController {
       page: _messagePage,
     );
 
-    if (isLoadMore) {
-      _isLoadingMoreMessages = false;
-    } else {
-      isLoading.value = false;
-    }
-
     if (chatData != null && chatData.messages != null) {
       if (isLoadMore) {
         messages.addAll(chatData.messages!);
       } else {
-        messages.assignAll(chatData.messages!);
+        // --- FIX: MERGE INSTEAD OF OVERWRITE ---
+        // We use a Set to avoid duplicates if socket messages arrived during fetch.
+        // We prioritize the existing messages (which might be newer from socket).
+        final existingIds = messages.map((m) => m.id).toSet();
+        final newMessages = chatData.messages!
+            .where((m) => !existingIds.contains(m.id))
+            .toList();
+        messages.addAll(newMessages);
       }
 
       // Check pagination
@@ -116,6 +141,14 @@ class ChatController extends GetxController {
       if (_hasMoreMessages) {
         _messagePage++;
       }
+    }
+
+    // --- FIX: STOP LOADING AFTER DATA IS READY ---
+    // We update the loading state AFTER updating the list to prevent empty frames.
+    if (isLoadMore) {
+      _isLoadingMoreMessages = false;
+    } else {
+      isLoading.value = false;
     }
   }
 
@@ -150,6 +183,7 @@ class ChatController extends GetxController {
       ),
       text: text,
       type: 'text',
+      isSending: true,
       createdAt: DateTime.now().toIso8601String(),
     );
 
@@ -162,10 +196,12 @@ class ChatController extends GetxController {
       text: text,
     );
 
+    // Remove optimistic message so the one coming from socket is the only one shown
+    messages.removeWhere((m) => m.id == optimisticMessage.id);
+    messages.refresh();
+
     if (!success) {
-      // Remove optimistic message if send failed
-      messages.removeWhere((m) => m.id == optimisticMessage.id);
-      messages.refresh();
+      appLog('Failed to send message');
     }
   }
 
