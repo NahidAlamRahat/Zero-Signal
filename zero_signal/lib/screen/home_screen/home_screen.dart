@@ -8,7 +8,6 @@ import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
 import 'package:zero_signal/screen/home_screen/conntroller/home_screen_controller.dart';
 import 'package:zero_signal/screen/home_screen/widget/filter_button_sheet.dart';
-import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import '../../routes/app_routes.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
@@ -22,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late HomeScreenController controller;
-
 
   // Radius dropdown state
   bool isRadiusDropdownOpen = false;
@@ -50,8 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   controller: controller.searchController,
                   hintText: 'Search in ZeroSignal',
                   fieldHeight: 40.h,
-                  hintText: AppStrings.searchInZeroSignal,
-                  fieldHeight: 40,
                   borderColor: Colors.transparent,
                   prefixIcon:
                       Icon(Icons.search, color: Colors.grey, size: 20.sp),
@@ -73,8 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Image.asset(AppIconPath.downloadIcon,
                   width: 40.w, height: 40.w),
-              child: Image.asset(AppIconPath.downloadIcon,
-                  width: 40.w, height: 40.w),
             ),
             SizedBox(width: 10.w),
 
@@ -87,9 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: controller.useOfflineMap
-                        ? Colors.green
-                        : Colors.grey.shade300,
                     color: controller.useOfflineMap
                         ? Colors.green
                         : Colors.grey.shade300,
@@ -207,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(width: 8.w),
                         Text(
-                          AppStrings.loadingSpots,
+                          'Loading spots...',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12.sp,
@@ -235,8 +226,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         padding: EdgeInsets.symmetric(
                             horizontal: 12.w, vertical: 8.h),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8.r),
@@ -254,11 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(Icons.radar,
                                 size: 16.sp, color: AppColor.backgroundColor),
                             SizedBox(width: 6.w),
-                            const Icon(Icons.radar,
-                                size: 16, color: AppColor.backgroundColor),
-                            const SizedBox(width: 6),
                             Text(
-                              '${controller.currentRadiusInMeters.toStringAsFixed(1)} ${AppStrings.km}',
+                              '${controller.currentRadiusInMeters.toStringAsFixed(1)} km',
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
@@ -270,9 +256,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               isRadiusDropdownOpen
                                   ? Icons.keyboard_arrow_up
                                   : Icons.keyboard_arrow_down,
-                              isRadiusDropdownOpen
-                                  ? Icons.keyboard_arrow_up
-                                  : Icons.keyboard_arrow_down,
                               color: Colors.grey.shade600,
                               size: 16.sp,
                             ),
@@ -280,7 +263,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-
 
                     // Expandable radius slider
                     AnimatedContainer(
@@ -307,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    AppStrings.searchRadius,
+                                    'Search Radius',
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
@@ -319,8 +301,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     data: SliderTheme.of(context).copyWith(
                                       activeTrackColor:
                                           AppColor.backgroundColor,
-                                      activeTrackColor:
-                                          AppColor.backgroundColor,
                                       inactiveTrackColor: Colors.grey.shade300,
                                       thumbColor: AppColor.backgroundColor,
                                       overlayColor: AppColor.backgroundColor
@@ -328,11 +308,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       thumbShape: const RoundSliderThumbShape(
                                           enabledThumbRadius: 6),
                                       trackHeight: 3.h,
-                                      overlayColor: AppColor.backgroundColor
-                                          .withValues(alpha: 0.2),
-                                      thumbShape: const RoundSliderThumbShape(
-                                          enabledThumbRadius: 6),
-                                      trackHeight: 3,
                                     ),
                                     child: Slider(
                                       value: controller.currentRadiusInMeters,
@@ -340,8 +315,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       max: 30.0,
                                       divisions: 59,
                                       onChanged: (value) {
-                                        controller.updateRadius(
-                                            value.toStringAsFixed(1));
                                         controller.updateRadius(
                                             value.toStringAsFixed(1));
                                         setState(() {});
@@ -352,18 +325,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        AppStrings.zeroFiveKm,
+                                        '0.5 km',
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           color: Colors.grey.shade600,
                                         ),
                                       ),
                                       Text(
-                                        AppStrings.thirtyKm,
+                                        '30 km',
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           color: Colors.grey.shade600,
@@ -606,239 +577,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColor.creamBackgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: AppColor.backgroundColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Icon(
-                Icons.download,
-                color: AppColor.backgroundColor,
-                size: 24.w,
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Text(
-              AppStrings.offlineMapDownload,
-              style: TextStyle(
-                color: AppColor.blackColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.sp,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppStrings.downloadMapDataOffline,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColor.blackColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              AppStrings.offlineMapInstruction,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.grey.shade600,
-                height: 1.4,
-              ),
-            ),
-            SizedBox(height: 16.h),
-            Container(
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline,
-                      color: Colors.blue.shade600, size: 16.w),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      AppStrings.mapsStoredInDevice,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: Colors.blue.shade700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              AppStrings.cancel,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14.sp,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _downloadOfflineMap();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.backgroundColor,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-            ),
-            child: Text(
-              AppStrings.download,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _downloadOfflineMap() async {
-    // Get application documents directory
-    Directory? appDocDir;
-    String storagePath = '';
-
-    try {
-      appDocDir = await getApplicationDocumentsDirectory();
-      storagePath = appDocDir.path;
-    } catch (e) {
-      storagePath = 'Local storage';
-    }
-
-    // Show progress dialog with storage info
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColor.creamBackgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: AppColor.backgroundColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(50.r),
-              ),
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColor.backgroundColor),
-              ),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              AppStrings.downloadingOfflineMap,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColor.blackColor,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              '${AppStrings.storagePrefix}$storagePath',
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              AppStrings.downloadInstruction,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.grey.shade500,
-              ),
-            ),
           ],
         ),
       ),
     );
-
-    // Simulate download process
-    await Future.delayed(Duration(seconds: 3));
-
-    // Create offline map directory
-    if (appDocDir != null) {
-      final offlineMapDir = Directory('${appDocDir.path}/offline_maps');
-      if (!await offlineMapDir.exists()) {
-        await offlineMapDir.create(recursive: true);
-      }
-
-      // Create a sample offline map file (in real implementation, this would be actual map tiles)
-      final mapFile = File('${offlineMapDir.path}/dhaka_region.map');
-      await mapFile.writeAsString('offline_map_data_for_dhaka_region');
-    }
-
-    // Close progress dialog and show success message
-    if (mounted) {
-      Navigator.of(context).pop(); // Close progress dialog
-
-      // Show success message with storage location
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColor.backgroundColor,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white, size: 16),
-                  SizedBox(width: 8),
-                  Text(
-                    AppStrings.offlineMapSuccess,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 4),
-              Text(
-                '${AppStrings.storedAt}: $storagePath/offline_maps',
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: Colors.white70,
-                ),
-              ),
-            ],
-          ),
-          duration: Duration(seconds: 4),
-        ),
-      );
-    }
   }
 }
