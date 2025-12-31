@@ -56,6 +56,7 @@ class AppApiEndPoint {
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
   static final String reportEndPoint = "/report";
   String spotAssistEndPoint(String id) => "/spot/assist/$id";
+  String sportUpdateEndPoint(String id) => "/spot/$id";
 
   /// ========================= Atik Hridoy =====================
 
