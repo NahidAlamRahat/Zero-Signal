@@ -52,10 +52,12 @@ class ActivityRepository {
   Future<ActivityFeedModel?> getActivityFeed({
     required double lat,
     required double lng,
+    double radius = 10000,
   }) async {
     try {
       ApiResponseModel response = await ApiService.getApi(
-        AppApiEndPoint.instance.activityFeedEndPoint(lat, lng),
+        AppApiEndPoint.instance
+            .activityFeedEndPoint(lat, lng, radius: radius.toInt()),
       );
 
       if (response.statusCode == 200) {

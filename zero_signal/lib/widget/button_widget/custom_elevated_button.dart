@@ -9,8 +9,8 @@ class CustomElevatedButton extends StatelessWidget {
   final Color textColor;
   final Size minimumSize;
   final Size? maximumSize;
-  final IconData? leftIcon; // The new optional icon on the left
-  final IconData? rightIcon; // The original optional icon, now on the right
+  final IconData? leftIcon;
+  final IconData? rightIcon;
   final double? iconSize;
   final FontWeight? fontWeight;
   final double fontSize;
@@ -27,8 +27,8 @@ class CustomElevatedButton extends StatelessWidget {
     this.textColor = Colors.white,
     this.minimumSize = const Size(150, 48),
     this.maximumSize,
-    this.leftIcon, // Added this property
-    this.rightIcon, // Your original icon, renamed for clarity
+    this.leftIcon,
+    this.rightIcon,
     this.fontWeight,
     this.fontSize = 16,
     this.borderColor = const Color(0xFFB16D2E),
@@ -66,12 +66,15 @@ class CustomElevatedButton extends StatelessWidget {
             ],
 
             // The main text
-            TextWidget(
-              text: text,
-              // style: TextStyle(fontSize: fontSize.sp, fontWeight: fontWeight),
-              fontSize: fontSize.sp,
-              fontWeight: fontWeight ?? FontWeight.w500,
-              fontColor: textColor,
+            Flexible(
+              child: TextWidget(
+                text: text,
+                // style: TextStyle(fontSize: fontSize.sp, fontWeight: fontWeight),
+                fontSize: fontSize.sp,
+                fontWeight: fontWeight ?? FontWeight.w500,
+                fontColor: textColor,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
 
             // Conditionally show the RIGHT icon

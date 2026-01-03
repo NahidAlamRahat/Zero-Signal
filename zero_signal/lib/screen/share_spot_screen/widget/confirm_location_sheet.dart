@@ -20,7 +20,7 @@ class ConfirmLocationSheet extends StatefulWidget {
 
 class _ConfirmLocationSheetState extends State<ConfirmLocationSheet> {
   mapbox.MapboxMap? mapboxMap;
-  mapbox.PointAnnotationManager? pointManager;
+  mapbox.CircleAnnotationManager? circleManager;
   bool isMapReady = false;
 
   // Default map style
@@ -216,10 +216,10 @@ class _ConfirmLocationSheetState extends State<ConfirmLocationSheet> {
     mapboxMap = controller;
     isMapReady = true;
 
-    // Initialize point annotation manager
+    // Initialize circle annotation manager
     try {
-      pointManager =
-          await mapboxMap?.annotations.createPointAnnotationManager();
+      circleManager =
+          await mapboxMap?.annotations.createCircleAnnotationManager();
 
       // Add initial marker if exists
       final shareController = Get.find<ShareSpotController>();
@@ -274,17 +274,19 @@ class _ConfirmLocationSheetState extends State<ConfirmLocationSheet> {
   }
 
   Future<void> _addOrMoveMarker(mapbox.Point point) async {
-    if (pointManager == null) return;
+    if (circleManager == null) return;
 
     // Clear old markers
-    await pointManager?.deleteAll();
+    await circleManager?.deleteAll();
 
-    // Add new marker
-    await pointManager?.create(
-      mapbox.PointAnnotationOptions(
+    // Add new marker (red circle with white border)
+    await circleManager?.create(
+      mapbox.CircleAnnotationOptions(
         geometry: point,
-        iconImage: "marker-15", // Default mapbox marker
-        iconSize: 1.5,
+        circleColor: Colors.red.toARGB32(),
+        circleRadius: 10.0,
+        circleStrokeColor: Colors.white.toARGB32(),
+        circleStrokeWidth: 2.0,
       ),
     );
   }

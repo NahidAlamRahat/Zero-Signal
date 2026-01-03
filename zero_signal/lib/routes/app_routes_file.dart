@@ -18,6 +18,7 @@ import '../screen/edit_profile_screen/edit_profile_screen.dart';
 import '../screen/favorite_routes_screen/favorite_routes_screen.dart';
 import '../screen/filters_screen/filters_screen.dart';
 import '../screen/full_map_screen/full_map_screen.dart';
+import '../screen/social_map_screen/social_map_screen.dart';
 import 'package:zero_signal/screen/social_screen/social_screen.dart';
 import '../screen/list_screen/list_screen.dart';
 import '../screen/list_view_details_screen/list_view_details_screen.dart';
@@ -163,6 +164,11 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     name: AppRoutes.socialScreen,
     // binding: SplashScreenBinding(),
     page: () => const SocialScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.socialMapScreen,
+    page: () => const SocialMapScreen(),
   ),
 
   GetPage(

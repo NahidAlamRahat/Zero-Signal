@@ -62,6 +62,7 @@ class _SocialScreenState extends State<SocialScreen> {
                       ],
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Row(
                           children: [
@@ -94,6 +95,16 @@ class _SocialScreenState extends State<SocialScreen> {
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(height: 10.h),
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.socialMapScreen);
+                          },
+                          child: Image.asset(
+                            AppIconPath.mapView,
+                            height: 40.h,
+                          ),
                         ),
                       ],
                     ),

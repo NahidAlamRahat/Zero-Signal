@@ -34,8 +34,8 @@ class AppApiEndPoint {
   String routeDetailEndPoint(String id) => "/route/$id";
   String routeTypeEndPoint() => "/category/route-type";
   static final String activityEndPoint = "/activity";
-  String activityFeedEndPoint(lat, lng) =>
-      "/activity/feed?lat=$lat&lng=$lng&radius=10000";
+  String activityFeedEndPoint(lat, lng, {int radius = 10000}) =>
+      "/activity/feed?lat=$lat&lng=$lng&radius=$radius";
 
   static final String activitySaveEndPoint = "/activity/save";
   String activityJoinEndPoint() => "/activity/join";

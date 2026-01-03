@@ -36,6 +36,7 @@ class AppRoutes {
 
   //Social Screen
   static const socialScreen = "/socialScreen";
+  static const socialMapScreen = "/socialMapScreen";
 
   static const favoriteSitesScreen = "/favoriteSitesScreen";
   static const disclaimerScreen = "/conditionsScreen";

@@ -27,10 +27,6 @@ class AppIconPath {
   static const String chatIcon = "assets/icons/chatIcon.png";
   static const String yelloDownloadIcon = "assets/icons/yelloDownloadIcon.png";
 
-
-
-
-
   //Social Screen Icons
   static const String addIcon2 = "assets/icons/add.png";
   static const String searchIcon = "assets/icons/search.png";
@@ -42,9 +38,9 @@ class AppIconPath {
   static const String saveIcon = "assets/icons/save.png";
   static const String isSavedIcon = "assets/icons/is_saved.png";
   static const String addPeopleIcon = "assets/icons/add_people.png";
+  static const String mapView = "assets/icons/mapView.png";
 
   static const String mySpotsIcon = "assets/icons/my_sport_list.png";
-
 
   //share a new spot screen icon
   static const String cameraIcon = "assets/icons/cameraIcon.png";
@@ -53,9 +49,4 @@ class AppIconPath {
   static const String microphoneIcon = "assets/microphone_icon.png";
   static const String sendChatIcon = "assets/send_icon.png";
   static const String addGreenbutton = "assets/addGreenbutton.png";
-
-
-
-
-
 }
