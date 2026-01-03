@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/screen/sport_details/controller/sport_details_controller.dart';
 import 'package:zero_signal/screen/sport_details/widget/date_picker_sheet.dart';
@@ -18,7 +20,12 @@ class StatsSection extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: () {
-              showUserDialog(context);
+              showUserDialog(
+                context,
+                userId: '', // Placeholder
+                userName: 'naturanauta',
+                userBio: '',
+              );
             },
             child: Row(
               children: const [
@@ -39,16 +46,6 @@ class StatsSection extends StatelessWidget {
             ),
           ),
         ),
-        Icon(
-          Icons.star,
-          color: AppColor.yello,
-          size: 18,
-        ),
-        TextWidget(
-          text: '(17 lugares / 6 plane)',
-          fontWeight: FontWeight.w400,
-          fontSize: 16,
-        ),
       ],
     );
   }
@@ -60,13 +57,13 @@ class ActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<SportDetailsController>();
-    
+
     return Row(
       children: [
         Expanded(
           child: ButtonWidget(
             backgroundColor: AppColor.backgroundColor,
-            label: 'How To Arrive',
+            label: AppStrings.howToArrive,
             fontSize: 11,
             fontWeight: FontWeight.w400,
             buttonHeight: 33,
@@ -90,7 +87,7 @@ class ActionButtons extends StatelessWidget {
         Expanded(
           child: ButtonWidget(
             backgroundColor: AppColor.overLayBoxColor,
-            label: 'Add Favorites',
+            label: AppStrings.addFavorites,
             buttonWidth: 120,
             fontSize: 11,
             buttonHeight: 33,
@@ -104,14 +101,19 @@ class ActionButtons extends StatelessWidget {
         Expanded(
           child: ButtonWidget(
             backgroundColor: Color.fromRGBO(245, 233, 223, 1),
-            label: 'Assist',
+            label: AppStrings.assist,
             buttonHeight: 40,
             fontSize: 11,
             fontWeight: FontWeight.w400,
             maxLines: 1,
             textColor: AppColor.textColor,
-            onPressed: () {
-              showDatePickerSheet(context);
+            onPressed: () async {
+              final DateTime? selectedDate = await showDatePickerSheet(context);
+              if (selectedDate != null) {
+                final String formattedDate =
+                    DateFormat('yyyy-MM-dd').format(selectedDate);
+                controller.assistSpot(formattedDate);
+              }
             },
           ),
         ),

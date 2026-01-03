@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_icon_path.dart';
+import 'package:zero_signal/constant/app_strings.dart';
+import 'package:zero_signal/screen/change_language_screen/controller/change_language_controller.dart';
 import 'package:zero_signal/utils/app_log/app_log.dart';
 
 class ChangeLanguageScreen extends StatefulWidget {
@@ -10,16 +14,31 @@ class ChangeLanguageScreen extends StatefulWidget {
 }
 
 class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
+  final ChangeLanguageController controller =
+      Get.put(ChangeLanguageController());
   String selectedLanguage = 'English'; // Default selected language
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial selection based on current locale
+    if (Get.locale?.languageCode == 'es') {
+      selectedLanguage = 'Español / Spanish';
+    } else {
+      selectedLanguage = 'English';
+    }
+  }
 
   final List<LanguageOption> languages = [
     LanguageOption(
       code: 'en',
+      countryCode: 'US',
       name: 'English',
       flagPath: AppIconPath.ukFlag,
     ),
     LanguageOption(
       code: 'es',
+      countryCode: 'ES',
       name: 'Español / Spanish',
       flagPath: AppIconPath.spanishFlag,
     ),
@@ -67,14 +86,14 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
               color: Color(0xFF2C2C2C),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Change Language',
+              AppStrings.changeLanguageHeader,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF2C2C2C),
+                color: const Color(0xFF2C2C2C),
                 fontSize: 20,
-                fontFamily: 'Poppins',
+                fontFamily: GoogleFonts.poppins().fontFamily,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -93,7 +112,8 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            selectedLanguage = language.name;
+            selectedLanguage =
+                language.name; // Keep this to update selection UI
           });
           _onLanguageSelected(language);
         },
@@ -128,10 +148,10 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
               Expanded(
                 child: Text(
                   language.name,
-                  style: const TextStyle(
-                    color: Color(0xFF2C2C2C),
+                  style: TextStyle(
+                    color: const Color(0xFF2C2C2C),
                     fontSize: 16,
-                    fontFamily: 'Poppins',
+                    fontFamily: GoogleFonts.poppins().fontFamily,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -153,39 +173,38 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
 
   void _onLanguageSelected(LanguageOption language) {
     // Handle language selection
-    appLog('Language selected: ${language.name} (${language.code})', source: 'ChangeLanguageScreen');
+    appLog('Language selected: ${language.name} (${language.code})',
+        source: 'ChangeLanguageScreen');
 
-    // You can add logic here to:
-    // 1. Save the selected language to preferences
-    // 2. Update the app's locale
-    // 3. Show confirmation
-    // 4. Navigate back with result
+    controller.changeLanguage(language.code, language.countryCode);
 
     // Example: Show confirmation and navigate back
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Language changed to ${language.name}'),
+        content: Text('${AppStrings.languageChangedPrefix}${language.name}'),
         backgroundColor: const Color(0xFF2E4F3E),
         duration: const Duration(seconds: 2),
       ),
     );
 
     // Navigate back after a short delay
-   /* Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         Navigator.pop(context, language);
       }
-    });*/
+    });
   }
 }
 
 class LanguageOption {
   final String code;
+  final String countryCode;
   final String name;
   final String flagPath;
 
   LanguageOption({
     required this.code,
+    required this.countryCode,
     required this.name,
     required this.flagPath,
   });

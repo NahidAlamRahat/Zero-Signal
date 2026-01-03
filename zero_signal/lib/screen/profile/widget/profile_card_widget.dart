@@ -8,6 +8,7 @@ import 'package:zero_signal/constant/app_image_path.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 
 import '../../../constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../widget/space_widget.dart';
 import '../../../widget/text_widget/text_widgets.dart';
@@ -82,7 +83,6 @@ class ProfileCardWidget extends StatelessWidget {
       ],
     );
   }
-
 
   Widget _buildProfileImage() {
     return GestureDetector(
@@ -166,7 +166,7 @@ class ProfileCardWidget extends StatelessWidget {
               ),
             ),
             TextSpan(
-              text: 'Points',
+              text: AppStrings.points,
               style: TextStyle(
                 color: const Color(0xFF2E4F3E),
                 fontSize: 10.sp,

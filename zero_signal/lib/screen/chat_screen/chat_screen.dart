@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'controller/chat_controller.dart';
 import 'model/chat_model.dart';
@@ -70,6 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
       preferredSize: const Size.fromHeight(100), // Kept your preferred height
       child: AppBar(
         backgroundColor: backgroundColor,
+        scrolledUnderElevation: 0,
         // --- FIX ---
         // Set elevation > 0 for the shadowColor to appear as a border
         elevation: 0,
@@ -100,7 +102,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Hiking Adventure',
+                    AppStrings.hikingAdventure,
                     style: TextStyle(
                       color: primaryTextColor,
                       fontSize: 20, // Kept your font size
@@ -124,7 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       // Use an Obx wrapper to listen for changes to the participants list
                       child: Obx(
                         () => Text(
-                          '${controller.participants.length} participants',
+                          '${controller.participants.length}${AppStrings.participantsSuffix}',
                           style: TextStyle(
                             color: secondaryTextColor,
                             fontSize: 16, // Kept your font size
@@ -159,15 +161,39 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildMessageList() {
     // We wrap the ListView in an Obx to make it reactive
     return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(iconColor)),
+        );
+      }
+
       // Sort messages by timestamp, descending (newest first)
       // This is safer than relying on list order.
-      final sortedMessages = controller.messages.toList();
-      // ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // createdAt is String, need logic if sorting needed. API usually returns sorted.
+      final sortedMessages = controller.messages.toList()
+        ..sort((a, b) {
+          if (a.createdAt == null || b.createdAt == null) return 0;
+          return DateTime.parse(b.createdAt!)
+              .compareTo(DateTime.parse(a.createdAt!));
+        });
+
+      if (sortedMessages.isEmpty) {
+        return Center(
+          child: Text(
+            AppStrings.noMessagesYet,
+            style: const TextStyle(
+              color: secondaryTextColor,
+              fontSize: 16,
+            ),
+          ),
+        );
+      }
 
       return ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         reverse: true, // Start from the bottom
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
         itemCount: sortedMessages.length,
         itemBuilder: (context, index) {
           final message = sortedMessages[index];
@@ -276,13 +302,51 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                       child: message.type == 'audio'
-                          ? _buildAudioPlayer(message)
-                          : Text(
-                              text,
-                              style: const TextStyle(
-                                color: primaryTextColor,
-                                fontSize: 15,
-                              ),
+                          ? Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: message.isSending ? 0.5 : 1.0,
+                                  child: _buildAudioPlayer(message),
+                                ),
+                                if (message.isSending)
+                                  const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          iconColor),
+                                    ),
+                                  ),
+                              ],
+                            )
+                          : Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: message.isSending ? 0.5 : 1.0,
+                                  child: Text(
+                                    text.isEmpty
+                                        ? AppStrings.emptyMessage
+                                        : text,
+                                    style: const TextStyle(
+                                      color: primaryTextColor,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                                if (message.isSending)
+                                  const SizedBox(
+                                    width: 15,
+                                    height: 15,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1.5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          iconColor),
+                                    ),
+                                  ),
+                              ],
                             ),
                     ),
                   ],
@@ -320,8 +384,8 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildAudioPlayer(ChatMessage message) {
     final audioUrl = message.audio;
     if (audioUrl == null || audioUrl.isEmpty) {
-      return const Text(
-        'Audio message',
+      return Text(
+        AppStrings.audioMessage,
         style: TextStyle(
           color: primaryTextColor,
           fontSize: 15,
@@ -329,7 +393,13 @@ class _ChatScreenState extends State<ChatScreen> {
       );
     }
 
-    return AudioPlayerWidget(audioUrl: audioUrl);
+    return SizedBox(
+      width: 180, // Adjust width to be more compact
+      child: AudioPlayerWidget(
+        key: ValueKey(message.id ?? audioUrl),
+        audioUrl: audioUrl,
+      ),
+    );
   }
 
   // Builds the bottom text input field
@@ -360,8 +430,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 child: TextField(
                   controller: _messageController,
-                  decoration: const InputDecoration(
-                    hintText: 'Compose your message...',
+                  decoration: InputDecoration(
+                    hintText: AppStrings.composeMessageHint,
                     hintStyle: TextStyle(color: secondaryTextColor),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
@@ -410,11 +480,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 controller.sendMessage(_messageController.text);
                 _messageController.clear();
                 // Scroll to the bottom to show the new message
-                _scrollController.animateTo(
-                  0.0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
+                if (_scrollController.hasClients) {
+                  _scrollController.animateTo(
+                    0.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                }
               }
             }),
           ],
@@ -440,9 +512,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // --- PARTICIPANTS DIALOG ---
 
   void _showParticipantsDialog(BuildContext context) {
-
     final screenSize = MediaQuery.of(context).size;
-
 
     final double dialogWidth =
         screenSize.width > 600 ? 500 : screenSize.width * 0.9;
@@ -486,9 +556,9 @@ class _ParticipantsDialogContent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Participants',
-                style: TextStyle(
+              Text(
+                AppStrings.participantsHeader,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   color: _ChatScreenState.primaryTextColor,

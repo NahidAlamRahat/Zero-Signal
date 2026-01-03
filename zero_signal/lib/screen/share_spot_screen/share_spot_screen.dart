@@ -8,6 +8,7 @@ import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../constant/app_colors.dart';
 import 'controller/share_spot_controller.dart';
 import 'model/category_response_model.dart';
@@ -65,7 +66,7 @@ class ShareSpotScreen extends StatelessWidget {
                   borderRadius: 12,
                   focusedBorderColor: AppColor.overLayBoxColor,
                   backgroundColor: AppColor.overLayBoxColor,
-                  hintText: 'Enter a tile',
+                  hintText: AppStrings.enterTitle,
                 ),
                 const SizedBox(height: 24),
                 // Location
@@ -283,7 +284,7 @@ class ShareSpotScreen extends StatelessWidget {
           maxLines: null,
           expands: true,
           decoration: InputDecoration(
-            hintText: 'Enter a description...',
+            hintText: AppStrings.enterDescriptionHint,
             hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(16),

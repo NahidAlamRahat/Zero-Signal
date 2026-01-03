@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
+import 'package:zero_signal/utils/app_log/app_log.dart';
 import '../../../widget/space_widget.dart';
 import '../controller/profile_controller.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'menuItem_widget.dart';
 
 class MenuItemsCardWidget extends StatelessWidget {
@@ -34,28 +36,28 @@ class MenuItemsCardWidget extends StatelessWidget {
         children: [
           MenuItemWidget(
             icon: Assets.icons.mySpotsImage.path,
-            title: 'My Spots',
+            title: AppStrings.mySpots,
             onTap: () => controller.navigateToRoute(AppRoutes.mySpotsScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.routesImage.path,
-            title: 'My Routes',
+            title: AppStrings.myRoutes,
             onTap: () => controller.navigateToRoute(AppRoutes.myRoutesScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.favoriteSiteImage.path,
-            title: 'Favorite Sites',
+            title: AppStrings.favoriteSites,
             onTap: () => controller.navigateToRoute(AppRoutes.mySpotsScreen,
                 arguments: {'type': 'favorite'}),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.favoriteRoutesImage.path,
-            title: 'Favorite Routes',
-            onTap: () =>
-                controller.navigateToRoute(AppRoutes.favoriteRoutesScreen),
+            title: AppStrings.favoriteRoutes,
+            onTap: () => controller.navigateToRoute(AppRoutes.myRoutesScreen,
+                arguments: {'type': 'favorite'}),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../repository/route_repository/route_repository.dart';
+import '../../../routes/app_routes.dart';
 import '../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/route_model.dart';
 
@@ -10,6 +11,7 @@ class MyRoutesController extends GetxController {
   bool isLoading = false;
   String errorMessage = '';
   List<RouteData> routes = [];
+  bool isFavoriteMode = false;
 
   // Pagination (if needed later, keeping simple for now)
   int page = 1;
@@ -21,6 +23,17 @@ class MyRoutesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (Get.arguments != null) {
+      if (Get.arguments is List) {
+        final list = Get.arguments as List;
+        // Assuming RouteData.fromJson exists and matches the map structure
+        routes = list.map((e) => RouteData.fromJson(e)).toList();
+        update(); // Update UI
+        return;
+      } else if (Get.arguments is Map) {
+        isFavoriteMode = Get.arguments['type'] == 'favorite';
+      }
+    }
     getRoutes();
   }
 
@@ -38,18 +51,47 @@ class MyRoutesController extends GetxController {
     update();
 
     try {
-      final result = await _routeRepository.getRoutes(page: page, limit: limit);
+      if (isFavoriteMode) {
+        final result = await _routeRepository.fetchFavoriteRoutes(
+            page: page, limit: limit);
 
-      if (result != null && result.success == true) {
-        if (result.data != null) {
+        if (result != null && result.success == true) {
+          final List<RouteData> favoriteRoutes = result.data
+              .map((spotData) => RouteData(
+                    sId: spotData.id,
+                    title: spotData.title,
+                    images: spotData.images,
+                    description: spotData.description,
+                    isFavorite: true,
+                    // Map other fields as necessary if RouteData matches SpotData structure
+                  ))
+              .toList();
+
           if (isRefresh) {
-            routes = result.data!;
+            routes = favoriteRoutes;
           } else {
-            routes.addAll(result.data!);
+            routes.addAll(favoriteRoutes);
           }
+        } else {
+          errorMessage = _routeRepository.errorMessage.isNotEmpty
+              ? _routeRepository.errorMessage
+              : "Failed to load favorite routes";
         }
       } else {
-        errorMessage = result?.message ?? "Failed to load routes";
+        final result =
+            await _routeRepository.getRoutes(page: page, limit: limit);
+
+        if (result != null && result.success == true) {
+          if (result.data != null) {
+            if (isRefresh) {
+              routes = result.data!;
+            } else {
+              routes.addAll(result.data!);
+            }
+          }
+        } else {
+          errorMessage = result?.message ?? "Failed to load routes";
+        }
       }
     } catch (e) {
       errorMessage = "An error occurred: $e";
@@ -71,8 +113,7 @@ class MyRoutesController extends GetxController {
 
   void onRouteTap(RouteData route) {
     // Navigate to route details
-    // TODO: Implement details navigation
-    print("Route tapped: ${route.title}");
+    Get.toNamed(AppRoutes.routeDetailsScreen, arguments: route);
   }
 
   Future<void> toggleFavorite(RouteData route) async {
@@ -80,7 +121,7 @@ class MyRoutesController extends GetxController {
 
     final result = await _routeRepository.toggleFavorite(
       id: route.sId!,
-      type: "Route",
+      type: "Routes",
     );
 
     if (result) {

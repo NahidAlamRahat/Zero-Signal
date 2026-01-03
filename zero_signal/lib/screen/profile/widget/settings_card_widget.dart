@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
@@ -9,7 +10,6 @@ import '../controller/profile_controller.dart';
 import 'delete_account_alert_dialog.dart';
 import 'logout_alert_dialog.dart';
 import 'menuItem_widget.dart';
-
 
 class SettingsCardWidget extends StatelessWidget {
   final ProfileController controller;
@@ -22,7 +22,7 @@ class SettingsCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:  EdgeInsets.symmetric(vertical: 12.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
         color: AppColor.overLayBoxColor,
         borderRadius: BorderRadius.circular(8),
@@ -38,10 +38,9 @@ class SettingsCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:  EdgeInsets.only(left: 12.w),
-            child: const TextWidget(
-             text:  'SETTINGS',
-
+            padding: EdgeInsets.only(left: 12.w),
+            child: TextWidget(
+              text: AppStrings.settings,
               fontSize: 12,
               fontWeight: FontWeight.w400,
               fontColor: AppColor.blackColor,
@@ -50,58 +49,73 @@ class SettingsCardWidget extends StatelessWidget {
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.languageImage.path,
-            title: 'Language',
-            onTap: () => controller.navigateToRoute(AppRoutes.changeLanguageScreen),
+            title: AppStrings.language,
+            onTap: () =>
+                controller.navigateToRoute(AppRoutes.changeLanguageScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.changePasswordImage.path,
-            title: 'Change Password',
-            onTap: () => controller.navigateToRoute(AppRoutes.changePasswordScreen),
+            title: AppStrings.changePassword,
+            onTap: () =>
+                controller.navigateToRoute(AppRoutes.changePasswordScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.deleteIcon.path,
-            title: 'Delete account',
+            title: AppStrings.deleteAccount,
             titleColor: const Color(0xFFFB6057),
-            onTap: () => showDeleteAccountDialog(context: context, controller: controller, ),
-
+            onTap: () => showDeleteAccountDialog(
+              context: context,
+              controller: controller,
+            ),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.manageDownloadImage.path,
-            title: 'Manage Download',
-            onTap: () => controller.navigateToRoute(AppRoutes.manageDownloadScreen),
+            title: AppStrings.manageDownload,
+            onTap: () =>
+                controller.navigateToRoute(AppRoutes.manageDownloadScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.aboutUsImage.path,
-            title: 'About Us',
-            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: {'name': 'About Us','type': 'about'}),
+            title: AppStrings.aboutUs,
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen,
+                arguments: {'name': AppStrings.aboutUs, 'type': 'about'}),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.privacyPolicyImage.path,
-            title: 'Privacy Policy',
-            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: {'name': 'Privacy Policy','type': 'privacy'}),
+            title: AppStrings.privacyPolicyHeader,
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen,
+                arguments: {
+                  'name': AppStrings.privacyPolicyHeader,
+                  'type': 'privacy'
+                }),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.termsAndConditionsImage.path,
-            title: 'Terms & Conditions',
-            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen, arguments: {'name': 'Terms & Conditions','type': 'terms'}),
+            title: AppStrings.termsAndConditionsHeader,
+            onTap: () => controller.navigateToRoute(AppRoutes.disclaimerScreen,
+                arguments: {
+                  'name': AppStrings.termsAndConditionsHeader,
+                  'type': 'terms'
+                }),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.termsAndConditionsImage.path,
-            title: 'FAQ',
+            title: AppStrings.faqHeader,
             onTap: () => controller.navigateToRoute(AppRoutes.faqScreen),
           ),
           _buildDivider(),
           MenuItemWidget(
             icon: Assets.icons.logoutImage.path,
-            title: 'Logout',
-            onTap: () => showLogoutDialog(context: context, controller: controller),
+            title: AppStrings.logout,
+            onTap: () =>
+                showLogoutDialog(context: context, controller: controller),
           ),
         ],
       ),

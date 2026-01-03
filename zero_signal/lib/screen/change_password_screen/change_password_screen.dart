@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/screen/change_password_screen/controller/change_password_controller.dart';
 import 'package:zero_signal/widget/appbar_widget/appbar_widget.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
@@ -10,17 +11,15 @@ import 'package:zero_signal/widget/text_widget/text_widgets.dart';
 import '../../widget/space_widget.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-   ChangePasswordScreen({super.key});
+  ChangePasswordScreen({super.key});
   final ChangePasswordController controller =
-  Get.find<ChangePasswordController>();
+      Get.find<ChangePasswordController>();
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,19 +27,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppbarWidget(
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
-        text: 'Change password',
+        text: AppStrings.changePasswordHeader,
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8, right: 20, left: 20),
         child: Form(
-          key:widget.controller.formKey,
+          key: widget.controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SpaceWidget(spaceHeight: 16),
               TextWidget(
-                text: 'Current Password',
+                text: AppStrings.currentPasswordLabel,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
               ),
@@ -51,14 +50,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 textColor: AppColor.subTitleColor,
                 borderColor: AppColor.lightGrayishOrange,
                 borderRadius: 8,
-                hintText: 'Current Password',
+                hintText: AppStrings.enterCurrentPassword,
                 backgroundColor: AppColor.lightGrayishOrange,
                 suffixIcon: true,
                 suffixIconColor: AppColor.blackColor,
               ),
               SpaceWidget(spaceHeight: 16),
               TextWidget(
-                text: 'New Password',
+                text: AppStrings.newPassword,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
               ),
@@ -69,14 +68,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 textColor: AppColor.subTitleColor,
                 borderColor: AppColor.lightGrayishOrange,
                 borderRadius: 8,
-                hintText: 'New Password',
+                hintText: AppStrings.enterNewPassword,
                 backgroundColor: AppColor.lightGrayishOrange,
                 suffixIcon: true,
                 suffixIconColor: AppColor.blackColor,
               ),
               SpaceWidget(spaceHeight: 16),
               TextWidget(
-                text: 'Confirm Password',
+                text: AppStrings.confirmPassword,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
               ),
@@ -87,7 +86,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 textColor: AppColor.subTitleColor,
                 borderColor: AppColor.lightGrayishOrange,
                 borderRadius: 8,
-                hintText: 'Confirm Password',
+                hintText: AppStrings.reEnterNewPassword,
                 backgroundColor: AppColor.lightGrayishOrange,
                 suffixIcon: true,
                 suffixIconColor: AppColor.blackColor,
@@ -100,8 +99,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     buttonWidth: double.infinity,
                     backgroundColor: AppColor.backgroundColor,
                     label: widget.controller.isLoading.value
-                        ? 'Loading...'
-                        : 'Save Changes',
+                        ? AppStrings.loading
+                        : AppStrings.saveChanges,
                   )),
             ],
           ),

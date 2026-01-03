@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import '../../../../service/local_database/prefs_helper.dart';
 import '../../../../utils/app_log/app_log.dart';
@@ -45,6 +47,39 @@ class SignInApiController extends GetxController {
         // Save to PrefsHelper for consistency with other controllers
         await PrefsHelper.setString("accessToken", jwtToken);
         await PrefsHelper.setBool("isLogIn", true);
+
+        // Decode JWT to extract userId
+        try {
+          final parts = jwtToken.split('.');
+          if (parts.length == 3) {
+            // Decode the payload (middle part)
+            String payload = parts[1];
+            // Add padding if needed for base64 decoding
+            int padLength = 4 - (payload.length % 4);
+            if (padLength < 4) {
+              payload += '=' * padLength;
+            }
+            final decoded = Uri.decodeFull(
+              String.fromCharCodes(base64Url.decode(payload)),
+            );
+            final Map<String, dynamic> payloadMap = jsonDecode(decoded);
+
+            // Extract userId - common JWT fields: 'id', '_id', 'sub', 'userId'
+            String? userId = payloadMap['id'] ??
+                payloadMap['_id'] ??
+                payloadMap['sub'] ??
+                payloadMap['userId'];
+
+            if (userId != null && userId.isNotEmpty) {
+              LocalStorage.userId = userId;
+              await LocalStorage.setString(LocalStorageKeys.userId, userId);
+              await PrefsHelper.setString("userId", userId);
+              appLog('userId extracted and saved: $userId');
+            }
+          }
+        } catch (e) {
+          appLog('JWT decode error: $e');
+        }
 
         _successfullyMessage = response.message;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -21,212 +22,219 @@ class ResetPassOtpVerifyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(AppImagePath.authBackground),
-                fit: BoxFit.cover,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(AppImagePath.authBackground),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 28.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Main content in center
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0.w),
-                      child: GlassEffact(
-                        // height: 438.h,
-                        width: 390.w,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.h, vertical: 28.h),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly, // Equal spacing
-                            children: [
-                              // App Logo
-                              Image.asset(AppImagePath.appLogo,
-                                  width: 61.w, height: 60.h),
-                              SizedBox(
-                                height: 16.h,
-                              ),
-
-                              // Title with colored number
-                              RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 24.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: "Enter ",
-                                      style:
-                                          TextStyle(color: AppColor.white500),
-                                    ),
-                                    TextSpan(
-                                      text: "4",
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromRGBO(255, 203, 32, 1)),
-                                    ),
-                                    TextSpan(
-                                      text: " digits code",
-                                      style:
-                                          TextStyle(color: AppColor.white500),
-                                    ),
-                                  ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 28.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Main content in center
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0.w),
+                        child: GlassEffact(
+                          // height: 438.h,
+                          width: 390.w,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20.h, vertical: 28.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment
+                                  .spaceEvenly, // Equal spacing
+                              children: [
+                                // App Logo
+                                Image.asset(AppImagePath.appLogo,
+                                    width: 61.w, height: 60.h),
+                                SizedBox(
+                                  height: 16.h,
                                 ),
-                              ),
 
-                              SizedBox(
-                                height: 12.h,
-                              ),
+                                // Title with colored number
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: AppStrings.enterText,
+                                        style:
+                                            TextStyle(color: AppColor.white500),
+                                      ),
+                                      TextSpan(
+                                        text: "4",
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(
+                                                255, 203, 32, 1)),
+                                      ),
+                                      TextSpan(
+                                        text: AppStrings.digitsCode,
+                                        style:
+                                            TextStyle(color: AppColor.white500),
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
-                              // Subtitle
-                              TextWidget(
-                                text:
-                                    "Enter the four-digit code that was emailed to you.",
-                                fontColor: AppColor.white500,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                textAlignment: TextAlign.center,
-                              ),
+                                SizedBox(
+                                  height: 12.h,
+                                ),
 
-                              SizedBox(
-                                height: 44.h,
-                              ),
+                                // Subtitle
+                                TextWidget(
+                                  text: AppStrings.enterCodeEmailMessage,
+                                  fontColor: AppColor.white500,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  textAlignment: TextAlign.center,
+                                ),
 
-                              // PIN Code TextField
-                              _buildPinCodeTextField(context, controller),
+                                SizedBox(
+                                  height: 44.h,
+                                ),
 
-                              // Timer/Resend Section
-                              Obx(() {
-                                return Column(
-                                  children: [
-                                    // Timer Display with colored seconds
-                                    if (!controller.canResend.value)
-                                      RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.w400,
+                                // PIN Code TextField
+                                _buildPinCodeTextField(context, controller),
+
+                                // Timer/Resend Section
+                                Obx(() {
+                                  return Column(
+                                    children: [
+                                      // Timer Display with colored seconds
+                                      if (!controller.canResend.value)
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: AppStrings.resendCodeIn,
+                                                style: TextStyle(
+                                                    color: AppColor.white500),
+                                              ),
+                                              TextSpan(
+                                                text: controller.formatTime(),
+                                                style: TextStyle(
+                                                    color: AppColor.yello),
+                                              ),
+                                              TextSpan(
+                                                text: " s",
+                                                style: TextStyle(
+                                                    color: AppColor.white500),
+                                              ),
+                                            ],
                                           ),
+                                        ),
+
+                                      // Resend Option
+                                      if (controller.canResend.value)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            TextSpan(
-                                              text: "Resend code in ",
-                                              style: TextStyle(
-                                                  color: AppColor.white500),
+                                            TextWidget(
+                                              text:
+                                                  AppStrings.didNotReceiveCode,
+                                              fontColor: AppColor.white500,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
                                             ),
-                                            TextSpan(
-                                              text: controller.formatTime(),
-                                              style: TextStyle(
-                                                  color: AppColor.yello),
-                                            ),
-                                            TextSpan(
-                                              text: " s",
-                                              style: TextStyle(
-                                                  color: AppColor.white500),
+                                            GestureDetector(
+                                              onTap: () {
+                                                controller.resendCode();
+                                              },
+                                              child: TextWidget(
+                                                text: "Resend",
+                                                fontColor: AppColor.yello,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
+                                    ],
+                                  );
+                                }),
 
-                                    // Resend Option
-                                    if (controller.canResend.value)
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextWidget(
-                                            text: "Didn't receive code? ",
-                                            fontColor: AppColor.white500,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              controller.resendCode();
-                                            },
-                                            child: TextWidget(
-                                              text: "Resend",
-                                              fontColor: AppColor.yello,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                  ],
-                                );
-                              }),
+                                SizedBox(
+                                  height: 32.h,
+                                ),
 
-                              SizedBox(
-                                height: 32.h,
-                              ),
-
-                              // Reset Password Button
-                              GetBuilder<ForgotPassVerifyOtpScreenController>(
-                                  builder: (controller) {
-                                return Visibility(
-                                  visible: controller.isLoading == false,
-                                  replacement: CircularProgressIndicator(),
-                                  child: ButtonWidget(
-                                    backgroundColor: AppColor.backgroundColor,
-                                    label: AppStrings.resetPassword,
-                                    buttonHeight: 46.h,
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      // Handle reset password
-                                      if (controller.otpTextEditingController
-                                              .text.length ==
-                                          4) {
-                                        controller.verifyOtpButton();
-                                      } else {
-                                        // Show error message
-                                        // Show error message
-                                        Fluttertoast.showToast(
-                                          msg:
-                                              "Please enter the complete 4-digit code",
-                                          backgroundColor:
-                                              Colors.red.withValues(alpha: 0.8),
-                                          textColor: Colors.white,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                );
-                              }),
-                            ],
+                                // Reset Password Button
+                                GetBuilder<ForgotPassVerifyOtpScreenController>(
+                                    builder: (controller) {
+                                  return Visibility(
+                                    visible: controller.isLoading == false,
+                                    replacement: CircularProgressIndicator(),
+                                    child: ButtonWidget(
+                                      backgroundColor: AppColor.backgroundColor,
+                                      label: AppStrings.resetPassword,
+                                      buttonHeight: 46.h,
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        // Handle reset password
+                                        if (controller.otpTextEditingController
+                                                .text.length ==
+                                            4) {
+                                          controller.verifyOtpButton();
+                                        } else {
+                                          // Show error message
+                                          // Show error message
+                                          Fluttertoast.showToast(
+                                            msg: AppStrings
+                                                .completeFourDigitCodeError,
+                                            backgroundColor: Colors.red
+                                                .withValues(alpha: 0.8),
+                                            textColor: Colors.white,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 60.h,
-            left: 20.w,
-            child: InkWell(
-                onTap: () {
-                  Get.back();
-                },
-                child: Icon(Icons.arrow_back_ios_new_rounded)),
-          )
-        ],
+            Positioned(
+              top: 60.h,
+              left: 20.w,
+              child: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(Icons.arrow_back_ios_new_rounded)),
+            )
+          ],
+        ),
       ),
     );
   }

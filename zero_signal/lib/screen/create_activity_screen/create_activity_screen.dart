@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/screen/create_activity_screen/controller/create_activity_controller.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
@@ -32,8 +33,8 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Create Activity',
+        title: Text(
+          AppStrings.createActivity,
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -50,21 +51,21 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextWidget(
-                  text: 'Activity Title',
+                  text: AppStrings.activityTitle,
                   fontWeight: FontWeight.w400,
                 ),
                 SizedBox(height: 8.h),
                 TextFieldWidget(
                   controller: controller.titleController,
                   textColor: const Color(0xFF484949),
-                  hintText: 'Title of the activity',
+                  hintText: AppStrings.titleOfActivityHint,
                   borderColor: Colors.transparent,
                   backgroundColor: AppColor.lightGrayishOrange,
                   borderRadius: 8,
                 ),
                 const SizedBox(height: 12),
                 TextWidget(
-                  text: 'Date',
+                  text: AppStrings.dateLabel,
                   fontWeight: FontWeight.w400,
                 ),
                 SizedBox(height: 8.h),
@@ -86,7 +87,7 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                       width: 18.w,
                     ),
                   ),
-                  hintText: 'dd/mm/yyyy',
+                  hintText: AppStrings.dateHint,
                   borderColor: Colors.transparent,
                   backgroundColor: AppColor.lightGrayishOrange,
                   borderRadius: 8,
@@ -94,14 +95,14 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                 const SizedBox(height: 12),
                 TextWidget(
                   textAlignment: TextAlign.start,
-                  text: 'Do you want to do a route of your favorites?',
+                  text: AppStrings.routeQuestion,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
                 SizedBox(height: 8.h),
                 CustomDropdown<String>(
                   items: [],
-                  hint: 'Select route',
+                  hint: AppStrings.selectRouteHint,
                   selectedValue: null,
                   borderRadius: 8,
                   onChanged: (value) {},
@@ -111,7 +112,7 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                 ),
                 const SizedBox(height: 12),
                 TextWidget(
-                  text: 'Location',
+                  text: AppStrings.locationLabel,
                   fontWeight: FontWeight.w400,
                 ),
                 SizedBox(height: 8.h),
@@ -126,14 +127,14 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                     color: AppColor.yello,
                     size: 18,
                   ),
-                  hintText: 'Search place (Google Maps)',
+                  hintText: AppStrings.searchPlaceHint,
                   borderColor: Colors.transparent,
                   backgroundColor: AppColor.lightGrayishOrange,
                   borderRadius: 12,
                 ),
                 const SizedBox(height: 12),
                 TextWidget(
-                  text: 'Activity Type',
+                  text: AppStrings.activityTypeLabel,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
@@ -141,7 +142,7 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                 CustomDropdown<String>(
                   items:
                       controller.routeTypes.map((e) => e.name ?? "").toList(),
-                  hint: 'Select type',
+                  hint: AppStrings.selectTypeHint,
                   selectedValue: controller.selectedRouteType.value?.name,
                   borderRadius: 8,
                   onChanged: (value) {
@@ -154,13 +155,13 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                 ),
                 const SizedBox(height: 12),
                 TextWidget(
-                  text: 'Description',
+                  text: AppStrings.descriptionHeader,
                   fontWeight: FontWeight.w400,
                 ),
                 SizedBox(height: 8.h),
                 TextFieldWidget(
                   controller: controller.descriptionController,
-                  hintText: 'Description of the activity ',
+                  hintText: AppStrings.descriptionOfActivityHint,
                   minLines: 4,
                   maxLines: 5,
                   borderColor: Colors.transparent,
@@ -172,19 +173,19 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextWidget(
-                    text: 'max 5 photos',
+                    text: AppStrings.maxPhotos,
                     fontColor: AppColor.yello,
                     textAlignment: TextAlign.end,
                   ),
                 ),
                 SizedBox(height: 12.h),
                 TextWidget(
-                  text: 'Maximum Number of Attendees',
+                  text: AppStrings.maxAttendees,
                   fontWeight: FontWeight.w400,
                 ),
                 TextFieldWidget(
                   controller: controller.maxParticipantsController,
-                  hintText: 'Enter Number',
+                  hintText: AppStrings.enterNumberHint,
                   keyboardType: TextInputType.number,
                   borderColor: Colors.transparent,
                   backgroundColor: AppColor.lightGrayishOrange,
@@ -200,7 +201,7 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                           },
                           buttonWidth: double.infinity,
                           backgroundColor: AppColor.backgroundColor,
-                          label: 'Publish',
+                          label: AppStrings.publish,
                         ),
                 ),
                 SizedBox(height: 30.h),
@@ -231,7 +232,7 @@ class CreateActivityScreen extends GetView<CreateActivityController> {
                   Icon(Icons.add, size: 40, color: Colors.grey.shade600),
                   const SizedBox(height: 8),
                   Text(
-                    'Add Images',
+                    AppStrings.addImages,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                   ),
                 ],

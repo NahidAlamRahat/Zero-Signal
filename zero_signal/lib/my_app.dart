@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/routes/all_bindings.dart';
+import 'utils/languages.dart';
 import 'routes/app_routes.dart';
 import 'routes/app_routes_file.dart';
 
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
             initialRoute: AppRoutes.splashScreen,
             getPages: appRootRoutesFile,
             enableLog: true,
+            translations: Languages(),
+            locale: Get.deviceLocale,
+            fallbackLocale: const Locale('en', 'US'),
             initialBinding: AppBindings(),
           );
         });

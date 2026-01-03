@@ -22,7 +22,6 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
 
   String? selectedValue;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,16 +48,22 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextWidget(text: 'Title',fontWeight: FontWeight.bold,),
+            TextWidget(
+              text: 'Title',
+              fontWeight: FontWeight.bold,
+              textAlignment: TextAlign.start,
+            ),
             const SizedBox(height: 12),
             TextFieldWidget(
-
               borderColor: Colors.transparent,
               backgroundColor: AppColor.lightGrayishOrange,
               borderRadius: 12,
             ),
             const SizedBox(height: 12),
-            TextWidget(text: 'Description',fontWeight: FontWeight.bold,),
+            TextWidget(
+              text: 'Description',
+              fontWeight: FontWeight.bold,
+            ),
             const SizedBox(height: 12),
             TextFieldWidget(
               minLines: 4,
@@ -69,7 +74,8 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
             ),
 
             const SizedBox(height: 24),
-            TextWidget(text: 'Difficulty',
+            TextWidget(
+              text: 'Difficulty',
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -82,49 +88,48 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
                 'Motorcycle',
                 'SUV',
                 'Road Trip',
-
               ],
               hint: 'Choose one',
               selectedValue: selectedValue,
               borderRadius: 8,
               onChanged: (value) {
-
-                selectedValue = value;
-              },
-              borderColor: AppColor.creamBackgroundColor,
-              dropdownColor: AppColor.lightGrayishOrange,
-               boxColor: AppColor.lightGrayishOrange,
-            ),
-
-            const SizedBox(height: 12),
-            TextWidget(text: 'Activity',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-            CustomDropdown<String>(
-              items: [
-                'Walking',
-                'Hiking',
-                'Running',
-                'Cycling',
-                'Motorcycle',
-                'SUV',
-                'Road Trip',
-
-              ],
-              hint: 'Choose one',
-              selectedValue: selectedValue,
-              borderRadius: 8,
-              onChanged: (value) {
-
                 selectedValue = value;
               },
               borderColor: AppColor.creamBackgroundColor,
               dropdownColor: AppColor.lightGrayishOrange,
               boxColor: AppColor.lightGrayishOrange,
             ),
-            
-            SizedBox(height: 20.h,),
+
+            const SizedBox(height: 12),
+            TextWidget(
+              text: 'Activity',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+            CustomDropdown<String>(
+              items: [
+                'Walking',
+                'Hiking',
+                'Running',
+                'Cycling',
+                'Motorcycle',
+                'SUV',
+                'Road Trip',
+              ],
+              hint: 'Choose one',
+              selectedValue: selectedValue,
+              borderRadius: 8,
+              onChanged: (value) {
+                selectedValue = value;
+              },
+              borderColor: AppColor.creamBackgroundColor,
+              dropdownColor: AppColor.lightGrayishOrange,
+              boxColor: AppColor.lightGrayishOrange,
+            ),
+
+            SizedBox(
+              height: 20.h,
+            ),
 
             // Type of route Section
             const Text(
@@ -148,11 +153,14 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
               ],
             ),
 
-            SizedBox(height: 20.h,),
+            SizedBox(
+              height: 20.h,
+            ),
 
             _uploadImagesBox(),
-            SizedBox(height: 30.h,),
-
+            SizedBox(
+              height: 30.h,
+            ),
 
             Row(
               children: [
@@ -160,7 +168,11 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
                   child: ButtonWidget(
                     backgroundColor: Color.fromRGBO(255, 222, 211, 1),
                     buttonHeight: 48,
-                    icon: Image.asset(AppIconPath.deleteIcon,width: 20,height: 20,),
+                    icon: Image.asset(
+                      AppIconPath.deleteIcon,
+                      width: 20,
+                      height: 20,
+                    ),
                     label: 'Delete',
                     textColor: Colors.red,
                   ),
@@ -169,47 +181,45 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
                 Expanded(
                   child: ButtonWidget(
                     backgroundColor: AppColor.backgroundColor,
-                    icon: Image.asset(AppIconPath.sendIcon,width: 20,height: 20,),
+                    icon: Image.asset(
+                      AppIconPath.sendIcon,
+                      width: 20,
+                      height: 20,
+                    ),
                     buttonHeight: 48,
                     label: 'Submit',
                   ),
                 ),
               ],
             ),
-
           ],
         ),
       ),
     );
   }
 
-
   // ------------------------------ helpers ------------------------------
 
-
-
-
   Widget _uploadImagesBox() => Container(
-    width: double.infinity,
-    height: 120,
-    decoration: BoxDecoration(
-      color: Color.fromRGBO(245, 233, 223, 1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.add, size: 40, color: Colors.grey.shade600),
-        const SizedBox(height: 8),
-        Text(
-          'Add Images',
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+        width: double.infinity,
+        height: 120,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(245, 233, 223, 1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Color.fromRGBO(245, 233, 223, 1)),
         ),
-      ],
-    ),
-  );
-
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add, size: 40, color: Colors.grey.shade600),
+            const SizedBox(height: 8),
+            Text(
+              'Add Images',
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildRouteTypeChip(String routeType) {
     final isSelected = selectedRouteType == routeType;
@@ -224,7 +234,6 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
           borderRadius: BorderRadius.circular(8),
-
         ),
         child: Text(
           routeType,
@@ -238,8 +247,6 @@ class _SaveRouteScreenState extends State<SaveRouteScreen> {
       ),
     );
   }
-
-
 
   @override
   void dispose() {

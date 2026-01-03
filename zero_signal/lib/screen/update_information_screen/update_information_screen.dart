@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
@@ -11,7 +12,8 @@ class UpdateInformationScreen extends StatefulWidget {
   const UpdateInformationScreen({super.key});
 
   @override
-  _UpdateInformationScreenState createState() => _UpdateInformationScreenState();
+  _UpdateInformationScreenState createState() =>
+      _UpdateInformationScreenState();
 }
 
 class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
@@ -37,8 +39,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
           },
         ),
         title: TextWidget(
-         text:  'Update Information',
-
+          text: 'Update Information',
           fontColor: AppColor.textColor,
           fontSize: 20,
           fontWeight: FontWeight.w500,
@@ -52,8 +53,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
           children: [
             // Modifications label
             TextWidget(
-             text:  'Modifications',
-
+              text: 'Modifications',
               fontColor: AppColor.textColor,
               fontSize: 16,
               fontWeight: FontWeight.w400,
@@ -62,7 +62,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
 
             // Text input area
             TextFieldWidget(
-              hintText: 'Enter a description of the changes here....',
+              hintText: AppStrings.enterDescriptionHint,
               hintStyle: TextStyle(
                 color: AppColor.subTitleColor,
                 fontSize: 12,
@@ -108,8 +108,7 @@ class _UpdateInformationScreenState extends State<UpdateInformationScreen> {
             // Thank you message
             Center(
               child: TextWidget(
-              text:  'Thank you for helping other people like you',
-
+                text: 'Thank you for helping other people like you',
                 textAlignment: TextAlign.center,
                 fontColor: AppColor.subTitleColor,
                 fontSize: 16,

@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/widget/text_widget/text_widgets.dart';
-import '../../gen/assets.gen.dart';
 import '../../widget/button_widget/button_widget.dart';
+import '../../constant/api_end_point.dart';
+import 'controller/filters_controller.dart';
 
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({super.key});
+class FiltersScreen extends StatelessWidget {
+  FiltersScreen({super.key});
 
-  @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
-}
-
-class _FiltersScreenState extends State<FiltersScreen> {
-  String selectedActivity = 'Walking';
-  String selectedDifficulty = 'Easy';
-  double distanceValue = 125.0; // Default value for 0m to +250km
-  String selectedRouteType = 'Round trip';
+  final FiltersController controller = Get.put(FiltersController());
 
   @override
   Widget build(BuildContext context) {
@@ -47,27 +41,38 @@ class _FiltersScreenState extends State<FiltersScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Activity Selection GridView
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 3,
-                crossAxisSpacing: 12.w,
-                mainAxisSpacing: 12.h,
-                childAspectRatio: 118 / 90, // width/height ratio for maintaining card proportions
-                children: [
-                  _buildActivityCard('Walking', Assets.icons.walking.path, 'Walking'),
-                  _buildActivityCard('Hiking', Assets.icons.hiking.path, 'Hiking'),
-                  _buildActivityCard('Running', Assets.icons.running.path, 'Running'),
-                  _buildActivityCard('Gravel', Assets.icons.gravel.path, 'Gravel'),
-                  _buildActivityCard('Motorcycle', Assets.icons.bike.path, 'Motorcycle'),
-                  _buildActivityCard('SUV / 4*4', Assets.icons.car.path, 'SUV / 4*4'),
-                  _buildActivityCard('Road Trip', Assets.icons.roadTrip.path, 'Road Trip'),
-                ],
-              ),
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (controller.categories.isEmpty) {
+                  return const Center(child: Text('No activities found'));
+                }
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 12.h,
+                    childAspectRatio: 118 / 90,
+                  ),
+                  itemCount: controller.categories.length,
+                  itemBuilder: (context, index) {
+                    final category = controller.categories[index];
+                    return _buildActivityCard(
+                      category.name,
+                      category.icon,
+                      category.name,
+                    );
+                  },
+                );
+              }),
 
               // Difficulty Section
+              const SizedBox(height: 16),
               const TextWidget(
-               text:  'Difficulty',
+                text: 'Difficulty',
                 // style: TextStyle(
                 //   fontSize: 16,
                 //   fontWeight: FontWeight.w600,
@@ -78,20 +83,20 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 fontWeight: FontWeight.w400,
               ),
               const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildDifficultyChip('Easy'),
-                    const SizedBox(width: 12),
-                    _buildDifficultyChip('Medium'),
-                    const SizedBox(width: 12),
-                    _buildDifficultyChip('Hard'),
-                    const SizedBox(width: 12),
-                    _buildDifficultyChip('Extreme'),
-                  ],
-                ),
-              ),
+              Obx(() => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildDifficultyChip('Easy'),
+                        const SizedBox(width: 12),
+                        _buildDifficultyChip('Medium'),
+                        const SizedBox(width: 12),
+                        _buildDifficultyChip('Hard'),
+                        const SizedBox(width: 12),
+                        _buildDifficultyChip('Extreme'),
+                      ],
+                    ),
+                  )),
 
               const SizedBox(height: 15),
 
@@ -100,7 +105,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextWidget(
-                   text:  'Distance:',
+                    text: 'Distance:',
                     // style: TextStyle(
                     //   fontSize: 16,
                     //   fontWeight: FontWeight.w400,
@@ -110,67 +115,67 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
-                  Text(
-                    '0m to +250km',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
+                  Obx(() => Text(
+                        '${controller.distanceValue.value.toInt()}km to +250km',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      )),
                 ],
               ),
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: const Color(0xFF2E5233),
-                  inactiveTrackColor: Colors.grey[300],
-                  thumbColor: const Color(0xFF2E5233),
-                  overlayColor: const Color(0xFF2E5233).withValues(alpha: 0.2),
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                  trackHeight: 4,
-                ),
-                child: Slider(
-                  value: distanceValue,
-                  min: 0,
-                  max: 250,
-                  onChanged: (value) {
-                    setState(() {
-                      distanceValue = value;
-                    });
-                  },
-                ),
-              ),
-
+              Obx(() => SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: const Color(0xFF2E5233),
+                      inactiveTrackColor: Colors.grey[300],
+                      thumbColor: const Color(0xFF2E5233),
+                      overlayColor:
+                          const Color(0xFF2E5233).withValues(alpha: 0.2),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 10),
+                      trackHeight: 4,
+                    ),
+                    child: Slider(
+                      value: controller.distanceValue.value,
+                      min: 0,
+                      max: 250,
+                      onChanged: (value) {
+                        controller.setDistanceValue(value);
+                      },
+                    ),
+                  )),
 
               // Type of route Section
               const TextWidget(
-               text:  'Type of route',
-
+                text: 'Type of route',
                 fontColor: AppColor.textColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildRouteTypeChip('Circular'),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildRouteTypeChip('Round trip'),
-                  ),
-                ],
-              ),
+              Obx(() => Row(
+                    children: [
+                      Expanded(
+                        child: _buildRouteTypeChip('Circular'),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildRouteTypeChip('Round trip'),
+                      ),
+                    ],
+                  )),
 
               const SizedBox(height: 50),
 
               // Apply Filters Button
               Center(
-                child: ButtonWidget(
-                  backgroundColor: AppColor.backgroundColor,
-                  label: 'Apply Filters',
-                  buttonWidth: double.infinity,
-                ),
+                child: Obx(() => ButtonWidget(
+                      onPressed: () => controller.applyFilters(),
+                      backgroundColor: AppColor.backgroundColor,
+                      label: 'Apply Filters',
+                      buttonWidth: double.infinity,
+                      isLoading: controller.isLoading.value,
+                    )),
               )
             ],
           ),
@@ -179,67 +184,69 @@ class _FiltersScreenState extends State<FiltersScreen> {
     );
   }
 
-  Widget _buildActivityCard(
-      String title,
-      String imageIcon,
-      String value) {
-    final isSelected = selectedActivity == value;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedActivity = value;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
-          borderRadius: BorderRadius.circular(12.w),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              imageIcon,
-              height: 40.h,
-              width: 40.w,
-            ),
-            SizedBox(height: 8.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: TextWidget(
-               text:  title,
-                // style: TextStyle(
-                //   fontSize: 12.w,
-                //   fontWeight: FontWeight.w500,
-                //   color: isSelected ? const Color(0xFF2C2C2C) : const Color(0xFF565656),
-                // ),
-                // textAlign: TextAlign.center,
-                fontColor: isSelected ? AppColor.darkGray500 : AppColor.darkGray400,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+  Widget _buildActivityCard(String title, String imageIcon, String value) {
+    return Obx(() {
+      final isSelected = controller.selectedActivity.value == value;
+      return GestureDetector(
+        onTap: () {
+          controller.selectActivity(value);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color:
+                isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
+            borderRadius: BorderRadius.circular(12.w),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (imageIcon.startsWith('http') || imageIcon.startsWith('/'))
+                Image.network(
+                  imageIcon.startsWith('http')
+                      ? imageIcon
+                      : '${AppApiEndPoint.domain}$imageIcon',
+                  height: 40.h,
+                  width: 40.w,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.broken_image),
+                )
+              else
+                Image.asset(
+                  imageIcon,
+                  height: 40.h,
+                  width: 40.w,
+                ),
+              SizedBox(height: 8.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: TextWidget(
+                  text: title,
+                  fontColor:
+                      isSelected ? AppColor.darkGray500 : AppColor.darkGray400,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildDifficultyChip(String difficulty) {
-    final isSelected = selectedDifficulty == difficulty;
+    final isSelected = controller.selectedDifficulty.value == difficulty;
     return GestureDetector(
-      // onTap: () {
-      //   setState(() {
-      //     selectedDifficulty = difficulty;
-      //   });
-      // },
+      onTap: () {
+        controller.selectDifficulty(difficulty);
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -247,8 +254,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: TextWidget(
-        text:   difficulty,
-
+          text: difficulty,
           fontColor: AppColor.textColor,
           fontSize: 12,
           fontWeight: FontWeight.w400,
@@ -258,27 +264,21 @@ class _FiltersScreenState extends State<FiltersScreen> {
   }
 
   Widget _buildRouteTypeChip(String routeType) {
-    final isSelected = selectedRouteType == routeType;
+    final isSelected = controller.selectedRouteType.value == routeType;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedRouteType = routeType;
-        });
+        controller.selectRouteType(routeType);
       },
       child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? AppColor.soilColor : AppColor.lightGrayishOrange,
           borderRadius: BorderRadius.circular(8),
         ),
         child: TextWidget(
-        text:   routeType,
+          text: routeType,
           textAlignment: TextAlign.center,
-          // style: TextStyle(
-          //   fontSize: 14,
-          //   fontWeight: FontWeight.w500,
-          //   color: Colors.black,
-          // ),
           fontColor: AppColor.textColor,
           fontSize: 14,
           fontWeight: FontWeight.w400,

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/screen/contact_support_screen/controller/contact_support_controller.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
 import 'package:zero_signal/widget/space_widget.dart';
 import 'package:zero_signal/widget/text_field_widget/text_field_widget.dart';
@@ -58,7 +59,7 @@ class ContactSupportScreen extends StatelessWidget {
 
             // Text input area
             TextFieldWidget(
-              hintText: 'Enter a description of the changes here....',
+              hintText: AppStrings.enterDescriptionHint,
               hintStyle: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 12,

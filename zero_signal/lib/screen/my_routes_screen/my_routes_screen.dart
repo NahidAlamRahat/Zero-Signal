@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../constant/app_colors.dart';
 import '../../widget/appbar_widget/appbar_widget.dart';
 import 'controller/my_routes_controller.dart';
@@ -17,7 +18,7 @@ class MyRoutesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        text: 'My Routes',
+        text: controller.isFavoriteMode ? 'Favorite Routes' : 'My Routes',
         backgroundColor: AppColor.creamBackgroundColor,
         centerTitle: true,
       ),
@@ -58,7 +59,7 @@ class MyRoutesScreen extends StatelessWidget {
                     SizedBox(height: 16.h),
                     ElevatedButton(
                       onPressed: () => controller.refreshRoutes(),
-                      child: const Text('Retry'),
+                      child: Text(AppStrings.retry),
                     ),
                   ],
                 ),

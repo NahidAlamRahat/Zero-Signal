@@ -127,7 +127,7 @@ class RouteData {
         json['distance'] != null ? Distance.fromJson(json['distance']) : null;
     duration =
         json['duration'] != null ? Duration.fromJson(json['duration']) : null;
-    isFavorite = json['isFavorite'] ?? false;
+    isFavorite = json['is_favorite'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

@@ -111,7 +111,8 @@ class ActivityCard extends StatelessWidget {
                     alignment: Alignment.bottomRight,
                     child: InkWell(
                       onTap: () {
-                        Get.toNamed(AppRoutes.listViewDetailsScreen);
+                        Get.toNamed(AppRoutes.listViewDetailsScreen,
+                            arguments: activity);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(

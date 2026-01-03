@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../../constant/app_colors.dart';
 import '../../widget/appbar_widget/appbar_widget.dart';
 import '../my_routes_screen/widget/delete_confirm_dialog.dart';
@@ -58,7 +59,7 @@ class MySpotsScreen extends StatelessWidget {
                     SizedBox(height: 16.h),
                     ElevatedButton(
                       onPressed: () => controller.refreshSpots(),
-                      child: const Text('Retry'),
+                      child: Text(AppStrings.retry),
                     ),
                   ],
                 ),

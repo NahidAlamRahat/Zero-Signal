@@ -23,6 +23,9 @@ class SportDetailsController extends GetxController {
   // List of images for the route
   final RxList<String> images = <String>[].obs;
 
+  // Visited people count
+  final RxInt visitedPeople = 0.obs;
+
   // Comments data
   final RxList<Map<String, dynamic>> comments = <Map<String, dynamic>>[].obs;
 
@@ -68,6 +71,11 @@ class SportDetailsController extends GetxController {
         images.assignAll(spot.images);
         selectedImage.value = spot.images.first;
       }
+
+      // Note: SpotCoordinateModel doesn't have visitedPeople yet,
+      // but let's assume we might need to handle it if it's added.
+      // Currently, it's updated via assistSpot API.
+
       print("DEBUG: Updated spot details from API");
 
       await fetchComments();
@@ -152,6 +160,32 @@ class SportDetailsController extends GetxController {
       commentController.clear();
       // Refresh comments to show the new one
       await fetchComments();
+    }
+  }
+
+  /// Mark assistance at the spot
+  final RxBool isAssisting = false.obs;
+
+  Future<void> assistSpot(String date) async {
+    if (spotId.value.isEmpty) {
+      Get.snackbar('Error', 'Spot ID is missing',
+          snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+
+    isAssisting.value = true;
+
+    final count = await _repository.assistSpot(
+      spotId: spotId.value,
+      date: date,
+    );
+
+    isAssisting.value = false;
+
+    if (count != null) {
+      visitedPeople.value = count;
+      Get.snackbar('Success', 'Assistance marked successfully',
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 

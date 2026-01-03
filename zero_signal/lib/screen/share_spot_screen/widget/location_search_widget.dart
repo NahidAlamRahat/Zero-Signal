@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../constant/app_colors.dart';
 import '../../../constant/app_icon_path.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../controller/share_spot_controller.dart';
 import '../model/spot_request_model.dart';
 import 'confirm_location_sheet.dart';
@@ -41,7 +42,7 @@ class LocationSearchWidget extends StatelessWidget {
                     child: TextField(
                       controller: controller.locationController,
                       decoration: InputDecoration(
-                        hintText: 'Enter address to search...',
+                        hintText: AppStrings.enterAddressToSearch,
                         hintStyle: TextStyle(
                           color: AppColor.blackColor.withOpacity(0.5),
                           fontWeight: FontWeight.w500,

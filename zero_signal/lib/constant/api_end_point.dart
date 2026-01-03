@@ -52,7 +52,11 @@ class AppApiEndPoint {
   String memberListEndPoint(String activityId) =>
       "/activity/member-list/$activityId";
   static final String sendMessageEndPoint = "/message";
+  //String activityByTypeEndPoint(String type) => "/activity?type=$type";
   static final String spotCoordinatesEndPoint = "/spot/coordinates";
+  static final String reportEndPoint = "/report";
+  String spotAssistEndPoint(String id) => "/spot/assist/$id";
+  String sportUpdateEndPoint(String id) => "/spot/$id";
 
   /// ========================= Atik Hridoy =====================
 
@@ -61,6 +65,21 @@ class AppApiEndPoint {
   static final String getRouteEndPoint = "/route/geocode";
   static final String createRoute = "/route";
 
+  static final String likeUserEndPoint = "/user/like";
+  String oneGetUserInfoEndPoint(String id) => "/user/$id";
+  String oneGetSpotUserInfoEndPoint(String id) => "/spot/user/$id";
+  String oneGetRouteUserInfoEndPoint(String id) => "/route/user/$id";
+  static final String routeCategoryTypeEndPoint = "/category/route-type";
+  static final String deleteAccountEndPoint = "/user/delete-account";
+  static String routeGeocodeEndPoint(
+    String lat,
+    String lng,
+    String radius,
+    String type,
+    String difficulty,
+    String type_of_route,
+  ) =>
+      "/route/geocode?lat=$lat&lng=$lng&radius=$radius&type=$type&difficulty=$difficulty&type_of_route=$type_of_route";
 
   // comment
   static final String commentEndPoint = "/comment";
@@ -75,7 +94,7 @@ String _getDomain() {
   // String liveServer = "http://195.35.9.21:3001";
   // String localServer = "http://10.0.70.30:3002";
   //////////10.0.70.30:3002////////////////////////
-  String liveServer = "https://shariful5000.binarybards.online";
+  String liveServer = "http://72.167.224.54:5012";
   String localServer = "https://shariful5000.binarybards.online";
   try {
     if (kDebugMode) {

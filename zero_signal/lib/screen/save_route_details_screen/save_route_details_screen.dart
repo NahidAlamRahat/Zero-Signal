@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/constant/app_colors.dart';
 import 'package:zero_signal/gen/assets.gen.dart';
 import 'package:zero_signal/routes/app_routes.dart';
@@ -19,8 +20,9 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   final Map<String, dynamic>? routeData;
   final String? routeId;
   final Uint8List? mapScreenshot;
-  
-  const SaveRouteDetailsScreen({super.key, this.routeData, this.routeId, this.mapScreenshot});
+
+  const SaveRouteDetailsScreen(
+      {super.key, this.routeData, this.routeId, this.mapScreenshot});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     print('================================');
 
     final controller = Get.put(RouteDetailsController());
-    
+
     // Set route data if provided, or fetch by ID - defer to avoid setState during build
     if (routeData != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -67,7 +69,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             ),
           );
         }
-        
+
         if (controller.errorMessage.isNotEmpty) {
           return Center(
             child: Column(
@@ -94,13 +96,13 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                       controller.fetchRouteDetails(routeId!);
                     }
                   },
-                  child: const Text('Retry'),
+                  child: Text(AppStrings.retry),
                 ),
               ],
             ),
           );
         }
-        
+
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -139,7 +141,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   Widget _buildHeaderImage(RouteDetailsController controller) {
     return Obx(() {
       final images = controller.images;
-      
+
       return Center(
         child: Container(
           margin: EdgeInsets.only(
@@ -164,7 +166,8 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.map, size: 50, color: Colors.grey[600]),
+                              Icon(Icons.map,
+                                  size: 50, color: Colors.grey[600]),
                               SizedBox(height: 8),
                               Text(
                                 'Route Map View',
@@ -175,7 +178,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                              ),
+                        ),
                       );
                     },
                   )
@@ -207,27 +210,27 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   // Title Section
   Widget _buildTitleSection(RouteDetailsController controller) {
     return Obx(() => Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: TextWidget(
-            text: controller.routeData['title'] ?? 'Untitled Route',
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w500,
-            fontColor: AppColor.textColor,
-          ),
-        ),
-        CircleAvatar(
-          backgroundColor: Color(0xFFFFA726),
-          foregroundColor: Colors.white,
-          child: Image.asset(
-            Assets.icons.download.path,
-            width: 24.w,
-            height: 20.h,
-          ),
-        ),
-      ],
-    ));
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: TextWidget(
+                text: controller.routeData['title'] ?? 'Untitled Route',
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w500,
+                fontColor: AppColor.textColor,
+              ),
+            ),
+            CircleAvatar(
+              backgroundColor: Color(0xFFFFA726),
+              foregroundColor: Colors.white,
+              child: Image.asset(
+                Assets.icons.download.path,
+                width: 24.w,
+                height: 20.h,
+              ),
+            ),
+          ],
+        ));
   }
 
   // Stats Section
@@ -237,7 +240,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       final distance = routeData['distance']?['text'] ?? 'Unknown';
       final duration = routeData['duration']?['text'] ?? 'Unknown';
       final difficulty = routeData['difficulty'] ?? 'Unknown';
-      
+
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -309,39 +312,41 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             buttonWidth: 120,
             maxLines: 1,
             onPressed: () {
-  // Use the route data that was passed to this screen
-  final routeCoordinates = <Map<String, dynamic>>[];
-  
-  if (routeData != null) {
-    // Add initial coordinate
-    routeCoordinates.add({
-      'latitude': routeData!['inital_lat'] ?? 0.0,
-      'longitude': routeData!['inital_lng'] ?? 0.0,
-    });
-    
-    // Add final coordinate
-    routeCoordinates.add({
-      'latitude': routeData!['final_lat'] ?? 0.0,
-      'longitude': routeData!['final_lng'] ?? 0.0,
-    });
-  }
-  
-  final routeName = routeData?['title'] ?? 'Route Navigation';
-  
-  print('=== NAVIGATION DEBUG ===');
-  print('Route Name: $routeName');
-  print('Route Coordinates: $routeCoordinates');
-  print('Coordinates Count: ${routeCoordinates.length}');
-  print('Initial: ${routeData?['inital_lat']}, ${routeData?['inital_lng']}');
-  print('Final: ${routeData?['final_lat']}, ${routeData?['final_lng']}');
-  print('====================');
-  
-  Get.to(() => RouteNavigationScreen(
-    routeId: routeId ?? '',
-    routeCoordinates: routeCoordinates,
-    routeName: routeName,
-  ));
-},
+              // Use the route data that was passed to this screen
+              final routeCoordinates = <Map<String, dynamic>>[];
+
+              if (routeData != null) {
+                // Add initial coordinate
+                routeCoordinates.add({
+                  'latitude': routeData!['inital_lat'] ?? 0.0,
+                  'longitude': routeData!['inital_lng'] ?? 0.0,
+                });
+
+                // Add final coordinate
+                routeCoordinates.add({
+                  'latitude': routeData!['final_lat'] ?? 0.0,
+                  'longitude': routeData!['final_lng'] ?? 0.0,
+                });
+              }
+
+              final routeName = routeData?['title'] ?? 'Route Navigation';
+
+              print('=== NAVIGATION DEBUG ===');
+              print('Route Name: $routeName');
+              print('Route Coordinates: $routeCoordinates');
+              print('Coordinates Count: ${routeCoordinates.length}');
+              print(
+                  'Initial: ${routeData?['inital_lat']}, ${routeData?['inital_lng']}');
+              print(
+                  'Final: ${routeData?['final_lat']}, ${routeData?['final_lng']}');
+              print('====================');
+
+              Get.to(() => RouteNavigationScreen(
+                    routeId: routeId ?? '',
+                    routeCoordinates: routeCoordinates,
+                    routeName: routeName,
+                  ));
+            },
           ),
         ),
         SizedBox(width: 12),
@@ -378,22 +383,50 @@ class SaveRouteDetailsScreen extends StatelessWidget {
   // User Section
   Widget _buildUserSection(BuildContext context) {
     final controller = Get.find<RouteDetailsController>();
-    
+
     return Obx(() {
       // Get user data from route data
       final routeData = controller.routeData;
-      final userName = routeData['user']?['name'] ?? routeData['createdBy']?['name'] ?? routeData['user']?['username'] ?? routeData['createdBy']?['username'] ?? 'Unknown User';
-      final userRating = routeData['user']?['rating']?.toString() ?? routeData['rating']?.toString() ?? '4.8';
+      final userName = routeData['user']?['name'] ??
+          routeData['createdBy']?['name'] ??
+          routeData['user']?['username'] ??
+          routeData['createdBy']?['username'] ??
+          'Unknown User';
+      final userRating = routeData['user']?['rating']?.toString() ??
+          routeData['rating']?.toString() ??
+          '4.8';
       final reviewCount = routeData['reviewCount']?.toString() ?? '57';
       final luggersCount = routeData['luggersCount']?.toString() ?? '17';
       final planesCount = routeData['planesCount']?.toString() ?? '6';
-      final userAvatar = routeData['user']?['image'] ?? routeData['createdBy']?['image'] ?? routeData['user']?['avatar'] ?? routeData['createdBy']?['avatar'];
-      
+      final userAvatar = routeData['user']?['image'] ??
+          routeData['createdBy']?['image'] ??
+          routeData['user']?['avatar'] ??
+          routeData['createdBy']?['avatar'];
+
+      final userId = routeData['user']?['_id'] ??
+          routeData['createdBy']?['_id'] ??
+          routeData['user']?['id'] ??
+          routeData['createdBy']?['id'] ??
+          '';
+      final userBio = routeData['user']?['bio'] ??
+          routeData['createdBy']?['bio'] ??
+          'No bio available';
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: () => showUserDialog(context),
+            onTap: () {
+              if (userId.isNotEmpty) {
+                showUserDialog(
+                  context,
+                  userId: userId,
+                  userName: userName,
+                  userBio: userBio,
+                  userImage: userAvatar,
+                );
+              }
+            },
             child: Row(
               children: [
                 Padding(
@@ -401,12 +434,12 @@ class SaveRouteDetailsScreen extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.brown,
-                    backgroundImage: userAvatar != null 
-                        ? NetworkImage(userAvatar.startsWith('http') 
-                            ? userAvatar 
+                    backgroundImage: userAvatar != null
+                        ? NetworkImage(userAvatar.startsWith('http')
+                            ? userAvatar
                             : 'https://shariful5000.binarybards.online$userAvatar')
                         : null,
-                    child: userAvatar == null 
+                    child: userAvatar == null
                         ? Icon(Icons.person, size: 16, color: Colors.white)
                         : null,
                   ),
@@ -425,7 +458,8 @@ class SaveRouteDetailsScreen extends StatelessWidget {
             children: [
               SizedBox(width: 30),
               TextWidget(
-                text: '  $userRating ($reviewCount)  ($luggersCount luggers / $planesCount planes)',
+                text:
+                    '  $userRating ($reviewCount)  ($luggersCount luggers / $planesCount planes)',
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
                 fontColor: AppColor.subTitleColor,
@@ -437,13 +471,13 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     });
   }
 
-
   // Description Section
   Widget _buildDescriptionSection(RouteDetailsController controller) {
     return Obx(() {
       final routeData = controller.routeData;
-      final description = routeData['description'] ?? 'No description available';
-      
+      final description =
+          routeData['description'] ?? 'No description available';
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -476,11 +510,11 @@ class SaveRouteDetailsScreen extends StatelessWidget {
       allImages.add(null); // Placeholder for map screenshot
     }
     allImages.addAll(controller.images);
-    
+
     if (allImages.isEmpty) {
       return const SizedBox.shrink(); // Don't show section if no images
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -541,11 +575,11 @@ class SaveRouteDetailsScreen extends StatelessWidget {
         },
       );
     }
-    
+
     // Adjust index for API images (accounting for screenshot)
     final apiImageIndex = mapScreenshot != null ? index - 1 : index;
     final controller = Get.find<RouteDetailsController>();
-    
+
     return Image.network(
       controller.images[apiImageIndex],
       fit: BoxFit.cover,
@@ -613,7 +647,7 @@ class SaveRouteDetailsScreen extends StatelessWidget {
     final userName = comment['user']?['name'] ?? comment['name'] ?? 'Anonymous';
     final commentText = comment['comment'] ?? '';
     final createdAt = comment['createdAt'] ?? comment['date'] ?? '';
-    
+
     return Container(
       margin: EdgeInsets.only(bottom: 16, top: 10),
       child: Column(
@@ -686,17 +720,20 @@ class SaveRouteDetailsScreen extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Obx(() => ButtonWidget(
-              backgroundColor: AppColor.backgroundColor,
-              label: controller.isPostingComment.value ? 'Posting...' : 'Comment',
-              maxLines: 1,
-              buttonWidth: 130.w,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              buttonHeight: 40,
-              onPressed: controller.isPostingComment.value 
-                  ? null 
-                  : () => controller.postComment(controller.routeData['_id']),
-            )),
+                  backgroundColor: AppColor.backgroundColor,
+                  label: controller.isPostingComment.value
+                      ? 'Posting...'
+                      : 'Comment',
+                  maxLines: 1,
+                  buttonWidth: 130.w,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  buttonHeight: 40,
+                  onPressed: controller.isPostingComment.value
+                      ? null
+                      : () =>
+                          controller.postComment(controller.routeData['_id']),
+                )),
           ),
           SizedBox(height: 10),
           Center(

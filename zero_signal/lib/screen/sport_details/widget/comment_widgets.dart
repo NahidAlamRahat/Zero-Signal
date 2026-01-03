@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_signal/constant/app_colors.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import 'package:zero_signal/routes/app_routes.dart';
 import 'package:zero_signal/screen/sport_details/controller/sport_details_controller.dart';
 import 'package:zero_signal/widget/button_widget/button_widget.dart';
@@ -87,7 +88,7 @@ class CommentsSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextWidget(
-                  text: 'Comments',
+                  text: AppStrings.commentsHeader,
                   fontColor: AppColor.textColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -97,8 +98,8 @@ class CommentsSection extends StatelessWidget {
                   onTap: () => controller.toggleComments(),
                   child: TextWidget(
                     text: controller.showAllComments.value
-                        ? 'Show less'
-                        : 'See more (${controller.remainingCommentsCount})',
+                        ? AppStrings.showLess
+                        : '${AppStrings.seeMore} (${controller.remainingCommentsCount})',
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     fontColor: AppColor.backgroundColor,
@@ -131,7 +132,7 @@ class AddCommentSection extends StatelessWidget {
             borderColor: AppColor.lightGrayishOrange,
             backgroundColor: AppColor.lightGrayishOrange,
             borderRadius: 8,
-            hintText: 'Add a comment here....',
+            hintText: AppStrings.addCommentHint,
             hintStyle: TextStyle(
               color: AppColor.subTitleColor,
               fontSize: 12.sp,
@@ -145,8 +146,8 @@ class AddCommentSection extends StatelessWidget {
             child: Obx(() => ButtonWidget(
                   backgroundColor: AppColor.backgroundColor,
                   label: controller.isPostingComment.value
-                      ? 'Posting...'
-                      : 'Comment',
+                      ? AppStrings.posting
+                      : AppStrings.commentButton,
                   maxLines: 1,
                   buttonWidth: 130.w,
                   fontSize: 14,
@@ -164,7 +165,7 @@ class AddCommentSection extends StatelessWidget {
                 Get.toNamed(AppRoutes.updateInformationScreen);
               },
               child: TextWidget(
-                text: 'Update Status',
+                text: AppStrings.updateStatus,
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
                 fontColor: AppColor.backgroundColor,

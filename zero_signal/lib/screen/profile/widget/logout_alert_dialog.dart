@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zero_signal/constant/app_strings.dart';
 import '../controller/profile_controller.dart';
 
 class LogoutAlertDialog extends StatelessWidget {
@@ -35,9 +36,9 @@ class LogoutAlertDialog extends StatelessWidget {
             const SizedBox(height: 20),
             Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Text(
-                  'Logout',
+                  AppStrings.logout,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF2C2C2C),
@@ -49,7 +50,7 @@ class LogoutAlertDialog extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Are you sure you want to Logout?',
+                  AppStrings.areYouSureLogout,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF565656),
@@ -67,7 +68,7 @@ class LogoutAlertDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildButton(
-                    label: 'No',
+                    label: AppStrings.no,
                     bgColor: Colors.transparent,
                     textColor: const Color(0xFF2E4F3E),
                     borderColor: const Color(0xFF2E4F3E),
@@ -77,7 +78,7 @@ class LogoutAlertDialog extends StatelessWidget {
                 const SizedBox(width: 20),
                 Expanded(
                   child: _buildButton(
-                    label: 'Yes',
+                    label: AppStrings.yes,
                     bgColor: const Color(0xFF2E4F3E),
                     textColor: const Color(0xFFF1F1F1),
                     onTap: () => controller.logout(),
@@ -138,6 +139,3 @@ void showLogoutDialog({
     },
   );
 }
-
-
-

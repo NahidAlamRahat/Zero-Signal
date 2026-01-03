@@ -33,6 +33,7 @@ import '../screen/share_route_screen/share_route_screen.dart';
 import '../screen/splash_screen/splash_screen.dart';
 import '../screen/sport_details/sport_details_screen.dart';
 import '../screen/spot_navigation_screen/spot_navigation_screen.dart';
+import '../screen/route_details_screen/route_details_screen.dart';
 import '../screen/sunset_point_details_screen/sunset_point_details_screen.dart';
 import '../screen/update_information_screen/update_information_screen.dart';
 import '../screen/view_profile_screen/view_profile_screen.dart';
@@ -135,7 +136,7 @@ List<GetPage> appRootRoutesFile = <GetPage>[
 
   GetPage(
     name: AppRoutes.filtersScreen,
-    page: () => const FiltersScreen(),
+    page: () => FiltersScreen(),
     // binding: GeneralBindings(),
   ),
 
@@ -287,5 +288,10 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     name: AppRoutes.spotNavigationScreen,
     // binding: SplashScreenBinding(),
     page: () => const SpotNavigationScreen(),
+  ),
+
+  GetPage(
+    name: AppRoutes.routeDetailsScreen,
+    page: () => const RouteDetailsScreen(),
   ),
 ];

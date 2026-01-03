@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:zero_signal/constant/api_end_point.dart';
@@ -53,6 +54,9 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         });
       }
     });
+
+    // Set source immediately to fetch duration/metadata
+    _setAudioSource();
   }
 
   @override
@@ -61,16 +65,39 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     super.dispose();
   }
 
+  Source _getSource() {
+    if (widget.audioUrl.startsWith('http') ||
+        widget.audioUrl.startsWith('https')) {
+      return UrlSource(widget.audioUrl);
+    } else if (widget.audioUrl.startsWith('/')) {
+      if (File(widget.audioUrl).existsSync()) {
+        return DeviceFileSource(widget.audioUrl);
+      } else {
+        return UrlSource('${AppApiEndPoint.domain}${widget.audioUrl}');
+      }
+    } else {
+      return UrlSource('${AppApiEndPoint.domain}${widget.audioUrl}');
+    }
+  }
+
+  Future<void> _setAudioSource() async {
+    try {
+      await _audioPlayer.setSource(_getSource());
+    } catch (e) {
+      debugPrint("Error setting audio source: $e");
+    }
+  }
+
   Future<void> _playPause() async {
     if (_isPlaying) {
       await _audioPlayer.pause();
     } else {
-      final fullUrl = '${AppApiEndPoint.domain}${widget.audioUrl}';
-      await _audioPlayer.play(UrlSource(fullUrl));
+      await _audioPlayer.resume(); // Use resume since source is already set
     }
   }
 
   String _formatDuration(Duration duration) {
+    if (duration == Duration.zero) return '00:00';
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds.remainder(60);

@@ -80,6 +80,7 @@ class ChatMessage {
   final String? audio;
   final String? createdAt;
   final bool? isCurrentUser; // Logic to set this will be in controller/repo
+  final bool isSending;
 
   ChatMessage({
     this.id,
@@ -91,14 +92,18 @@ class ChatMessage {
     this.audio,
     this.createdAt,
     this.isCurrentUser,
+    this.isSending = false,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
     return ChatMessage(
       id: json['_id'],
       activity: json['activity'],
-      sender:
-          json['sender'] != null ? Participant.fromJson(json['sender']) : null,
+      sender: json['sender'] != null
+          ? json['sender'] is String
+              ? Participant(id: json['sender'])
+              : Participant.fromJson(json['sender'])
+          : null,
       text: json['text'],
       images: json['images'] != null ? List<String>.from(json['images']) : [],
       type: json['type'],
