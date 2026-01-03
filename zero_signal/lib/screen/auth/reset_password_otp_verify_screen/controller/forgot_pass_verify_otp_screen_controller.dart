@@ -9,6 +9,8 @@ import '../../../../routes/app_routes.dart';
 import '../../../../widget/app_snack_bar/app_snack_bar.dart';
 import '../model/verify_otp_model.dart';
 
+
+
 class ForgotPassVerifyOtpScreenController extends GetxController {
   final VerifyOtpRepository _verifyOtpController = Get.put(
     VerifyOtpRepository(),
